@@ -1,0 +1,6 @@
+{
+  "target_pid": 80995,
+  "safety_sha256": "3c4fc58c8e66d9a0624b8328b341745437c5e62697e34e3338a8975945add8d2",
+  "transport_sha256": "02a97e8a8bce2d01242a2aa3eeb4047cf9728ed870db677b4f793edff2d41519",
+  "purpose": "Performance-only redaction repair preserving in-memory provider responses; no model, request body, scientific criterion, or billing change"
+}

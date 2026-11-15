@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "reviews": [
+    {
+      "id": "CheckMate238-main-OS",
+      "reviewed_on": "2026-11-14",
+      "pmid": "37058595",
+      "source_sha256": "c8588d4616053df7e60c7a8bc286f51190a18904a9d25c43185ac51a986f3273",
+      "review_binding_sha256": "106550449b98e3f217a567b4c658a9049a1dd7dba414a298f44d8e1446d55306",
+      "effect_id": "r3-effect-os",
+      "population_id": "r3-pop-overall",
+      "endpoint": "OS",
+      "measure": "HR",
+      "estimate": 0.86,
+      "ci_lower": 0.66,
+      "ci_upper": 1.12,
+      "ci_level": 95,
+      "cutoff": "minimum follow-up 62.0 months; database lock March 16, 2021",
+      "intervention_arm_id": "r3-arm-nivo",
+      "reference_arm_id": "r3-arm-ipi",
+      "evidence": [
+        {
+          "id": "span-390cb6ad4f4d2d5757e54d59",
+          "quote_sha256": "7730a8b7389f95c187555b29c2a2d6c9b521ccc3b9f8cc03880f734f105a5fe7"
+        },
+        {
+          "id": "span-5d8ad05a2be6785eb0e90e00",
+          "quote_sha256": "2a4fddabe240e32ad39eba64ac4af60f8d33d4c181005e5fa89756d1e361a218"
+        },
+        {
+          "id": "span-ee8a56955a39f833f3f6f818",
+          "quote_sha256": "c6cdbd93c8a7cd6ec28fb801ac2ac427aad9261ebeeb18ebe13a9f80b8ed68b3"
+        }
+      ],
+      "supporting_quotes": [
+        {
+          "id": "span-390cb6ad4f4d2d5757e54d59",
+          "quote_sha256": "7730a8b7389f95c187555b29c2a2d6c9b521ccc3b9f8cc03880f734f105a5fe7",
+          "quote": "Minimum follow-up (i.e., from the first dose of the last patient randomized until the database cutoff) was 62.0 months, and median follow-up (i.e., median time between the first dose and date of death or last known alive date for each patient) was 61.5 months for nivolumab and 61.2 months for ipilimumab. The median RFS (nivolumab vs. ipilimumab) was 61.0 months (95% CI, 42.5‒not reached) versus 24.1 months (95% CI, 16.6‒35.1), with a stratified HR favoring nivolumab of 0.72 (95% CI, 0.60‒0.86); 5-year RFS rates were 50% versus 39% ( Fig. 2A ). Recurrence patterns were similar for each treatment (Supplementary Table S4). Median DMFS was not reached in either group, with 5-year DMFS rates of 58% for nivolumab and 51% for ipilimumab (HR= 0.79; 95% CI, 0.63‒0.99; Fig. 2B ). The 228 total deaths remained below the 302 events anticipated at the 4-year primary OS analysis ( 8 ). OS did not significantly differ between treatments (HR= 0.86; 95% CI, 0.66‒1.12) with the median not reached in either arm; 5-year OS rates were 76% with nivolumab and 72% with ipilimumab ( Fig. 2C ).",
+          "source_id": "report-e81aa355e50f793a2d833090:main:f8d4239a8164b30c"
+        },
+        {
+          "id": "span-5d8ad05a2be6785eb0e90e00",
+          "quote_sha256": "2a4fddabe240e32ad39eba64ac4af60f8d33d4c181005e5fa89756d1e361a218",
+          "quote": "The primary endpoint was RFS, as assessed by the investigator, and defined as the time from randomization to the date of first recurrence (local, regional, or distant metastasis), new primary melanoma, or death from any cause. Secondary endpoints comprised OS, safety and tolerability, RFS by PD-L1 expression, and health-related quality of life. OS was defined as the time between the date of randomization and the date of death. Exploratory endpoints included DMFS, the association between biomarkers from the tumor microenvironment or periphery and clinical efficacy (i.e., RFS, DMFS, and OS), and the incidence of adverse events (AE). DMFS was defined as the time between the date of randomization and the date of the first distant metastasis (including in those patients with an initial regional recurrence) or of death from any cause.",
+          "source_id": "report-e81aa355e50f793a2d833090:main:f8d4239a8164b30c"
+        },
+        {
+          "id": "span-ee8a56955a39f833f3f6f818",
+          "quote_sha256": "c6cdbd93c8a7cd6ec28fb801ac2ac427aad9261ebeeb18ebe13a9f80b8ed68b3",
+          "quote": "Efficacy analyses was conducted in the intention-to-treat (ITT) population, comprising all randomized patients. We estimated time-to-event distributions using the Kaplan–Meier method, with medians presented with their 95% confidence interval (CI) based on the Brookmeyer and Crowley method. All analyses used SAS analytics software (version 9.2; Cary, NC, USA).",
+          "source_id": "report-e81aa355e50f793a2d833090:supplement:3776950dfb89d7c5"
+        }
+      ],
+      "reason": "The main Results section and Figure 2C report OS HR 0.86 (0.66–1.12) at the 5-year analysis. The 0.91 alternative is a supplementary clinical-factor Cox estimate. Prefer the main trial efficacy result by default; retain both for explicit user selection."
+    },
+    {
+      "id": "T-VEC-ipilimumab-main-OS",
+      "reviewed_on": "2026-11-14",
+      "pmid": "37142291",
+      "source_sha256": "7d78b0d1bd7d3451a093a1462f6be29a6892833229784fba3e686c84d3cba544",
+      "review_binding_sha256": "01ab8346528474fd1defbb3938f773678704769007770b0d8708cb652541bb97",
+      "effect_id": "eff4",
+      "population_id": "pop1",
+      "endpoint": "OS",
+      "measure": "HR",
+      "estimate": 0.83,
+      "ci_lower": 0.56,
+      "ci_upper": 1.24,
+      "ci_level": 95,
+      "cutoff": "Final analysis; data cutoff March 31, 2021",
+      "intervention_arm_id": "arm1",
+      "reference_arm_id": "arm2",
+      "evidence": [
+        {
+          "id": "span-f381db2b194fd41bcbe3d5dc",
+          "quote_sha256": "6df67f0a6590cf7a7426dae94ecfbc52d283f105babec7bd9ef32b06338f6ff9"
+        },
+        {
+          "id": "span-8cf0b09e8c7588a4cd657ef7",
+          "quote_sha256": "b1930989dacb77f707e78e2f27f91a7e3d482d769376f22dfa3655574a7f51a9"
+        },
+        {
+          "id": "span-a746db075fcfbadddc2afaf6",
+          "quote_sha256": "76e45025e17edc0a69cc368a43401d5d9a7db5d59da7795c3a7c372cff29ab9b"
+        }
+      ],
+      "supporting_quotes": [
+        {
+          "id": "span-f381db2b194fd41bcbe3d5dc",
+          "quote_sha256": "6df67f0a6590cf7a7426dae94ecfbc52d283f105babec7bd9ef32b06338f6ff9",
+          "quote": "At the final analysis, 45.9% of patients in the combination arm and 52.0% in the ipilimumab arm had died. The median OS was 84.9 months (95% CI 41.0 to NE) with the combination and 50.1 months (95% CI 32.0 to NE) with ipilimumab (HR 0.83; 95% CI 0.56 to 1.24, descriptive p=0.37) ( figure 2A ). The 1–5-year OS landmarks for the combination and ipilimumab arms, respectively, were 83.3% and 79.9%, 72.7% and 69.3%, 62.9% and 55.2%, 57.2% and 50.7%, and 54.7% and 48.4% ( table 1 ). Median OS was 56.7 months with the combination and 32.0 months with ipilimumab in patients aged ≥65 years (HR 0.59; 95% CI 0.35 to 1.00) ( figure 2B ).",
+          "source_id": "report-40319c4f43c4734d5bac6b44:main:d46c5b8e74042ce2"
+        },
+        {
+          "id": "span-8cf0b09e8c7588a4cd657ef7",
+          "quote_sha256": "b1930989dacb77f707e78e2f27f91a7e3d482d769376f22dfa3655574a7f51a9",
+          "quote": "<table-wrap position=\"float\" id=\"T1\" orientation=\"portrait\"><label>Table 1</label><caption><p>Response to therapy (intent-to-treat analysis set)</p></caption><table frame=\"hsides\" rules=\"groups\"><thead><tr><td align=\"left\" valign=\"bottom\" rowspan=\"2\" colspan=\"1\">Variable</td><td align=\"left\" valign=\"bottom\" rowspan=\"1\" colspan=\"3\">Primary analysis</td><td align=\"left\" valign=\"bottom\" rowspan=\"1\" colspan=\"1\">Final analysis</td><td align=\"left\" valign=\"bottom\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"bottom\" rowspan=\"1\" colspan=\"1\">T-VEC plus ipilimumab<break />(n=98)</td><td align=\"left\" valign=\"bottom\" rowspan=\"1\" colspan=\"1\">Ipilimumab<break />(n=100)</td><td align=\"left\" valign=\"bottom\" rowspan=\"1\" colspan=\"1\">T-VEC plus ipilimumab<break />(n=98)</td><td align=\"left\" valign=\"bottom\" rowspan=\"1\" colspan=\"1\">Ipilimumab<break />(n=100)</td><td align=\"left\" valign=\"bottom\" rowspan=\"1\" colspan=\"1\">Statistical results</td></tr></thead><tbody><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">Objective response rate (CR/PR)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">38 (39.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">18 (18.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">35 (35.7)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">16 (16.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">19.7 (6.8 to 31.9)*</td></tr><tr><td align=\"char\" char=\".\" valign=\"top\" rowspan=\"1\" colspan=\"1\">95% CI†</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">(26.3 to 46.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">(9.4 to 24.7)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">0.003‡</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">2.9 (1.5 to 5.7)§</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">Best overall response</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> CR</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">13 (13.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">7 (7.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">20 (20.4)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">6 (6.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> PR</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">25 (26.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">11 (11.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">15 (15.3)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">10 (10.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> SD</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">19 (19.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">24 (24.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">20 (20.4)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">24 (24.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> PD</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">31 (32.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">33 (33.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">30 (30.6)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">35 (35.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Unevaluable</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">4 (4.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">17 (17.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">7 (7.1)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">16 (16.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Not done</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">6 (6.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">8 (8.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">6 (6.1)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">9 (9.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">Disease control</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Disease control rate (CR/PR/SD)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">57 (58.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">42 (42.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">55 (56.1)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">40 (40.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">16.1 (1.5 to 29.9)*</td></tr><tr><td align=\"char\" char=\".\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> 95% CI†</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">(45.7 to 66.1)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">(30.3 to 50.3)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">0.033‡</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> </td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">1.9 (1.1 to 3.4)§</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">Durable response</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Durable response rate</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">33 (33.7)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">13 (13.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">20.7 (8.2 to 32.4)*</td></tr><tr><td align=\"char\" char=\".\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> 95% CI†</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">(24.4 to 43.9)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">(7.1 to 21.2)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">0.001‡</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> </td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">3.4 (1.7 to 7.0)§</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"3\">Progression-free survival (KM) (months)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Median (95% CI)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">8.2 (4.2 to 21.5)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">6.4 (3.2 to 16.5)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">13.5 (5.2 to 25.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">6.4 (3.8 to 17.1)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">OS</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Deaths</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">45 (45.9)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">52 (52.0)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Median¶ (95% CI), months</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">84.9 (41.0 to NE)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">50.1 (32.0 to NE)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Estimated OS at 12 months¶, % (95% CI)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">83.3 (74.2 to 89.4)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">79.9 (70.4 to 86.7)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">3.4 (−7.6 to 14.4)*</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Estimated OS at 24 months¶, % (95% CI)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">72.7 (62.5 to 80.5)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">69.3 (58.9 to 77.5)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">3.4 (−9.5 to 16.3)*</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Estimated OS at 36 months¶, % (95% CI)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">62.9 (52.3 to 71.7)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">55.2 (44.5 to 64.6)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">7.7 (−6.4 to 21.8)*</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Estimated OS at 48 months¶, % (95% CI)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">57.2 (46.5 to 66.5)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">50.7 (40.1 to 60.3)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">6.5 (−7.8 to 20.8)*</td></tr><tr><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\"> Estimated OS at 60 months¶, % (95% CI)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\" /><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">54.7 (43.9 to 64.2)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">48.4 (37.9 to 58.1)</td><td align=\"left\" valign=\"top\" rowspan=\"1\" colspan=\"1\">6.3 (−8.1 to 20.7)*</td></tr></tbody></table><table-wrap-foot><fn id=\"T1_FN1\"><p>Data presented as number (%) of patients unless specified otherwise.</p></fn><fn id=\"T1_FN2\"><p>Confirmed CR/PR/PD per modified irRC refers to the initiating CR/PR/PD of two consecutive CR/PR/PD that are ≥4 weeks apart. The PD without confirmation was not considered as confirmed PD with only one exception: if the last tumor assessment was an initialization of PD and patients had ended radiographic follow-up due to rapid clinical deterioration.</p></fn><fn id=\"T1_FN3\"><p>Durable response rate was defined as the incidence rate of patients with a duration of response per modified irRC of ≥6 months; 1 month=365.25/12 days.</p></fn><fn id=\"T1_FN4\"><p>Progression-free survival was defined as the time from randomization to the first confirmed disease progression per modified irRC, or death.</p></fn><fn id=\"T1_FN5\"><p>OS was defined as the time from randomization to death from any cause.</p></fn><fn id=\"T1_FN6\"><p>*Rate difference (95% CI) (T-VEC plus ipilimumab−ipilimumab).</p></fn><fn id=\"T1_FN7\"><p>†The Clopper-Pearson method was used to calculate exact CIs for binary end points. Wilson score method with continuity correction was used to calculate an approximate CI for between-arm differences in binary rates.</p></fn><fn id=\"T1_FN8\"><p>‡p value from the χ<sup>2</sup> test with continuity correction.</p></fn><fn id=\"T1_FN9\"><p>§Unadjusted OR (95% CI) obtained from the unstratified logistic regression model.</p></fn><fn id=\"T1_FN10\"><p>¶Calculated using the KM method.</p></fn><fn id=\"T1_FN11\"><p>CR, complete response; irRC, immune-related response criteria; KM, Kaplan-Meier; NE, not estimable; OS, overall survival; PD, progressive disease; PR, partial response; SD, stable disease; T-VEC, talimogene laherparepvec.</p></fn></table-wrap-foot></table-wrap>",
+          "source_id": "report-40319c4f43c4734d5bac6b44:main:d46c5b8e74042ce2"
+        },
+        {
+          "id": "span-a746db075fcfbadddc2afaf6",
+          "quote_sha256": "76e45025e17edc0a69cc368a43401d5d9a7db5d59da7795c3a7c372cff29ab9b",
+          "quote": "The planned sample size of approximately 200 patients was based on the comparison between the treatment arms for the primary efficacy end point of ORR using the intent-to-treat (ITT) analysis set using an overall two-sided 5% significance level to test the null hypothesis of no treatment effect. Efficacy was analyzed using the ITT set. Safety was analyzed using the safety analysis set, per the treatment received. Treatment effects on efficacy end points were evaluated and compared between the treatment arms according to the treatment as randomized. Summary statistics, including mean, standard deviation, median, and first and third quartiles, were provided for continuous variables. Frequency and percentage were summarized by treatment arm for the binary and categorical variables. For binary end points, exact binomial two-sided 95% CIs were provided. A χ 2 test with continuity correction was used as appropriate. Unstratified log-rank tests were performed to test for time-to-event end points, which were estimated using the Kaplan-Meier method. HRs and corresponding 95% CIs were estimated using unstratified Cox proportional hazards models. Data presented for secondary end points, including p values, are strictly descriptive. Statistical analyses are detailed in the online supplemental material .",
+          "source_id": "report-40319c4f43c4734d5bac6b44:main:d46c5b8e74042ce2"
+        }
+      ],
+      "reason": "The final-analysis Results section and Figure 2A report OS HR 0.83 (0.56–1.24). The 0.84 alternative accounts for confounding by subsequent anticancer medication. Prefer the main trial efficacy result by default; retain both for explicit user selection."
+    },
+    {
+      "id": "Dabrafenib-trametinib-prespecified-PFS",
+      "reviewed_on": "2026-11-14",
+      "pmid": "23020132",
+      "source_sha256": "35e45a8e40b13a17c89f0687fa59ad16ba7886d3237c5180f124b839e48148f7",
+      "review_binding_sha256": "60cdc952a4672adc9fad06fbd997588282e6b1ca82e8bba43b88b53408da2d12",
+      "effect_id": "e_pfs_c1502_vs_dabrafenib",
+      "population_id": "p_c",
+      "endpoint": "PFS",
+      "measure": "HR",
+      "estimate": 0.39,
+      "ci_lower": 0.25,
+      "ci_upper": 0.62,
+      "ci_level": 95,
+      "cutoff": "May 31, 2012",
+      "intervention_arm_id": "arm_c150_2",
+      "reference_arm_id": "arm_c_dabrafenib",
+      "evidence": [
+        {
+          "id": "span-d9053b9e3093738fcc5d2155",
+          "quote_sha256": "666d86bc91228c6afa3bb979f2deab726cee31fa2d2e857f049322a78a3377d5"
+        },
+        {
+          "id": "span-9cb29166a00bcd3e75bba50e",
+          "quote_sha256": "ec2b536e3f04e0e00ddccfc2b18f8f50286fd426fb96b5d4db990d3b3c8e45e9"
+        }
+      ],
+      "supporting_quotes": [
+        {
+          "id": "span-d9053b9e3093738fcc5d2155",
+          "quote_sha256": "666d86bc91228c6afa3bb979f2deab726cee31fa2d2e857f049322a78a3377d5",
+          "quote": "At the time of the prespecified efficacy analysis, the median follow-up for patients in part C was 14.1 months (range, 10.8 to 17.6). The median progression-free survival for patients in the combination 150/2 group was 9.4 months, as compared with 5.8 months with dabrafenib monotherapy (hazard ratio for progression or death, 0.39; 95% confidence interval [CI], 0.25 to 0.62; P<0.001) ( Table 3 and Fig. 1A ). The improvement in progression-free survival as assessed by an independent review committee was less pronounced (hazard ratio, 0.55; 95% CI, 0.33 to 0.93; P = 0.02) ( Fig. S4 in the Supplementary Appendix ). This difference in the hazard ratio is largely attributable to an imbalance in informative censoring, most commonly in cases in which new lesions were identified at the study center but were not considered to constitute definitive progression on central review. Less censoring occurred in the combination 150/2 group, in part because of additional follow-up beyond investigator-assessed progression. Such follow-up did not occur for patients who had disease progression while receiving monotherapy. These patients crossed over to receive combination therapy and could no longer be evaluated for disease progression while receiving their originally assigned therapy.",
+          "source_id": "report-b1d1ca1e849affbc4b0aae2f:main:7137525a0bfa27e1"
+        },
+        {
+          "id": "span-9cb29166a00bcd3e75bba50e",
+          "quote_sha256": "ec2b536e3f04e0e00ddccfc2b18f8f50286fd426fb96b5d4db990d3b3c8e45e9",
+          "quote": "Efficacy analyses were performed in the intention-to-treat population in part C. The prespecified rate of progression events required for the final analysis in part C was 70% across the three study groups, which was reached on May 31, 2012. We used Kaplan–Meier methods to estimate progression-free survival and compared the results among the three study groups with a log-rank test. The statistical analysis plan is available at NEJM.org.",
+          "source_id": "report-b1d1ca1e849affbc4b0aae2f:main:7137525a0bfa27e1"
+        }
+      ],
+      "reason": "The main Results section describes the prespecified efficacy analysis and reports investigator PFS HR 0.39 (0.25–0.62), also used in the abstract. HR 0.55 (0.33–0.93) is the independent-review assessment of the same comparison. Prefer the prespecified primary assessment by default; retain both for explicit user selection."
+    },
+    {
+      "id": "37845511-RFS-primary-efficacy-result",
+      "reviewed_on": "2026-11-14",
+      "pmid": "37845511",
+      "source_sha256": "8289b3bdb5b3175f824bd11a464ea3f05b5199032aba363bcf20228ebb2b0aff",
+      "review_binding_sha256": "85369fcfbdb3a206174faf2a8138157db9c6c8bbec7dfcadbb1de8e806e3b186",
+      "report_id": "report-cf2aac138f38dc8153be7da6",
+      "effect_id": "effect-rfs-primary",
+      "population_id": "pop-overall",
+      "endpoint": "RFS",
+      "measure": "HR",
+      "estimate": 0.42,
+      "ci_lower": 0.3,
+      "ci_upper": 0.59,
+      "ci_level": 95,
+      "cutoff": "2022-06-28",
+      "intervention_arm_id": "arm-nivolumab",
+      "reference_arm_id": "arm-placebo",
+      "evidence": [
+        {
+          "id": "span-bb4ca0ba3d4191fd5804eb5f",
+          "quote_sha256": "dbe53f8980ea05ae93e465dc111766bd7dd87ffa51486d40e219197eab8df6b4"
+        },
+        {
+          "id": "span-bda4cb3138b7fd6155f3784f",
+          "quote_sha256": "ff7fa1e9d91407a2e9517145a1846df57343bd572b1ed85bc69d837c54276daa"
+        },
+        {
+          "id": "span-d48b4df3112434b18344b8c1",
+          "quote_sha256": "67f64ad5904744df121f4a6d4df0b066a15cce4a1a037e8f286819ac383a3dec"
+        }
+      ],
+      "reason": "CheckMate 76K specifies investigator-assessed RFS including new primary melanomas as its primary endpoint. The primary intention-to-treat result is HR 0.42 (0.30–0.59) from the stratified Cox model. HR 0.39 is explicitly a sensitivity analysis excluding new primary melanomas; HR 0.43 is the unstratified overall benchmark in the subgroup forest plot.",
+      "supporting_quotes": [
+        {
+          "evidence_id": "span-bb4ca0ba3d4191fd5804eb5f",
+          "registry_id": "CE-85369fcfbdb3a206174faf2a-span-bb4ca0ba3d4191fd5804eb5f",
+          "block_id": "b00012",
+          "source_id": "report-cf2aac138f38dc8153be7da6:main:33ac1f0650372c06",
+          "supporting_quote": "At the time of data cutoff, 12.5% (66/526) of patients in the nivolumab group and 26.1% (69/264) of patients in the placebo group had recurrence or death, with an HR for RFS of 0.42 (95% CI: 0.30–0.59; P < 0.0001) and 12-month RFS rates of 89.0% (95% CI: 85.6–91.6) versus 79.4% (95% CI: 73.5–84.1) (Fig. 2a ). The improvement in RFS with nivolumab versus placebo was presumably driven by numerically fewer distant recurrences (4.9% (26/526) versus 11.7% (31/264)) and regional recurrences (2.1% (11/526) versus 7.6% (20/264), respectively) (Extended Data Table 1 ). Occurrence of new primary invasive melanomas at first recurrence was low at 0.8% (4/526) in the nivolumab group and 1.1% (3/264) in the placebo group (for melanoma in situ, it was 1.3% (7/526) and 1.9% (5/264), respectively), and a sensitivity analysis excluding new primary melanoma (invasive and in situ) RFS events was consistent with the primary analysis (HR = 0.39; 95% CI: 0.27–0.57; Supplementary Fig. 1 ). Sites of lesions/metastases at first recurrence for nivolumab versus placebo were most commonly found in skin (3.6% (19/526) versus 6.1% (16/264)), lungs (3.2% (17/526) versus 9.1% (24/264)) and lymph nodes (3.2% (17/526) versus 12.5% (33/264), respectively) (Extended Data Table 2 ); six patients in each group had an initial local or regional recurrence or new primary melanoma and went on to have a distant recurrence (Supplementary Fig. 2 ). Fig. 2 Kaplan–Meier estimates of RFS in the intention-to-treat population (a) and in patients with stage IIB disease (b) and stage IIC disease (c). a Based on Cox proportional hazards model stratified by AJCC 8th edition T category (T3b versus T4a versus T4b) with treatment group as a covariate. The two-sided log-rank P value was <0.0001. b Based on unstratified Cox proportional hazards model. mo, months; NA, not available; NR, not reached."
+        },
+        {
+          "evidence_id": "span-bda4cb3138b7fd6155f3784f",
+          "registry_id": "CE-85369fcfbdb3a206174faf2a-span-bda4cb3138b7fd6155f3784f",
+          "block_id": "b00041",
+          "source_id": "report-cf2aac138f38dc8153be7da6:main:33ac1f0650372c06",
+          "supporting_quote": "A two-sided log-rank test stratified by AJCC 8th edition T category was used to compare the treatments for the intention-to-treat populations for both RFS and DMFS. HRs and CIs were estimated using a stratified Cox proportional hazards model with treatment group as a covariate. Comparison for subgroups was estimated using an unstratified Cox proportional hazards model. Survival was estimated using the Kaplan–Meier product-limit method. Medians and rates were estimated, and corresponding 95% CIs were computed based on a log–log-transformed CI for the survivor function."
+        },
+        {
+          "evidence_id": "span-d48b4df3112434b18344b8c1",
+          "registry_id": "CE-85369fcfbdb3a206174faf2a-span-d48b4df3112434b18344b8c1",
+          "block_id": "b00035",
+          "source_id": "report-cf2aac138f38dc8153be7da6:main:33ac1f0650372c06",
+          "supporting_quote": "The primary endpoint for the trial was investigator-assessed RFS, defined as the time between randomization and the first recurrence event. Events included local, regional or distant recurrence; new primary melanomas (including in situ); and death due to any cause. Patients could continue on blinded adjuvant treatment with a diagnosis of melanoma in situ but not with an invasive new primary melanoma. Imaging was required every 26 weeks for the first 3 years and annually in years 4 and 5. Tumor assessments were performed using contrast-enhanced computed tomography of the chest, abdomen, pelvis and all other relevant sites based on known or suspected disease sites (slice thickness ≤5 mm, with no intervening gaps). Cytological and/or histological evidence of recurrence was required in all cases unless a biopsy was deemed to be clinically unsafe or not feasible by the investigator."
+        }
+      ],
+      "source_path": "data/r3/quantitative_20261108/sources/37845511/8289b3bdb5b3175f824bd11a464ea3f05b5199032aba363bcf20228ebb2b0aff.json",
+      "source_file_sha256": "49b5e12b6f8e12dbb3ed2a664840f60266ee4f4e3f84ed4863b4bc99d7bf66f4"
+    },
+    {
+      "id": "30010756-OS-primary-efficacy-result",
+      "reviewed_on": "2026-11-14",
+      "pmid": "30010756",
+      "source_sha256": "c560a958ec7ca1dd3f40ff7467091d504fb8d2fa2156d9668d8193b726c21392",
+      "review_binding_sha256": "28507c9b402a709f03c1285b2fa6e62b3ac89df8359168b3cf4e39bedf41fdc0",
+      "report_id": "report-ec6d40e1d9bf142c7c5da095",
+      "effect_id": "eff_os_unadjusted",
+      "population_id": "pop_all",
+      "endpoint": "OS",
+      "measure": "HR",
+      "estimate": 0.98,
+      "ci_lower": 0.82,
+      "ci_upper": 1.16,
+      "ci_level": 95,
+      "cutoff": "median follow-up 6.4 years",
+      "intervention_arm_id": "arm_bev_all",
+      "reference_arm_id": "arm_obs_all",
+      "evidence": [
+        {
+          "id": "span-b6f7112bb24a309409317dd3",
+          "quote_sha256": "2a97cf27bed8b6c93b0b318b1196ad4d0e47f99610ac7ab1e26b77bef0fcec06"
+        },
+        {
+          "id": "span-8f0efeef654255867e3489ec",
+          "quote_sha256": "4d2c4e6ad4c0d0c60e55d1a7d07faf195679862ce3f902916bde3b9bedff7a5e"
+        }
+      ],
+      "reason": "AVAST-M identifies the pre-planned overall-survival analysis as its primary endpoint and reports HR 0.98 (0.82–1.16) as the trial-arm efficacy comparison in the abstract and Figure 1A. HR 1.01 is the alternative treatment coefficient in Table 2 multivariable prognostic analysis.",
+      "supporting_quotes": [
+        {
+          "evidence_id": "span-b6f7112bb24a309409317dd3",
+          "registry_id": "CE-28507c9b402a709f03c1285b-span-b6f7112bb24a309409317dd3",
+          "block_id": "b00019",
+          "source_id": "report-ec6d40e1d9bf142c7c5da095:main:6ce6dd652187c1bf",
+          "supporting_quote": "There was no significant difference in OS between trial arms (HR for bevacizumab = 0.98; CI 0.82–1.16; P = 0.78, Figure 1 A). The 5-year OS rate was 64% for both arms (CI 61%–68% for bevacizumab, 60%–67% for observation). Multivariate analysis identified disease stage, ECOG performance status, primary melanoma Breslow thickness and sex as independently prognostic of OS; trial arm remained non-significant ( P = 0.92; Table 2 ). There was no statistically significant interaction between any of these variables and trial arm (Figure 2 ). Table 2. Multivariate analysis for overall survival for all trial patients and for the subgroup of patients for whom BRAF mutation status was assessed All trial patients BRAF mutation status assessed All trial patients Deaths Hazard ratio (95% CI) BRAF mutant BRAF WT Deaths Hazard ratio (95% CI) N (%) N (%) N (%) N (%) N (%) Total 1343 303 379 Sex P = 0.003 P = 0.19 Male 753 (56%) 316 (42%) 1.31 (1.10-1.57) 156 (51%) 230 (61%) 167 (43%) 1.18 (0.92-1.51) Females 590 (44%) 199 (34%) 1.00 147 (49%) 149 (39%) 113 (38%) 1.00 Breslow thickness of primary melanoma P = 0.0003 P = 0.004 < 2.0 mm 399 (30%) 140 (35%) 1.00 126 (42%) 87 (23%) 83 (39%) 1.00 >2–4 mm 405 (30%) 149 (37%) 1.12 (0.89-1.42) 94 (31%) 108 (29%) 81 (40%) 1.16 (0.85-1.59) >4 mm 438 (33%) 194 (44%) 1.53 (1.19-1.96) 65 (21%) 153 (40%) 101 (46%) 1.63 (1.16-2.27) Unknown 101 (7%) 32 (32%) 0.75 (0.51-1.10) 18 (6%) 31 (8%) 15 (31%) 0.67 (0.38-1.17) AJCC disease stage a P < 0.0001 P < 0.0001 II 364 (27%) 119 (33%) 1.00 52 (17%) 117 (31%) 55 (33%) 1.00 IIIA 195 (15%) 41 (21%) 0.78 (0.53-1.48) 56 (19%) 29 (7%) 23 (27%) 1.00 (0.59-1.70) IIIB 495 (37%) 210 (42%) 1.89 (1.47-2.44) 130 (43%) 147 (39%) 127 (46%) 2.18 (1.53-3.12) IIIC 289 (21%) 145 (50%) 2.27 (1.74-2.96) 65 (21%) 86 (23%) 75 (50%) 2.40 (1.65-3.51) ECOG performance status P < 0.0001 P = 0.001 0 1195 (89%) 436 (36%) 1.00 269 (89%) 345 (91%) 240 (39%) 1.00 1 146 (11%) 78 (53%) 1.64 (1.29-2.10) 34 (11%) 33 (9%) 39 (58%) 1.75 (1.24-2.46) Trial arm P = 0.92 P = 0.83 Bevacizumab 671 (50%) 254 (38%) 1.01 (0.85-1.20) 132 (44%) 184 (49%) 128 (41%) 1.03 (0.81-1.30) Observation 672 (50%) 261 (39%) 1.00 171 (56%) 195 (51%) 152 (42%) 1.00 BRAF status P = 0.08 BRAF mutant 303 (100%) 0 129 (43%) 1.24 (0.97-1.59) BRAF WT 0 379 (100%) 151 (40%) 1.00 a AJCC 7th edition."
+        },
+        {
+          "evidence_id": "span-8f0efeef654255867e3489ec",
+          "registry_id": "CE-28507c9b402a709f03c1285b-span-8f0efeef654255867e3489ec",
+          "block_id": "b00013",
+          "source_id": "report-ec6d40e1d9bf142c7c5da095:main:6ce6dd652187c1bf",
+          "supporting_quote": "Patients ( n = 1320; 660 patients per arm) were required to detect an 8% increase in the 5-year OS rate (primary end point) from 40% to 48% with 85% power and a 5% significance level, equating to an HR of 0.80. OS was defined as the time from date of randomisation until date of death from any cause, or censored at the last known date alive. Analysis was follow-up driven and pre-planned when all patients had been on study for 5 years."
+        }
+      ],
+      "source_path": "data/r3/quantitative_20261108/sources/30010756/c560a958ec7ca1dd3f40ff7467091d504fb8d2fa2156d9668d8193b726c21392.json",
+      "source_file_sha256": "4abf8a44f1c7da93c2b500df173cfc49483051a7477b046b842792c43541c059"
+    },
+    {
+      "id": "30010756-DFS-primary-efficacy-result",
+      "reviewed_on": "2026-11-14",
+      "pmid": "30010756",
+      "source_sha256": "c560a958ec7ca1dd3f40ff7467091d504fb8d2fa2156d9668d8193b726c21392",
+      "review_binding_sha256": "28507c9b402a709f03c1285b2fa6e62b3ac89df8359168b3cf4e39bedf41fdc0",
+      "report_id": "report-ec6d40e1d9bf142c7c5da095",
+      "effect_id": "eff_dfi_unadjusted",
+      "population_id": "pop_all",
+      "endpoint": "DFS",
+      "measure": "HR",
+      "estimate": 0.85,
+      "ci_lower": 0.74,
+      "ci_upper": 0.99,
+      "ci_level": 95,
+      "cutoff": "median follow-up 6.4 years",
+      "intervention_arm_id": "arm_bev_all",
+      "reference_arm_id": "arm_obs_all",
+      "evidence": [
+        {
+          "id": "span-da08a5203a95e93b97ad6763",
+          "quote_sha256": "6ae1bc0cddef7471f8a353ed8a1c39a24f9e110995b614ee2686f210a0235dac"
+        }
+      ],
+      "reason": "For the secondary disease-free-interval endpoint, AVAST-M reports HR 0.85 (0.74–0.99) as the main treatment comparison in the abstract and Figure 1C, then separately reports persistence after stratification-variable adjustment with HR 0.86. Primary-analysis preference here means the main reported efficacy result for this endpoint, not that DFI was the trial primary endpoint.",
+      "supporting_quotes": [
+        {
+          "evidence_id": "span-da08a5203a95e93b97ad6763",
+          "registry_id": "CE-28507c9b402a709f03c1285b-span-da08a5203a95e93b97ad6763",
+          "block_id": "b00023",
+          "source_id": "report-ec6d40e1d9bf142c7c5da095:main:6ce6dd652187c1bf",
+          "supporting_quote": "The significant improvement in DFI for those on the bevacizumab arm reported at the interim analysis was maintained over time (HR = 0.85; CI 0.74–0.99; P = 0.03, Figure 1 C) and persisted after adjustment for the stratification variables (HR = 0.86; CI 0.74–0.99; P = 0.04). Patients receiving bevacizumab had a higher 5-year DFI rate (51%; CI 47%–55%) compared with the observation arm (45%; CI 42%–49%). The median DFI for patients in the bevacizumab arm was 63 months (CI, 44 months to limit not reached) and 37 months (CI 30–50 months) for those in the observation arm."
+        }
+      ],
+      "source_path": "data/r3/quantitative_20261108/sources/30010756/c560a958ec7ca1dd3f40ff7467091d504fb8d2fa2156d9668d8193b726c21392.json",
+      "source_file_sha256": "4abf8a44f1c7da93c2b500df173cfc49483051a7477b046b842792c43541c059"
+    }
+  ]
+}

@@ -1,0 +1,669 @@
+{
+  "producer": "data/proposed_changes/study_table_regimens_20261105/before/website/dist/treatment_groups.js",
+  "sha256": "8fc63a6f821264710f34de1e08a13d092db7337d5c9263d2dcfa351a0270f868",
+  "definitions": [
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Vemurafenib plus cobimetinib (coBRIM)",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "Vemurafenib plus cobimetinib (coBRIM)",
+        "children": [
+          {
+            "type": "agent",
+            "raw_label": "Vemurafenib",
+            "name": "Vemurafenib",
+            "agent_id": "vemurafenib",
+            "class_id": "braf",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "unknown",
+            "raw_label": "cobimetinib (coBRIM)",
+            "name": "cobimetinib (coBRIM)",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Dabrafenib plus trametinib (COMBI-v)",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "Dabrafenib plus trametinib (COMBI-v)",
+        "children": [
+          {
+            "type": "agent",
+            "raw_label": "Dabrafenib",
+            "name": "Dabrafenib",
+            "agent_id": "dabrafenib",
+            "class_id": "braf",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "class",
+            "raw_label": "trametinib (COMBI-v)",
+            "name": "Trametinib (COMBI-v)",
+            "agent_id": null,
+            "class_id": "mek",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Single arm: pembrolizumab with carboplatin and paclitaxel (CP)",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "Single arm: pembrolizumab with carboplatin and paclitaxel (CP)",
+        "children": [
+          {
+            "type": "unknown",
+            "raw_label": "Single arm: pembrolizumab",
+            "name": "Single arm: pembrolizumab",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "agent",
+            "raw_label": "carboplatin",
+            "name": "Carboplatin",
+            "agent_id": "carboplatin",
+            "class_id": "chemotherapy",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "unknown",
+            "raw_label": "paclitaxel (CP)",
+            "name": "paclitaxel (CP)",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Nivolumab or pembrolizumab",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "or",
+        "raw_label": "Nivolumab or pembrolizumab",
+        "children": [
+          {
+            "type": "agent",
+            "raw_label": "Nivolumab",
+            "name": "Nivolumab",
+            "agent_id": "nivolumab",
+            "class_id": "pd1",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "agent",
+            "raw_label": "pembrolizumab",
+            "name": "Pembrolizumab",
+            "agent_id": "pembrolizumab",
+            "class_id": "pd1",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Ipilimumab 3 mg/kg + nivolumab 1 mg/kg",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "Ipilimumab 3 mg/kg + nivolumab 1 mg/kg",
+        "children": [
+          {
+            "type": "agent",
+            "raw_label": "Ipilimumab 3 mg/kg",
+            "name": "Ipilimumab",
+            "agent_id": "ipilimumab",
+            "class_id": "ctla4",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": "3 mg/kg",
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [
+                "3 mg/kg"
+              ],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "agent",
+            "raw_label": "nivolumab 1 mg/kg",
+            "name": "Nivolumab",
+            "agent_id": "nivolumab",
+            "class_id": "pd1",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": "1 mg/kg",
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [
+                "1 mg/kg"
+              ],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Ipilimumab 3 mg/kg + nivolumab 1 mg/kg",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "agent",
+        "raw_label": "Ipilimumab 3 mg/kg",
+        "name": "Ipilimumab",
+        "agent_id": "ipilimumab",
+        "class_id": "ctla4",
+        "class_source": "curated_vocabulary",
+        "reported_class": null,
+        "dose": "3 mg/kg",
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [
+            "3 mg/kg"
+          ],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": []
+      },
+      "placebo": false,
+      "derivation": {
+        "kind": "concurrent_agent_subset",
+        "source_root": {
+          "type": "and",
+          "raw_label": "Ipilimumab 3 mg/kg + nivolumab 1 mg/kg",
+          "children": [
+            {
+              "type": "agent",
+              "raw_label": "Ipilimumab 3 mg/kg",
+              "name": "Ipilimumab",
+              "agent_id": "ipilimumab",
+              "class_id": "ctla4",
+              "class_source": "curated_vocabulary",
+              "reported_class": null,
+              "dose": "3 mg/kg",
+              "route": null,
+              "schedule": null,
+              "metadata_literals": {
+                "dose": [
+                  "3 mg/kg"
+                ],
+                "route": [],
+                "schedule": []
+              },
+              "evidence_ids": []
+            },
+            {
+              "type": "agent",
+              "raw_label": "nivolumab 1 mg/kg",
+              "name": "Nivolumab",
+              "agent_id": "nivolumab",
+              "class_id": "pd1",
+              "class_source": "curated_vocabulary",
+              "reported_class": null,
+              "dose": "1 mg/kg",
+              "route": null,
+              "schedule": null,
+              "metadata_literals": {
+                "dose": [
+                  "1 mg/kg"
+                ],
+                "route": [],
+                "schedule": []
+              },
+              "evidence_ids": []
+            }
+          ],
+          "evidence_ids": []
+        },
+        "selected_agent_ids": [
+          "ipilimumab"
+        ]
+      }
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Single-arm trial",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "class",
+        "raw_label": "Single-arm trial",
+        "name": "No comparator",
+        "agent_id": null,
+        "class_id": "no-comparator",
+        "class_source": "curated_vocabulary",
+        "reported_class": null,
+        "dose": null,
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": [],
+        "single_arm_trial": true
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Combined nivolumab",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "unknown",
+        "raw_label": "Combined nivolumab",
+        "name": "Combined nivolumab",
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "reported_class": null,
+        "dose": null,
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Melanoma cohort abemaciclib monotherapy",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "unknown",
+        "raw_label": "Melanoma cohort abemaciclib monotherapy",
+        "name": "Melanoma cohort abemaciclib",
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "reported_class": null,
+        "dose": null,
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "NSCLC cohort abemaciclib treatment, pooled regimens",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "NSCLC cohort abemaciclib treatment, pooled regimens",
+        "children": [
+          {
+            "type": "unknown",
+            "raw_label": "NSCLC cohort abemaciclib treatment",
+            "name": "NSCLC cohort abemaciclib treatment",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "unknown",
+            "raw_label": "pooled regimens",
+            "name": "pooled regimens",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "raw_label": "Single-agent nivolumab or pembrolizumab, pooled",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "legacy-C",
+        "role": "comparator",
+        "scope": {
+          "report_id": "legacy-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "or",
+        "raw_label": "Single-agent nivolumab or pembrolizumab, pooled",
+        "children": [
+          {
+            "type": "agent",
+            "raw_label": "Single-agent nivolumab",
+            "name": "Nivolumab",
+            "agent_id": "nivolumab",
+            "class_id": "pd1",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "and",
+            "raw_label": "pembrolizumab, pooled",
+            "children": [
+              {
+                "type": "agent",
+                "raw_label": "pembrolizumab",
+                "name": "Pembrolizumab",
+                "agent_id": "pembrolizumab",
+                "class_id": "pd1",
+                "class_source": "curated_vocabulary",
+                "reported_class": null,
+                "dose": null,
+                "route": null,
+                "schedule": null,
+                "metadata_literals": {
+                  "dose": [],
+                  "route": [],
+                  "schedule": []
+                },
+                "evidence_ids": []
+              },
+              {
+                "type": "unknown",
+                "raw_label": "pooled",
+                "name": "pooled",
+                "agent_id": null,
+                "class_id": null,
+                "class_source": null,
+                "reported_class": null,
+                "dose": null,
+                "route": null,
+                "schedule": null,
+                "metadata_literals": {
+                  "dose": [],
+                  "route": [],
+                  "schedule": []
+                },
+                "evidence_ids": []
+              }
+            ],
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    }
+  ]
+}

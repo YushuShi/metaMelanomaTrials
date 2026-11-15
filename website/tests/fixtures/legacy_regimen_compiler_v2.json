@@ -1,0 +1,513 @@
+{
+  "producer": "data/proposed_changes/labels_trials_wald_20261106/before/website/dist/treatment_groups.js",
+  "sha256": "6883396a77f3ed9a5afbc3a1e960b7c27f0e74c88aa09533bb1a2247c0ac0a20",
+  "definitions": [
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "High-dose interferon alfa-2b (HDI)",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "unknown",
+        "raw_label": "High-dose interferon alfa-2b (HDI)",
+        "name": "interferon alfa-2b (HDI)",
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "reported_class": null,
+        "dose": null,
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "Ipilimumab 3 mg/kg (ipi3)",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "unknown",
+        "raw_label": "Ipilimumab 3 mg/kg (ipi3)",
+        "name": "Ipilimumab (ipi3)",
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "reported_class": null,
+        "dose": "3 mg/kg",
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [
+            "3 mg/kg"
+          ],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "Ipilimumab 10 mg/kg (ipi10)",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "unknown",
+        "raw_label": "Ipilimumab 10 mg/kg (ipi10)",
+        "name": "Ipilimumab (ipi10)",
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "reported_class": null,
+        "dose": "10 mg/kg",
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [
+            "10 mg/kg"
+          ],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "DAB+TRAM first-line comparator",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "DAB+TRAM first-line comparator",
+        "children": [
+          {
+            "type": "unknown",
+            "raw_label": "DAB",
+            "name": "DAB",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "unknown",
+            "raw_label": "TRAM first-line comparator",
+            "name": "TRAM first-line comparator",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "ENCO+BINI",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "ENCO+BINI",
+        "children": [
+          {
+            "type": "unknown",
+            "raw_label": "ENCO",
+            "name": "ENCO",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "unknown",
+            "raw_label": "BINI",
+            "name": "BINI",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "ATEZO+VEM+COBI cohort",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "ATEZO+VEM+COBI cohort",
+        "children": [
+          {
+            "type": "unknown",
+            "raw_label": "ATEZO",
+            "name": "ATEZO",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "unknown",
+            "raw_label": "VEM",
+            "name": "VEM",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "unknown",
+            "raw_label": "COBI cohort",
+            "name": "COBI cohort",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "NIVO+RELA",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "and",
+        "raw_label": "NIVO+RELA",
+        "children": [
+          {
+            "type": "unknown",
+            "raw_label": "NIVO",
+            "name": "NIVO",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "unknown",
+            "raw_label": "RELA",
+            "name": "RELA",
+            "agent_id": null,
+            "class_id": null,
+            "class_source": null,
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "DAB/TRAM",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "unknown",
+        "raw_label": "DAB/TRAM",
+        "name": "DAB/TRAM",
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "reported_class": null,
+        "dose": null,
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "Nivolumab without ipilimumab",
+      "role": "negated",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "unknown",
+        "raw_label": "Nivolumab without ipilimumab",
+        "name": "Nivolumab without ipilimumab",
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "reported_class": null,
+        "dose": null,
+        "route": null,
+        "schedule": null,
+        "metadata_literals": {
+          "dose": [],
+          "route": [],
+          "schedule": []
+        },
+        "evidence_ids": []
+      },
+      "placebo": false
+    },
+    {
+      "schema_version": 1,
+      "record_kind": "regimen_definition",
+      "origin": "legacy_label",
+      "compiler_version": 2,
+      "raw_label": "Nivolumab followed by ipilimumab",
+      "role": "actual_regimen",
+      "source_binding": {
+        "comparison_id": "compiler-v2-C",
+        "role": "intervention",
+        "scope": {
+          "report_id": "compiler-v2-R"
+        }
+      },
+      "arm_id": null,
+      "evidence_ids": [],
+      "root": {
+        "type": "sequential",
+        "raw_label": "Nivolumab followed by ipilimumab",
+        "children": [
+          {
+            "type": "agent",
+            "raw_label": "Nivolumab",
+            "name": "Nivolumab",
+            "agent_id": "nivolumab",
+            "class_id": "pd1",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          },
+          {
+            "type": "agent",
+            "raw_label": "ipilimumab",
+            "name": "Ipilimumab",
+            "agent_id": "ipilimumab",
+            "class_id": "ctla4",
+            "class_source": "curated_vocabulary",
+            "reported_class": null,
+            "dose": null,
+            "route": null,
+            "schedule": null,
+            "metadata_literals": {
+              "dose": [],
+              "route": [],
+              "schedule": []
+            },
+            "evidence_ids": []
+          }
+        ],
+        "evidence_ids": []
+      },
+      "placebo": false
+    }
+  ]
+}

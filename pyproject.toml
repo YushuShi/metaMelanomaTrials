@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metamelanoma-trials"
+version = "1.0.0"
+description = "Melanoma clinical evidence screening, extraction and local review"
+requires-python = ">=3.11"
+dependencies = ["pypdf"]
+
+[project.scripts]
+metamelanoma = "metamelanoma.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

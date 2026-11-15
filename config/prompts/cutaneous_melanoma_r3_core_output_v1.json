@@ -1,0 +1,637 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/report"
+      },
+      "minItems": 1,
+      "maxItems": 1
+    }
+  },
+  "required": [
+    "results"
+  ],
+  "$defs": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "block_id": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "supporting_quote": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "block_id",
+        "locator",
+        "supporting_quote"
+      ]
+    },
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "not_reported",
+            "not_applicable",
+            "unclear"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor"
+          }
+        }
+      },
+      "required": [
+        "status",
+        "text",
+        "evidence"
+      ]
+    },
+    "trial": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "trial_under_analysis",
+            "background_mention",
+            "unclear"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor"
+          }
+        }
+      },
+      "required": [
+        "identifier",
+        "role",
+        "evidence"
+      ]
+    },
+    "arm": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "arm_id": {
+          "type": "string"
+        },
+        "label": {
+          "$ref": "#/$defs/text"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "experimental",
+            "comparator",
+            "unclear"
+          ]
+        },
+        "complete_regimen": {
+          "$ref": "#/$defs/text"
+        },
+        "sample_size_description": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "arm_id",
+        "label",
+        "role",
+        "complete_regimen",
+        "sample_size_description"
+      ]
+    },
+    "population": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "population_id": {
+          "type": "string"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "parent_population_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "arm_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "melanoma_population": {
+          "type": "string",
+          "enum": [
+            "cutaneous_only",
+            "cutaneous_subgroup",
+            "mixed_melanoma",
+            "unspecified_melanoma",
+            "noncutaneous",
+            "not_reported"
+          ]
+        },
+        "subgroup_variables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "independence_status": {
+          "type": "string",
+          "enum": [
+            "unverified"
+          ]
+        }
+      },
+      "required": [
+        "population_id",
+        "description",
+        "parent_population_id",
+        "arm_ids",
+        "melanoma_population",
+        "subgroup_variables",
+        "independence_status"
+      ]
+    },
+    "endpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endpoint_id": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string",
+          "enum": [
+            "overall_survival",
+            "progression_free_survival",
+            "recurrence",
+            "response",
+            "adverse_events",
+            "other"
+          ]
+        },
+        "definition": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "family",
+        "definition"
+      ]
+    },
+    "model_group": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "group_id": {
+          "type": "string"
+        },
+        "execution_status": {
+          "type": "string",
+          "enum": [
+            "actual"
+          ]
+        },
+        "population_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "endpoint_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contrast_type": {
+          "type": "string",
+          "enum": [
+            "treatment_comparison",
+            "single_arm",
+            "biomarker_association",
+            "interaction",
+            "other"
+          ]
+        },
+        "experimental_arm_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "comparator_arm_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contrast_descriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "grouping_basis": {
+          "$ref": "#/$defs/text"
+        },
+        "model": {
+          "$ref": "#/$defs/text"
+        },
+        "formula": {
+          "$ref": "#/$defs/text"
+        },
+        "adjusted_status": {
+          "type": "string",
+          "enum": [
+            "adjusted",
+            "unadjusted",
+            "not_reported",
+            "unclear"
+          ]
+        },
+        "adjustment_covariates_status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "not_reported",
+            "not_applicable",
+            "unclear"
+          ]
+        },
+        "adjustment_covariates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "analysis_strata_status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "not_reported",
+            "not_applicable",
+            "unclear"
+          ]
+        },
+        "analysis_strata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "randomization_strata_status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "not_reported",
+            "not_applicable",
+            "unclear"
+          ]
+        },
+        "randomization_strata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "subgroup_variables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "adjustment_structure": {
+          "$ref": "#/$defs/text"
+        },
+        "confounding_method": {
+          "$ref": "#/$defs/text"
+        },
+        "cutoff_definition": {
+          "$ref": "#/$defs/text"
+        },
+        "biomarker_timepoint": {
+          "$ref": "#/$defs/text"
+        },
+        "data_cutoff": {
+          "$ref": "#/$defs/text"
+        },
+        "estimand": {
+          "$ref": "#/$defs/text"
+        },
+        "null_hypothesis": {
+          "$ref": "#/$defs/text"
+        },
+        "missing_data_handling": {
+          "$ref": "#/$defs/text"
+        },
+        "prespecification": {
+          "$ref": "#/$defs/text"
+        },
+        "source_model_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor"
+          }
+        },
+        "verified": {
+          "type": "boolean",
+          "const": false
+        },
+        "pooling_eligible": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "group_id",
+        "execution_status",
+        "population_id",
+        "endpoint_id",
+        "contrast_type",
+        "experimental_arm_ids",
+        "comparator_arm_ids",
+        "contrast_descriptions",
+        "grouping_basis",
+        "model",
+        "formula",
+        "adjusted_status",
+        "adjustment_covariates_status",
+        "adjustment_covariates",
+        "analysis_strata_status",
+        "analysis_strata",
+        "randomization_strata_status",
+        "randomization_strata",
+        "subgroup_variables",
+        "adjustment_structure",
+        "confounding_method",
+        "cutoff_definition",
+        "biomarker_timepoint",
+        "data_cutoff",
+        "estimand",
+        "null_hypothesis",
+        "missing_data_handling",
+        "prespecification",
+        "source_model_evidence",
+        "verified",
+        "pooling_eligible"
+      ]
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "cutaneous_melanoma_r3_core_v1"
+        },
+        "report_id": {
+          "type": "string"
+        },
+        "review_status": {
+          "type": "string",
+          "enum": [
+            "eligible",
+            "ineligible",
+            "uncertain"
+          ]
+        },
+        "review_reason": {
+          "type": "string"
+        },
+        "review_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor"
+          }
+        },
+        "melanoma_population": {
+          "type": "string",
+          "enum": [
+            "cutaneous_only",
+            "cutaneous_subgroup",
+            "mixed_melanoma",
+            "unspecified_melanoma",
+            "noncutaneous",
+            "not_reported"
+          ]
+        },
+        "noncutaneous_subtypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "source_availability": {
+          "type": "string",
+          "enum": [
+            "full_text",
+            "abstract_only",
+            "supporting_only"
+          ]
+        },
+        "final_full_text_eligibility_verified": {
+          "type": "boolean",
+          "const": false
+        },
+        "publication_status": {
+          "type": "string",
+          "enum": [
+            "retracted",
+            "corrected_republication",
+            "preprint",
+            "other",
+            "not_reported"
+          ]
+        },
+        "publication_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor"
+          }
+        },
+        "population_description": {
+          "$ref": "#/$defs/text"
+        },
+        "basic_design": {
+          "$ref": "#/$defs/text"
+        },
+        "design_type": {
+          "type": "string",
+          "enum": [
+            "randomized_controlled",
+            "single_arm",
+            "nonrandomized_comparative",
+            "pooled_trial_analysis",
+            "biomarker_analysis",
+            "observational_treatment",
+            "other",
+            "not_reported"
+          ]
+        },
+        "stage": {
+          "$ref": "#/$defs/text"
+        },
+        "treatment_line": {
+          "$ref": "#/$defs/text"
+        },
+        "sample_size_description": {
+          "$ref": "#/$defs/text"
+        },
+        "regimen_scope": {
+          "type": "string",
+          "enum": [
+            "core",
+            "deferred_concurrent_cytotoxic",
+            "separate_endocrine_only",
+            "unclear"
+          ]
+        },
+        "regimen_scope_reason": {
+          "$ref": "#/$defs/text"
+        },
+        "trial_identifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/trial"
+          }
+        },
+        "arms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/arm"
+          }
+        },
+        "analysis_populations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/population"
+          }
+        },
+        "endpoint_definitions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/endpoint"
+          }
+        },
+        "model_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/model_group"
+          }
+        },
+        "planned_model_notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "overlap_clues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "missing_information": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pooling_exclusion_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "full_framework_followup_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "verified": {
+          "type": "boolean",
+          "const": false
+        },
+        "validated": {
+          "type": "boolean",
+          "const": false
+        },
+        "pooling_eligible": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "report_id",
+        "review_status",
+        "review_reason",
+        "review_evidence",
+        "melanoma_population",
+        "noncutaneous_subtypes",
+        "source_availability",
+        "final_full_text_eligibility_verified",
+        "publication_status",
+        "publication_evidence",
+        "population_description",
+        "basic_design",
+        "design_type",
+        "stage",
+        "treatment_line",
+        "sample_size_description",
+        "regimen_scope",
+        "regimen_scope_reason",
+        "trial_identifiers",
+        "arms",
+        "analysis_populations",
+        "endpoint_definitions",
+        "model_groups",
+        "planned_model_notes",
+        "overlap_clues",
+        "missing_information",
+        "pooling_exclusion_reasons",
+        "full_framework_followup_required",
+        "verified",
+        "validated",
+        "pooling_eligible"
+      ]
+    }
+  }
+}

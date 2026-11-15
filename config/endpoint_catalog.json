@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "version": "2026-10-28.1",
+  "status": "schema_prepared_no_extraction_performed",
+  "endpoint_families": [
+    {
+      "family_id": "overall_survival",
+      "label": "Overall Survival",
+      "endpoint_types": [
+        "overall_survival"
+      ],
+      "required_definition_fields": [
+        "time_origin",
+        "analysis_population",
+        "hr",
+        "confidence_interval",
+        "confidence_level",
+        "event_count_by_arm",
+        "arm_sizes",
+        "control_survival",
+        "landmark_time",
+        "median_survival",
+        "follow_up"
+      ],
+      "interchangeable": false
+    },
+    {
+      "family_id": "progression_free_survival",
+      "label": "Progression Free Survival",
+      "endpoint_types": [
+        "progression_free_survival",
+        "immune_modified_progression_free_survival",
+        "time_to_progression"
+      ],
+      "required_definition_fields": [
+        "verbatim_definition",
+        "time_origin",
+        "criteria",
+        "criteria_version",
+        "immune_modified_variant",
+        "assessor",
+        "scan_schedule",
+        "censoring",
+        "analysis_population",
+        "effect_estimate",
+        "events_by_arm",
+        "control_survival"
+      ],
+      "interchangeable": false
+    },
+    {
+      "family_id": "recurrence",
+      "label": "Recurrence",
+      "endpoint_types": [
+        "disease_free_survival",
+        "invasive_disease_free_survival",
+        "recurrence_free_survival",
+        "event_free_survival",
+        "distant_recurrence",
+        "local_recurrence",
+        "locoregional_recurrence",
+        "biochemical_recurrence",
+        "fixed_time_recurrence_probability"
+      ],
+      "required_definition_fields": [
+        "verbatim_definition",
+        "event_components",
+        "death_is_event",
+        "time_origin",
+        "competing_events",
+        "statistical_measure",
+        "statistical_model",
+        "time_horizon"
+      ],
+      "interchangeable": false
+    },
+    {
+      "family_id": "adverse_events",
+      "label": "Adverse Events",
+      "endpoint_types": [
+        "all_grade_adverse_event",
+        "high_grade_adverse_event",
+        "serious_adverse_event",
+        "fatal_adverse_event",
+        "adverse_event_treatment_discontinuation",
+        "immune_related_adverse_event"
+      ],
+      "required_definition_fields": [
+        "event_term",
+        "grade_threshold",
+        "grading_system",
+        "grading_version",
+        "serious_or_severe",
+        "causality_class",
+        "observation_window",
+        "exposure_duration",
+        "safety_denominator_by_arm",
+        "participants_with_event",
+        "event_episode_count"
+      ],
+      "interchangeable": false
+    },
+    {
+      "family_id": "response",
+      "label": "Response",
+      "endpoint_types": [
+        "objective_response",
+        "complete_response",
+        "disease_control",
+        "pathological_complete_response",
+        "major_pathological_response",
+        "psa_response",
+        "other_disease_specific_response",
+        "duration_of_response"
+      ],
+      "required_definition_fields": [
+        "response_definition",
+        "responders_by_arm",
+        "exact_denominator_by_arm",
+        "criteria",
+        "criteria_version",
+        "confirmation_required",
+        "assessor",
+        "timing",
+        "analysis_population",
+        "duration_of_response_time_origin"
+      ],
+      "interchangeable": false
+    }
+  ],
+  "common_provenance_fields": [
+    "source_id",
+    "source_location",
+    "report_id",
+    "report_version_id",
+    "trial_id",
+    "cohort_id",
+    "comparison_id",
+    "population_id",
+    "endpoint_definition_id",
+    "data_cutoff",
+    "units",
+    "reported_or_derived",
+    "missing_reason"
+  ],
+  "non_equivalence_rules": [
+    "Cancer-specific survival is not overall survival.",
+    "PFS, time to progression, and immune-modified definitions remain distinct.",
+    "DFS, invasive DFS, RFS, EFS and recurrence-specific definitions remain distinct.",
+    "Serious and severe are different properties; participants and event episodes are different counts.",
+    "RECIST, PSA and pathological responses are distinct; duration of response is time-to-event among responders, not an all-patient binary rate."
+  ],
+  "missing_value_policy": "Use null plus missing_reason; unreported adverse events are not zero; do not replace subgroup denominators with trial totals.",
+  "readiness_schema": {
+    "comparative_effect": {
+      "default_status": "not_assessed",
+      "allowed_statuses": [
+        "not_assessed",
+        "ready",
+        "not_ready",
+        "manual_review"
+      ],
+      "required_fields": [
+        "comparison_id",
+        "effect_measure",
+        "effect_estimate",
+        "effect_direction",
+        "confidence_interval",
+        "confidence_level",
+        "population_id",
+        "endpoint_definition_id",
+        "source_location"
+      ]
+    },
+    "binary_calculation": {
+      "default_status": "not_assessed",
+      "allowed_statuses": [
+        "not_assessed",
+        "ready",
+        "not_ready",
+        "manual_review"
+      ],
+      "required_fields": [
+        "responders_or_events_by_arm",
+        "exact_endpoint_denominator_by_arm",
+        "time_horizon",
+        "comparison_id",
+        "endpoint_definition_id",
+        "source_location"
+      ]
+    },
+    "survival_event_calculation": {
+      "default_status": "not_assessed",
+      "allowed_statuses": [
+        "not_assessed",
+        "ready",
+        "not_ready",
+        "manual_review"
+      ],
+      "required_fields": [
+        "effect_measure",
+        "hr",
+        "confidence_interval",
+        "event_definition",
+        "analysis_population",
+        "time_origin",
+        "source_location"
+      ]
+    },
+    "control_risk_survival": {
+      "default_status": "not_assessed",
+      "allowed_statuses": [
+        "not_assessed",
+        "ready",
+        "not_ready",
+        "manual_review"
+      ],
+      "required_fields": [
+        "control_arm_id",
+        "risk_or_survival",
+        "time_horizon",
+        "population_id",
+        "endpoint_definition_id",
+        "source_location"
+      ]
+    },
+    "enrollment_projection": {
+      "default_status": "not_assessed",
+      "allowed_statuses": [
+        "not_assessed",
+        "ready",
+        "not_ready",
+        "manual_review"
+      ],
+      "required_fields": [
+        "target_effect",
+        "allocation_ratio",
+        "alpha",
+        "power",
+        "sidedness",
+        "accrual",
+        "follow_up",
+        "censoring",
+        "baseline_outcome"
+      ]
+    },
+    "manual_review": {
+      "default_status": "not_assessed",
+      "allowed_statuses": [
+        "not_assessed",
+        "ready",
+        "not_ready",
+        "manual_review"
+      ],
+      "required_fields": [
+        "review_reason",
+        "missing_fields",
+        "provenance",
+        "review_status"
+      ]
+    }
+  },
+  "prohibited_derivations": [
+    "HR from ratio of median survival times",
+    "automatic HR-to-RR conversion",
+    "integer responder counts invented from rounded percentages"
+  ],
+  "extraction_gate": "No comprehensive numerical extraction, calculator execution, or sample-size calculation before later explicit authorization."
+}

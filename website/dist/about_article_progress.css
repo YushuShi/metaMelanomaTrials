@@ -1,0 +1,27 @@
+.article-stage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:20px 0}
+.article-stage{padding:22px;align-self:start;border-top:3px solid var(--ink,#171717)}
+.article-stage h2{margin:0;color:var(--ink,#171717)}
+.article-stage-counts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:22px 0}
+.article-stage-counts dt{font-size:12px;color:var(--muted,#666)}
+.article-stage-counts dd{margin:4px 0;font-size:27px;font-weight:650;font-variant-numeric:tabular-nums;color:var(--ink,#171717)}
+.article-reasons{border-top:1px solid var(--line,#dedede);padding-top:14px}
+.article-reasons summary{cursor:pointer;font-size:14px;color:var(--ink,#171717)}
+.article-reasons .article-reason-table{font-size:12px;min-width:0;table-layout:fixed;width:100%}
+.article-reasons .article-reason-table th{background:#f4f4f4;color:#444;border-color:var(--line,#dedede)}
+.article-reasons .article-reason-table td{white-space:normal;vertical-align:top;overflow-wrap:anywhere;color:#444;border-color:#e5e5e5}
+.article-reasons .article-reason-table th:first-child{width:90px}
+.published-outcome-review{padding:22px;margin:20px 0;min-width:0}
+.published-review-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.published-review-heading h2{margin:0;color:var(--ink,#171717)}
+.published-review-heading a{font-size:13px;color:var(--ink,#171717);text-underline-offset:3px}
+.published-outcome-review>p{font-size:13px;color:var(--muted,#666);margin:10px 0 18px}
+.published-review-scroll{max-width:100%;overflow-x:auto}
+.published-review-table{width:100%;min-width:720px;border-collapse:collapse;table-layout:fixed;font-size:13px;line-height:1.5}
+.published-review-table th,.published-review-table td{padding:12px 14px;text-align:left;vertical-align:top;white-space:normal;overflow-wrap:anywhere;border-bottom:1px solid var(--line,#dedede)}
+.published-review-table th{background:#f4f4f4;color:var(--ink,#171717);font-weight:600}
+.published-review-table th:first-child{width:96px}
+.published-review-table th:nth-child(2){width:20%}
+.published-review-table th:nth-child(3){width:32%}
+.published-review-table td a{color:var(--ink,#171717);text-underline-offset:3px}
+@media(max-width:760px){.article-stage-grid{grid-template-columns:1fr}.article-stage{padding:16px}}
+@media(max-width:760px){.published-outcome-review{padding:16px}.published-review-table th,.published-review-table td{padding:10px}}

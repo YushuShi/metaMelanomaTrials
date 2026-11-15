@@ -1,0 +1,74 @@
+{
+  "producer_files": [
+    {
+      "bytes": 4083,
+      "path": "app.py",
+      "sha256": "3ae7995f1c68bd94c3ef63d21f156d41643157fd59eb9f75ad44110255a05cc2"
+    },
+    {
+      "bytes": 8567,
+      "path": "website/scripts/article_progress.py",
+      "sha256": "6d7c68776fbb441e45a3de1401dc723704447e46372d3d69a47f1d450ccd09f0"
+    },
+    {
+      "bytes": 153,
+      "path": "website/scripts/refresh_article_progress.py",
+      "sha256": "06e315031d8707c4c10bce7feb506c17c060db98d4f02f8f05c09e3ef086661b"
+    },
+    {
+      "bytes": 106089,
+      "path": "website/dist/app.js",
+      "sha256": "1fc8eb3f676618ee213076c6e76b9a41b984063fa87b2550de2e2b0f395da342"
+    },
+    {
+      "bytes": 13992,
+      "path": "website/dist/index.html",
+      "sha256": "675b7ce157b0f64a98b308affdb86e37870a188a368ae7ec0078ba6eece809fd"
+    },
+    {
+      "bytes": 5384,
+      "path": "website/dist/about_article_progress.js",
+      "sha256": "d57c81cc217faf76e50fb90c6e86a62e98c503012e4b1709021d19bba62b5424"
+    },
+    {
+      "bytes": 908,
+      "path": "website/dist/about_article_progress.css",
+      "sha256": "57b59b3e90ef32aff41f99aee454af41513addbe1f659c02e7674cd923b503f6"
+    },
+    {
+      "bytes": 20666,
+      "path": "website/scripts/clinical_evidence.py",
+      "sha256": "fb2265ac271bd84f63e397daf4b280f67e8635e6bcc87936c7528a03e10facd8"
+    },
+    {
+      "bytes": 10855,
+      "path": "website/dist/clinical_evidence.js",
+      "sha256": "03e6a9afb11a53efde9583c5767f94eeac9f556b196a8c15733046e18e62519a"
+    },
+    {
+      "bytes": 10281,
+      "path": "website/dist/numeric_evidence_display.js",
+      "sha256": "df6e1725c394ae144b7a2c8d029abef97564b641b1d6fb77bfc03c496d0995cd"
+    },
+    {
+      "bytes": 29658,
+      "path": "website/dist/numeric_evidence_release.js",
+      "sha256": "806382cca579713fffa432a303dd5d60624d47a8a194db9e17bbe513404d301b"
+    }
+  ],
+  "protected_scientific_assets": [
+    {
+      "bytes": 288867067,
+      "path": "website/dist/data/studies.json",
+      "sha256": "c415d84ec831e37129224b09e14b380a6fb2ca74a7838f561ef850a982ea6081"
+    },
+    {
+      "bytes": 181,
+      "path": "website/dist/data/analysis.json",
+      "sha256": "9f60ed283bb2750bc4898ab9b994f0b9e31a46510a62ba38c022bb7164dadf23"
+    }
+  ],
+  "provider_requests_authorized": 0,
+  "public": "website/dist/data/article_review_progress.json",
+  "source": "data/current/article_progress.json"
+}

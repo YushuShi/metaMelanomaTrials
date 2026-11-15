@@ -1,0 +1,949 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/report"
+      },
+      "minItems": 1,
+      "maxItems": 1
+    }
+  },
+  "required": [
+    "results"
+  ],
+  "$defs": {
+    "local_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "review_status": {
+          "type": "string",
+          "enum": [
+            "eligible",
+            "ineligible",
+            "uncertain"
+          ]
+        },
+        "melanoma_population": {
+          "type": "string",
+          "enum": [
+            "cutaneous_only",
+            "cutaneous_subgroup",
+            "mixed_melanoma",
+            "unspecified_melanoma",
+            "noncutaneous",
+            "not_reported"
+          ]
+        },
+        "publication_status": {
+          "type": "string",
+          "enum": [
+            "retracted",
+            "corrected_republication",
+            "preprint",
+            "other",
+            "not_reported"
+          ]
+        },
+        "regimen_scope": {
+          "type": "string",
+          "enum": [
+            "core",
+            "chemotherapy_deferred",
+            "endocrine_only_separate",
+            "unclear"
+          ]
+        },
+        "reason": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "reported",
+                "not_reported",
+                "not_applicable",
+                "unclear"
+              ]
+            },
+            "text": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "evidence_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "status",
+            "text",
+            "evidence_ids"
+          ]
+        },
+        "final_full_text_eligibility_verified": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "review_status",
+        "melanoma_population",
+        "publication_status",
+        "regimen_scope",
+        "reason",
+        "final_full_text_eligibility_verified"
+      ]
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "block_id": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "supporting_quote": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_id",
+        "block_id",
+        "locator",
+        "supporting_quote"
+      ]
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "study",
+            "publication",
+            "population",
+            "arm",
+            "experimental_arm",
+            "comparator_arm",
+            "endpoint",
+            "model",
+            "planning_design",
+            "biomarker",
+            "treatment_component"
+          ]
+        },
+        "entity_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "entity_id"
+      ]
+    },
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "not_reported",
+            "not_applicable",
+            "unclear"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "status",
+        "text",
+        "evidence_ids"
+      ]
+    },
+    "number": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "estimate",
+            "ci_lower",
+            "ci_upper",
+            "confidence_level",
+            "standard_error",
+            "p_value",
+            "numerator",
+            "denominator",
+            "percentage",
+            "mean",
+            "SD",
+            "median",
+            "IQR_lower",
+            "IQR_upper",
+            "minimum",
+            "maximum",
+            "sample_size",
+            "timepoint",
+            "follow_up",
+            "exposure_duration",
+            "alpha",
+            "power",
+            "assumed_effect",
+            "required_events",
+            "dose",
+            "threshold",
+            "other"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "not_reported",
+            "not_applicable",
+            "unclear"
+          ]
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "raw_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "qualifier": {
+          "type": "string",
+          "enum": [
+            "equal",
+            "less_than",
+            "less_or_equal",
+            "greater_than",
+            "greater_or_equal",
+            "not_reached",
+            "not_reported"
+          ]
+        },
+        "normalization": {
+          "type": "string",
+          "enum": [
+            "none",
+            "percent_to_probability"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "role",
+        "status",
+        "value",
+        "raw_text",
+        "unit",
+        "qualifier",
+        "normalization",
+        "evidence_ids"
+      ]
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "entity_id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "study",
+            "publication",
+            "population",
+            "arm",
+            "endpoint",
+            "planning_design",
+            "biomarker",
+            "treatment_component"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/text"
+        },
+        "parent_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "independence_status": {
+          "type": "string",
+          "enum": [
+            "unverified"
+          ]
+        }
+      },
+      "required": [
+        "entity_id",
+        "kind",
+        "label",
+        "parent_id",
+        "links",
+        "independence_status"
+      ]
+    },
+    "variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "exposure",
+            "predictor",
+            "adjustment",
+            "analysis_stratum",
+            "randomization_stratum",
+            "subgroup",
+            "interaction",
+            "eligibility",
+            "baseline",
+            "not_distinguished"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "planned",
+            "unclear"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "role",
+        "scope"
+      ]
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "model_id": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "planned",
+            "unclear"
+          ]
+        },
+        "family": {
+          "$ref": "#/$defs/text"
+        },
+        "formula": {
+          "$ref": "#/$defs/text"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "contrast_type": {
+          "type": "string",
+          "enum": [
+            "treatment_comparison",
+            "single_arm",
+            "biomarker_association",
+            "interaction",
+            "other"
+          ]
+        },
+        "adjusted_status": {
+          "type": "string",
+          "enum": [
+            "adjusted",
+            "unadjusted",
+            "not_reported",
+            "unclear"
+          ]
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/variable"
+          }
+        },
+        "null_hypothesis": {
+          "$ref": "#/$defs/text"
+        },
+        "estimand": {
+          "$ref": "#/$defs/text"
+        },
+        "data_cutoff": {
+          "$ref": "#/$defs/text"
+        },
+        "adoption_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "model_id",
+        "scope",
+        "family",
+        "formula",
+        "links",
+        "contrast_type",
+        "adjusted_status",
+        "variables",
+        "null_hypothesis",
+        "estimand",
+        "data_cutoff",
+        "adoption_evidence_ids"
+      ]
+    },
+    "qualifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "effect_direction",
+            "data_cutoff",
+            "grade",
+            "grading_system",
+            "seriousness",
+            "attribution",
+            "observation_window",
+            "assessment",
+            "analysis_set",
+            "time_origin",
+            "CI_type",
+            "reported_scale",
+            "clinical_scope",
+            "denominator_description",
+            "counting_unit_description",
+            "missing_data",
+            "prespecification",
+            "confounding_method",
+            "model_assumptions",
+            "adjustment_structure",
+            "other"
+          ]
+        },
+        "fact": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "name",
+        "fact"
+      ]
+    },
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fact_id": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string",
+          "enum": [
+            "study_identification",
+            "study_design",
+            "patient_demographics",
+            "general_health",
+            "cancer_characteristics",
+            "treatment_history",
+            "biomarkers",
+            "treatment_regimens",
+            "statistical_methods",
+            "efficacy_outcomes",
+            "safety_outcomes",
+            "trial_planning_quality"
+          ]
+        },
+        "variable": {
+          "type": "string"
+        },
+        "checklist_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "study_identification.publication_identity",
+              "study_identification.trial_identity",
+              "study_identification.protocol_version",
+              "study_identification.data_cutoff",
+              "study_identification.funding",
+              "study_identification.publication_status",
+              "study_identification.source_version",
+              "study_identification.overlap_clue",
+              "study_design.phase",
+              "study_design.design",
+              "study_design.prospective_retrospective",
+              "study_design.centers_countries",
+              "study_design.blinding",
+              "study_design.allocation",
+              "study_design.hypothesis_design",
+              "study_design.adaptive_design",
+              "patient_demographics.sample_size",
+              "patient_demographics.age",
+              "patient_demographics.sex",
+              "patient_demographics.race_ethnicity",
+              "patient_demographics.geography",
+              "patient_demographics.recruitment",
+              "general_health.performance_status",
+              "general_health.comorbidities",
+              "general_health.smoking",
+              "general_health.BMI",
+              "general_health.organ_function",
+              "general_health.steroids_immunosuppression",
+              "general_health.autoimmune_history",
+              "cancer_characteristics.primary_site_histology",
+              "cancer_characteristics.cutaneous_scope",
+              "cancer_characteristics.stage",
+              "cancer_characteristics.metastases_sites",
+              "cancer_characteristics.tumor_burden",
+              "cancer_characteristics.resectability",
+              "cancer_characteristics.molecular_subtype",
+              "treatment_history.treatment_line",
+              "treatment_history.prior_systemic",
+              "treatment_history.prior_ICI",
+              "treatment_history.prior_targeted",
+              "treatment_history.surgery_radiation",
+              "treatment_history.resistance",
+              "biomarkers.biomarker_name",
+              "biomarkers.exact_alteration",
+              "biomarkers.assay",
+              "biomarkers.specimen",
+              "biomarkers.threshold",
+              "biomarkers.positive_tested_counts",
+              "biomarkers.biomarker_context",
+              "treatment_regimens.complete_regimen",
+              "treatment_regimens.drug_components",
+              "treatment_regimens.mechanism_target_class",
+              "treatment_regimens.dose",
+              "treatment_regimens.frequency_route",
+              "treatment_regimens.duration_sequence",
+              "treatment_regimens.backbone_maintenance",
+              "treatment_regimens.crossover_subsequent",
+              "statistical_methods.actual_model",
+              "statistical_methods.planned_model",
+              "statistical_methods.actual_covariates",
+              "statistical_methods.analysis_strata",
+              "statistical_methods.randomization_strata",
+              "statistical_methods.variable_roles",
+              "statistical_methods.confounding_method",
+              "statistical_methods.analysis_population",
+              "statistical_methods.missing_data",
+              "statistical_methods.assumptions",
+              "statistical_methods.prespecification",
+              "statistical_methods.null_hypothesis",
+              "statistical_methods.estimand",
+              "efficacy_outcomes.endpoint_definition",
+              "efficacy_outcomes.assessment",
+              "efficacy_outcomes.effect_estimate",
+              "efficacy_outcomes.uncertainty",
+              "efficacy_outcomes.event_response_counts",
+              "efficacy_outcomes.analysis_denominator",
+              "efficacy_outcomes.median",
+              "efficacy_outcomes.landmark_probability",
+              "efficacy_outcomes.timepoint",
+              "efficacy_outcomes.follow_up",
+              "efficacy_outcomes.patient_reported_outcomes",
+              "safety_outcomes.AE_term",
+              "safety_outcomes.grade_system",
+              "safety_outcomes.attribution",
+              "safety_outcomes.any_grade",
+              "safety_outcomes.grade_ge3",
+              "safety_outcomes.serious_AE",
+              "safety_outcomes.immune_AE",
+              "safety_outcomes.dose_modification",
+              "safety_outcomes.discontinuation",
+              "safety_outcomes.deaths",
+              "safety_outcomes.counting_unit",
+              "safety_outcomes.safety_denominator",
+              "safety_outcomes.observation_window",
+              "trial_planning_quality.planned_N",
+              "trial_planning_quality.alpha_power",
+              "trial_planning_quality.assumed_effect",
+              "trial_planning_quality.control_assumptions",
+              "trial_planning_quality.required_events",
+              "trial_planning_quality.accrual_follow_up",
+              "trial_planning_quality.multiplicity_interim",
+              "trial_planning_quality.stopping_reestimation",
+              "trial_planning_quality.dropout_nonadherence",
+              "trial_planning_quality.dose_optimization_DLT_RP2D",
+              "trial_planning_quality.methodological_quality"
+            ]
+          }
+        },
+        "mapping_status": {
+          "type": "string",
+          "enum": [
+            "mapped",
+            "additional",
+            "unresolved"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "planned",
+            "unclear"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "reported",
+            "not_reported",
+            "not_applicable",
+            "unclear"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "link_gaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "population",
+              "arm",
+              "endpoint",
+              "model",
+              "planning_design",
+              "data_cutoff",
+              "comparison"
+            ]
+          }
+        },
+        "measure": {
+          "type": "string",
+          "enum": [
+            "HR",
+            "TR",
+            "RR",
+            "OR",
+            "RD",
+            "MD",
+            "SMD",
+            "SHR",
+            "median",
+            "survival_probability",
+            "event_probability",
+            "response_probability",
+            "participant_count",
+            "event_episode_count",
+            "sample_size",
+            "duration",
+            "rate",
+            "interaction",
+            "other",
+            "not_applicable"
+          ]
+        },
+        "measure_verbatim": {
+          "$ref": "#/$defs/text"
+        },
+        "contrast_type": {
+          "type": "string",
+          "enum": [
+            "treatment_comparison",
+            "single_arm",
+            "biomarker_association",
+            "interaction",
+            "other",
+            "not_applicable"
+          ]
+        },
+        "counting_unit": {
+          "type": "string",
+          "enum": [
+            "participants",
+            "event_episodes",
+            "lesions",
+            "samples",
+            "time",
+            "other",
+            "not_reported",
+            "not_applicable"
+          ]
+        },
+        "denominator_unit": {
+          "type": "string",
+          "enum": [
+            "participants",
+            "event_episodes",
+            "lesions",
+            "samples",
+            "time",
+            "other",
+            "not_reported",
+            "not_applicable"
+          ]
+        },
+        "denominator_type": {
+          "type": "string",
+          "enum": [
+            "randomized",
+            "recruited",
+            "treated",
+            "evaluable",
+            "safety",
+            "endpoint_specific",
+            "subgroup",
+            "other",
+            "not_reported",
+            "not_applicable"
+          ]
+        },
+        "numbers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/number"
+          }
+        },
+        "qualifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/qualifier"
+          }
+        }
+      },
+      "required": [
+        "fact_id",
+        "domain",
+        "variable",
+        "checklist_fields",
+        "mapping_status",
+        "scope",
+        "status",
+        "text",
+        "evidence_ids",
+        "links",
+        "link_gaps",
+        "measure",
+        "measure_verbatim",
+        "contrast_type",
+        "counting_unit",
+        "denominator_unit",
+        "denominator_type",
+        "numbers",
+        "qualifiers"
+      ]
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "melanoma_detailed_fragment_v1"
+        },
+        "task_id": {
+          "type": "string"
+        },
+        "report_id": {
+          "type": "string"
+        },
+        "pipeline_id": {
+          "type": "string",
+          "enum": [
+            "Sol",
+            "Opus"
+          ]
+        },
+        "source_input_sha256": {
+          "type": "string"
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "reviewed_domains": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "study_identification",
+              "study_design",
+              "patient_demographics",
+              "general_health",
+              "cancer_characteristics",
+              "treatment_history",
+              "biomarkers",
+              "treatment_regimens",
+              "statistical_methods",
+              "efficacy_outcomes",
+              "safety_outcomes",
+              "trial_planning_quality"
+            ]
+          }
+        },
+        "checklist_sha256": {
+          "type": "string"
+        },
+        "unreviewed_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor"
+          }
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entity"
+          }
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/model"
+          }
+        },
+        "facts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fact"
+          }
+        },
+        "local_review": {
+          "$ref": "#/$defs/local_review"
+        },
+        "unresolved_links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "verified": {
+          "type": "boolean",
+          "const": false
+        },
+        "validated": {
+          "type": "boolean",
+          "const": false
+        },
+        "pooling_eligible": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "task_id",
+        "report_id",
+        "pipeline_id",
+        "source_input_sha256",
+        "complete",
+        "reviewed_domains",
+        "checklist_sha256",
+        "unreviewed_fields",
+        "evidence",
+        "entities",
+        "models",
+        "facts",
+        "local_review",
+        "unresolved_links",
+        "source_limitations",
+        "verified",
+        "validated",
+        "pooling_eligible"
+      ]
+    }
+  }
+}

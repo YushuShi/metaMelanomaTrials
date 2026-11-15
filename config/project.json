@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "project_id": "metaSampleSize",
+  "version": "2026-10-28.4",
+  "scope": {
+    "population": "Included solid-tumor categories, including sarcoma",
+    "core_priority": "equal",
+    "endocrine_focused_searches": "supplementary_without_priority_bump",
+    "experimental_concurrent_conventional_cytotoxic": "deferred",
+    "endocrine_only": "separately_identified"
+  },
+  "disease_catalog": "config/cancer_catalog.json",
+  "drug_catalog": "config/drug_catalog.json",
+  "retrieval": {
+    "sources": [
+      {
+        "id": "pubmed",
+        "api": "NCBI E-utilities ESearch/EFetch XML"
+      },
+      {
+        "id": "clinicaltrials_gov",
+        "api": "v2"
+      },
+      {
+        "id": "europepmc",
+        "api": "REST searchPOST cursor/core"
+      },
+      {
+        "id": "original_conferences",
+        "sources": [
+          "ASCO",
+          "ESMO",
+          "SABCS",
+          "CTOS",
+          "AACR",
+          "IASLC",
+          "SITC",
+          "SGO"
+        ]
+      }
+    ],
+    "query_strategy_version": "2026-10-28.2",
+    "queries_file": "data/retrieval/*_query_manifest.json",
+    "initial_r1_citation_sources": [
+      "pubmed",
+      "original_conferences"
+    ],
+    "europepmc_policy": {
+      "initial_r1_use": false,
+      "activation": "only_after_later_pmc_full_text_retrieval_failure",
+      "requires_later_stage_approval": true,
+      "existing_records": "preserved_as_deferred_auxiliary_not_r1_input"
+    }
+  },
+  "eligibility": {
+    "protocol_file": "docs/PROJECT_SPECIFICATION_2026-10-28.md",
+    "version": "combined-plus-user-steering-2026-10-28",
+    "amendment_files": [
+      "docs/USER_STEERING_2026-10-28.md"
+    ]
+  },
+  "screening": {
+    "R1": {
+      "provider": "cornell_openai_gateway",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "selection_status": "User-requested GPT-6 Luna; exact gateway model available in saved catalog; Responses compatibility verified in official model documentation before any R1 call",
+      "prompt_file": "config/prompts/r1_luna_v1.txt",
+      "prompt_version": "2026-10-28-r1-v1",
+      "configuration_version": "2026-10-28.4",
+      "automatic_retries": 0,
+      "tools": [],
+      "output_schema_file": "config/prompts/r1_output_schema.json",
+      "latest_version_required_before_execution": true,
+      "reasoning_effort": "xhigh",
+      "max_output_tokens": 128000,
+      "timeout_seconds": 1800,
+      "max_attempts": 12,
+      "retry_policy": "explicit attempts, short initial backoff then 60s exponential to900s, preserve and expose failures"
+    },
+    "R2-A": {
+      "pipeline_id": "primary-responses-independent",
+      "provider": "cornell_openai_gateway",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "pending-frozen-R2-protocol",
+      "configuration_version": "2026-10-28.4",
+      "independent_input": true,
+      "latest_version_required_before_execution": true,
+      "reasoning_effort": "high",
+      "reasoning_parameter": {
+        "reasoning": {
+          "effort": "high"
+        }
+      }
+    },
+    "R2-B": {
+      "pipeline_id": "claude-validation-independent",
+      "provider": "cornell_openai_gateway",
+      "model": "claude-opus-5-5",
+      "prompt_version": "pending-frozen-R2-protocol",
+      "configuration_version": "2026-10-28.4",
+      "independent_input": true,
+      "latest_version_required_before_execution": true,
+      "reasoning_effort": "high",
+      "native_reasoning_parameter": {
+        "output_config": {
+          "effort": "high"
+        }
+      },
+      "gateway_reasoning_parameter": {
+        "reasoning_effort": "high"
+      },
+      "reasoning_mapping_status": "must verify exact Cornell route before later authorized R2 execution; never silently drop effort"
+    },
+    "later_validation": {
+      "provider": "cornell_openai_gateway",
+      "model": "gemini-3.8-flash",
+      "configuration_version": "2026-10-28.4",
+      "execution_status": "not_authorized_until_later_review_gate",
+      "role": "later independent full-text validation; not an initial R1 or independent R2 substitute",
+      "latest_version_required_before_execution": true
+    }
+  },
+  "accounting": {
+    "ledger": "data/usage_ledger.sqlite3",
+    "disease_allocation": "equal_call_to_work_items_to_distinct_disease_ids",
+    "drug_allocation": "equal_call_to_work_items_to_distinct_experimental_agents",
+    "unknown_categories": "shared/unassigned",
+    "currency_conversion": "none",
+    "estimated_costs_are_not_billed_charges": true
+  }
+}

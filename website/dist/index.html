@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <meta name="description" content="Cutaneous melanoma trial evidence and sample-size planning.">
+  <title>Treatment map · metaMelanomaTrials</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23171717'/%3E%3Ctext x='16' y='24' text-anchor='middle' fill='white' font-family='sans-serif' font-size='23'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./about_article_progress.css">
+  <link rel="stylesheet" href="./advanced_filters.css">
+  <link rel="stylesheet" href="./treatment_map.css">
+  <link rel="stylesheet" href="./treatment_map_analysis.css">
+  <script src="./semantic_numeric_display.js" defer></script>
+  <script src="./evidence_display.js" defer></script>
+  <script src="./numeric_evidence_release.js" defer></script>
+  <script src="./numeric_evidence_display.js" defer></script>
+  <script src="./clinical_evidence.js" defer></script>
+  <script src="./treatment_registry.js" defer></script>
+  <script src="./treatment_resolver.js" defer></script>
+  <script src="./treatment_groups.js" defer></script>
+  <script src="./regimen_source_rules.js" defer></script>
+  <script src="./regimen_definitions.js" defer></script>
+  <script src="./melanoma_scope.js" defer></script>
+  <script src="./treatment_picker.js" defer></script>
+  <script src="./trial_registry.js" defer></script>
+  <script src="./trial_identifiers.js" defer></script>
+  <script src="./statistical_math.js" defer></script>
+  <script src="./confidence_intervals.js" defer></script>
+  <script src="./wald_interval.js" defer></script>
+  <script src="./quantitative_extraction.js" defer></script>
+  <script src="./cohort_alias_rules.js" defer></script>
+  <script src="./concise_study_groups.js" defer></script>
+  <script src="./outcome_source_rules.js" defer></script>
+  <script src="./outcome_reconciliation.js" defer></script>
+  <script src="./study_design_display.js" defer></script>
+  <script src="./advanced_filters.js" defer></script>
+  <script src="./advanced_filter_panel.js" defer></script>
+  <script src="./treatment_map_effects.js" defer></script>
+  <script src="./treatment_map_analysis.js" defer></script>
+  <script src="./treatment_map_planning.js" defer></script>
+  <script src="./treatment_map_charts.js" defer></script>
+  <script src="./treatment_node_studies.js" defer></script>
+  <script src="./treatment_map.js" defer></script>
+  <script src="./app.js" defer></script>
+  <script src="./published_outcome_review.js" defer></script>
+  <script src="./about_article_progress.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-study" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v17h17M8 16v-5M13 16V6M18 16V9"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 10 5-10 5L2 8zM3 12l9 5 9-5M3 16l9 5 9-5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 3h7v7M21 3 10 14M10 5H4v15h15v-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5M5 8a8 8 0 0 1 13-3l2 3M4 16l2 3a8 8 0 0 0 13-3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L20 5"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  </defs></svg>
+  <div class="workspace">
+    <header class="topbar site-header">
+      <div class="site-brand"><a class="series-logo" href="#treatment-map">metaMelanomaTrials</a><p class="source-fetch-time" id="source-fetch-status" aria-live="polite">Last fetched: checking saved date…</p></div>
+      <nav class="header-actions" aria-label="Site navigation">
+        <button class="header-action" data-view="settings">Settings</button>
+        <button class="header-action" data-view="about">About</button>
+      </nav>
+    </header>
+    <main id="main" tabindex="-1">
+      <div id="data-notice" class="data-notice" role="status" aria-live="polite" hidden></div>
+
+      <section class="view" id="view-analysis" aria-label="Treatment evidence">
+        <form class="panel analysis-controls" id="analysis-form" hidden>
+          <div class="analysis-control-grid">
+            
+            <div class="treatment-filter-field"><label for="analysis-comparator" id="analysis-comparator-label" title="Matches named components of this arm, including conditioning drugs and adjuvants. Their treatment roles remain separate.">Comparator</label><select id="analysis-comparator"><option value="">All comparators</option></select><button type="button" class="advanced-filter-toggle" id="advanced-filter-toggle" aria-expanded="false" aria-controls="advanced-filter-panel"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg><span class="advanced-filter-text">Advanced filter</span></button></div>
+            <div class="treatment-filter-field"><label for="analysis-intervention" id="analysis-intervention-label" title="Matches named components of this arm, including conditioning drugs and adjuvants. Their treatment roles remain separate.">Intervention</label><select id="analysis-intervention"><option value="">All interventions</option></select></div>
+            <label><span>Endpoint</span><select id="analysis-endpoint"><option value="">Select an endpoint</option></select></label>
+            <button class="primary-button" type="submit">View analysis</button>
+          </div>
+          <section class="advanced-filters" id="advanced-filter-panel" aria-label="Advanced filter" hidden>
+            <div class="advanced-filter-fields" id="advanced-filter-fields"></div>
+            <p class="advanced-filter-status" id="advanced-filter-status" role="status" aria-live="polite"></p>
+            <div class="advanced-filter-footer"><button type="button" class="secondary-button" id="reset-advanced-filters">Reset advanced filters</button></div>
+          </section>
+          <p class="advanced-evidence-count" id="advanced-evidence-count" aria-live="polite" hidden></p>
+          <div class="comparison-control" id="analysis-comparison-field" hidden><label><span>Comparison</span><select id="analysis-comparison" disabled><option value="">No comparisons available</option></select></label></div>
+        </form>
+        <div class="analysis-tabs" role="tablist" aria-label="Evidence analysis">
+          <button role="tab" aria-selected="true" aria-controls="analysis-treatment-map" id="tab-treatment-map" data-analysis-tab="treatment-map">Treatment map</button>
+          <button role="tab" aria-selected="false" aria-controls="analysis-articles" id="tab-articles" data-analysis-tab="articles" tabindex="-1">Studies</button>
+        </div>
+        <section class="panel analysis-panel" id="analysis-articles" role="tabpanel" aria-labelledby="tab-articles" hidden>
+          <div class="panel-heading study-table-heading">
+            <div class="study-table-title"><h2>Studies <span class="articles-count" id="scoped-studies-count"></span></h2><p class="study-table-key" id="study-table-key"><span title="Results based on abstract-only extraction">* Abstract only</span><span>Gray rows: non-trial studies</span></p></div>
+            <div class="study-table-actions"><button type="button" class="secondary-button" id="trial-only-toggle" aria-pressed="false" aria-controls="scoped-studies-rows" title="Show trials only">Trial Only</button><button type="button" class="secondary-button" id="download-study-table" title="Download all filtered studies and results across all pages" disabled><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download CSV</button></div>
+          </div>
+          <div class="table-scroll"><table class="scoped-studies-table"><thead><tr><th scope="col">Study</th><th scope="col" id="scoped-author-heading" aria-sort="none"><button type="button" id="scoped-sort-author">First author <span aria-hidden="true">↕</span></button></th><th scope="col" id="scoped-year-heading" aria-sort="descending"><button type="button" id="scoped-sort-year">Year <span aria-hidden="true">↓</span></button></th><th scope="col">Trial name</th><th scope="col">NCT number</th><th scope="col">Group</th><th scope="col">Comparator</th><th scope="col">Intervention</th><th scope="col">Sample size</th><th scope="col">Effect size (CI)</th></tr></thead><tbody id="scoped-studies-rows"></tbody></table></div>
+          <div class="main-articles-footer"><span id="scoped-studies-range" role="status" aria-live="polite"></span><nav class="main-articles-pagination" aria-label="Study pages"><button type="button" class="secondary-button" id="scoped-studies-previous">Previous</button><span id="scoped-studies-page"></span><button type="button" class="secondary-button" id="scoped-studies-next">Next</button></nav></div>
+        </section>
+        <section class="panel analysis-panel" id="analysis-treatment-map" role="tabpanel" aria-labelledby="tab-treatment-map"><div id="treatment-map-root"><p>Loading the saved treatment map…</p></div></section>
+        <section class="panel analysis-panel" id="analysis-forest" role="tabpanel" aria-label="Forest plot" hidden><div class="panel-heading"><h2>Forest plot</h2></div><div class="chart-stage" id="forest-canvas"></div></section>
+        <section class="panel analysis-panel" id="analysis-bias" role="tabpanel" aria-label="Publication bias" hidden><div class="panel-heading"><h2>Publication bias</h2><span class="diagnostic-stat">Egger’s p: <strong id="egger-p">—</strong></span></div><div class="chart-stage" id="funnel-canvas"></div></section>
+        <section class="panel analysis-panel" id="analysis-sensitivity" role="tabpanel" aria-label="Sensitivity analysis" hidden><div class="panel-heading"><h2>Sensitivity analysis</h2></div><div class="chart-stage" id="sensitivity-canvas"></div></section>
+        <p class="analysis-method-note" id="analysis-method-note" hidden></p>
+      </section>
+
+      <section class="view" id="view-studies" aria-labelledby="studies-title" hidden>
+        <div class="app-identity"><h1 id="studies-title">Study selection</h1></div>
+        <div class="panel prisma-panel"><div class="panel-heading"><h2>PRISMA flow</h2></div><div id="prisma-canvas" class="prisma-canvas"></div></div>
+      </section>
+
+      <section class="view" id="view-summary" aria-labelledby="summary-title" hidden>
+        <div class="app-identity"><h1 id="summary-title">Summary</h1></div>
+        <div class="panel summary-controls">
+          
+          <label><span>Endpoint</span><select id="summary-endpoint"><option value="">Select an endpoint</option></select></label>
+        </div>
+        <div id="summary-canvas" class="summary-canvas"></div>
+      </section>
+
+      <section class="view" id="view-dotplot" aria-labelledby="dotplot-title" hidden>
+        <div class="app-identity"><h1 id="dotplot-title">Summary across interventions</h1></div>
+        <div class="panel matrix-controls">
+          
+          <label><span>Endpoint</span><select id="matrix-endpoint"><option value="">Select an endpoint</option></select></label>
+        </div>
+        <div class="matrix-legend"><span><i style="background:#2475c0"></i>Favors intervention · significant</span><span><i style="background:#8dc9e8"></i>Favors intervention</span><span><i style="background:#eea4bc"></i>Favors control</span><span><i style="background:#c9354c"></i>Favors control · significant</span></div>
+        <div class="panel matrix-panel"><div id="matrix-canvas" class="matrix-scroll"></div><p class="panel-footnote" id="matrix-count"></p></div>
+      </section>
+
+      <section class="view" id="view-sample-size" aria-labelledby="sample-size-title" hidden>
+        <div class="app-identity"><h1 id="sample-size-title">Sample size summary</h1></div>
+        <form class="panel planning-controls" id="planning-form">
+          <div class="planning-grid">
+            
+            <label><span>Endpoint</span><select id="planning-endpoint"><option value="">Select an endpoint</option></select></label>
+            <label><span>Baseline event probability</span><input id="planning-baseline" type="number" min="0.000001" max="0.999999" step="any" placeholder="0–1"></label>
+            <label id="planning-followup-field" hidden><span>Follow-up · months</span><input id="planning-followup" type="number" min="0.01" step="any" placeholder="Months"></label>
+            <button class="primary-button" type="submit">View summary</button>
+          </div>
+        </form>
+        <article class="panel sample-panel"><div class="panel-heading"><h2>Required sample size</h2><p id="sample-axis-note">Select an endpoint.</p></div><div id="sample-canvas" class="chart-stage"></div></article>
+      </section>
+
+      <section class="view" id="view-settings" aria-labelledby="settings-title" hidden>
+        <div class="app-identity"><h1 id="settings-title">Settings</h1></div>
+        <form id="settings-form" class="panel settings-panel">
+          <fieldset><legend>Meta-analysis</legend><div class="settings-grid">
+            <label><span>Results per cohort</span><select id="analysis-record-policy"><option value="latest">Latest poolable result</option><option value="all">All eligible results</option></select></label>
+          </div><p class="settings-note">Earlier results remain available.</p></fieldset>
+          <fieldset><legend>Sample size planning</legend><div class="settings-grid">
+            <label><span>Allocation ratio</span><input id="planning-allocation" type="number" min="0.01" step="any" value="1" required></label>
+            <label><span>Sidedness</span><select id="planning-sidedness"><option value="2">Two-sided</option><option value="1">One-sided</option></select></label>
+            <label><span>Power</span><input id="planning-power" type="number" min="0.01" max="0.999" value="0.8" step="any" required></label>
+            <label><span>Alpha</span><input id="planning-alpha" type="number" min="0.000001" max="0.5" value="0.05" step="any" required></label>
+          </div></fieldset>
+          <div class="settings-actions"><button class="primary-button" type="submit">Save settings</button><button class="secondary-button" type="button" id="reset-settings">Reset defaults</button><span id="settings-status" role="status"></span></div>
+        </form>
+      </section>
+
+      <section class="view" id="view-about" aria-labelledby="about-title" hidden>
+        <div class="app-identity tracking-heading"><h1 id="about-title">About</h1><div class="snapshot-line"><span id="article-progress-date"></span><button class="icon-button" id="refresh" aria-label="Refresh article progress" title="Refresh article progress"><svg class="icon"><use href="#i-refresh"/></svg></button></div></div>
+        <div id="article-review-progress" aria-live="polite"><p>Loading saved article progress…</p></div>
+      </section>
+      <footer class="main-footer"><span>metaMelanomaTrials</span></footer>
+    </main>
+  </div>
+  <dialog id="study-dialog" class="study-dialog" aria-label="Report details"><div class="drawer-top"><span class="eyebrow">Study details</span><button class="icon-button" id="close-drawer" aria-label="Close report details"><svg class="icon"><use href="#i-close"/></svg></button></div><div id="drawer-content"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

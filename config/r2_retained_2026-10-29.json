@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "project_id": "metaSampleSize",
+  "project_run_id": "r2-retained-2026-10-29",
+  "parent_run_id": "r1-2026-10-28",
+  "version": "2026-10-29-r2-retained-v1",
+  "disease_catalog": "config/cancer_catalog.json",
+  "drug_catalog": "config/drug_catalog.json",
+  "eligibility": {
+    "protocol_file": "docs/PROJECT_SPECIFICATION_2026-10-28.md",
+    "version": "combined-plus-user-steering-2026-10-28; retained-only-R2-2026-10-29",
+    "amendment_files": ["docs/USER_STEERING_2026-10-28.md", "docs/USER_R2_RETAINED_STEERING_2026-10-29.md"]
+  },
+  "selection": {"count": 5504, "source": "completed R1 retained only", "uncertain_included": false, "excluded_included": false},
+  "screening": {
+    "R2-A": {
+      "pipeline_id": "sol-independent-retained-r2-v1",
+      "provider": "cornell_openai_gateway",
+      "model": "gpt-6.1-sol",
+      "api_kind": "responses",
+      "reasoning_effort": "high",
+      "reasoning_parameter": {"reasoning": {"effort": "high"}},
+      "independent_input": true,
+      "prompt_file": "config/prompts/r2_retained_v1.txt",
+      "output_schema_file": "config/prompts/r2_output_schema_v1.json",
+      "prompt_version": "2026-10-29-r2-retained-v1",
+      "configuration_version": "2026-10-29-r2-retained-v1",
+      "max_output_tokens": 128000,
+      "timeout_seconds": 1800,
+      "automatic_retries": 0,
+      "max_attempts": 12,
+      "tools": []
+    },
+    "R2-B": {
+      "pipeline_id": "opus-independent-retained-r2-v1",
+      "provider": "cornell_openai_gateway",
+      "model": "claude-opus-5-5",
+      "api_kind": "chat_completions",
+      "reasoning_effort": "high",
+      "reasoning_parameter": {"reasoning_effort": "high", "drop_params": false},
+      "native_reasoning_parameter": {"output_config": {"effort": "high"}},
+      "independent_input": true,
+      "prompt_file": "config/prompts/r2_retained_v1.txt",
+      "output_schema_file": "config/prompts/r2_output_schema_v1.json",
+      "prompt_version": "2026-10-29-r2-retained-v1",
+      "configuration_version": "2026-10-29-r2-retained-v1",
+      "max_output_tokens": 128000,
+      "timeout_seconds": 1800,
+      "automatic_retries": 0,
+      "max_attempts": 12,
+      "tools": []
+    }
+  },
+  "document_retrieval": {
+    "selection": "reconciled_R2_advance_only",
+    "primary": "PMC full-document retrieval",
+    "europepmc_activation": "only after an explicit unsuccessful PMC full-document attempt for the same report",
+    "verify_report_version": true,
+    "prefer_corresponding_peer_reviewed_version": true,
+    "preserve_preprint_versions_and_unique_information": true
+  },
+  "review_gate": "AWAITING_USER_REVIEW_BEFORE_FINAL_SCREENING",
+  "automatic_final_screening": false,
+  "accounting": {"ledger": "data/usage_ledger.sqlite3", "preserve_parent_costs": true, "gateway_costs_are_estimates_not_invoices": true}
+}

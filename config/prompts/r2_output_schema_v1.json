@@ -1,0 +1,299 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "results"
+  ],
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "report_id",
+          "decision",
+          "criterion_reasons",
+          "report_type",
+          "original_results_status",
+          "is_human_interventional",
+          "cancer_scope",
+          "cancer_ids",
+          "sarcoma_subtypes",
+          "comparisons",
+          "endpoint_families",
+          "genetic_subgroup",
+          "trial_identifiers",
+          "participant_overlap",
+          "missing_information",
+          "uncertainties",
+          "trial_design",
+          "trial_phase",
+          "cohort_type"
+        ],
+        "properties": {
+          "report_id": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "retain",
+              "exclude",
+              "uncertain"
+            ]
+          },
+          "criterion_reasons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "criterion",
+                "supporting_text"
+              ],
+              "properties": {
+                "criterion": {
+                  "type": "string",
+                  "enum": [
+                    "potential_original_trial",
+                    "non_original_review",
+                    "protocol_without_results",
+                    "nonhuman_preclinical",
+                    "individual_case_report",
+                    "observational_not_interventional",
+                    "non_solid_tumor",
+                    "insufficient_information"
+                  ]
+                },
+                "supporting_text": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "report_type": {
+            "type": "string",
+            "enum": [
+              "trial_primary",
+              "trial_followup",
+              "trial_safety",
+              "trial_subgroup",
+              "trial_biomarker",
+              "trial_pooled_analysis",
+              "conference_original",
+              "preprint_original",
+              "registry_record",
+              "review",
+              "systematic_review",
+              "meta_analysis",
+              "network_meta_analysis",
+              "guideline",
+              "editorial",
+              "protocol",
+              "statistical_analysis_plan",
+              "observational",
+              "case_report",
+              "preclinical",
+              "other",
+              "unclear"
+            ]
+          },
+          "original_results_status": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no",
+              "unclear"
+            ]
+          },
+          "is_human_interventional": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no",
+              "unclear"
+            ]
+          },
+          "cancer_scope": {
+            "type": "string",
+            "enum": [
+              "solid_tumor",
+              "mixed_potentially_separable",
+              "non_solid_only",
+              "unclear"
+            ]
+          },
+          "cancer_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sarcoma_subtypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "comparisons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "comparison_id",
+                "experimental_agents",
+                "comparator_agents",
+                "background_agents",
+                "supportive_agents",
+                "prior_agents",
+                "subsequent_agents",
+                "experimental_chemotherapy_timing",
+                "eligibility_status",
+                "evidence_text"
+              ],
+              "properties": {
+                "comparison_id": {
+                  "type": "string"
+                },
+                "experimental_agents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "comparator_agents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "background_agents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "supportive_agents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "prior_agents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "subsequent_agents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "experimental_chemotherapy_timing": {
+                  "type": "string",
+                  "enum": [
+                    "concurrent",
+                    "prior",
+                    "subsequent",
+                    "unclear",
+                    "not_applicable"
+                  ]
+                },
+                "eligibility_status": {
+                  "type": "string",
+                  "enum": [
+                    "eligible",
+                    "ineligible",
+                    "review"
+                  ]
+                },
+                "evidence_text": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "endpoint_families": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "overall_survival",
+                "progression_free_survival",
+                "recurrence",
+                "adverse_events",
+                "response",
+                "other",
+                "unclear"
+              ]
+            }
+          },
+          "genetic_subgroup": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no",
+              "unclear"
+            ]
+          },
+          "trial_identifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "participant_overlap": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no",
+              "unclear"
+            ]
+          },
+          "missing_information": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "trial_design": {
+            "type": "string",
+            "enum": [
+              "randomized",
+              "nonrandomized_comparative",
+              "single_arm",
+              "mixed",
+              "unclear"
+            ]
+          },
+          "trial_phase": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cohort_type": {
+            "type": "string",
+            "enum": [
+              "dose_escalation",
+              "expansion",
+              "efficacy",
+              "mixed",
+              "unclear"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

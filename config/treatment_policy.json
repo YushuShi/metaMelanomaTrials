@@ -1,0 +1,33 @@
+{
+  "policy_version": "2026-10-28.1",
+  "classification_source": "explicit_normalized_metadata_only",
+  "normalized_treatment_classes": [
+    "immunotherapy",
+    "targeted_therapy",
+    "endocrine_therapy",
+    "conventional_cytotoxic_chemotherapy"
+  ],
+  "core_regimen_categories": [
+    "immunotherapy",
+    "targeted_therapy",
+    "immunotherapy_targeted_therapy",
+    "endocrine_combination"
+  ],
+  "core_priority": "equal",
+  "applies_to": "all_included_solid_tumor_categories_including_sarcoma",
+  "disease_priority_overrides": {},
+  "supplementary_endocrine_query_priority_bump": false,
+  "experimental_concurrent_conventional_cytotoxic_chemotherapy_priority": "deferred",
+  "comparator_prior_or_subsequent_chemotherapy_causes_deferral": false,
+  "endocrine_only_priority": "separate",
+  "unresolved_eligibility_status": "review",
+  "experimental_chemotherapy_timings": ["concurrent", "prior", "subsequent", "unclear"],
+  "scheduling": {
+    "ready_eligibility_status": "eligible",
+    "ready_priority_class": "core",
+    "method": "round_robin_across_nonempty_disease_id_by_regimen_category_buckets",
+    "bucket_order": "lexicographically_sorted_disease_id_and_regimen_category",
+    "within_bucket_order": "lexicographically_sorted_unique_task_id",
+    "review_deferred_separate_and_ineligible_queues": "held_separately_never_implicitly_advanced"
+  }
+}

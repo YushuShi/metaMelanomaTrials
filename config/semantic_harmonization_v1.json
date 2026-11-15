@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "policy_version": "source-grounded-semantic-harmonization-v1",
+  "authorization": "User instruction on 2026-11-01: harmonize equivalent numbers and missing values for all saved and future R2/R3 records, including held responses.",
+  "stages": ["R2", "R3"],
+  "numeric_storage": "arabic_numbers",
+  "missing_storage": "json_null",
+  "missing_display": "NA",
+  "preserve_originals": true,
+  "preserve_missingness_reason": true,
+  "preserve_zero_signs_inequalities_and_scientific_scope": true,
+  "hold_non_equivalent_values": true,
+  "hold_graph_conflicts": true,
+  "allow_exact_registered_percent_probability": true,
+  "legacy_threshold_encodings_require_verified_original_source": true,
+  "normalization_is_not_new_screening_or_pooling_approval": true,
+  "harmonizer": {
+    "path": "src/metacutaneous/semantic_harmonization_v1.py",
+    "sha256": "f9224d4252c6961596d3d940f6fac0f0a964b31889ae39e486e07a156fe0e6f1",
+    "bytes": 41245
+  },
+  "core_version": "source-bound-number-equivalence-and-NA-v1",
+  "historical_input_selection": {
+    "path": "data/proposed_changes/semantic_harmonization_backfill_v1/finite_authoritative_selection_v1.json",
+    "sha256": "c554050999805bfe41b14488d2e478a1f8eb114a2b41080deaebfae286dbaad7",
+    "bytes": 4175882
+  },
+  "new_API_requests_authorized": 0
+}

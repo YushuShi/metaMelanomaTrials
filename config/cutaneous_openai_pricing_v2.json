@@ -1,0 +1,72 @@
+{
+  "rate_cards": [
+    {
+      "api_kind": "responses",
+      "currency": "USD",
+      "default_write_ttl": "30m",
+      "input_max_inclusive": 272000,
+      "input_min_exclusive": -1,
+      "modalities": [
+        "text"
+      ],
+      "model": "gpt-6.1-sol",
+      "provider": "openai",
+      "regions": [
+        "global"
+      ],
+      "request_type": "standard",
+      "service_tier": "default",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+        "https://developers.openai.com/api/docs/guides/prompt-caching"
+      ],
+      "unit_tokens": 1000000,
+      "usd_per_million": {
+        "cache_creation:12h": "5",
+        "cache_creation:30m": "2.50",
+        "cached_input": "0.10",
+        "ordinary_input": "2",
+        "output": "10"
+      },
+      "verified": true,
+      "verified_at": "2026-10-31T02:33:38+00:00",
+      "version": "cutaneous-openai-short-context-explicit30m-2026-10-30-v2"
+    },
+    {
+      "api_kind": "responses",
+      "currency": "USD",
+      "default_write_ttl": "30m",
+      "input_max_inclusive": 272000,
+      "input_min_exclusive": -1,
+      "modalities": [
+        "text"
+      ],
+      "model": "gpt-6-luna",
+      "provider": "openai",
+      "regions": [
+        "global"
+      ],
+      "request_type": "standard",
+      "service_tier": "default",
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching"
+      ],
+      "unit_tokens": 1000000,
+      "usd_per_million": {
+        "cache_creation:12h": "0.25",
+        "cache_creation:30m": "0.125",
+        "cached_input": "0.01",
+        "ordinary_input": "0.10",
+        "output": "0.50"
+      },
+      "verified": true,
+      "verified_at": "2026-10-31T02:33:38+00:00",
+      "version": "cutaneous-openai-short-context-explicit30m-2026-10-30-v2"
+    }
+  ],
+  "scope": "Native Responses default/global text, input at most272000tokens; never batch or priority; request explicitly sets prompt_cache_options.ttl30m",
+  "version": "cutaneous-openai-short-context-explicit30m-2026-10-30-v2"
+}

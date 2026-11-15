@@ -1,0 +1,101 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const scope=require('../dist/melanoma_scope.js');
+const study=JSON.parse(fs.readFileSync(path.join(__dirname,'../../data/proposed_changes/study_table_regimens_20261105/PMID41768125_baseline.json'),'utf8'));
+test('specific cutaneous counts and generic count quotes in a melanoma trial do not need the diagnosis repeated in every sentence',()=>{
+ const own={title:'Cutaneous melanoma trial'},registry={E:{supporting_quote:'Among 157 randomly assigned patients,107received the combination and50received control.'}},context=scope.contextFor(own,{evidenceRegistry:registry});
+ const sample={population:{description:{text:'Randomly assigned patients',evidence_ids:['E']},melanoma_population:'cutaneous'},main_result_eligible:true};
+ assert(scope.sampleEligible(sample,{study:own,context}));
+ assert(scope.sampleEligible({...sample,population:{...sample.population,melanoma_population:'unspecified_melanoma'}},{study:own,context}));
+ assert(!scope.sampleEligible({...sample,population:{...sample.population,description:{text:'NSCLC cohort'}}},{study:own,context}));
+ const mixed={title:'Melanoma and NSCLC trial'};
+ assert(!scope.sampleEligible({...sample,population:{...sample.population,melanoma_population:'unspecified_melanoma'}},{study:mixed,context:scope.contextFor(mixed,{evidenceRegistry:registry})}));
+});
+test('actual41768125 retains four melanoma outcomes, not four NSCLC outcomes or pooled/NSCLC N',()=>{
+ const before=JSON.stringify(study),rows=study.details.quantitative_results;
+ const keep=rows.filter(r=>scope.resultEligible(r,{study}));
+ assert.equal(keep.length,4);assert(keep.every(r=>r.population.population_id==='P3'));
+ const samples=study.details.sample_size_records.filter(r=>scope.sampleEligible(r,{study}));
+ assert.deepEqual(samples.map(s=>s.n.value),[23]);
+ const comparisons=study.comparisons.filter(c=>scope.comparisonEligible(c,{results:rows,study}));
+ assert.equal(comparisons.length,4);assert(comparisons.every(c=>c.scope.population_id==='P3'));
+ assert.equal(JSON.stringify(study),before);
+});
+test('local cancer/arm/model/endpoint contradiction overrides a broad melanoma tag',()=>{
+ const row={main_result_eligible:true,population:{label:'Melanoma patients',population_scope:'melanoma'},original_fact:{result_population_id:'P'},measure:'median',arm:{label:'NSCLC cohort'}};
+ assert.equal(scope.resultEligible(row),false);
+ assert.equal(scope.resultEligible({...row,arm:null,model:{estimand:'Overall survival in RCC patients'}}),false);
+ assert.equal(scope.resultEligible({...row,arm:null,endpoint:{definition:{text:'NSCLC progression-free survival'}}}),false);
+ assert.equal(scope.resultEligible({...row,arm:null,model:{analysis_population_id:'Q'}}),false);
+ assert.equal(scope.resultEligible({...row,arm:{label:'Melanoma patients with lung metastases'}}),true);
+ assert.equal(scope.resultEligible({...row,arm:{label:'Non‑melanoma patients'}}),false);
+ assert.equal(scope.resultEligible({...row,arm:{label:'Human melanoma cell lines'}}),false);
+ assert.equal(scope.resultEligible({...row,arm:{label:'Melanoma patients; no NSCLC included'}}),true);
+ assert.equal(scope.resultEligible({...row,arm:null,population:{label:'Melanoma subset of a solid-tumor trial',population_scope:'melanoma'}}),true);
+});
+test('explicit source-supported subgroup parent is retained, unrelated/missing parent proof is not',()=>{
+ const row={main_result_eligible:true,population:{entity_id:'P',label:'Melanoma subgroup',population_scope:'melanoma',parent_id:'Q',evidence_ids:['E']},original_fact:{result_population_id:'P'},model:{analysis_population_id:'Q'}};
+ const study={reviews:[{entities:[{entity_id:'Q',kind:'population',label:'Melanoma trial cohort',evidence_ids:['E']}]}]};
+ assert.equal(scope.resultEligible(row,{study}),true);
+ assert.equal(scope.resultEligible(row,{study:{reviews:[{entities:[{entity_id:'Q',evidence_ids:['other']}]}]}}),false);
+ assert.equal(scope.resultEligible(row),false);
+});
+test('negative veto preserves qualified nonmixed count-only scopes and never borrows another cohort sample',()=>{
+ const comparison={comparison_id:'C2',comparison_filter_eligible:true,result_ids:[],scope:{report_id:'R',population_id:'P2',source_input_sha256:'S'}};
+ assert.equal(scope.comparisonEligible(comparison),true);
+ assert.equal(scope.comparisonEligible({...comparison,result_ids:['declared-without-row']}),true);
+ const mixed={title:'Melanoma or NSCLC trial'};
+ const sample={main_result_eligible:true,report_id:'R',population_id:'P1',source_input_sha256:'S',population:{description:{text:'Melanoma cohort'}}};
+ assert.equal(scope.comparisonEligible(comparison,{study:mixed,samples:[sample]}),false);
+ assert.equal(scope.comparisonEligible(comparison,{study:mixed,samples:[{...sample,population_id:'P2'}]}),true);
+ assert.equal(scope.comparisonEligible({...comparison,result_ids:['foreign']},{study:mixed,results:[]}),false);
+ assert.equal(scope.resultEligible({...sample,main_result_eligible:false}),false);
+});
+test('merged source-extraction result IDs retain foreign-scope veto',()=>{
+ const comparison={comparison_id:'C',comparison_filter_eligible:true,result_ids:['original-result']};
+ const foreign={result_id:'merged-result',source_extraction_ids:['original-result'],population:{description:{text:'NSCLC cohort'}},main_result_eligible:true};
+ assert.equal(scope.comparisonEligible(comparison,{results:[foreign]}),false);
+ assert.equal(scope.comparisonEligible(comparison,{results:[{...foreign,population:{description:{text:'Melanoma cohort'}}}]}),true);
+});
+test('operation context scans study rows once and propagates through comparison results and samples',()=>{
+ let scans=0;
+ const study={title:'Melanoma trial',details:{get quantitative_results(){scans++;return [];}}};
+ const context=scope.contextFor(study);
+ assert(Object.isFrozen(context));assert.equal(context.study,study);assert.equal(context.mixed,false);assert.equal(scans,1);
+ const row={main_result_eligible:true,result_id:'R',population:{label:'Melanoma cohort'}};
+ for(let i=0;i<100;i++)assert.equal(scope.resultEligible(row,{study,context}),true);
+ assert.equal(scope.comparisonEligible({comparison_id:'C',result_ids:['R']},{results:[row],study,context}),true);
+ assert.equal(scope.comparisonEligible({comparison_id:'empty',result_ids:[]},{study,context}),true);
+ assert.equal(scans,1);
+ let mixedScans=0;
+ const mixed={title:'Trial',details:{get quantitative_results(){mixedScans++;return [{population:{label:'NSCLC cohort'}}];}}};
+ const mixedContext=scope.contextFor(mixed),sample={main_result_eligible:true,report_id:'P',population_id:'mel',source_input_sha256:'S',population:{label:'Melanoma cohort'}};
+ assert.equal(scope.comparisonEligible({comparison_id:'N',scope:{report_id:'P',population_id:'mel',source_input_sha256:'S'}},{samples:[sample],study:mixed,context:mixedContext}),true);
+ assert.equal(mixedScans,1);
+});
+test('context from another study is ignored and a new operation observes mutable fixture changes',()=>{
+ const row={main_result_eligible:true,population:{label:'All enrolled patients'}};
+ const first={title:'Trial',details:{quantitative_results:[]}},second={title:'Melanoma or NSCLC trial'};
+ const context=scope.contextFor(first);
+ assert.equal(scope.resultEligible(row,{study:second,context}),false);
+ assert.equal(scope.resultEligible(row,{study:first,context}),true);
+ first.details.quantitative_results.push({population:{label:'NSCLC cohort'}});
+ assert.equal(scope.contextFor(first).mixed,true);
+ assert.equal(scope.resultEligible(row,{study:first,context:scope.contextFor(first)}),false);
+ assert.equal(scope.resultEligible(row,{study:first}),false);
+});
+test('patient counts use own population evidence, not assay/background or unrelated foreign cohorts',()=>{
+ const study={title:'Study in melanoma or NSCLC',details:{evidence_registry:{mel:{supporting_quote:'449 patients with advanced melanoma received nivolumab.'},pooled:{supporting_quote:'51 patients enrolled: 28 NSCLC and 23 melanoma.'}}}};
+ const context=scope.contextFor(study);
+ const row={main_result_eligible:true,population:{description:{text:'Patients identified as receiving nivolumab',evidence_ids:['mel']}},original_fact:{text:'T-cell lines and renal cell carcinoma are discussed elsewhere.'}};
+ assert.equal(scope.sampleEligible(row,{study,context}),true);
+ assert.equal(scope.sampleEligible({...row,population:{description:{text:'All enrolled patients',evidence_ids:['pooled']}}},{study,context}),false);
+ for(const label of ['Study 2 metastatic melanoma subgroup','Patients with malignant melanoma in the mixed-cancer study','Melanoma patients with vaccination-site T-cell findings'])assert.equal(scope.sampleEligible({...row,population:{description:{text:label}}},{study,context}),true);
+ assert.equal(scope.sampleEligible({...row,population:{description:{text:'Solid tumor patients including melanoma'}}},{study,context}),false);
+ const canonical={...row,review_binding_sha256:'a'.repeat(64),population:{label:'Patients receiving treatment',evidence_ids:['own']}};
+ const registry=new Map([['CE-'+ 'a'.repeat(24)+'-own',{supporting_quote:'Patients with melanoma received treatment.'}]]);
+ assert.equal(scope.sampleEligible(canonical,{study,context:scope.contextFor(study,{evidenceRegistry:registry})}),true);
+ const qualifiedGeneric={...row,population:{label:'Safety population: patients receiving study drug',population_scope:'melanoma',evidence_ids:['pooled']}};
+ assert.equal(scope.sampleEligible(qualifiedGeneric,{study,context}),true);
+ assert.equal(scope.sampleEligible({...qualifiedGeneric,population:{...qualifiedGeneric.population,label:'NSCLC safety cohort'}},{study,context}),false);
+ assert.equal(scope.sampleEligible({...row,main_result_eligible:false},{study,context}),false);
+});

@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "version": "2026-10-28.1",
+  "status": "initial_actual_trial_examples_extensible",
+  "creation_policy": "Only documented actual regimens; no Cartesian products of agents. Not an eligibility whitelist.",
+  "regimens": [
+    {
+      "regimen_id": "nivolumab_ipilimumab",
+      "trial_name": "CheckMate 067",
+      "trial_identifiers": [
+        "NCT01844505"
+      ],
+      "experimental_drug_ids": [
+        "nivolumab",
+        "ipilimumab"
+      ],
+      "shared_background_drug_ids": [],
+      "comparator_drug_ids": [
+        "nivolumab",
+        "ipilimumab"
+      ],
+      "regimen_category": "immunotherapy",
+      "priority_class": "core",
+      "equal_priority_core": true,
+      "supporting_sources": [
+        {
+          "url": "https://www.nejm.org/doi/pdf/10.1056/NEJMoa1910836",
+          "accessed": "2026-10-28",
+          "kind": "original_trial_report_or_authoritative_trial_description"
+        }
+      ],
+      "notes": "Actual documented trial regimen; doses, sequence, exact comparator and backbones must still be taken from each report. Comparator list may represent separate arms/options, not concurrent coadministration."
+    },
+    {
+      "regimen_id": "nivolumab_relatlimab",
+      "trial_name": "RELATIVITY-047",
+      "trial_identifiers": [
+        "NCT03470922"
+      ],
+      "experimental_drug_ids": [
+        "nivolumab",
+        "relatlimab"
+      ],
+      "shared_background_drug_ids": [],
+      "comparator_drug_ids": [
+        "nivolumab"
+      ],
+      "regimen_category": "immunotherapy",
+      "priority_class": "core",
+      "equal_priority_core": true,
+      "supporting_sources": [
+        {
+          "url": "https://ascopubs.org/doi/full/10.1200/JCO.24.01124",
+          "accessed": "2026-10-28",
+          "kind": "original_trial_report_or_authoritative_trial_description"
+        }
+      ],
+      "notes": "Actual documented trial regimen; doses, sequence, exact comparator and backbones must still be taken from each report. Comparator list may represent separate arms/options, not concurrent coadministration."
+    },
+    {
+      "regimen_id": "pembrolizumab_axitinib",
+      "trial_name": "KEYNOTE-426",
+      "trial_identifiers": [
+        "NCT02853331"
+      ],
+      "experimental_drug_ids": [
+        "pembrolizumab",
+        "axitinib"
+      ],
+      "shared_background_drug_ids": [],
+      "comparator_drug_ids": [
+        "sunitinib"
+      ],
+      "regimen_category": "immunotherapy_targeted_therapy",
+      "priority_class": "core",
+      "equal_priority_core": true,
+      "supporting_sources": [
+        {
+          "url": "https://www.nejm.org/doi/10.1056/NEJMoa1816714",
+          "accessed": "2026-10-28",
+          "kind": "original_trial_report_or_authoritative_trial_description"
+        }
+      ],
+      "notes": "Actual documented trial regimen; doses, sequence, exact comparator and backbones must still be taken from each report. Comparator list may represent separate arms/options, not concurrent coadministration."
+    },
+    {
+      "regimen_id": "dabrafenib_trametinib",
+      "trial_name": "COMBI-d",
+      "trial_identifiers": [
+        "NCT01584648"
+      ],
+      "experimental_drug_ids": [
+        "dabrafenib",
+        "trametinib"
+      ],
+      "shared_background_drug_ids": [],
+      "comparator_drug_ids": [
+        "dabrafenib"
+      ],
+      "regimen_category": "targeted_therapy",
+      "priority_class": "core",
+      "equal_priority_core": true,
+      "supporting_sources": [
+        {
+          "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa1406037",
+          "accessed": "2026-10-28",
+          "kind": "original_trial_report_or_authoritative_trial_description"
+        }
+      ],
+      "notes": "Actual documented trial regimen; doses, sequence, exact comparator and backbones must still be taken from each report. Comparator list may represent separate arms/options, not concurrent coadministration."
+    },
+    {
+      "regimen_id": "palbociclib_letrozole",
+      "trial_name": "PALOMA-2",
+      "trial_identifiers": [
+        "NCT01740427"
+      ],
+      "experimental_drug_ids": [
+        "palbociclib"
+      ],
+      "shared_background_drug_ids": [
+        "letrozole"
+      ],
+      "comparator_drug_ids": [],
+      "regimen_category": "endocrine_combination",
+      "priority_class": "core",
+      "equal_priority_core": true,
+      "supporting_sources": [
+        {
+          "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa1607303",
+          "accessed": "2026-10-28",
+          "kind": "original_trial_report_or_authoritative_trial_description"
+        }
+      ],
+      "notes": "Actual documented trial regimen; doses, sequence, exact comparator and backbones must still be taken from each report. Comparator list may represent separate arms/options, not concurrent coadministration."
+    },
+    {
+      "regimen_id": "olaparib_abiraterone",
+      "trial_name": "PROpel",
+      "trial_identifiers": [
+        "NCT03732820"
+      ],
+      "experimental_drug_ids": [
+        "olaparib"
+      ],
+      "shared_background_drug_ids": [
+        "abiraterone"
+      ],
+      "comparator_drug_ids": [],
+      "regimen_category": "endocrine_combination",
+      "priority_class": "core",
+      "equal_priority_core": true,
+      "supporting_sources": [
+        {
+          "url": "https://www.cancer.gov/types/prostate/hp/prostate-treatment-pdq",
+          "accessed": "2026-10-28",
+          "kind": "original_trial_report_or_authoritative_trial_description"
+        }
+      ],
+      "notes": "Actual documented trial regimen; doses, sequence, exact comparator and backbones must still be taken from each report. Comparator list may represent separate arms/options, not concurrent coadministration. Preserve any reported ongoing ADT separately; never invent a specific ADT agent.",
+      "supportive_agents": [
+        "prednisone or prednisolone"
+      ]
+    },
+    {
+      "regimen_id": "enfortumab_vedotin_pembrolizumab",
+      "trial_name": "EV-302",
+      "trial_identifiers": [
+        "NCT04223856"
+      ],
+      "experimental_drug_ids": [
+        "enfortumab_vedotin",
+        "pembrolizumab"
+      ],
+      "shared_background_drug_ids": [],
+      "comparator_drug_ids": [
+        "gemcitabine",
+        "cisplatin",
+        "carboplatin"
+      ],
+      "regimen_category": "immunotherapy_targeted_therapy",
+      "priority_class": "core",
+      "equal_priority_core": true,
+      "supporting_sources": [
+        {
+          "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=b5631d3e-4604-4363-8f20-11dfc5a4a8ed",
+          "accessed": "2026-10-28",
+          "kind": "original_trial_report_or_authoritative_trial_description"
+        }
+      ],
+      "notes": "Actual documented trial regimen; doses, sequence, exact comparator and backbones must still be taken from each report. Comparator list may represent separate arms/options, not concurrent coadministration."
+    }
+  ]
+}

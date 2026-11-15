@@ -1,0 +1,26 @@
+{
+  "version": "cutaneous-openai-short-context-2026-10-30-v1",
+  "scope": "Native Responses default/global text, input at most272000tokens; never batch or priority",
+  "rate_cards": [
+    {
+      "version": "cutaneous-openai-short-context-2026-10-30-v1",
+      "provider": "openai", "model": "gpt-6.1-sol", "api_kind": "responses",
+      "request_type": "standard", "service_tier": "default",
+      "verified": true, "verified_at": "2026-10-31T02:33:38+00:00",
+      "source_urls": ["https://developers.openai.com/api/docs/pricing", "https://developers.openai.com/api/docs/models/gpt-6.1-sol"],
+      "currency": "USD", "unit_tokens": 1000000, "regions": ["global"], "modalities": ["text"],
+      "input_min_exclusive": -1, "input_max_inclusive": 272000,
+      "usd_per_million": {"ordinary_input": "2", "cached_input": "0.10", "cache_creation:30m": "2.50", "cache_creation:12h": "5", "output": "10"}
+    },
+    {
+      "version": "cutaneous-openai-short-context-2026-10-30-v1",
+      "provider": "openai", "model": "gpt-6-luna", "api_kind": "responses",
+      "request_type": "standard", "service_tier": "default",
+      "verified": true, "verified_at": "2026-10-31T02:33:38+00:00",
+      "source_urls": ["https://developers.openai.com/api/docs/pricing", "https://developers.openai.com/api/docs/models/gpt-6-luna"],
+      "currency": "USD", "unit_tokens": 1000000, "regions": ["global"], "modalities": ["text"],
+      "input_min_exclusive": -1, "input_max_inclusive": 272000,
+      "usd_per_million": {"ordinary_input": "0.10", "cached_input": "0.01", "cache_creation:30m": "0.125", "cache_creation:12h": "0.25", "output": "0.50"}
+    }
+  ]
+}

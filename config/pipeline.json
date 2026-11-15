@@ -1,0 +1,266 @@
+{
+  "R2_output_ceiling": 16384,
+  "R2_output_tokens": 8192,
+  "R3_fresh_output_tokens": 32768,
+  "R3_output_ceiling": 32768,
+  "R3_output_tokens": 16384,
+  "abstract_check_manifest_ref": {
+    "bytes": 132262,
+    "path": "data/proposed_changes/remaining_blank_abstract_checks/CANONICAL_CHECK_RETURN_MANIFEST.json",
+    "sha256": "0635de4c51dc171bfad110e6c6908d26b72de09d15e13d3e2f474a99f400173b"
+  },
+  "additional_budget_usd": "100",
+  "article_count": 3596,
+  "authorization_basis": "Original $100 additional direct OpenAI allowance remains unchanged; user instructed switching the remaining work to Cornell on November 2, 2026. See bound route authority and frozen history.",
+  "baseline": {
+    "amount_usd": "144.959774",
+    "held_rows_ref": {
+      "bytes": 314433,
+      "path": "data/proposed_changes/canonical_runtime_consolidation/historical_held_rows.json",
+      "sha256": "543dfdf281a4682d8522005a7f70cc63485ea9f72d3f7ad933f25e34d5bcf853"
+    },
+    "proof_refs": [
+      {
+        "bytes": 39189,
+        "path": "data/proposed_changes/r3_numeric_completion_v6/final_cost_proof_v1/FINAL_NUMERICAL_CONTINUATION_COST_PROOF_v1.json",
+        "sha256": "31b98edd8c39840fd489d48af0fce85dfba5886dfbb4551e634615ea303c69dd"
+      },
+      {
+        "bytes": 5271,
+        "path": "data/proposed_changes/r3_numeric_completion_v6/final_cost_proof_v1/FINAL_INCOMPLETE_OUTPUT_HOLD_APPENDIX_v1.json",
+        "sha256": "46103c5a5786e547e9ec9a3658c5196e171be0a411ed2a033c5e0a84252c7b45"
+      }
+    ],
+    "provider_identifiers_ref": {
+      "bytes": 2002667,
+      "path": "data/proposed_changes/canonical_runtime_consolidation/historical_provider_identifiers.json",
+      "sha256": "047cf0d68af4d5ce7f024be54ad22b17a1e094e38d22ca50075a3ba178280128"
+    }
+  },
+  "catalog_enum_repair_ref": {
+    "bytes": 648794,
+    "path": "data/audits/schema_repair_authorizations/6d7b415b0fe68869cfc321a0cdd44c816e387f3860ec009ca2ca11d3c39d988c.json",
+    "sha256": "ad0bcdfbb8105ac0506c823f2d932692fc7ebc222107b47aef89cfa5894504a4"
+  },
+  "clinical_publish_interval_seconds": 120,
+  "cohort": {
+    "bytes": 15529465,
+    "path": "data/cohort/broad_melanoma_keyword_v2/new_candidates.jsonl",
+    "sha256": "2f8050cca670bb0de40f4a88673c54682dad44443073ddd1d4d1559037f898c4"
+  },
+  "created_at": "2026-11-02T01:38:41.317968+00:00",
+  "decision_repair_plan": {
+    "bytes": 2319,
+    "path": "data/audits/decision_repair_plan/0b217d80c0afc4f718dd7b5fe60e8efd39df0bc92143715085a0e6c8fefab89c.json",
+    "sha256": "3f4910fb4bee5eab1763179fe29c54b60dbf17d94cce9cb668c7e04a191b4d0c"
+  },
+  "direct_OpenAI_dispatch_enabled": false,
+  "direct_financial_activation_ref": {
+    "bytes": 5003,
+    "path": "data/audits/financial_activation/cc4d4ae022783e5c3525b1783203c17b485a51351524b04ed94bffd6dd3503b0.json",
+    "sha256": "3deb28cc72b7712da235a2e6a79ba2d846bd857ecf0ac6f2ae10f33655cf7826"
+  },
+  "endpoint": "https://api.ai.it.cornell.edu/v1/responses",
+  "financial_activation": {
+    "bytes": 2393,
+    "path": "data/audits/financial_activation/02d2631f6e53202b07d0b70815b068f3d8dba10aa41681fbaed369c5190aefb3.json",
+    "sha256": "4358c27d25e236bb4d5092b3d1bdfcec027903f32bbb51574bf29a7edef7ba17"
+  },
+  "gateway_route_ref": {
+    "bytes": 2173,
+    "path": "data/audits/route_authorizations/492b1de5177c5b5f51e554d98e5ddfc7802d9cca228ff8b9db15aaf917085e13.json",
+    "sha256": "f568af01e3010e2d3b589af23f602e2ea58657309989a5824d6055c893bf5117"
+  },
+  "gateway_timeout_seconds": 3600,
+  "include_deferred_treatments": true,
+  "include_separate_treatments": false,
+  "max_attempts": 3,
+  "max_workers": 128,
+  "models": {
+    "R2": "gpt-6.1-sol",
+    "R3": "gpt-6-luna"
+  },
+  "not_after_utc": "2026-11-04T01:38:41.318094+00:00",
+  "phase_id": "melanoma-expansion-3596",
+  "producer_files": [
+    {
+      "bytes": 100,
+      "path": "src/metamelanoma/__init__.py",
+      "sha256": "404bc0c6b15cb0043d492c6d798763dfb8a385b7c3d1b6b74b9b17a69672643e"
+    },
+    {
+      "bytes": 17298,
+      "path": "src/metamelanoma/abstracts.py",
+      "sha256": "c525a3e1092d782d39ff02b3f0983313fa26738adbec9fa821d8ec3ee0ab71b7"
+    },
+    {
+      "bytes": 51041,
+      "path": "src/metamelanoma/accounting.py",
+      "sha256": "8183a51f512567df1b057f393e8b8e98a4c135a2dfba73c02926a7a302426d94"
+    },
+    {
+      "bytes": 8088,
+      "path": "src/metamelanoma/adjudication.py",
+      "sha256": "4c15e43391c2a79be53284932dd73ef9456cc16bb3ec0715a6caee0ead77ea6d"
+    },
+    {
+      "bytes": 5335,
+      "path": "src/metamelanoma/bootstrap.py",
+      "sha256": "a49d917b1751c418d50e8c04a169e2336dc62b5762f48bc291235687b65b81a9"
+    },
+    {
+      "bytes": 2468,
+      "path": "src/metamelanoma/cli.py",
+      "sha256": "a6b369836382e82f029a650dd1973e1afad1df0421675e1d55fcd44c19e0ff14"
+    },
+    {
+      "bytes": 12457,
+      "path": "src/metamelanoma/eligibility_repair.py",
+      "sha256": "2d4e47ed83a4cd69a274397e9ec1010366d67d657add549c128b3d0ad7742658"
+    },
+    {
+      "bytes": 17391,
+      "path": "src/metamelanoma/execution.py",
+      "sha256": "14aeedc833ace6c9af9e329cdf852e923bf882d0b400c125f594a34d99c41728"
+    },
+    {
+      "bytes": 6840,
+      "path": "src/metamelanoma/gateway.py",
+      "sha256": "393c31e13fa7261e5e435f51c41185f9a56b5e88f4522e3b58525d1dcf71d8af"
+    },
+    {
+      "bytes": 59805,
+      "path": "src/metamelanoma/gateway_accounting.py",
+      "sha256": "d42289d84062e87dcf18943f56adafc90d0551bd3d31570e174d510e7771cdbc"
+    },
+    {
+      "bytes": 15368,
+      "path": "src/metamelanoma/gateway_recovery.py",
+      "sha256": "4b50dc3429cd5d4890fefd84eae5ec981584143f73415d1f8dd0cb07dded6c39"
+    },
+    {
+      "bytes": 3611,
+      "path": "src/metamelanoma/io.py",
+      "sha256": "ad686f19f662e219ff53ae09cc20276c3f63e454f20ab65f85efab73e793e30d"
+    },
+    {
+      "bytes": 8014,
+      "path": "src/metamelanoma/linked_sources.py",
+      "sha256": "d198ce44e5752b46eb9452a9b547c7a0811bca637cbdbcb05f458015b1b89c7a"
+    },
+    {
+      "bytes": 19928,
+      "path": "src/metamelanoma/maintenance.py",
+      "sha256": "09aa85449a651d44f1c6c8941d3b4f7e8c89d74b75b9f7e08e964b96afb15a01"
+    },
+    {
+      "bytes": 46756,
+      "path": "src/metamelanoma/normalization.py",
+      "sha256": "57d2f1d64a010cec9823c92adb49450ebdb70ce5102e973ed03502b1d14d6177"
+    },
+    {
+      "bytes": 46174,
+      "path": "src/metamelanoma/pipeline.py",
+      "sha256": "bc342c3fb4da80c972b49e641b253f58d486b601c9e2c49cedc825d64fd97ecd"
+    },
+    {
+      "bytes": 16601,
+      "path": "src/metamelanoma/pmc_html.py",
+      "sha256": "29a86a5a64167e6734923ebf88f03b69261247b4706ad4504bbbd0cd5cc7d220"
+    },
+    {
+      "bytes": 7190,
+      "path": "src/metamelanoma/prefetch.py",
+      "sha256": "846cf26d78bfeace00c9086167757fe31dd2949d8cbfad1d22650f4749ee71c9"
+    },
+    {
+      "bytes": 13906,
+      "path": "src/metamelanoma/registry.py",
+      "sha256": "966e7eac2ada48c1fc06781fcb3c78ea15f85ec18687e7e42f4a928a656c5b8c"
+    },
+    {
+      "bytes": 10130,
+      "path": "src/metamelanoma/schema.py",
+      "sha256": "46658a4593df9b28261583a156abf10d5bf5201a32a7762c97ef4509da91fc9a"
+    },
+    {
+      "bytes": 12820,
+      "path": "src/metamelanoma/screening.py",
+      "sha256": "7770b01e107a7abca82a1ca2229e915ebdac220c62666fcc9df3db925e754a5a"
+    },
+    {
+      "bytes": 33907,
+      "path": "src/metamelanoma/sources.py",
+      "sha256": "624f57b60de9738b11b9eb9928b679df44f2c79cb6d8161d726fab0ccd97a233"
+    },
+    {
+      "bytes": 13892,
+      "path": "src/metamelanoma/transport.py",
+      "sha256": "e4a93e7e6b182290c27af6b6c2e8901231dd371bc8a409af773aed6ab9f9283e"
+    },
+    {
+      "bytes": 15499,
+      "path": "src/metamelanoma/usage_reconciliation.py",
+      "sha256": "58e92054b0dfb2f76a06ea814bdef958029ddc800bc2a514860b362e223f1bf6"
+    },
+    {
+      "bytes": 26987,
+      "path": "src/metamelanoma/validation.py",
+      "sha256": "a03d323ad35ed97a948649fcb673e70438dce0ccc847cc8f4f8d35b8578f52c3"
+    }
+  ],
+  "provider": "cornell_openai_gateway",
+  "reasoning_effort": "high",
+  "route_amended_at": "2026-11-02T05:41:53.782238+00:00",
+  "service_tier": "default",
+  "source_adjudications": [
+    {
+      "bytes": 661,
+      "path": "data/audits/applied_source_adjudication/2ac647328996f12c6943db5748b3e3134360dd0527daff346841dbbae3fb747b.json",
+      "sha256": "6bbde3e04695f0596bf735c3015e469a1c838b89ba06c6e11b688f1535d552ed"
+    },
+    {
+      "bytes": 795,
+      "path": "data/audits/applied_source_adjudication/e5457e590c4440d577325096f9a769b244241c9a745dc308d5429ad26fcd0ccf.json",
+      "sha256": "bb5eddd7933501655b1fc58ff7b636a4db766ebaf8ff45421f3e87774c8a32b6"
+    },
+    {
+      "bytes": 2054,
+      "path": "data/audits/applied_source_adjudication/8d0cf63b44df85a25db04c7eae9c9cbb981175ff7cfdbbb4e58ed0ed03b06e26.json",
+      "sha256": "779b281350277a90508a79f6287463f8a4a6ad1bf14588d5b19a75e74fbdd488"
+    },
+    {
+      "bytes": 1461,
+      "path": "data/audits/applied_source_adjudication/bd1a65941dff39f20c8abb6ec9a2c531316e00053c68b4ba4de4b708878e874b.json",
+      "sha256": "d688af2259c58098f380ec03aa465719918423db27347c100fc5c6d89575920c"
+    },
+    {
+      "bytes": 3485,
+      "path": "data/audits/applied_source_adjudication/11ddfedf1c74a3b8d32b35b0065e5da33cb3888ccc4cd3a6e6f0828cb20be67d.json",
+      "sha256": "08b36d07639d40210ee826ae4176eb1ce7a54f188da302384e73baad7d6e291c"
+    },
+    {
+      "bytes": 1444,
+      "path": "data/audits/applied_source_adjudication/9214a38c4e30cb20e926d967d9f64d0efbd64443b063e248e72d9128c18e53fd.json",
+      "sha256": "cd095098ad6a89831ec6c004b53f85c31502057cd07e8b90046a6a3c6f43698e"
+    }
+  ],
+  "source_recovery_refs": [
+    {
+      "bytes": 226451,
+      "path": "data/audits/source_recovery_authorizations/a1f9959babc2576ea17582ff701b036279edbc8624e2c44577f58fc9cd26b1e9.json",
+      "sha256": "a1f9959babc2576ea17582ff701b036279edbc8624e2c44577f58fc9cd26b1e9"
+    },
+    {
+      "bytes": 23886,
+      "path": "data/audits/source_recovery_authorizations/87f2d9be53f6fe92bfebd3747cf77cfa2e7e0e30961f29977f06ff78fa5e275e.json",
+      "sha256": "87f2d9be53f6fe92bfebd3747cf77cfa2e7e0e30961f29977f06ff78fa5e275e"
+    }
+  ],
+  "source_revalidation_acceptance": {
+    "bytes": 843826,
+    "path": "data/audits/offline_revalidation/5346d53848ce6d4b6e5d51367920b44bf333ab24c25f881eaf5200725b8a9af7.json",
+    "sha256": "e44e158f9225250f03dd00f0e133465fe67413882bb7817d4e8d0591882bbd2e"
+  },
+  "total_cap_usd": "244.959774"
+}

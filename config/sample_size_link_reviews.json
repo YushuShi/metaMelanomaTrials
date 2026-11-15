@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "reviews": [
+    {
+      "id": "COMBI-i-42585631-OS-full-analysis-N",
+      "reviewed_on": "2026-11-14",
+      "pmid": "42585631",
+      "effect_source_sha256": "1729ed7f86a554a587742a570accfe0e33a091a842ff588f8f8831f1b322b926",
+      "count_source_sha256": "236577b858e251d10dd008b61b27283b7b7931c3b5dea08ad9eb57006e771d4c",
+      "effect_id": "hr_os",
+      "population_id": "pop1",
+      "intervention_arm_id": "arm1",
+      "reference_arm_id": "arm2",
+      "endpoint": "OS",
+      "measure": "HR",
+      "estimate": 0.76,
+      "ci_lower": 0.598,
+      "ci_upper": 0.966,
+      "ci_level": 95,
+      "cutoff": "2024-08-21",
+      "counts": [
+        {
+          "id": "n_fas_1",
+          "arm_id": "arm1",
+          "n": 267
+        },
+        {
+          "id": "n_fas_2",
+          "arm_id": "arm2",
+          "n": 265
+        }
+      ],
+      "evidence_id": "span-f10b53e9517f7bc9499d168f",
+      "quote_sha256": "1905d19fec485b64fd1d8e7e1416a04545b57792631b9d344946f79e4ce59d9f",
+      "reason": "Saved full-text TABLE A1 reports OS HR 0.760 (0.598 to 0.966) and full analysis set arm Ns 267 and 265. The R3 effect estimate was masked by a prior literal-validation issue; this reviewed association uses accepted arm counts and the exact saved table, without changing or accepting that masked effect."
+    }
+  ]
+}

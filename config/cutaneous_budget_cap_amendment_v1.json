@@ -1,0 +1,19 @@
+{
+  "account_id": "user_openaiApi_env_2026_10_30",
+  "authorized_at": "2026-10-31T03:39:18.820692+00:00",
+  "baseline_authority": {
+    "bytes": 2188,
+    "path": "data/reviews/v1/pilot_review_bundle_v1/APPROVED_budget_authority_v1.json",
+    "sha256": "851afe6449653422ebb336616f4b9c800e6052a335cbffe3a698f8b801150282"
+  },
+  "cap_usd": "180",
+  "currency": "USD",
+  "instruction_scope": "Cumulative direct OpenAI R2 and R3 budget; replaces the100USD ceiling with180USD, adding80USD capacity rather than resetting usage.",
+  "no_budget_reset": true,
+  "preserve_all_existing_reservations_events_and_legacy_liabilities": true,
+  "previous_cap_usd": "100",
+  "project": "metaCutaneousMelanomaTrial",
+  "schema_version": 1,
+  "status": "approved",
+  "user_instruction": "please make the threshold be 180 dollars than 100"
+}

@@ -1,0 +1,784 @@
+{
+  "source_subset": "data/proposed_changes/sample_sizes_survival_20261105/PMID27269740_SEQUENCE_SUBSET.json",
+  "comparison": {
+    "additional_intervention_drug_ids": [],
+    "additional_intervention_ids": [],
+    "additional_intervention_label": null,
+    "comparator_arm_id": null,
+    "comparator_drug_ids": [],
+    "comparator_filter_eligible": false,
+    "comparator_key": null,
+    "comparator_label": null,
+    "comparator_regimen": {
+      "arm_id": null,
+      "compiler_version": 2,
+      "evidence_ids": [],
+      "origin": "legacy_label",
+      "placebo": false,
+      "raw_label": "",
+      "record_kind": "regimen_definition",
+      "role": "actual_regimen",
+      "root": {
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "dose": null,
+        "evidence_ids": [],
+        "metadata_literals": {
+          "dose": [],
+          "route": [],
+          "schedule": []
+        },
+        "name": null,
+        "raw_label": "",
+        "reported_class": null,
+        "route": null,
+        "schedule": null,
+        "type": "unknown"
+      },
+      "schema_version": 1,
+      "source_binding": {
+        "comparison_id": "CE-2bf346e138415b8489344df0-C-6c9d75389541a6f9",
+        "role": "comparator",
+        "scope": {
+          "population_id": "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:pop-itt",
+          "record_kind": "canonical_review_scope",
+          "report_id": "report-eb4e1504cd454b6a073ef0af",
+          "review_binding_sha256": "2bf346e138415b8489344df09a8beefbe9fe6b84a56435364b5dafce47774077",
+          "review_stage": "R2",
+          "source_input_sha256": "905bc58a72439c6781c0b6efc0da3dcfccc62c810a8897320cbe0f45cf6757d4"
+        }
+      }
+    },
+    "comparison_filter_eligible": true,
+    "comparison_id": "CE-2bf346e138415b8489344df0-C-6c9d75389541a6f9",
+    "intervention_arm_id": null,
+    "intervention_drug_ids": [],
+    "intervention_regimen": {
+      "arm_id": null,
+      "compiler_version": 2,
+      "evidence_ids": [],
+      "origin": "legacy_label",
+      "placebo": false,
+      "raw_label": "",
+      "record_kind": "regimen_definition",
+      "role": "actual_regimen",
+      "root": {
+        "agent_id": null,
+        "class_id": null,
+        "class_source": null,
+        "dose": null,
+        "evidence_ids": [],
+        "metadata_literals": {
+          "dose": [],
+          "route": [],
+          "schedule": []
+        },
+        "name": null,
+        "raw_label": "",
+        "reported_class": null,
+        "route": null,
+        "schedule": null,
+        "type": "unknown"
+      },
+      "schema_version": 1,
+      "source_binding": {
+        "comparison_id": "CE-2bf346e138415b8489344df0-C-6c9d75389541a6f9",
+        "role": "intervention",
+        "scope": {
+          "population_id": "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:pop-itt",
+          "record_kind": "canonical_review_scope",
+          "report_id": "report-eb4e1504cd454b6a073ef0af",
+          "review_binding_sha256": "2bf346e138415b8489344df09a8beefbe9fe6b84a56435364b5dafce47774077",
+          "review_stage": "R2",
+          "source_input_sha256": "905bc58a72439c6781c0b6efc0da3dcfccc62c810a8897320cbe0f45cf6757d4"
+        }
+      }
+    },
+    "kind": "unresolved_comparator",
+    "outcome_arm_id": null,
+    "outcome_arm_label": null,
+    "result_ids": [
+      "CE-2bf346e138415b8489344df0-F-99f7cc534d9a4961"
+    ],
+    "result_relation": "other",
+    "scope": {
+      "population_id": "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:pop-itt",
+      "record_kind": "canonical_review_scope",
+      "report_id": "report-eb4e1504cd454b6a073ef0af",
+      "review_binding_sha256": "2bf346e138415b8489344df09a8beefbe9fe6b84a56435364b5dafce47774077",
+      "review_stage": "R2",
+      "source_input_sha256": "905bc58a72439c6781c0b6efc0da3dcfccc62c810a8897320cbe0f45cf6757d4"
+    }
+  },
+  "result": {
+    "API_verification_pending": false,
+    "analysis_n": {
+      "evidence_ids": [],
+      "qualifier": "not_reported",
+      "raw_text": null,
+      "status": "not_reported",
+      "unit": null,
+      "value": null
+    },
+    "arm": null,
+    "arm_id": null,
+    "ci_lower": {
+      "evidence_ids": [
+        "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+      ],
+      "missing_reason": null,
+      "qualifier": "equal",
+      "raw_text": "0·29",
+      "role": "ci_lower",
+      "status": "reported",
+      "unit": null,
+      "value": 0.29
+    },
+    "ci_upper": {
+      "evidence_ids": [
+        "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+      ],
+      "missing_reason": null,
+      "qualifier": "equal",
+      "raw_text": "0·80",
+      "role": "ci_upper",
+      "status": "reported",
+      "unit": null,
+      "value": 0.8
+    },
+    "clinical_validation": false,
+    "clinical_verified": false,
+    "comparator_arm": null,
+    "comparison_id": "CE-2bf346e138415b8489344df0-C-6c9d75389541a6f9",
+    "confidence_level": {
+      "evidence_ids": [
+        "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+      ],
+      "missing_reason": null,
+      "qualifier": "equal",
+      "raw_text": "95",
+      "role": "confidence_level",
+      "status": "reported",
+      "unit": "%",
+      "value": 95
+    },
+    "contrast_type": "treatment_comparison",
+    "cutoff": null,
+    "denominator": {
+      "evidence_ids": [],
+      "qualifier": "not_reported",
+      "raw_text": null,
+      "status": "not_reported",
+      "unit": null,
+      "value": null
+    },
+    "endpoint": {
+      "definition": {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:methods",
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "text": "Overall survival"
+      },
+      "family": "overall_survival"
+    },
+    "estimate": {
+      "evidence_ids": [
+        "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+      ],
+      "missing_reason": null,
+      "qualifier": "equal",
+      "raw_text": "0·48",
+      "role": "estimate",
+      "status": "reported",
+      "unit": null,
+      "value": 0.48
+    },
+    "evidence_ids": [
+      "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+    ],
+    "evidence_origin": "own_report_results",
+    "experimental_arm": null,
+    "final_R3_complete": false,
+    "main_result_eligible": true,
+    "measure": "HR",
+    "measure_verbatim": "HR",
+    "model": {
+      "adjusted_status": "not_reported",
+      "analysis_population_id": "r2-c6143374b91e065215d43d7e6aa4:pop-itt",
+      "arm_ids": [
+        "r2-c6143374b91e065215d43d7e6aa4:arm-nivolumab-first",
+        "r2-c6143374b91e065215d43d7e6aa4:arm-ipilimumab-first"
+      ],
+      "contrast_type": "treatment_comparison",
+      "cutoff_id": null,
+      "endpoint_id": "r2-c6143374b91e065215d43d7e6aa4:endpoint-os",
+      "estimand": "Reported overall-survival hazard ratio; numerator/reference direction not explicitly attached to numerical HR",
+      "evidence_ids": [
+        "r2-c6143374b91e065215d43d7e6aa4:methods",
+        "r2-c6143374b91e065215d43d7e6aa4:findings"
+      ],
+      "evidence_origin": "own_report_results",
+      "family": null,
+      "model_id": "r2-c6143374b91e065215d43d7e6aa4:model-os-hr",
+      "scope": "observed",
+      "variables": []
+    },
+    "model_id": "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:model-os-hr",
+    "numerator": {
+      "evidence_ids": [],
+      "qualifier": "not_reported",
+      "raw_text": null,
+      "status": "not_reported",
+      "unit": null,
+      "value": null
+    },
+    "numerical_extraction_complete": false,
+    "original_fact": {
+      "arm_id": null,
+      "clinical_endpoint_family": "overall_survival",
+      "comparator_arm_id": null,
+      "contrast_type": "treatment_comparison",
+      "count_context": "not_applicable",
+      "cutoff_id": null,
+      "domain": "efficacy_outcomes",
+      "endpoint_id": "r2-c6143374b91e065215d43d7e6aa4:endpoint-os",
+      "evidence_ids": [
+        "r2-c6143374b91e065215d43d7e6aa4:findings"
+      ],
+      "evidence_origin": "own_report_results",
+      "experimental_arm_id": null,
+      "fact_id": "r2-c6143374b91e065215d43d7e6aa4:fact-overall-survival-hr",
+      "field": "overall-survival-hr",
+      "link_gaps": [
+        "cutoff",
+        "treatment_direction"
+      ],
+      "measure": "HR",
+      "model_id": "r2-c6143374b91e065215d43d7e6aa4:model-os-hr",
+      "numbers": [
+        {
+          "evidence_ids": [
+            "r2-c6143374b91e065215d43d7e6aa4:findings"
+          ],
+          "missing_reason": null,
+          "qualifier": "equal",
+          "raw_text": "0·48",
+          "role": "estimate",
+          "status": "reported",
+          "unit": null,
+          "value": 0.48
+        },
+        {
+          "evidence_ids": [
+            "r2-c6143374b91e065215d43d7e6aa4:findings"
+          ],
+          "missing_reason": null,
+          "qualifier": "equal",
+          "raw_text": "0·29",
+          "role": "ci_lower",
+          "status": "reported",
+          "unit": null,
+          "value": 0.29
+        },
+        {
+          "evidence_ids": [
+            "r2-c6143374b91e065215d43d7e6aa4:findings"
+          ],
+          "missing_reason": null,
+          "qualifier": "equal",
+          "raw_text": "0·80",
+          "role": "ci_upper",
+          "status": "reported",
+          "unit": null,
+          "value": 0.8
+        },
+        {
+          "evidence_ids": [
+            "r2-c6143374b91e065215d43d7e6aa4:findings"
+          ],
+          "missing_reason": null,
+          "qualifier": "equal",
+          "raw_text": "95",
+          "role": "confidence_level",
+          "status": "reported",
+          "unit": "%",
+          "value": 95
+        }
+      ],
+      "reported_trial": null,
+      "result_population_id": "r2-c6143374b91e065215d43d7e6aa4:pop-itt",
+      "scope": "observed",
+      "status": "reported",
+      "text": "Reported HR0.48with95%CI0.29-0.80. Numerical hazard-ratio direction remains unresolved; no experimental/reference arm is assigned from favorable survival prose."
+    },
+    "p_value": {
+      "evidence_ids": [],
+      "qualifier": "not_reported",
+      "raw_text": null,
+      "status": "not_reported",
+      "unit": null,
+      "value": null
+    },
+    "pmid": "27269740",
+    "pooling_eligible": false,
+    "population": {
+      "entity_id": "r2-c6143374b91e065215d43d7e6aa4:pop-itt",
+      "evidence_ids": [
+        "r2-c6143374b91e065215d43d7e6aa4:methods",
+        "r2-c6143374b91e065215d43d7e6aa4:findings"
+      ],
+      "kind": "population",
+      "label": "As-treated analysis population:68nivolumab-first and70ipilimumab-first; no total computed",
+      "parent_id": "r2-c6143374b91e065215d43d7e6aa4:pop-randomized",
+      "population_scope": "melanoma"
+    },
+    "population_id": "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:pop-itt",
+    "record_kind": "canonical_clinical_fact",
+    "report_R3_complete": false,
+    "report_id": "report-eb4e1504cd454b6a073ef0af",
+    "reported_numbers": [
+      {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "missing_reason": null,
+        "qualifier": "equal",
+        "raw_text": "0·48",
+        "role": "estimate",
+        "status": "reported",
+        "unit": null,
+        "value": 0.48
+      },
+      {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "missing_reason": null,
+        "qualifier": "equal",
+        "raw_text": "0·29",
+        "role": "ci_lower",
+        "status": "reported",
+        "unit": null,
+        "value": 0.29
+      },
+      {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "missing_reason": null,
+        "qualifier": "equal",
+        "raw_text": "0·80",
+        "role": "ci_upper",
+        "status": "reported",
+        "unit": null,
+        "value": 0.8
+      },
+      {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "missing_reason": null,
+        "qualifier": "equal",
+        "raw_text": "95",
+        "role": "confidence_level",
+        "status": "reported",
+        "unit": "%",
+        "value": 95
+      }
+    ],
+    "result_id": "CE-2bf346e138415b8489344df0-F-99f7cc534d9a4961",
+    "result_relation": "other",
+    "review_binding_sha256": "2bf346e138415b8489344df09a8beefbe9fe6b84a56435364b5dafce47774077",
+    "review_stage": "R2",
+    "reviewer": "Sol",
+    "scope": "observed",
+    "source_input_sha256": "905bc58a72439c6781c0b6efc0da3dcfccc62c810a8897320cbe0f45cf6757d4",
+    "source_report_coverage_complete": false,
+    "source_reported_numbers": [
+      {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "missing_reason": null,
+        "qualifier": "equal",
+        "raw_text": "0·48",
+        "role": "estimate",
+        "status": "reported",
+        "unit": null,
+        "value": 0.48
+      },
+      {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "missing_reason": null,
+        "qualifier": "equal",
+        "raw_text": "0·29",
+        "role": "ci_lower",
+        "status": "reported",
+        "unit": null,
+        "value": 0.29
+      },
+      {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "missing_reason": null,
+        "qualifier": "equal",
+        "raw_text": "0·80",
+        "role": "ci_upper",
+        "status": "reported",
+        "unit": null,
+        "value": 0.8
+      },
+      {
+        "evidence_ids": [
+          "CE-2bf346e138415b8489344df0-r2-c6143374b91e065215d43d7e6aa4:findings"
+        ],
+        "missing_reason": null,
+        "qualifier": "equal",
+        "raw_text": "95",
+        "role": "confidence_level",
+        "status": "reported",
+        "unit": "%",
+        "value": 95
+      }
+    ],
+    "validated": false,
+    "variable": "Reported HR0.48with95%CI0.29-0.80. Numerical hazard-ratio direction remains unresolved; no experimental/reference arm is assigned from favorable survival prose."
+  },
+  "existing_R3_pairs": [
+    {
+      "additional_intervention_drug_ids": [],
+      "additional_intervention_ids": [
+        "reported-arm-cede16e52fd2ce3057d3"
+      ],
+      "additional_intervention_label": "Nivolumab followed by ipilimumab",
+      "comparator_arm_id": "r3-aeb9972ab0de9db2f1220ca78b22:arm-ipilimumab-first",
+      "comparator_drug_ids": [],
+      "comparator_filter_eligible": false,
+      "comparator_key": "reported-arm-cf6ad0b564db90b17008",
+      "comparator_label": "Ipilimumab followed by nivolumab",
+      "comparator_regimen": {
+        "arm_id": null,
+        "compiler_version": 2,
+        "evidence_ids": [],
+        "origin": "legacy_label",
+        "placebo": false,
+        "raw_label": "Ipilimumab followed by nivolumab",
+        "record_kind": "regimen_definition",
+        "role": "actual_regimen",
+        "root": {
+          "children": [
+            {
+              "agent_id": "ipilimumab",
+              "class_id": "ctla4",
+              "class_source": "curated_vocabulary",
+              "dose": null,
+              "evidence_ids": [],
+              "metadata_literals": {
+                "dose": [],
+                "route": [],
+                "schedule": []
+              },
+              "name": "Ipilimumab",
+              "raw_label": "Ipilimumab",
+              "reported_class": null,
+              "route": null,
+              "schedule": null,
+              "type": "agent"
+            },
+            {
+              "agent_id": "nivolumab",
+              "class_id": "pd1",
+              "class_source": "curated_vocabulary",
+              "dose": null,
+              "evidence_ids": [],
+              "metadata_literals": {
+                "dose": [],
+                "route": [],
+                "schedule": []
+              },
+              "name": "Nivolumab",
+              "raw_label": "nivolumab",
+              "reported_class": null,
+              "route": null,
+              "schedule": null,
+              "type": "agent"
+            }
+          ],
+          "evidence_ids": [],
+          "raw_label": "Ipilimumab followed by nivolumab",
+          "type": "sequential"
+        },
+        "schema_version": 1,
+        "source_binding": {
+          "comparison_id": "CE-5b14b4206743334665d8d481-C-fdf45c98be628711",
+          "role": "comparator",
+          "scope": {
+            "population_id": "CE-5b14b4206743334665d8d481-r3-aeb9972ab0de9db2f1220ca78b22:pop-melanoma",
+            "record_kind": "canonical_review_scope",
+            "report_id": "report-eb4e1504cd454b6a073ef0af",
+            "review_binding_sha256": "5b14b4206743334665d8d481c0da205991b5886ed545c5754e19245187639a43",
+            "review_stage": "R3",
+            "source_input_sha256": "80bcdbd29d0244e9739ecd271ad9b228e02d2e173083c23c04e31369bc9f9c68"
+          }
+        }
+      },
+      "comparison_filter_eligible": false,
+      "comparison_id": "CE-5b14b4206743334665d8d481-C-fdf45c98be628711",
+      "intervention_arm_id": "r3-aeb9972ab0de9db2f1220ca78b22:arm-nivolumab-first",
+      "intervention_drug_ids": [],
+      "intervention_regimen": {
+        "arm_id": null,
+        "compiler_version": 2,
+        "evidence_ids": [],
+        "origin": "legacy_label",
+        "placebo": false,
+        "raw_label": "Nivolumab followed by ipilimumab",
+        "record_kind": "regimen_definition",
+        "role": "actual_regimen",
+        "root": {
+          "children": [
+            {
+              "agent_id": "nivolumab",
+              "class_id": "pd1",
+              "class_source": "curated_vocabulary",
+              "dose": null,
+              "evidence_ids": [],
+              "metadata_literals": {
+                "dose": [],
+                "route": [],
+                "schedule": []
+              },
+              "name": "Nivolumab",
+              "raw_label": "Nivolumab",
+              "reported_class": null,
+              "route": null,
+              "schedule": null,
+              "type": "agent"
+            },
+            {
+              "agent_id": "ipilimumab",
+              "class_id": "ctla4",
+              "class_source": "curated_vocabulary",
+              "dose": null,
+              "evidence_ids": [],
+              "metadata_literals": {
+                "dose": [],
+                "route": [],
+                "schedule": []
+              },
+              "name": "Ipilimumab",
+              "raw_label": "ipilimumab",
+              "reported_class": null,
+              "route": null,
+              "schedule": null,
+              "type": "agent"
+            }
+          ],
+          "evidence_ids": [],
+          "raw_label": "Nivolumab followed by ipilimumab",
+          "type": "sequential"
+        },
+        "schema_version": 1,
+        "source_binding": {
+          "comparison_id": "CE-5b14b4206743334665d8d481-C-fdf45c98be628711",
+          "role": "intervention",
+          "scope": {
+            "population_id": "CE-5b14b4206743334665d8d481-r3-aeb9972ab0de9db2f1220ca78b22:pop-melanoma",
+            "record_kind": "canonical_review_scope",
+            "report_id": "report-eb4e1504cd454b6a073ef0af",
+            "review_binding_sha256": "5b14b4206743334665d8d481c0da205991b5886ed545c5754e19245187639a43",
+            "review_stage": "R3",
+            "source_input_sha256": "80bcdbd29d0244e9739ecd271ad9b228e02d2e173083c23c04e31369bc9f9c68"
+          }
+        }
+      },
+      "kind": "treatment_comparison",
+      "outcome_arm_id": null,
+      "outcome_arm_label": null,
+      "result_ids": [
+        "CE-5b14b4206743334665d8d481-F-2d7f2211eb202e4a",
+        "CE-5b14b4206743334665d8d481-F-914ae830e0dc97c2",
+        "CE-5b14b4206743334665d8d481-F-26466434e54434df",
+        "CE-5b14b4206743334665d8d481-F-8d4fbe549e0a6511"
+      ],
+      "result_relation": "other",
+      "scope": {
+        "population_id": "CE-5b14b4206743334665d8d481-r3-aeb9972ab0de9db2f1220ca78b22:pop-melanoma",
+        "record_kind": "canonical_review_scope",
+        "report_id": "report-eb4e1504cd454b6a073ef0af",
+        "review_binding_sha256": "5b14b4206743334665d8d481c0da205991b5886ed545c5754e19245187639a43",
+        "review_stage": "R3",
+        "source_input_sha256": "80bcdbd29d0244e9739ecd271ad9b228e02d2e173083c23c04e31369bc9f9c68"
+      }
+    },
+    {
+      "additional_intervention_drug_ids": [],
+      "additional_intervention_ids": [
+        "reported-arm-cede16e52fd2ce3057d3"
+      ],
+      "additional_intervention_label": "Nivolumab followed by ipilimumab",
+      "comparator_arm_id": "r3-aeb9972ab0de9db2f1220ca78b22:arm-ipilimumab-first",
+      "comparator_drug_ids": [],
+      "comparator_filter_eligible": false,
+      "comparator_key": "reported-arm-cf6ad0b564db90b17008",
+      "comparator_label": "Ipilimumab followed by nivolumab",
+      "comparator_regimen": {
+        "arm_id": null,
+        "compiler_version": 2,
+        "evidence_ids": [],
+        "origin": "legacy_label",
+        "placebo": false,
+        "raw_label": "Ipilimumab followed by nivolumab",
+        "record_kind": "regimen_definition",
+        "role": "actual_regimen",
+        "root": {
+          "children": [
+            {
+              "agent_id": "ipilimumab",
+              "class_id": "ctla4",
+              "class_source": "curated_vocabulary",
+              "dose": null,
+              "evidence_ids": [],
+              "metadata_literals": {
+                "dose": [],
+                "route": [],
+                "schedule": []
+              },
+              "name": "Ipilimumab",
+              "raw_label": "Ipilimumab",
+              "reported_class": null,
+              "route": null,
+              "schedule": null,
+              "type": "agent"
+            },
+            {
+              "agent_id": "nivolumab",
+              "class_id": "pd1",
+              "class_source": "curated_vocabulary",
+              "dose": null,
+              "evidence_ids": [],
+              "metadata_literals": {
+                "dose": [],
+                "route": [],
+                "schedule": []
+              },
+              "name": "Nivolumab",
+              "raw_label": "nivolumab",
+              "reported_class": null,
+              "route": null,
+              "schedule": null,
+              "type": "agent"
+            }
+          ],
+          "evidence_ids": [],
+          "raw_label": "Ipilimumab followed by nivolumab",
+          "type": "sequential"
+        },
+        "schema_version": 1,
+        "source_binding": {
+          "comparison_id": "CE-5b14b4206743334665d8d481-C-36fefef570950c02",
+          "role": "comparator",
+          "scope": {
+            "population_id": "CE-5b14b4206743334665d8d481-r3-aeb9972ab0de9db2f1220ca78b22:pop-melanoma",
+            "record_kind": "canonical_review_scope",
+            "report_id": "report-eb4e1504cd454b6a073ef0af",
+            "review_binding_sha256": "5b14b4206743334665d8d481c0da205991b5886ed545c5754e19245187639a43",
+            "review_stage": "R3",
+            "source_input_sha256": "80bcdbd29d0244e9739ecd271ad9b228e02d2e173083c23c04e31369bc9f9c68"
+          }
+        }
+      },
+      "comparison_filter_eligible": false,
+      "comparison_id": "CE-5b14b4206743334665d8d481-C-36fefef570950c02",
+      "intervention_arm_id": "r3-aeb9972ab0de9db2f1220ca78b22:arm-nivolumab-first",
+      "intervention_drug_ids": [],
+      "intervention_regimen": {
+        "arm_id": null,
+        "compiler_version": 2,
+        "evidence_ids": [],
+        "origin": "legacy_label",
+        "placebo": false,
+        "raw_label": "Nivolumab followed by ipilimumab",
+        "record_kind": "regimen_definition",
+        "role": "actual_regimen",
+        "root": {
+          "children": [
+            {
+              "agent_id": "nivolumab",
+              "class_id": "pd1",
+              "class_source": "curated_vocabulary",
+              "dose": null,
+              "evidence_ids": [],
+              "metadata_literals": {
+                "dose": [],
+                "route": [],
+                "schedule": []
+              },
+              "name": "Nivolumab",
+              "raw_label": "Nivolumab",
+              "reported_class": null,
+              "route": null,
+              "schedule": null,
+              "type": "agent"
+            },
+            {
+              "agent_id": "ipilimumab",
+              "class_id": "ctla4",
+              "class_source": "curated_vocabulary",
+              "dose": null,
+              "evidence_ids": [],
+              "metadata_literals": {
+                "dose": [],
+                "route": [],
+                "schedule": []
+              },
+              "name": "Ipilimumab",
+              "raw_label": "ipilimumab",
+              "reported_class": null,
+              "route": null,
+              "schedule": null,
+              "type": "agent"
+            }
+          ],
+          "evidence_ids": [],
+          "raw_label": "Nivolumab followed by ipilimumab",
+          "type": "sequential"
+        },
+        "schema_version": 1,
+        "source_binding": {
+          "comparison_id": "CE-5b14b4206743334665d8d481-C-36fefef570950c02",
+          "role": "intervention",
+          "scope": {
+            "population_id": "CE-5b14b4206743334665d8d481-r3-aeb9972ab0de9db2f1220ca78b22:pop-melanoma",
+            "record_kind": "canonical_review_scope",
+            "report_id": "report-eb4e1504cd454b6a073ef0af",
+            "review_binding_sha256": "5b14b4206743334665d8d481c0da205991b5886ed545c5754e19245187639a43",
+            "review_stage": "R3",
+            "source_input_sha256": "80bcdbd29d0244e9739ecd271ad9b228e02d2e173083c23c04e31369bc9f9c68"
+          }
+        }
+      },
+      "kind": "treatment_comparison",
+      "outcome_arm_id": null,
+      "outcome_arm_label": null,
+      "result_ids": [
+        "CE-5b14b4206743334665d8d481-F-7c63718df7856d8c"
+      ],
+      "result_relation": "other",
+      "scope": {
+        "population_id": "CE-5b14b4206743334665d8d481-r3-aeb9972ab0de9db2f1220ca78b22:pop-melanoma",
+        "record_kind": "canonical_review_scope",
+        "report_id": "report-eb4e1504cd454b6a073ef0af",
+        "review_binding_sha256": "5b14b4206743334665d8d481c0da205991b5886ed545c5754e19245187639a43",
+        "review_stage": "R3",
+        "source_input_sha256": "80bcdbd29d0244e9739ecd271ad9b228e02d2e173083c23c04e31369bc9f9c68"
+      }
+    }
+  ],
+  "source_complete_public_subset": "data/proposed_changes/sample_sizes_survival_20261105/PUBLIC_ARTICLES_TWO_CASES_10968385eee0435f5ef419d0ac5d2b0d956497b750b52b82fa3fb619a194f24f.json"
+}

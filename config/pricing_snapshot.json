@@ -1,0 +1,896 @@
+{
+  "schema_version": 1,
+  "version": "2026-10-28.2",
+  "verified_at": "2026-10-28",
+  "currency": "USD",
+  "sources": {
+    "openai_pricing": {
+      "url": "https://developers.openai.com/api/docs/pricing",
+      "verified_at": "2026-10-28",
+      "role": "Exact per-million token tables, tiers, input threshold; global processing scope."
+    },
+    "openai_decisions": {
+      "url": "https://developers.openai.com/api/docs/guides/decisions",
+      "verified_at": "2026-10-28",
+      "role": "Decisions-specific Luna input pricing; output is uncharged; cache subsets."
+    },
+    "openai_decisions_schema": {
+      "url": "https://developers.openai.com/api/reference/resources/decisions/methods/create",
+      "verified_at": "2026-10-28",
+      "role": "Usage field names and default/supported30m write lifetime."
+    },
+    "openai_caching": {
+      "url": "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+      "verified_at": "2026-10-28",
+      "role": "Input includes disjoint reads and writes; 30m/12h write counts and multipliers."
+    },
+    "openai_reasoning": {
+      "url": "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs",
+      "verified_at": "2026-10-28",
+      "role": "Reasoning is already inside output; example rates in cookbook are not used."
+    },
+    "anthropic_pricing": {
+      "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "verified_at": "2026-10-28",
+      "role": "First-party Sonnet5.5 standard/batch rates; all-context pricing; caching modifiers."
+    },
+    "anthropic_caching": {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+      "verified_at": "2026-10-28",
+      "role": "Input, reads and creation are disjoint; 5m/1h subcounts split cache creation."
+    },
+    "gemini_schema": {
+      "url": "https://ai.google.dev/api/generate-content#UsageMetadata",
+      "verified_at": "2026-10-28",
+      "role": "Effective prompt contains cache; candidates and thoughts are disjoint; tool prompt separate."
+    },
+    "gemini_pricing": {
+      "url": "https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro",
+      "verified_at": "2026-10-28",
+      "role": "Paid Gemini2.5Pro standard/batch rates; inclusive thinking output and200k threshold."
+    },
+    "anthropic_thinking": {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking",
+      "verified_at": "2026-10-28",
+      "role": "output_tokens_details.thinking_tokens reports internal reasoning included in billed output."
+    },
+    "anthropic_model_ids": {
+      "url": "https://platform.claude.com/docs/en/models/overview",
+      "verified_at": "2026-10-28",
+      "role": "Exact first-party API ID claude-sonnet-5-5."
+    },
+    "openai_luna56_model": {
+      "url": "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+      "verified_at": "2026-10-28",
+      "role": "Exactgpt-5.6-luna model; Responses structured outputs and922000 maximum input. First-party OpenAI price reference, not verified Cornell invoice."
+    }
+  },
+  "scope": "Frozen public list-price model-token estimates for exact first-party APIs; not invoices, negotiated prices, credits, tools, cache storage, regional, realtime or multimodal fees.",
+  "conditions": [
+    "No rate is substituted for an unknown exact model or API.",
+    "gpt-6-luna Decisions output is uncharged; Responses output is charged.",
+    "Input thresholds apply to the whole request, including cached input.",
+    "Decisions schema currently supports only30m TTL; Responses supports separate30m/12h counts.",
+    "Anthropic cards cover first-party global routing, not Bedrock/Vertex/Foundry.",
+    "Gemini cards cover paid global text requests and implicit cache reads only; explicit-cache storage needs a separate audited event.",
+    "Batch means a real provider batch request, not several reports inside one synchronous request.",
+    "Amounts exclude account credits, taxes, negotiated offers and unknown request modifiers.",
+    "Cornell gateway billing is not established by OpenAI public list rates. Keep actual Cornell cost unknown unless independently verified; a separate reference estimate must be labeled non-billed and non-additive."
+  ],
+  "rate_cards": [
+    {
+      "id": "openai:gpt-6-luna:responses:standard:default:-1:272000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.10",
+        "output": "0.50",
+        "cached_input": "0.01",
+        "cache_creation:30m": "0.125",
+        "cache_creation:12h": "0.25"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+        "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs"
+      ]
+    },
+    {
+      "id": "openai:gpt-6-luna:responses:standard:default:272000:922000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.20",
+        "output": "0.75",
+        "cached_input": "0.02",
+        "cache_creation:30m": "0.25",
+        "cache_creation:12h": "0.50"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+        "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs"
+      ]
+    },
+    {
+      "id": "openai:gpt-6-luna:responses:batch:default:-1:272000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "request_type": "batch",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.05",
+        "output": "0.25",
+        "cached_input": "0.005",
+        "cache_creation:30m": "0.0625",
+        "cache_creation:12h": "0.125"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+        "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs"
+      ]
+    },
+    {
+      "id": "openai:gpt-6-luna:responses:batch:default:272000:922000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "request_type": "batch",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.10",
+        "output": "0.375",
+        "cached_input": "0.01",
+        "cache_creation:30m": "0.125",
+        "cache_creation:12h": "0.25"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+        "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs"
+      ]
+    },
+    {
+      "id": "openai:gpt-6-luna:responses:standard:flex:-1:272000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "flex",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.05",
+        "output": "0.25",
+        "cached_input": "0.005",
+        "cache_creation:30m": "0.0625",
+        "cache_creation:12h": "0.125"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+        "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs"
+      ]
+    },
+    {
+      "id": "openai:gpt-6-luna:responses:standard:flex:272000:922000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "flex",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.10",
+        "output": "0.375",
+        "cached_input": "0.01",
+        "cache_creation:30m": "0.125",
+        "cache_creation:12h": "0.25"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+        "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs"
+      ]
+    },
+    {
+      "id": "openai:gpt-6-luna:responses:standard:fast:-1:272000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "fast",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.20",
+        "output": "1.00",
+        "cached_input": "0.02",
+        "cache_creation:30m": "0.25",
+        "cache_creation:12h": "0.50"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+        "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs"
+      ]
+    },
+    {
+      "id": "openai:gpt-6-luna:responses:standard:fast:272000:922000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "fast",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.40",
+        "output": "1.50",
+        "cached_input": "0.04",
+        "cache_creation:30m": "0.50",
+        "cache_creation:12h": "1.00"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance",
+        "https://developers.openai.com/cookbook/articles/per_run_spending_controller_responses_api#limits-and-other-costs"
+      ]
+    },
+    {
+      "id": "openai:gpt-6-luna:decisions:standard:default:-1:272000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "decisions",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.10",
+        "output": "0",
+        "cached_input": "0.01",
+        "cache_creation:30m": "0.125"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/guides/decisions",
+        "https://developers.openai.com/api/reference/resources/decisions/methods/create",
+        "https://developers.openai.com/api/docs/pricing"
+      ],
+      "default_write_ttl": "30m"
+    },
+    {
+      "id": "openai:gpt-6-luna:decisions:standard:default:272000:922000",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "api_kind": "decisions",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.20",
+        "output": "0",
+        "cached_input": "0.02",
+        "cache_creation:30m": "0.25"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/guides/decisions",
+        "https://developers.openai.com/api/reference/resources/decisions/methods/create",
+        "https://developers.openai.com/api/docs/pricing"
+      ],
+      "default_write_ttl": "30m"
+    },
+    {
+      "id": "anthropic:claude-sonnet-5-5:messages:standard:default:-1:1000000",
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "api_kind": "messages",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 1000000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "2",
+        "output": "10",
+        "cached_input": "0.10",
+        "cache_creation:5m": "2.50",
+        "cache_creation:1h": "4"
+      },
+      "source_urls": [
+        "https://platform.claude.com/docs/en/about-claude/pricing",
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+        "https://platform.claude.com/docs/en/build-with-claude/extended-thinking",
+        "https://platform.claude.com/docs/en/models/overview"
+      ]
+    },
+    {
+      "id": "anthropic:claude-sonnet-5-5:messages:batch:default:-1:1000000",
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "api_kind": "messages",
+      "request_type": "batch",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 1000000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "1",
+        "output": "5",
+        "cached_input": "0.05",
+        "cache_creation:5m": "1.25",
+        "cache_creation:1h": "2"
+      },
+      "source_urls": [
+        "https://platform.claude.com/docs/en/about-claude/pricing",
+        "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+        "https://platform.claude.com/docs/en/build-with-claude/extended-thinking",
+        "https://platform.claude.com/docs/en/models/overview"
+      ]
+    },
+    {
+      "id": "gemini:gemini-2.5-pro:generate_content:standard:default:-1:200000",
+      "provider": "gemini",
+      "model": "gemini-2.5-pro",
+      "api_kind": "generate_content",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 200000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "1.25",
+        "output": "10",
+        "cached_input": "0.125"
+      },
+      "source_urls": [
+        "https://ai.google.dev/api/generate-content#UsageMetadata",
+        "https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro"
+      ]
+    },
+    {
+      "id": "gemini:gemini-2.5-pro:generate_content:standard:default:200000:1000000",
+      "provider": "gemini",
+      "model": "gemini-2.5-pro",
+      "api_kind": "generate_content",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 200000,
+      "input_max_inclusive": 1000000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "2.50",
+        "output": "15",
+        "cached_input": "0.25"
+      },
+      "source_urls": [
+        "https://ai.google.dev/api/generate-content#UsageMetadata",
+        "https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro"
+      ]
+    },
+    {
+      "id": "gemini:gemini-2.5-pro:generate_content:batch:default:-1:200000",
+      "provider": "gemini",
+      "model": "gemini-2.5-pro",
+      "api_kind": "generate_content",
+      "request_type": "batch",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 200000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.625",
+        "output": "5",
+        "cached_input": "0.125"
+      },
+      "source_urls": [
+        "https://ai.google.dev/api/generate-content#UsageMetadata",
+        "https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro"
+      ]
+    },
+    {
+      "id": "gemini:gemini-2.5-pro:generate_content:batch:default:200000:1000000",
+      "provider": "gemini",
+      "model": "gemini-2.5-pro",
+      "api_kind": "generate_content",
+      "request_type": "batch",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.1",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 200000,
+      "input_max_inclusive": 1000000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "1.25",
+        "output": "7.50",
+        "cached_input": "0.25"
+      },
+      "source_urls": [
+        "https://ai.google.dev/api/generate-content#UsageMetadata",
+        "https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro"
+      ]
+    },
+    {
+      "id": "openai:gpt-5.6-luna:responses:standard:default:-1:272000",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.2",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.20",
+        "output": "1.20",
+        "cached_input": "0.02",
+        "cache_creation:30m": "0.25",
+        "cache_creation:12h": "0.50"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance"
+      ],
+      "billing_scope": "First-party OpenAI public list price. For Cornell gateway, reference only; no verified pass-through or markup assumption."
+    },
+    {
+      "id": "openai:gpt-5.6-luna:responses:standard:default:272000:922000",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.2",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.40",
+        "output": "1.80",
+        "cached_input": "0.04",
+        "cache_creation:30m": "0.50",
+        "cache_creation:12h": "1.00"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance"
+      ],
+      "billing_scope": "First-party OpenAI public list price. For Cornell gateway, reference only; no verified pass-through or markup assumption."
+    },
+    {
+      "id": "openai:gpt-5.6-luna:responses:batch:default:-1:272000",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "api_kind": "responses",
+      "request_type": "batch",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.2",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.10",
+        "output": "0.60",
+        "cached_input": "0.01",
+        "cache_creation:30m": "0.125",
+        "cache_creation:12h": "0.25"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance"
+      ],
+      "billing_scope": "First-party OpenAI public list price. For Cornell gateway, reference only; no verified pass-through or markup assumption."
+    },
+    {
+      "id": "openai:gpt-5.6-luna:responses:batch:default:272000:922000",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "api_kind": "responses",
+      "request_type": "batch",
+      "service_tier": "default",
+      "verified": true,
+      "version": "2026-10-28.2",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.20",
+        "output": "0.90",
+        "cached_input": "0.02",
+        "cache_creation:30m": "0.25",
+        "cache_creation:12h": "0.50"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance"
+      ],
+      "billing_scope": "First-party OpenAI public list price. For Cornell gateway, reference only; no verified pass-through or markup assumption."
+    },
+    {
+      "id": "openai:gpt-5.6-luna:responses:standard:flex:-1:272000",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "flex",
+      "verified": true,
+      "version": "2026-10-28.2",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.10",
+        "output": "0.60",
+        "cached_input": "0.01",
+        "cache_creation:30m": "0.125",
+        "cache_creation:12h": "0.25"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance"
+      ],
+      "billing_scope": "First-party OpenAI public list price. For Cornell gateway, reference only; no verified pass-through or markup assumption."
+    },
+    {
+      "id": "openai:gpt-5.6-luna:responses:standard:flex:272000:922000",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "flex",
+      "verified": true,
+      "version": "2026-10-28.2",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.20",
+        "output": "0.90",
+        "cached_input": "0.02",
+        "cache_creation:30m": "0.25",
+        "cache_creation:12h": "0.50"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance"
+      ],
+      "billing_scope": "First-party OpenAI public list price. For Cornell gateway, reference only; no verified pass-through or markup assumption."
+    },
+    {
+      "id": "openai:gpt-5.6-luna:responses:standard:fast:-1:272000",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "fast",
+      "verified": true,
+      "version": "2026-10-28.2",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": -1,
+      "input_max_inclusive": 272000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.40",
+        "output": "2.40",
+        "cached_input": "0.04",
+        "cache_creation:30m": "0.50",
+        "cache_creation:12h": "1.00"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance"
+      ],
+      "billing_scope": "First-party OpenAI public list price. For Cornell gateway, reference only; no verified pass-through or markup assumption."
+    },
+    {
+      "id": "openai:gpt-5.6-luna:responses:standard:fast:272000:922000",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "api_kind": "responses",
+      "request_type": "standard",
+      "service_tier": "fast",
+      "verified": true,
+      "version": "2026-10-28.2",
+      "verified_at": "2026-10-28",
+      "currency": "USD",
+      "unit_tokens": 1000000,
+      "input_min_exclusive": 272000,
+      "input_max_inclusive": 922000,
+      "regions": [
+        "global"
+      ],
+      "modalities": [
+        "text"
+      ],
+      "tools_allowed": false,
+      "usd_per_million": {
+        "ordinary_input": "0.80",
+        "output": "3.60",
+        "cached_input": "0.08",
+        "cache_creation:30m": "1.00",
+        "cache_creation:12h": "2.00"
+      },
+      "source_urls": [
+        "https://developers.openai.com/api/docs/pricing",
+        "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "https://developers.openai.com/api/docs/guides/prompt-caching#monitor-cache-performance"
+      ],
+      "billing_scope": "First-party OpenAI public list price. For Cornell gateway, reference only; no verified pass-through or markup assumption."
+    }
+  ]
+}

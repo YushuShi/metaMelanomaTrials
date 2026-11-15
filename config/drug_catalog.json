@@ -1,0 +1,3991 @@
+{
+  "schema_version": 1,
+  "version": "2026-10-28.4",
+  "status": "initial_extensible_source_documented_vocabulary",
+  "not_an_eligibility_whitelist": true,
+  "selection_rule": "Cover common checkpoint, noncheckpoint, kinase/targeted antibody, ADC, endocrine/backbone and cytotoxic-comparator families relevant to solid-tumor trial discovery; no fixed-size quota. Expand from retrieved investigational agents without excluding unknowns.",
+  "source_repo_audit": "metaMeta/metaOnco README identifies nutritional cancer-incidence exposures, not therapeutic drugs; those exposure classes are not imported as treatment classes.",
+  "sources": {
+    "nci_drugs": {
+      "title": "NCI A to Z cancer drugs",
+      "url": "https://www.cancer.gov/about-cancer/treatment/drugs/cancer-drugs",
+      "accessed": "2026-10-28"
+    },
+    "nci_targeted": {
+      "title": "NCI targeted therapy drug list",
+      "url": "https://www.cancer.gov/about-cancer/treatment/types/targeted-therapies/approved-drug-list",
+      "accessed": "2026-10-28"
+    },
+    "nci_checkpoint": {
+      "title": "NCI immune checkpoint inhibitors",
+      "url": "https://www.cancer.gov/about-cancer/treatment/types/immunotherapy/checkpoint-inhibitors",
+      "accessed": "2026-10-28"
+    },
+    "nci_endocrine": {
+      "title": "NCI hormone therapy",
+      "url": "https://www.cancer.gov/about-cancer/treatment/types/hormone-therapy",
+      "accessed": "2026-10-28"
+    },
+    "nci_breast": {
+      "title": "NCI breast cancer drugs",
+      "url": "https://www.cancer.gov/about-cancer/treatment/drugs/breast",
+      "accessed": "2026-10-28"
+    },
+    "nci_prostate": {
+      "title": "NCI prostate cancer drugs",
+      "url": "https://www.cancer.gov/about-cancer/treatment/drugs/prostate",
+      "accessed": "2026-10-28"
+    },
+    "fda_mirvetuximab": {
+      "title": "FDA mirvetuximab soravtansine chemistry review",
+      "url": "https://www.accessdata.fda.gov/drugsatfda_docs/nda/2022/761310Orig1s000ChemR.pdf",
+      "accessed": "2026-10-28"
+    },
+    "nlm_padcev": {
+      "title": "DailyMed PADCEV prescribing information",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=b5631d3e-4604-4363-8f20-11dfc5a4a8ed",
+      "accessed": "2026-10-28"
+    },
+    "nci_aldesleukin": {
+      "title": "nci aldesleukin",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/aldesleukin",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_aldesleukin_cancer": {
+      "title": "nci aldesleukin cancer",
+      "url": "https://www.cancer.gov/about-cancer/treatment/drugs/aldesleukin",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_interferon_alfa_2a": {
+      "title": "nci interferon alfa 2a",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/recombinant-interferon-alfa-2a",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_interferon_alfa_2b": {
+      "title": "nci interferon alfa 2b",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/recombinant-interferon-alfa-2b",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_peginterferon_alfa_2a": {
+      "title": "nci peginterferon alfa 2a",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/peginterferon-alfa-2a",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_peginterferon_alfa_2b": {
+      "title": "nci peginterferon alfa 2b",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/peginterferon-alfa-2b",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_sylatron": {
+      "title": "nci sylatron",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/sylatron",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_bcg": {
+      "title": "nci bcg",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/bcg-solution",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "fda_tice_bcg": {
+      "title": "fda tice bcg",
+      "url": "https://www.fda.gov/vaccines-blood-biologics/vaccines/tice-bcg",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "fda_theracys": {
+      "title": "fda theracys",
+      "url": "https://www.accessdata.fda.gov/scripts/purplebooksearch/index.cfm?blaNo=103943&event=productdetails",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "fda_bcg_formulation": {
+      "title": "fda bcg formulation",
+      "url": "https://www.fda.gov/media/193847/download?attachment=",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_nogapendekin": {
+      "title": "nci nogapendekin",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/nogapendekin-alfa-inbakicept",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "fda_nogapendekin": {
+      "title": "fda nogapendekin",
+      "url": "https://www.fda.gov/drugs/resources-information-approved-drugs/fda-approves-nogapendekin-alfa-inbakicept-pmln-bcg-unresponsive-non-muscle-invasive-bladder-cancer",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "fda_nogapendekin_aliases": {
+      "title": "fda nogapendekin aliases",
+      "url": "https://precision.fda.gov/uniisearch/srs/unii/7tk323dla0",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_bempegaldesleukin": {
+      "title": "nci bempegaldesleukin",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/bempegaldesleukin",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_immune_modulators": {
+      "title": "nci immune modulators",
+      "url": "https://www.cancer.gov/about-cancer/treatment/types/immunotherapy/immune-system-modulators",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_immune_modulator_definition": {
+      "title": "nci immune modulator definition",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/immune-system-modulator",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_levamisole": {
+      "title": "nci levamisole",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/levamisole-hydrochloride",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_vusolimogene": {
+      "title": "nci vusolimogene",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/vusolimogene-oderparepvec",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_skin_drugs": {
+      "title": "nci skin drugs",
+      "url": "https://www.cancer.gov/about-cancer/treatment/drugs/skin",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_cancer_vaccines": {
+      "title": "nci cancer vaccines",
+      "url": "https://www.cancer.gov/about-cancer/treatment/types/immunotherapy/cancer-treatment-vaccines",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_tcell_transfer": {
+      "title": "nci tcell transfer",
+      "url": "https://www.cancer.gov/about-cancer/treatment/types/immunotherapy/t-cell-transfer-therapy",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_oncolytic_definition": {
+      "title": "nci oncolytic definition",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-terms/def/oncolytic-virus-therapy",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_angiogenesis": {
+      "title": "nci angiogenesis",
+      "url": "https://www.cancer.gov/about-cancer/treatment/types/immunotherapy/angiogenesis-inhibitors-fact-sheet",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "nci_formulary_classes": {
+      "title": "nci formulary classes",
+      "url": "https://dctd.cancer.gov/drug-discovery-development/reagents-materials/formulary/about/agents",
+      "accessed": "2026-10-28",
+      "source_type": "primary_NCI_or_FDA"
+    },
+    "original_emilia_2012_adc_alias": {
+      "title": "Trastuzumab emtansine for HER2-positive advanced breast cancer.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23020162/",
+      "doi": "10.1056/NEJMoa1209124",
+      "verified_on": "2026-10-28",
+      "verification_basis": "Already tracked original PubMed citation/abstract; T-DM1 bridges the regulatory-prefixed generic name and unprefixed trial-report alias."
+    }
+  },
+  "drugs": [
+    {
+      "drug_id": "pembrolizumab",
+      "generic_name": "pembrolizumab",
+      "brands": [
+        "Keytruda"
+      ],
+      "development_codes": [
+        "MK-3475"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-1"
+      ],
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "nivolumab",
+      "generic_name": "nivolumab",
+      "brands": [
+        "Opdivo"
+      ],
+      "development_codes": [
+        "BMS-936558",
+        "ONO-4538"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-1"
+      ],
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "cemiplimab",
+      "generic_name": "cemiplimab",
+      "brands": [
+        "Libtayo"
+      ],
+      "development_codes": [
+        "REGN2810"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-1"
+      ],
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "dostarlimab",
+      "generic_name": "dostarlimab",
+      "brands": [
+        "Jemperli"
+      ],
+      "development_codes": [
+        "TSR-042"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-1"
+      ],
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "tislelizumab",
+      "generic_name": "tislelizumab",
+      "brands": [
+        "Tevimbra"
+      ],
+      "development_codes": [
+        "BGB-A317"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-1"
+      ],
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "toripalimab",
+      "generic_name": "toripalimab",
+      "brands": [
+        "Loqtorzi"
+      ],
+      "development_codes": [
+        "JS001"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-1"
+      ],
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "retifanlimab",
+      "generic_name": "retifanlimab",
+      "brands": [
+        "Zynyz"
+      ],
+      "development_codes": [
+        "INCMGA00012"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-1"
+      ],
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "atezolizumab",
+      "generic_name": "atezolizumab",
+      "brands": [
+        "Tecentriq"
+      ],
+      "development_codes": [
+        "MPDL3280A"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-L1"
+      ],
+      "mechanism": "PD-L1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "durvalumab",
+      "generic_name": "durvalumab",
+      "brands": [
+        "Imfinzi"
+      ],
+      "development_codes": [
+        "MEDI4736"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-L1"
+      ],
+      "mechanism": "PD-L1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "avelumab",
+      "generic_name": "avelumab",
+      "brands": [
+        "Bavencio"
+      ],
+      "development_codes": [
+        "MSB0010718C"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "PD-L1"
+      ],
+      "mechanism": "PD-L1 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "ipilimumab",
+      "generic_name": "ipilimumab",
+      "brands": [
+        "Yervoy"
+      ],
+      "development_codes": [
+        "MDX-010"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "CTLA-4"
+      ],
+      "mechanism": "CTLA-4 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "tremelimumab",
+      "generic_name": "tremelimumab",
+      "brands": [
+        "Imjudo"
+      ],
+      "development_codes": [
+        "CP-675206"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "CTLA-4"
+      ],
+      "mechanism": "CTLA-4 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "relatlimab",
+      "generic_name": "relatlimab",
+      "brands": [],
+      "development_codes": [
+        "BMS-986016"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "LAG-3"
+      ],
+      "mechanism": "LAG-3 directed checkpoint_antibody",
+      "modality": "checkpoint_antibody",
+      "is_checkpoint_inhibitor": true,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_checkpoint"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "imatinib",
+      "generic_name": "imatinib",
+      "brands": [
+        "Gleevec",
+        "Glivec"
+      ],
+      "development_codes": [
+        "STI571"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "KIT",
+        "PDGFRA",
+        "ABL"
+      ],
+      "mechanism": "KIT;PDGFRA;ABL directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "sunitinib",
+      "generic_name": "sunitinib",
+      "brands": [
+        "Sutent"
+      ],
+      "development_codes": [
+        "SU11248"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "VEGFR",
+        "PDGFR",
+        "KIT"
+      ],
+      "mechanism": "VEGFR;PDGFR;KIT directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "regorafenib",
+      "generic_name": "regorafenib",
+      "brands": [
+        "Stivarga"
+      ],
+      "development_codes": [
+        "BAY 73-4506"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "VEGFR",
+        "KIT",
+        "RAF"
+      ],
+      "mechanism": "VEGFR;KIT;RAF directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "ripretinib",
+      "generic_name": "ripretinib",
+      "brands": [
+        "Qinlock"
+      ],
+      "development_codes": [
+        "DCC-2618"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "KIT",
+        "PDGFRA"
+      ],
+      "mechanism": "KIT;PDGFRA directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "avapritinib",
+      "generic_name": "avapritinib",
+      "brands": [
+        "Ayvakit"
+      ],
+      "development_codes": [
+        "BLU-285"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "KIT",
+        "PDGFRA"
+      ],
+      "mechanism": "KIT;PDGFRA directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "pazopanib",
+      "generic_name": "pazopanib",
+      "brands": [
+        "Votrient"
+      ],
+      "development_codes": [
+        "GW786034"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "VEGFR",
+        "PDGFR",
+        "KIT"
+      ],
+      "mechanism": "VEGFR;PDGFR;KIT directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "cabozantinib",
+      "generic_name": "cabozantinib",
+      "brands": [
+        "Cabometyx",
+        "Cometriq"
+      ],
+      "development_codes": [
+        "XL184"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "MET",
+        "VEGFR2",
+        "AXL"
+      ],
+      "mechanism": "MET;VEGFR2;AXL directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "axitinib",
+      "generic_name": "axitinib",
+      "brands": [
+        "Inlyta"
+      ],
+      "development_codes": [
+        "AG-013736"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "VEGFR"
+      ],
+      "mechanism": "VEGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "lenvatinib",
+      "generic_name": "lenvatinib",
+      "brands": [
+        "Lenvima"
+      ],
+      "development_codes": [
+        "E7080"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "VEGFR",
+        "FGFR"
+      ],
+      "mechanism": "VEGFR;FGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "sorafenib",
+      "generic_name": "sorafenib",
+      "brands": [
+        "Nexavar"
+      ],
+      "development_codes": [
+        "BAY 43-9006"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "RAF",
+        "VEGFR"
+      ],
+      "mechanism": "RAF;VEGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "osimertinib",
+      "generic_name": "osimertinib",
+      "brands": [
+        "Tagrisso"
+      ],
+      "development_codes": [
+        "AZD9291"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "EGFR"
+      ],
+      "mechanism": "EGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "erlotinib",
+      "generic_name": "erlotinib",
+      "brands": [
+        "Tarceva"
+      ],
+      "development_codes": [
+        "OSI-774"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "EGFR"
+      ],
+      "mechanism": "EGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "gefitinib",
+      "generic_name": "gefitinib",
+      "brands": [
+        "Iressa"
+      ],
+      "development_codes": [
+        "ZD1839"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "EGFR"
+      ],
+      "mechanism": "EGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "afatinib",
+      "generic_name": "afatinib",
+      "brands": [
+        "Gilotrif",
+        "Giotrif"
+      ],
+      "development_codes": [
+        "BIBW 2992"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "EGFR",
+        "HER2"
+      ],
+      "mechanism": "EGFR;HER2 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "alectinib",
+      "generic_name": "alectinib",
+      "brands": [
+        "Alecensa"
+      ],
+      "development_codes": [
+        "CH5424802"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "ALK"
+      ],
+      "mechanism": "ALK directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "brigatinib",
+      "generic_name": "brigatinib",
+      "brands": [
+        "Alunbrig"
+      ],
+      "development_codes": [
+        "AP26113"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "ALK"
+      ],
+      "mechanism": "ALK directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "lorlatinib",
+      "generic_name": "lorlatinib",
+      "brands": [
+        "Lorbrena"
+      ],
+      "development_codes": [
+        "PF-06463922"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "ALK",
+        "ROS1"
+      ],
+      "mechanism": "ALK;ROS1 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "crizotinib",
+      "generic_name": "crizotinib",
+      "brands": [
+        "Xalkori"
+      ],
+      "development_codes": [
+        "PF-02341066"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "ALK",
+        "ROS1",
+        "MET"
+      ],
+      "mechanism": "ALK;ROS1;MET directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "dabrafenib",
+      "generic_name": "dabrafenib",
+      "brands": [
+        "Tafinlar"
+      ],
+      "development_codes": [
+        "GSK2118436"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "BRAF"
+      ],
+      "mechanism": "BRAF directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "vemurafenib",
+      "generic_name": "vemurafenib",
+      "brands": [
+        "Zelboraf"
+      ],
+      "development_codes": [
+        "PLX4032"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "BRAF"
+      ],
+      "mechanism": "BRAF directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "encorafenib",
+      "generic_name": "encorafenib",
+      "brands": [
+        "Braftovi"
+      ],
+      "development_codes": [
+        "LGX818"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "BRAF"
+      ],
+      "mechanism": "BRAF directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "trametinib",
+      "generic_name": "trametinib",
+      "brands": [
+        "Mekinist"
+      ],
+      "development_codes": [
+        "GSK1120212"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "MEK1",
+        "MEK2"
+      ],
+      "mechanism": "MEK1;MEK2 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "cobimetinib",
+      "generic_name": "cobimetinib",
+      "brands": [
+        "Cotellic"
+      ],
+      "development_codes": [
+        "GDC-0973"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "MEK1",
+        "MEK2"
+      ],
+      "mechanism": "MEK1;MEK2 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "binimetinib",
+      "generic_name": "binimetinib",
+      "brands": [
+        "Mektovi"
+      ],
+      "development_codes": [
+        "MEK162"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "MEK1",
+        "MEK2"
+      ],
+      "mechanism": "MEK1;MEK2 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "selpercatinib",
+      "generic_name": "selpercatinib",
+      "brands": [
+        "Retevmo"
+      ],
+      "development_codes": [
+        "LOXO-292"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "RET"
+      ],
+      "mechanism": "RET directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "pralsetinib",
+      "generic_name": "pralsetinib",
+      "brands": [
+        "Gavreto"
+      ],
+      "development_codes": [
+        "BLU-667"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "RET"
+      ],
+      "mechanism": "RET directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "larotrectinib",
+      "generic_name": "larotrectinib",
+      "brands": [
+        "Vitrakvi"
+      ],
+      "development_codes": [
+        "LOXO-101"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "NTRK"
+      ],
+      "mechanism": "NTRK directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "entrectinib",
+      "generic_name": "entrectinib",
+      "brands": [
+        "Rozlytrek"
+      ],
+      "development_codes": [
+        "RXDX-101"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "NTRK",
+        "ROS1"
+      ],
+      "mechanism": "NTRK;ROS1 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "repotrectinib",
+      "generic_name": "repotrectinib",
+      "brands": [
+        "Augtyro"
+      ],
+      "development_codes": [
+        "TPX-0005"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "ROS1",
+        "NTRK"
+      ],
+      "mechanism": "ROS1;NTRK directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "capmatinib",
+      "generic_name": "capmatinib",
+      "brands": [
+        "Tabrecta"
+      ],
+      "development_codes": [
+        "INC280"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "MET"
+      ],
+      "mechanism": "MET directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "tepotinib",
+      "generic_name": "tepotinib",
+      "brands": [
+        "Tepmetko"
+      ],
+      "development_codes": [
+        "MSC2156119J"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "MET"
+      ],
+      "mechanism": "MET directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "erdafitinib",
+      "generic_name": "erdafitinib",
+      "brands": [
+        "Balversa"
+      ],
+      "development_codes": [
+        "JNJ-42756493"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "FGFR"
+      ],
+      "mechanism": "FGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "pemigatinib",
+      "generic_name": "pemigatinib",
+      "brands": [
+        "Pemazyre"
+      ],
+      "development_codes": [
+        "INCB054828"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "FGFR"
+      ],
+      "mechanism": "FGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "futibatinib",
+      "generic_name": "futibatinib",
+      "brands": [
+        "Lytgobi"
+      ],
+      "development_codes": [
+        "TAS-120"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "FGFR"
+      ],
+      "mechanism": "FGFR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "sotorasib",
+      "generic_name": "sotorasib",
+      "brands": [
+        "Lumakras"
+      ],
+      "development_codes": [
+        "AMG 510"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "KRAS G12C"
+      ],
+      "mechanism": "KRAS G12C directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "adagrasib",
+      "generic_name": "adagrasib",
+      "brands": [
+        "Krazati"
+      ],
+      "development_codes": [
+        "MRTX849"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "KRAS G12C"
+      ],
+      "mechanism": "KRAS G12C directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "olaparib",
+      "generic_name": "olaparib",
+      "brands": [
+        "Lynparza"
+      ],
+      "development_codes": [
+        "AZD2281"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "PARP"
+      ],
+      "mechanism": "PARP directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "niraparib",
+      "generic_name": "niraparib",
+      "brands": [
+        "Zejula"
+      ],
+      "development_codes": [
+        "MK-4827"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "PARP"
+      ],
+      "mechanism": "PARP directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "rucaparib",
+      "generic_name": "rucaparib",
+      "brands": [
+        "Rubraca"
+      ],
+      "development_codes": [
+        "AG-014699"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "PARP"
+      ],
+      "mechanism": "PARP directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "talazoparib",
+      "generic_name": "talazoparib",
+      "brands": [
+        "Talzenna"
+      ],
+      "development_codes": [
+        "BMN 673"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "PARP"
+      ],
+      "mechanism": "PARP directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "palbociclib",
+      "generic_name": "palbociclib",
+      "brands": [
+        "Ibrance"
+      ],
+      "development_codes": [
+        "PD-0332991"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "CDK4",
+        "CDK6"
+      ],
+      "mechanism": "CDK4;CDK6 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "ribociclib",
+      "generic_name": "ribociclib",
+      "brands": [
+        "Kisqali"
+      ],
+      "development_codes": [
+        "LEE011"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "CDK4",
+        "CDK6"
+      ],
+      "mechanism": "CDK4;CDK6 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "abemaciclib",
+      "generic_name": "abemaciclib",
+      "brands": [
+        "Verzenio"
+      ],
+      "development_codes": [
+        "LY2835219"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "CDK4",
+        "CDK6"
+      ],
+      "mechanism": "CDK4;CDK6 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "everolimus",
+      "generic_name": "everolimus",
+      "brands": [
+        "Afinitor"
+      ],
+      "development_codes": [
+        "RAD001"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "mTOR"
+      ],
+      "mechanism": "mTOR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "temsirolimus",
+      "generic_name": "temsirolimus",
+      "brands": [
+        "Torisel"
+      ],
+      "development_codes": [
+        "CCI-779"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "mTOR"
+      ],
+      "mechanism": "mTOR directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "alpelisib",
+      "generic_name": "alpelisib",
+      "brands": [
+        "Piqray"
+      ],
+      "development_codes": [
+        "BYL719"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "PI3K alpha"
+      ],
+      "mechanism": "PI3K alpha directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "capivasertib",
+      "generic_name": "capivasertib",
+      "brands": [
+        "Truqap"
+      ],
+      "development_codes": [
+        "AZD5363"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "AKT"
+      ],
+      "mechanism": "AKT directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "inavolisib",
+      "generic_name": "inavolisib",
+      "brands": [
+        "Itovebi"
+      ],
+      "development_codes": [
+        "GDC-0077"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "PI3K alpha"
+      ],
+      "mechanism": "PI3K alpha directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "belzutifan",
+      "generic_name": "belzutifan",
+      "brands": [
+        "Welireg"
+      ],
+      "development_codes": [
+        "MK-6482",
+        "PT2977"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "HIF-2 alpha"
+      ],
+      "mechanism": "HIF-2 alpha directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "tazemetostat",
+      "generic_name": "tazemetostat",
+      "brands": [
+        "Tazverik"
+      ],
+      "development_codes": [
+        "EPZ-6438"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "EZH2"
+      ],
+      "mechanism": "EZH2 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "vorasidenib",
+      "generic_name": "vorasidenib",
+      "brands": [
+        "Voranigo"
+      ],
+      "development_codes": [
+        "AG-881"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "IDH1",
+        "IDH2"
+      ],
+      "mechanism": "IDH1;IDH2 directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "tovorafenib",
+      "generic_name": "tovorafenib",
+      "brands": [
+        "Ojemda"
+      ],
+      "development_codes": [
+        "DAY101"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "RAF"
+      ],
+      "mechanism": "RAF directed small_molecule_inhibitor",
+      "modality": "small_molecule_inhibitor",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "trastuzumab",
+      "generic_name": "trastuzumab",
+      "brands": [
+        "Herceptin"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "HER2"
+      ],
+      "mechanism": "HER2 directed targeted_antibody",
+      "modality": "targeted_antibody",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "pertuzumab",
+      "generic_name": "pertuzumab",
+      "brands": [
+        "Perjeta"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "HER2"
+      ],
+      "mechanism": "HER2 directed targeted_antibody",
+      "modality": "targeted_antibody",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "bevacizumab",
+      "generic_name": "bevacizumab",
+      "brands": [
+        "Avastin"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "VEGF-A"
+      ],
+      "mechanism": "VEGF-A directed targeted_antibody",
+      "modality": "targeted_antibody",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "cetuximab",
+      "generic_name": "cetuximab",
+      "brands": [
+        "Erbitux"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "EGFR"
+      ],
+      "mechanism": "EGFR directed targeted_antibody",
+      "modality": "targeted_antibody",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "panitumumab",
+      "generic_name": "panitumumab",
+      "brands": [
+        "Vectibix"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "EGFR"
+      ],
+      "mechanism": "EGFR directed targeted_antibody",
+      "modality": "targeted_antibody",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "ramucirumab",
+      "generic_name": "ramucirumab",
+      "brands": [
+        "Cyramza"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "VEGFR2"
+      ],
+      "mechanism": "VEGFR2 directed targeted_antibody",
+      "modality": "targeted_antibody",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "zanidatamab",
+      "generic_name": "zanidatamab",
+      "brands": [
+        "Ziihera"
+      ],
+      "development_codes": [
+        "ZW25"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "HER2"
+      ],
+      "mechanism": "HER2 directed targeted_antibody",
+      "modality": "targeted_antibody",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "amivantamab",
+      "generic_name": "amivantamab",
+      "brands": [
+        "Rybrevant"
+      ],
+      "development_codes": [
+        "JNJ-61186372"
+      ],
+      "synonyms": [],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "EGFR",
+        "MET"
+      ],
+      "mechanism": "EGFR;MET directed targeted_antibody",
+      "modality": "targeted_antibody",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "ado_trastuzumab_emtansine",
+      "generic_name": "ado-trastuzumab emtansine",
+      "brands": [
+        "Kadcyla"
+      ],
+      "development_codes": [
+        "T-DM1"
+      ],
+      "synonyms": [
+        "trastuzumab emtansine"
+      ],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "HER2"
+      ],
+      "mechanism": "HER2 directed antibody_drug_conjugate",
+      "modality": "antibody_drug_conjugate",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": true,
+      "payload": "DM1",
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted",
+        "nlm_padcev",
+        "fda_mirvetuximab",
+        "original_emilia_2012_adc_alias"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "ADC is one targeted agent; payload does not itself imply a concurrent conventional-chemotherapy regimen."
+    },
+    {
+      "drug_id": "trastuzumab_deruxtecan",
+      "generic_name": "trastuzumab deruxtecan",
+      "brands": [
+        "Enhertu"
+      ],
+      "development_codes": [
+        "DS-8201",
+        "T-DXd"
+      ],
+      "synonyms": [
+        "fam-trastuzumab deruxtecan-nxki",
+        "trastuzumab deruxtecan-nxki"
+      ],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "HER2"
+      ],
+      "mechanism": "HER2 directed antibody_drug_conjugate",
+      "modality": "antibody_drug_conjugate",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": true,
+      "payload": "DXd",
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted",
+        "nlm_padcev",
+        "fda_mirvetuximab"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "ADC is one targeted agent; payload does not itself imply a concurrent conventional-chemotherapy regimen."
+    },
+    {
+      "drug_id": "enfortumab_vedotin",
+      "generic_name": "enfortumab vedotin",
+      "brands": [
+        "Padcev"
+      ],
+      "development_codes": [
+        "ASG-22ME"
+      ],
+      "synonyms": [
+        "enfortumab vedotin-ejfv"
+      ],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "Nectin-4"
+      ],
+      "mechanism": "Nectin-4 directed antibody_drug_conjugate",
+      "modality": "antibody_drug_conjugate",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": true,
+      "payload": "MMAE",
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted",
+        "nlm_padcev",
+        "fda_mirvetuximab"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "ADC is one targeted agent; payload does not itself imply a concurrent conventional-chemotherapy regimen."
+    },
+    {
+      "drug_id": "sacituzumab_govitecan",
+      "generic_name": "sacituzumab govitecan",
+      "brands": [
+        "Trodelvy"
+      ],
+      "development_codes": [
+        "IMMU-132"
+      ],
+      "synonyms": [
+        "sacituzumab govitecan-hziy"
+      ],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "TROP-2"
+      ],
+      "mechanism": "TROP-2 directed antibody_drug_conjugate",
+      "modality": "antibody_drug_conjugate",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": true,
+      "payload": "SN-38",
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted",
+        "nlm_padcev",
+        "fda_mirvetuximab"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "ADC is one targeted agent; payload does not itself imply a concurrent conventional-chemotherapy regimen."
+    },
+    {
+      "drug_id": "mirvetuximab_soravtansine",
+      "generic_name": "mirvetuximab soravtansine",
+      "brands": [
+        "Elahere"
+      ],
+      "development_codes": [
+        "IMGN853"
+      ],
+      "synonyms": [
+        "mirvetuximab soravtansine-gynx"
+      ],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "Folate receptor alpha"
+      ],
+      "mechanism": "Folate receptor alpha directed antibody_drug_conjugate",
+      "modality": "antibody_drug_conjugate",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": true,
+      "payload": "DM4",
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted",
+        "nlm_padcev",
+        "fda_mirvetuximab"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "ADC is one targeted agent; payload does not itself imply a concurrent conventional-chemotherapy regimen."
+    },
+    {
+      "drug_id": "tisotumab_vedotin",
+      "generic_name": "tisotumab vedotin",
+      "brands": [
+        "Tivdak"
+      ],
+      "development_codes": [
+        "HuMax-TF-ADC"
+      ],
+      "synonyms": [
+        "tisotumab vedotin-tftv"
+      ],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "Tissue factor"
+      ],
+      "mechanism": "Tissue factor directed antibody_drug_conjugate",
+      "modality": "antibody_drug_conjugate",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": true,
+      "payload": "MMAE",
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted",
+        "nlm_padcev",
+        "fda_mirvetuximab"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "ADC is one targeted agent; payload does not itself imply a concurrent conventional-chemotherapy regimen."
+    },
+    {
+      "drug_id": "datopotamab_deruxtecan",
+      "generic_name": "datopotamab deruxtecan",
+      "brands": [
+        "Datroway"
+      ],
+      "development_codes": [
+        "DS-1062",
+        "Dato-DXd"
+      ],
+      "synonyms": [
+        "datopotamab deruxtecan-dlnk"
+      ],
+      "operational_class": "targeted_therapy",
+      "normalized_classes": [
+        "targeted_therapy"
+      ],
+      "targets": [
+        "TROP-2"
+      ],
+      "mechanism": "TROP-2 directed antibody_drug_conjugate",
+      "modality": "antibody_drug_conjugate",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": true,
+      "payload": "DXd",
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_targeted",
+        "nlm_padcev",
+        "fda_mirvetuximab"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "ADC is one targeted agent; payload does not itself imply a concurrent conventional-chemotherapy regimen."
+    },
+    {
+      "drug_id": "letrozole",
+      "generic_name": "letrozole",
+      "brands": [
+        "Femara"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "aromatase"
+      ],
+      "mechanism": "aromatase directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "estrogen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "anastrozole",
+      "generic_name": "anastrozole",
+      "brands": [
+        "Arimidex"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "aromatase"
+      ],
+      "mechanism": "aromatase directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "estrogen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "exemestane",
+      "generic_name": "exemestane",
+      "brands": [
+        "Aromasin"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "aromatase"
+      ],
+      "mechanism": "aromatase directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "estrogen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "tamoxifen",
+      "generic_name": "tamoxifen",
+      "brands": [
+        "Soltamox",
+        "Nolvadex"
+      ],
+      "development_codes": [],
+      "synonyms": [
+        "tamoxifen citrate"
+      ],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "estrogen receptor"
+      ],
+      "mechanism": "estrogen receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "estrogen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "fulvestrant",
+      "generic_name": "fulvestrant",
+      "brands": [
+        "Faslodex"
+      ],
+      "development_codes": [
+        "ICI 182780"
+      ],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "estrogen receptor"
+      ],
+      "mechanism": "estrogen receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "estrogen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "elacestrant",
+      "generic_name": "elacestrant",
+      "brands": [
+        "Orserdu"
+      ],
+      "development_codes": [
+        "RAD1901"
+      ],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "estrogen receptor"
+      ],
+      "mechanism": "estrogen receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "estrogen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "goserelin",
+      "generic_name": "goserelin",
+      "brands": [
+        "Zoladex"
+      ],
+      "development_codes": [],
+      "synonyms": [
+        "goserelin acetate"
+      ],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "GnRH receptor"
+      ],
+      "mechanism": "GnRH receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "ADT_or_ovarian_suppression",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "leuprolide",
+      "generic_name": "leuprolide",
+      "brands": [
+        "Lupron",
+        "Eligard"
+      ],
+      "development_codes": [],
+      "synonyms": [
+        "leuprolide acetate",
+        "leuprolide mesylate"
+      ],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "GnRH receptor"
+      ],
+      "mechanism": "GnRH receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "ADT_or_ovarian_suppression",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "triptorelin",
+      "generic_name": "triptorelin",
+      "brands": [
+        "Trelstar"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "GnRH receptor"
+      ],
+      "mechanism": "GnRH receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "ADT_or_ovarian_suppression",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "degarelix",
+      "generic_name": "degarelix",
+      "brands": [
+        "Firmagon"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "GnRH receptor"
+      ],
+      "mechanism": "GnRH receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "ADT_or_ovarian_suppression",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "relugolix",
+      "generic_name": "relugolix",
+      "brands": [
+        "Orgovyx"
+      ],
+      "development_codes": [
+        "TAK-385"
+      ],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "GnRH receptor"
+      ],
+      "mechanism": "GnRH receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "ADT_or_ovarian_suppression",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "abiraterone",
+      "generic_name": "abiraterone",
+      "brands": [
+        "Zytiga",
+        "Yonsa"
+      ],
+      "development_codes": [
+        "CB7630"
+      ],
+      "synonyms": [
+        "abiraterone acetate"
+      ],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "CYP17A1"
+      ],
+      "mechanism": "CYP17A1 directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "androgen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "enzalutamide",
+      "generic_name": "enzalutamide",
+      "brands": [
+        "Xtandi"
+      ],
+      "development_codes": [
+        "MDV3100"
+      ],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "androgen receptor"
+      ],
+      "mechanism": "androgen receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "androgen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "apalutamide",
+      "generic_name": "apalutamide",
+      "brands": [
+        "Erleada"
+      ],
+      "development_codes": [
+        "ARN-509"
+      ],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "androgen receptor"
+      ],
+      "mechanism": "androgen receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "androgen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "darolutamide",
+      "generic_name": "darolutamide",
+      "brands": [
+        "Nubeqa"
+      ],
+      "development_codes": [
+        "ODM-201"
+      ],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "androgen receptor"
+      ],
+      "mechanism": "androgen receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "androgen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "bicalutamide",
+      "generic_name": "bicalutamide",
+      "brands": [
+        "Casodex"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "endocrine_therapy",
+      "normalized_classes": [
+        "endocrine_therapy"
+      ],
+      "targets": [
+        "androgen receptor"
+      ],
+      "mechanism": "androgen receptor directed endocrine_agent",
+      "modality": "endocrine_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": "androgen_pathway_agent",
+      "supporting_sources": [
+        "nci_drugs",
+        "nci_endocrine",
+        "nci_breast",
+        "nci_prostate"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist",
+      "classification_note": "Operationally endocrine; combining endocrine agents does not create nonendocrine targeted therapy."
+    },
+    {
+      "drug_id": "doxorubicin",
+      "generic_name": "doxorubicin",
+      "brands": [
+        "Adriamycin"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "topoisomerase II"
+      ],
+      "mechanism": "topoisomerase II directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "paclitaxel",
+      "generic_name": "paclitaxel",
+      "brands": [
+        "Taxol"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "microtubules"
+      ],
+      "mechanism": "microtubules directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "docetaxel",
+      "generic_name": "docetaxel",
+      "brands": [
+        "Taxotere"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "microtubules"
+      ],
+      "mechanism": "microtubules directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "carboplatin",
+      "generic_name": "carboplatin",
+      "brands": [
+        "Paraplatin"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "DNA"
+      ],
+      "mechanism": "DNA directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "cisplatin",
+      "generic_name": "cisplatin",
+      "brands": [
+        "Platinol"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "DNA"
+      ],
+      "mechanism": "DNA directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "gemcitabine",
+      "generic_name": "gemcitabine",
+      "brands": [
+        "Gemzar"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "DNA synthesis"
+      ],
+      "mechanism": "DNA synthesis directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "pemetrexed",
+      "generic_name": "pemetrexed",
+      "brands": [
+        "Alimta"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "folate metabolism"
+      ],
+      "mechanism": "folate metabolism directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "capecitabine",
+      "generic_name": "capecitabine",
+      "brands": [
+        "Xeloda"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "thymidylate synthase"
+      ],
+      "mechanism": "thymidylate synthase directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "fluorouracil",
+      "generic_name": "fluorouracil",
+      "brands": [
+        "5-FU"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "thymidylate synthase"
+      ],
+      "mechanism": "thymidylate synthase directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "ifosfamide",
+      "generic_name": "ifosfamide",
+      "brands": [
+        "Ifex"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "DNA"
+      ],
+      "mechanism": "DNA directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "trabectedin",
+      "generic_name": "trabectedin",
+      "brands": [
+        "Yondelis"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "DNA"
+      ],
+      "mechanism": "DNA directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "eribulin",
+      "generic_name": "eribulin",
+      "brands": [
+        "Halaven"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "conventional_cytotoxic_chemotherapy",
+      "normalized_classes": [
+        "conventional_cytotoxic_chemotherapy"
+      ],
+      "targets": [
+        "microtubules"
+      ],
+      "mechanism": "microtubules directed cytotoxic_agent",
+      "modality": "cytotoxic_agent",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "sipuleucel_T",
+      "generic_name": "sipuleucel-T",
+      "brands": [
+        "Provenge"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "prostate antigen directed immune response"
+      ],
+      "mechanism": "prostate antigen directed immune response directed noncheckpoint_immunotherapy",
+      "modality": "noncheckpoint_immunotherapy",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "talimogene_laherparepvec",
+      "generic_name": "talimogene laherparepvec",
+      "brands": [
+        "Imlygic"
+      ],
+      "development_codes": [
+        "T-VEC"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "oncolytic herpesvirus",
+        "GM-CSF"
+      ],
+      "mechanism": "oncolytic herpesvirus;GM-CSF directed noncheckpoint_immunotherapy",
+      "modality": "noncheckpoint_immunotherapy",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "lifileucel",
+      "generic_name": "lifileucel",
+      "brands": [
+        "Amtagvi"
+      ],
+      "development_codes": [
+        "LN-144"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "tumor infiltrating lymphocytes"
+      ],
+      "mechanism": "tumor infiltrating lymphocytes directed noncheckpoint_immunotherapy",
+      "modality": "noncheckpoint_immunotherapy",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "afamitresgene_autoleucel",
+      "generic_name": "afamitresgene autoleucel",
+      "brands": [
+        "Tecelra"
+      ],
+      "development_codes": [
+        "ADP-A2M4"
+      ],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "MAGE-A4 directed TCR"
+      ],
+      "mechanism": "MAGE-A4 directed TCR directed noncheckpoint_immunotherapy",
+      "modality": "noncheckpoint_immunotherapy",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_drugs"
+      ],
+      "classification_status": "curated_initial_vocabulary_not_an_eligibility_whitelist"
+    },
+    {
+      "drug_id": "aldesleukin",
+      "generic_name": "aldesleukin",
+      "brands": [
+        "Proleukin"
+      ],
+      "development_codes": [],
+      "synonyms": [
+        "interleukin-2",
+        "interleukin 2",
+        "IL-2",
+        "recombinant human IL-2",
+        "recombinant human interleukin-2"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "IL-2 receptor"
+      ],
+      "mechanism": "Recombinant IL-2 receptor agonism and immune stimulation.",
+      "modality": "recombinant_cytokine",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_aldesleukin",
+        "nci_aldesleukin_cancer"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "interferon_alfa_2a",
+      "generic_name": "interferon alfa-2a",
+      "brands": [
+        "Roferon-A",
+        "Roferon A",
+        "Laroferon",
+        "Roceron-A"
+      ],
+      "development_codes": [],
+      "synonyms": [
+        "recombinant interferon alfa-2a",
+        "interferon alfa 2a",
+        "IFN alpha-2A",
+        "alpha 2 interferon",
+        "rHuIFN-a 2a"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "interferon receptors"
+      ],
+      "mechanism": "Recombinant interferon with immune-modulating activity.",
+      "modality": "recombinant_cytokine",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_interferon_alfa_2a"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "interferon_alfa_2b",
+      "generic_name": "interferon alfa-2b",
+      "brands": [
+        "Intron A",
+        "Intron-A",
+        "Alfatronol",
+        "Glucoferon",
+        "Heberon Alfa",
+        "Urifron",
+        "Viraferon"
+      ],
+      "development_codes": [
+        "Sch 30500"
+      ],
+      "synonyms": [
+        "recombinant interferon alfa-2b",
+        "interferon alfa 2b",
+        "interferon alpha-2b",
+        "IFN alpha-2B"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Recombinant interferon with immune-modulating activity.",
+      "modality": "recombinant_cytokine",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_interferon_alfa_2b",
+        "nci_immune_modulators"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "peginterferon_alfa_2a",
+      "generic_name": "peginterferon alfa-2a",
+      "brands": [
+        "Pegasys"
+      ],
+      "development_codes": [],
+      "synonyms": [
+        "pegylated interferon alfa-2a",
+        "peginterferon alpha-2a",
+        "PEG-IFNA2a"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "interferon receptors"
+      ],
+      "mechanism": "Pegylated interferon alfa-2a with immune-modulating activity.",
+      "modality": "pegylated_cytokine",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_peginterferon_alfa_2a"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "peginterferon_alfa_2b",
+      "generic_name": "peginterferon alfa-2b",
+      "brands": [
+        "Sylatron",
+        "PegIntron",
+        "PEG-Intron",
+        "PEG Intron"
+      ],
+      "development_codes": [],
+      "synonyms": [
+        "PEG-IFN alfa-2b",
+        "pegylated interferon alpha-2b",
+        "pegylated interferon alfa-2b",
+        "peginterferon alpha-2b",
+        "PEG-IFN-a 2b",
+        "polyethylene glycol interferon alfa-2b"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Pegylated interferon alfa-2b; historical immunomodulating treatment.",
+      "modality": "pegylated_cytokine",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_peginterferon_alfa_2b",
+        "nci_sylatron"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28",
+      "historical_status_note": "Sylatron's current availability does not exclude historical trials; peginterferon alfa-2a and2b remain distinct agents."
+    },
+    {
+      "drug_id": "bacillus_calmette_guerin",
+      "generic_name": "Bacillus Calmette-Guerin",
+      "brands": [
+        "TICE BCG",
+        "TICE",
+        "TheraCys"
+      ],
+      "development_codes": [],
+      "synonyms": [
+        "BCG",
+        "BCG live",
+        "BCG solution",
+        "Bacillus Calmette-Gu\u00e9rin",
+        "Bacillus Calmette Guerin",
+        "intravesical BCG",
+        "TICE BCG solution"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Local immune stimulation; product labeling does not establish a precise mechanism.",
+      "modality": "live_attenuated_bacterial_immunotherapy",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_bcg",
+        "nci_immune_modulators",
+        "fda_tice_bcg",
+        "fda_theracys",
+        "fda_bcg_formulation"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28",
+      "formulation_note": "Preserve exact product/strain and route in comparisons; generic identity does not establish interchangeability of BCG formulations."
+    },
+    {
+      "drug_id": "nogapendekin_alfa_inbakicept",
+      "generic_name": "nogapendekin alfa inbakicept",
+      "brands": [
+        "Anktiva"
+      ],
+      "development_codes": [
+        "ALT-803",
+        "ALT 803",
+        "ALT803",
+        "N-803",
+        "N 803",
+        "N803"
+      ],
+      "synonyms": [
+        "nogapendekin alfa inbakicept-pmln",
+        "nogapendekin alfa",
+        "IL-15N72D-IL-15RaSU/Fc",
+        "inbakicept nogapendekin alfa fusion complex"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "IL-15 receptor"
+      ],
+      "mechanism": "IL-15 receptor agonism and immune stimulation.",
+      "modality": "cytokine_receptor_agonist_complex",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_nogapendekin",
+        "fda_nogapendekin",
+        "fda_nogapendekin_aliases"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "bempegaldesleukin",
+      "generic_name": "bempegaldesleukin",
+      "brands": [],
+      "development_codes": [
+        "NKTR-214"
+      ],
+      "synonyms": [
+        "aldesleukin prodrug NKTR-214"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [
+        "IL-2 receptor beta"
+      ],
+      "mechanism": "Pegylated IL-2 prodrug with potential immune-stimulating activity.",
+      "modality": "pegylated_cytokine",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_bempegaldesleukin"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "imiquimod",
+      "generic_name": "imiquimod",
+      "brands": [
+        "Aldara",
+        "Zyclara"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Immune modulation through cytokine release.",
+      "modality": "small_molecule_immune_modulator",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_immune_modulators"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "thalidomide",
+      "generic_name": "thalidomide",
+      "brands": [
+        "Thalomid"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Immune modulation with antiangiogenic properties described by NCI.",
+      "modality": "small_molecule_immune_modulator",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_immune_modulators",
+        "nci_angiogenesis"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "lenalidomide",
+      "generic_name": "lenalidomide",
+      "brands": [
+        "Revlimid"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Immune modulation with antiangiogenic properties described by NCI.",
+      "modality": "small_molecule_immune_modulator",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_immune_modulators",
+        "nci_angiogenesis"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "pomalidomide",
+      "generic_name": "pomalidomide",
+      "brands": [
+        "Pomalyst"
+      ],
+      "development_codes": [],
+      "synonyms": [],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Immune modulation described by NCI.",
+      "modality": "small_molecule_immune_modulator",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_immune_modulators"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "levamisole",
+      "generic_name": "levamisole",
+      "brands": [
+        "Ergamisol",
+        "Ascaridil",
+        "Decaris",
+        "Ergamisole",
+        "Ketrax",
+        "Solaskil"
+      ],
+      "development_codes": [
+        "ICI-59623",
+        "R 12564",
+        "RP-20605"
+      ],
+      "synonyms": [
+        "levamisole hydrochloride",
+        "l-tetramisole hydrochloride"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Nonspecific immune-stimulating activity.",
+      "modality": "small_molecule_immune_modulator",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_levamisole",
+        "nci_immune_modulator_definition"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    },
+    {
+      "drug_id": "vusolimogene_oderparepvec",
+      "generic_name": "vusolimogene oderparepvec",
+      "brands": [
+        "Tudriqev"
+      ],
+      "development_codes": [
+        "RP1",
+        "RP-1"
+      ],
+      "synonyms": [
+        "vusolimogene oderparepvec-wtpg",
+        "HSV-1 oncolytic viral strain RP1",
+        "oncolytic virus RP1"
+      ],
+      "operational_class": "immunotherapy",
+      "normalized_classes": [
+        "immunotherapy"
+      ],
+      "targets": [],
+      "mechanism": "Modified oncolytic HSV-1 with immunostimulating activity.",
+      "modality": "oncolytic_virus",
+      "is_checkpoint_inhibitor": false,
+      "is_antibody_drug_conjugate": false,
+      "payload": null,
+      "endocrine_backbone_role": null,
+      "supporting_sources": [
+        "nci_vusolimogene",
+        "nci_skin_drugs"
+      ],
+      "classification_status": "source_verified_vocabulary_extension_not_an_eligibility_whitelist",
+      "verified_on": "2026-10-28"
+    }
+  ],
+  "expansion_candidates": [],
+  "ambiguous_alias_rules": [
+    {
+      "term": "pegIFN",
+      "canonical_drug_id": null,
+      "resolution_status": "requires_reported_subtype",
+      "possible_drug_ids": [
+        "peginterferon_alfa_2a",
+        "peginterferon_alfa_2b"
+      ],
+      "policy": "Family search term; do not infer alfa-2a or alfa-2b for attribution without report evidence."
+    }
+  ],
+  "vocabulary_extension_note": "Historical cytokine/BCG and additional source-verified immunotherapy coverage; discontinued/investigational status does not exclude original solid-tumor trial evidence."
+}
