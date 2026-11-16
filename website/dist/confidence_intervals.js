@@ -1,7 +1,9 @@
 /* Display-only standardization. Original intervals remain the precision source. */
 (function(root,factory){
-  if(typeof module==='object'&&module.exports)module.exports=factory(require('./statistical_math.js'));
-  else root.ConfidenceIntervals=factory(root.StatisticalMath);
+  const stats=typeof module==='object'&&module.exports?require('./statistical_math.js'):root.StatisticalMath;
+  const api=Object.freeze({...factory(stats),cacheSource:String(factory)+stats.cacheSource});
+  if(typeof module==='object'&&module.exports)module.exports=api;
+  else root.ConfidenceIntervals=api;
 })(typeof globalThis==='undefined'?this:globalThis,function(Stats){
   'use strict';
   const SOURCE='https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-06#section-6-3-2';

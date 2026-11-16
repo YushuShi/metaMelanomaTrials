@@ -208,6 +208,9 @@ def publication(root, payload, *, source_bytes, source_path=SOURCE):
         result = build(root, payload, source_bytes=source_bytes, source_path=source_path, previous=previous)
         receipt = _save(root, result)
         yield receipt
+        if 'treatment_map' in result:
+            from .treatment_map import refresh_defaults
+            receipt['treatment_map']['default_views'] = refresh_defaults(root)
 
 
 def reconcile(root, *, dry_run=False, source_path=SOURCE, registry_path=REGISTRY,
@@ -224,4 +227,7 @@ def reconcile(root, *, dry_run=False, source_path=SOURCE, registry_path=REGISTRY
         receipt = _save(root, result, dry_run=dry_run, audit_dir=audit_dir)
         if source.read_bytes() != source_bytes:
             raise ValueError('Source publication changed during reconciliation; repeat the local build')
+        if not dry_run and 'treatment_map' in result:
+            from .treatment_map import refresh_defaults
+            receipt['treatment_map']['default_views'] = refresh_defaults(root)
         return receipt

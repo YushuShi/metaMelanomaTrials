@@ -1,8 +1,8 @@
 /* Prepared evidence only: layout and interaction never parse or aggregate trial reports. */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./treatment_map_effects.js'), require('./treatment_map_analysis.js'), require('./treatment_map_planning.js'), require('./treatment_map_charts.js'), require('./confidence_intervals.js'));
-  else root.TreatmentMap = factory(root.TreatmentMapEffects, root.TreatmentMapAnalysis, root.TreatmentMapPlanning, root.TreatmentMapCharts, root.ConfidenceIntervals);
-})(typeof globalThis === 'undefined' ? this : globalThis, function (Effects, Analysis, Planning, Charts, ConfidenceIntervals) {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./treatment_map_effects.js'), require('./treatment_map_analysis.js'), require('./treatment_map_planning.js'), require('./treatment_map_charts.js'), require('./confidence_intervals.js'), String(factory));
+  else root.TreatmentMap = factory(root.TreatmentMapEffects, root.TreatmentMapAnalysis, root.TreatmentMapPlanning, root.TreatmentMapCharts, root.ConfidenceIntervals, String(factory));
+})(typeof globalThis === 'undefined' ? this : globalThis, function (Effects, Analysis, Planning, Charts, ConfidenceIntervals, sourceCode) {
   'use strict';
   const NS = 'http://www.w3.org/2000/svg';
   const number = (value) => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value).toLocaleString('en-US', { maximumFractionDigits: 2 }) : '—';
@@ -13,6 +13,66 @@
   const contains = (child, parent) => parent.components.length < child.components.length && parent.components.every((id) => child.components.includes(id));
   const byComparison = (a, b) => String(a.default_rank ?? '').localeCompare(String(b.default_rank ?? ''), 'en', { numeric: true }) || String(a.study_name || a.study_id).localeCompare(String(b.study_name || b.study_id), 'en') || String(a.outcome).localeCompare(String(b.outcome), 'en') || String(a.pmid).localeCompare(String(b.pmid), 'en') || String(a.id).localeCompare(String(b.id), 'en');
   const count = (node) => node.count_summary || {};
+  // A cache identity, not a security digest. Include complete numerical and
+  // selection implementations so a code edit invalidates prepared results.
+  const engineSignature = (() => {
+    const source=sourceCode+Analysis.cacheSource+Effects.cacheSource+ConfidenceIntervals.cacheSource;
+    let a=2166136261,b=5381;
+    for(let i=0;i<source.length;i++){a=Math.imul(a^source.charCodeAt(i),16777619);b=Math.imul(b,33)^source.charCodeAt(i);}
+    return source.length+':'+(a>>>0).toString(16)+':'+(b>>>0).toString(16);
+  })();
+  function preparedDefaults(graph) {
+    const saved=graph.default_views;
+    return saved?.schema_version===1&&saved.graph_content_sha256===graph.content_sha256&&saved.engine_signature===engineSignature?saved:null;
+  }
+  const analysisKey=(edge,endpoint,scope,direction)=>[edge.id,endpoint,scope,direction.tailId,direction.headId].join('|');
+  const decodedDefaults=new WeakMap();
+  function unpackAnalysis(saved,key) {
+    const packed=saved.analyses;
+    if(packed?.format!=='interned-v1')return packed?.[key]||null;
+    if(!Object.hasOwn(packed.entries,key))return null;
+    if(!decodedDefaults.has(saved))decodedDefaults.set(saved,new Map());
+    const memo=decodedDefaults.get(saved);
+    const expand=value=>{
+      if(!value||typeof value!=='object')return value;
+      if(!Object.hasOwn(value,'$cache_ref'))return value;
+      const id=value.$cache_ref;if(memo.has(id))return memo.get(id);
+      const source=packed.values[id];
+      if(!source||typeof source!=='object')throw new Error('Invalid saved treatment-map analysis');
+      const result=Array.isArray(source)?source.map(expand):Object.fromEntries(Object.entries(source).map(([k,v])=>[k,expand(v)]));
+      memo.set(id,result);return result;
+    };
+    return expand(packed.entries[key]);
+  }
+  function savedAnalysis(model,edge,options) {
+    if(options.endpoint!=='OS:HR'||options.studyScope!=='all'||options.advanced?.active||Object.keys(options.inclusionOverrides||{}).length||options.inclusionOrder?.length)return null;
+    const saved=preparedDefaults(model.graph);
+    return saved?unpackAnalysis(saved,analysisKey(edge,options.endpoint,options.studyScope,options)):null;
+  }
+  function serializeLayout(tree) {
+    return {...tree,nodes:tree.nodes.map(node=>node.id),parents:[...tree.parents],children:[...tree.children].map(([id,nodes])=>[id,nodes.map(node=>node.id)]),positions:[...tree.positions]};
+  }
+  function preparedLayout(model,branchId) {
+    const saved=preparedDefaults(model.graph)?.layouts?.[branchId];
+    if(!saved)return layout(model,branchId);
+    return {...saved,nodes:saved.nodes.map(id=>model.byId.get(id)),parents:new Map(saved.parents),children:new Map(saved.children.map(([id,nodes])=>[id,nodes.map(id=>model.byId.get(id))])),positions:new Map(saved.positions)};
+  }
+  function buildDefaultViews(model) {
+    const layouts={},analyses={};
+    for(const branchId of ['all',...model.nodes.map(node=>node.id)]){
+      const tree=layout(model,branchId);layouts[branchId]=serializeLayout(tree);
+      for(const edge of tree.comparisonEdges){
+        const comparisons=model.comparisons.filter(item=>edge.comparison_ids.includes(item.id));
+        // Both source directions can be visited while choosing the latest
+        // supported result; store each exact directional analysis once.
+        for(const source of [null,...comparisons.filter(item=>Effects.comparisonMatchesEndpoint(item,'OS:HR'))]){
+          const direction=comparisonDirection(tree,edge,source),key=analysisKey(edge,'OS:HR','all',direction);
+          if(!analyses[key])analyses[key]=Analysis.analyze(comparisons,{...direction,endpoint:'OS:HR',studyScope:'all',advanced:{active:false,matches:{}},inclusionOverrides:{},inclusionOrder:[]});
+        }
+      }
+    }
+    return {schema_version:1,engine_signature:engineSignature,graph_content_sha256:model.graph.content_sha256,layouts,analyses,direct_parallel_ids:[...directParallelNodeIds(model)]};
+  }
   const categoryDefinitions = [
     ['ici', 'Immune checkpoint inhibitors', 'Checkpoint inhibitors', 'ici'],
     ['targeted', 'Targeted therapy', 'Targeted therapy', 'targeted'],
@@ -380,7 +440,7 @@
     constructor(root, graph, options) {
       this.root = root; this.doc = root.ownerDocument; this.win = this.doc.defaultView; this.options = options || {}; this.model = prepare(graph);
       this.exactNodeBrowse=Array.isArray(graph.study_memberships)&&typeof this.options.renderNodeStudies==='function'; this.selectionMode='node';
-      this.directParallelIds = directParallelNodeIds(this.model);
+      this.directParallelIds = new Set(preparedDefaults(graph)?.direct_parallel_ids||directParallelNodeIds(this.model));
       this.selectedEndpoint = 'OS:HR'; this.selectedComparisonByPair = new Map();
       this.studyScope = 'all'; this.analysisCache = new Map();
       this.inclusionOverrides = {}; this.inclusionOrder = []; this.advanced = this.options.advanced || {active:false,matches:{}};
@@ -500,7 +560,7 @@
     }
     setBranch(id) {
       this.branchId = id === 'all' || this.model.byId.has(id) ? id : 'all'; this.syncBranchSelector();
-      this.tree = layout(this.model, this.branchId); this.allButton.setAttribute('aria-pressed', String(this.branchId === 'all'));
+      this.tree = preparedLayout(this.model, this.branchId); this.allButton.setAttribute('aria-pressed', String(this.branchId === 'all'));
       this.root.classList.toggle('tm-overview', this.tree.overview);
       this.branchCount.hidden = this.tree.overview; this.comparisonLegendItem.hidden = false;
       for (const { item, kind } of this.comparisonLegendKeys) item.hidden = this.tree.overview && kind === 'parallel';
@@ -556,8 +616,9 @@
     }
     analysisFor(edge, source) {
       const direction = comparisonDirection(this.tree, edge, source);
-      const key = [edge.id, this.selectedEndpoint, this.studyScope, direction.tailId, direction.headId].join('|');
-      if (!this.analysisCache.has(key)) this.analysisCache.set(key, Analysis.analyze(this.model.comparisons.filter(item => edge.comparison_ids.includes(item.id)), { ...direction, endpoint: this.selectedEndpoint, studyScope: this.studyScope, inclusionOverrides:this.inclusionOverrides, inclusionOrder:this.inclusionOrder, advanced:this.advanced }));
+      const key = analysisKey(edge,this.selectedEndpoint,this.studyScope,direction);
+      const options={...direction,endpoint:this.selectedEndpoint,studyScope:this.studyScope,inclusionOverrides:this.inclusionOverrides,inclusionOrder:this.inclusionOrder,advanced:this.advanced};
+      if (!this.analysisCache.has(key)) this.analysisCache.set(key, savedAnalysis(this.model,edge,options)||Analysis.analyze(this.model.comparisons.filter(item => edge.comparison_ids.includes(item.id)), options));
       const result = this.analysisCache.get(key);
       return { result, group: result.groups[0] || null };
     }
@@ -1153,5 +1214,5 @@
     }
     destroy() { this.nodeStudiesController?.destroy(); this.cleanups.forEach((cleanup) => cleanup()); this.resizeObserver?.disconnect(); this.picker?.destroy(); this.root.replaceChildren(); this.root.classList.remove('treatment-map'); }
   }
-  return Object.freeze({ mount: (root, graph, options) => new MapView(root, graph, options), prepare, branchNodes, displayParents, layout, parallelArms, branchComparisons, branchNodeLabel, parallelLinkGeometry, radialComparisonGeometry, directParallelNodeIds, neutralControl, effectLabel, countLabel, countedContributions, categoryInfo, annularSectorPath, studyLabel, recordCoverage });
+  return Object.freeze({ mount: (root, graph, options) => new MapView(root, graph, options), prepare, branchNodes, displayParents, layout, parallelArms, branchComparisons, branchNodeLabel, parallelLinkGeometry, radialComparisonGeometry, directParallelNodeIds, neutralControl, effectLabel, countLabel, countedContributions, categoryInfo, annularSectorPath, studyLabel, recordCoverage, engineSignature, preparedDefaults, buildDefaultViews, preparedLayout, serializeLayout, savedAnalysis, analysisKey, comparisonDirection });
 });

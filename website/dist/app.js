@@ -1860,6 +1860,7 @@ if (typeof document !== 'undefined') (() => {
       if (selected && focus) button.focus();
     }
     if(name==='treatment-map')loadTreatmentMap();
+    else ensureStudyData().catch(()=>{});
     if(name==='treatment-map'||location.hash==='#treatment-map')history.replaceState(null,'',name==='treatment-map'?'#treatment-map':'#analysis');
   }
 
@@ -1945,19 +1946,85 @@ if (typeof document !== 'undefined') (() => {
   }
 
   function openDrawer(id,section='') { renderDrawer(id); if (state.activeReport === id) {$('study-dialog').showModal();if(section)requestAnimationFrame(()=>{$(section)?.scrollIntoView?.({block:'start'});$(section)?.focus?.({preventScroll:true});});} }
-  async function fetchJson(path) { const response = await fetch(path, { cache: 'no-store' }); if (!response.ok) throw new Error(`Saved data returned HTTP ${response.status}.`); return response.json(); }
+  async function fetchJson(path,expectedSha256) {
+    const response=await fetch(path,{cache:'no-cache'});if(!response.ok)throw new Error(`Saved data returned HTTP ${response.status}.`);
+    if(!expectedSha256)return response.json();
+    const bytes=await response.arrayBuffer(),digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),byte=>byte.toString(16).padStart(2,'0')).join('');
+    if(digest!==expectedSha256)throw new Error('The saved map update is incomplete. Reload to try again.');
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }
   let treatmentRegistryDigest;
-  async function fetchTreatments(path='./data/treatment_normalizations.json'){
+  function currentTreatmentRegistryDigest(){
     const stable=value=>Array.isArray(value)?value.map(stable):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])])):value;
     treatmentRegistryDigest??=crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(stable(globalThis.TreatmentResolver.registry))))
       .then(bytes=>Array.from(new Uint8Array(bytes),byte=>byte.toString(16).padStart(2,'0')).join(''));
-    const [prepared,digest]=await Promise.all([fetchJson(path),treatmentRegistryDigest]);
+    return treatmentRegistryDigest;
+  }
+  async function fetchTreatments(path='./data/treatment_normalizations.json'){
+    const [prepared,digest]=await Promise.all([fetchJson(path),currentTreatmentRegistryDigest()]);
     if(prepared.record_kind!=='source_bound_treatment_normalizations'||prepared.registry_version!==globalThis.TreatmentResolver.registry.version||prepared.registry_sha256!==digest)throw new Error('Prepared treatments require a registry rebuild.');
     return prepared;
   }
   let treatmentMapController,treatmentMapPending,treatmentMapContent,treatmentMapEpoch=0;
+  let treatmentMapGraph,treatmentMapFullGraph,treatmentMapFullPending,treatmentMapVersion,studyDataPending;
+  function ensureStudyData(){
+    if(studyDataPending)return studyDataPending;
+    if(state.baselineScopedStudies&&!state.loading&&!state.datasetError)return Promise.resolve();
+    if(!studyDataPending)studyDataPending=loadData().then(()=>{if(state.datasetError)throw new Error('Study details could not be loaded.');}).finally(()=>{studyDataPending=null;});
+    return studyDataPending;
+  }
+  function mapMatchesTreatments(graph,treatments){
+    const meta=graph?.metadata||{};return !!treatments&&meta.registry_sha256===treatments.registry_sha256&&meta.normalization_content_sha256===treatments.content_sha256&&meta.source_file_sha256===treatments.source_file_sha256&&meta.clinical_content_sha256===treatments.clinical_content_sha256;
+  }
+  async function savedMapVersion(){
+    const version=await fetchJson('./data/treatment_map_version.json');
+    if(version.schema_version!==1||!version.graph_content_sha256)throw new Error('Saved map version is unavailable.');
+    return version;
+  }
+  function mapVersionChanged(version){
+    return !!version&&(version.graph_content_sha256!==treatmentMapContent||version.default_snapshot_sha256!==treatmentMapVersion?.default_snapshot_sha256||version.engine_signature!==treatmentMapVersion?.engine_signature);
+  }
+  function sameEvidenceVersion(version){
+    return !!version&&version.source_file_sha256===state.treatmentNormalizations?.source_file_sha256&&version.quantitative_content_sha256===state.quantitativeContent&&version.normalization_content_sha256===state.treatmentNormalizations?.content_sha256&&version.clinical_classification_content_sha256===state.clinicalClassifications?.content_sha256;
+  }
+  async function fullTreatmentMap(expectedHash){
+    if(treatmentMapFullGraph?.content_sha256===expectedHash)return treatmentMapFullGraph;
+    if(!treatmentMapFullPending)treatmentMapFullPending=fetchJson('./data/treatment_map.json').then(graph=>{
+      if(graph.content_sha256!==expectedHash)throw new Error('The saved evidence changed. Reload the map to load its current studies.');
+      treatmentMapFullGraph=graph;return graph;
+    }).finally(()=>{treatmentMapFullPending=null;});
+    const graph=await treatmentMapFullPending;
+    if(graph.content_sha256!==expectedHash)throw new Error('The saved evidence changed. Reload the map to load its current studies.');
+    return graph;
+  }
+  function mountNodeStudies(root,node,graph){
+    let cancelled=false,inner,observer,pending=false;
+    const load=async()=>{
+      if(cancelled||pending)return;pending=true;observer?.disconnect();
+      root.innerHTML='<p role="status">Loading studies…</p>';
+      try{
+        const [full]=await Promise.all([fullTreatmentMap(graph.content_sha256),ensureStudyData()]);
+        if(cancelled)return;
+        if(!mapMatchesTreatments(full,state.treatmentNormalizations))throw new Error('The map and study data are from different saved updates. Reload to use the latest evidence.');
+        const memberships=list(full.study_memberships).filter(member=>member.node_id===node.id);
+        inner=globalThis.TreatmentNodeStudies.mount(root,{node,memberships,regimenMemberships:full.study_memberships,studies:state.scopedStudies,api:charts,registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels,renderRows:studyRowsHTML,download:(csv,selected)=>{
+          const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})),link=document.createElement('a');link.href=url;link.download='metaMelanomaTrials-'+selected.label.replace(/[^a-z0-9]+/gi,'-')+'-studies.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        }});
+      }catch(error){
+        if(cancelled)return;pending=false;root.replaceChildren();const notice=document.createElement('p');notice.setAttribute('role','status');notice.textContent=error.message;root.appendChild(notice);addLoadButton('Retry studies');
+      }
+    };
+    const addLoadButton=label=>{const button=document.createElement('button');button.type='button';button.className='secondary-button';button.textContent=label;button.addEventListener('click',load);root.appendChild(button);};
+    root.replaceChildren();
+    if(state.baselineScopedStudies&&treatmentMapFullGraph?.content_sha256===graph.content_sha256)load();
+    else{
+      addLoadButton('Load study details');
+      if(typeof IntersectionObserver==='function'){observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting))load();});observer.observe(root);}
+    }
+    return {destroy(){cancelled=true;observer?.disconnect();inner?.destroy();}};
+  }
   function syncTreatmentMapAdvanced(){
-    if(!treatmentMapController)return;
+    if(!treatmentMapController||!state.baselineScopedStudies)return;
     const engine=globalThis.AdvancedFilters,selections=engine.normalizeSelections(state.advanced),active=engine.activeCount(selections)>0;
     const keys=Object.keys(selections).filter(key=>selections[key]!=='all'),matches={};
     const options={classifications:state.clinicalClassifications,registry:state.scopedPayload?.evidence_registry||{},clinical_content_sha256:state.quantitativeSnapshot?.clinical_evidence?.content_sha256};
@@ -1973,37 +2040,47 @@ if (typeof document !== 'undefined') (() => {
   }
   function mapIsOpen(){return !$('analysis-treatment-map').hidden;}
   function invalidateTreatmentMap(){
+    if(treatmentMapController&&mapMatchesTreatments(treatmentMapGraph,state.treatmentNormalizations)){
+      syncTreatmentMapAdvanced();return;
+    }
     treatmentMapEpoch++;treatmentMapController?.destroy();treatmentMapController=null;treatmentMapContent=null;
+    treatmentMapGraph=null;treatmentMapFullGraph=null;
     $('treatment-map-root').innerHTML='<p role="status">Loading the saved treatment map…</p>';
     if(mapIsOpen())loadTreatmentMap();
   }
-  async function loadTreatmentMap(){
-    const target=$('treatment-map-root'),normalizations=state.treatmentNormalizations,epoch=treatmentMapEpoch;
-    if(!normalizations){target.innerHTML='<p role="status">Waiting for the saved study data…</p>';return;}
+  async function loadTreatmentMap(force=false){
+    const target=$('treatment-map-root'),epoch=treatmentMapEpoch;
     if(treatmentMapPending)return treatmentMapPending;
+    if(treatmentMapController&&!force)return treatmentMapController;
     if(!treatmentMapController)target.innerHTML='<p role="status">Loading the saved treatment map…</p>';
     treatmentMapPending=(async()=>{
       try{
-        const graph=await fetchJson('./data/treatment_map.json'),meta=graph.metadata||{};
+        const [version,digest]=await Promise.all([savedMapVersion().catch(()=>null),currentTreatmentRegistryDigest()]);
+        let graph;
+        if(version){
+          graph=await fetchJson('./data/treatment_map_default.json',version.default_snapshot_sha256);
+          if(graph.content_sha256!==version.graph_content_sha256||graph.metadata?.registry_sha256!==version.registry_sha256||graph.metadata?.source_file_sha256!==version.source_file_sha256||graph.metadata?.normalization_content_sha256!==version.normalization_content_sha256||graph.metadata?.clinical_content_sha256!==version.clinical_content_sha256)throw new Error('The saved map update is incomplete. Reload to try again.');
+        }else graph=await fetchJson('./data/treatment_map.json');
         if(epoch!==treatmentMapEpoch)return;
-        if(graph.schema_version!==1||meta.registry_sha256!==normalizations.registry_sha256||
-          meta.normalization_content_sha256!==normalizations.content_sha256||
-          meta.source_file_sha256!==normalizations.source_file_sha256||
-          meta.clinical_content_sha256!==normalizations.clinical_content_sha256)
-          throw new Error('The map is awaiting a rebuild for the current evidence.');
+        if(graph.schema_version!==1||graph.metadata?.registry_sha256!==digest||(state.treatmentNormalizations&&!mapMatchesTreatments(graph,state.treatmentNormalizations)))throw new Error('The map is awaiting a rebuild for the current evidence.');
         if(!globalThis.TreatmentMap)throw new Error('The treatment map viewer could not be loaded.');
-        if(graph.content_sha256!==treatmentMapContent){
-          treatmentMapController?.destroy();treatmentMapController=globalThis.TreatmentMap.mount(target,graph,{onOpenStudies:()=>{go('analysis');state.advancedExpanded=true;renderAdvancedFilters();},renderNodeStudies:(root,node,memberships)=>globalThis.TreatmentNodeStudies.mount(root,{node,memberships,regimenMemberships:graph.study_memberships,studies:state.scopedStudies,api:charts,registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels,renderRows:studyRowsHTML,download:(csv,selected)=>{
-            const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})),link=document.createElement('a');link.href=url;link.download='metaMelanomaTrials-'+selected.label.replace(/[^a-z0-9]+/gi,'-')+'-studies.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
-          }})});
+        const changed=graph.content_sha256!==treatmentMapContent||mapVersionChanged(version);
+        treatmentMapVersion=version;treatmentMapGraph=graph;
+        if(!graph.view_snapshot)treatmentMapFullGraph=graph;
+        if(changed){
+          treatmentMapController?.destroy();
+          const advanced=globalThis.AdvancedFilters.activeCount(state.advanced)>0?{active:true,matches:{},label:'Loading selected filters…'}:{active:false,matches:{}};
+          treatmentMapController=globalThis.TreatmentMap.mount(target,graph,{advanced,onOpenStudies:()=>{go('analysis');state.advancedExpanded=true;renderAdvancedFilters();},renderNodeStudies:(root,node)=>mountNodeStudies(root,node,graph)});
           treatmentMapContent=graph.content_sha256;
           syncTreatmentMapAdvanced();
+          if(advanced.active)ensureStudyData().catch(()=>{});
         }
+        scheduleClinicalRefresh();
       }catch(error){
         if(epoch!==treatmentMapEpoch)return;
         treatmentMapController?.destroy();treatmentMapController=null;treatmentMapContent=null;
         target.innerHTML=`<p role="status">${escape(error.message)} <button type="button" class="secondary-button" id="retry-treatment-map">Retry map</button></p>`;
-        $('retry-treatment-map').addEventListener('click',loadTreatmentMap);
+        $('retry-treatment-map').addEventListener('click',()=>loadTreatmentMap(true));
       }finally{
         treatmentMapPending=null;
         if(epoch!==treatmentMapEpoch&&mapIsOpen())loadTreatmentMap();
@@ -2017,7 +2094,7 @@ if (typeof document !== 'undefined') (() => {
     state.scopedStudies=globalThis.RegimenDefinitions.prepareStudies(merged.studies,{normalizations:treatments,clinical_content_sha256:snapshot.clinical_evidence?.content_sha256});
     state.treatmentNormalizations=treatments;
     state.scopedPayload={schema_version:1,studies:state.scopedStudies,evidence_registry:merged.evidence_registry};
-    state.quantitativeSnapshot=snapshot;state.quantitativeContent=snapshot.content_sha256||JSON.stringify(snapshot);
+    state.quantitativeSnapshot=snapshot;state.quantitativeContent=snapshot.content_sha256||treatments?.source_file_sha256||JSON.stringify(snapshot);
     if(snapshot.mode==='pilot'){
       const progress=snapshot.about_progress?.stages?.R2||{};
       state.summary={...defaults,counts:{candidates:snapshot.scope_pmids.length,processed:progress.screening_finished,retained:progress.retained,excluded:progress.excluded,uncertain:progress.unclear},diseases:[],disease_catalog:[],evidence_combinations:[],endpoint_definitions:[]};
@@ -2035,10 +2112,12 @@ if (typeof document !== 'undefined') (() => {
     refreshEvidenceFreshness();
     clinicalPending=(async()=>{
       try{
+        const version=await savedMapVersion().catch(()=>null);
+        if(!version||sameEvidenceVersion(version)){if(version&&mapVersionChanged(version)&&mapIsOpen())await loadTreatmentMap(true);return;}
         const [compact,classificationsChanged,treatments]=await Promise.all([fetchJson('./data/quantitative_extraction.json').catch(()=>null),updateClinicalClassifications(),fetchTreatments().catch(()=>null)]);
         if(compact?.publication_ready===true){
           if(!treatments)throw new Error('Prepared treatment data is unavailable.');
-          const content=compact.content_sha256||JSON.stringify(compact);if(content===state.quantitativeContent&&treatments.content_sha256===state.treatmentNormalizations?.content_sha256){if(classificationsChanged)setupAnalysisControls();if(mapIsOpen())loadTreatmentMap();return;}
+          const content=compact.content_sha256||treatments.source_file_sha256||JSON.stringify(compact);if(content===state.quantitativeContent&&treatments.content_sha256===state.treatmentNormalizations?.content_sha256){if(classificationsChanged)setupAnalysisControls();if(mapIsOpen()&&mapVersionChanged(version))loadTreatmentMap(true);return;}
           applyQuantitativeSnapshot(compact,treatments);
         }else if(state.quantitativeSnapshot?.mode==='pilot'){return;}else{
           const [snapshot,legacyTreatments]=await Promise.all([fetchJson('./data/clinical_evidence.json').then(globalThis.ClinicalEvidence.checked),fetchTreatments('./data/clinical_treatment_normalizations.json')]),content=snapshot.content_sha256||JSON.stringify(snapshot.articles);
@@ -2053,7 +2132,13 @@ if (typeof document !== 'undefined') (() => {
   }
   function scheduleClinicalRefresh() {
     if(typeof document.visibilityState!=='string')return;
-    clearTimeout(clinicalTimer);clinicalTimer=setTimeout(()=>{if(document.visibilityState==='visible'&&state.currentView!=='about')refreshClinicalEvidence();scheduleClinicalRefresh();},15000);
+    clearTimeout(clinicalTimer);clinicalTimer=setTimeout(async()=>{
+      if(document.visibilityState==='visible'&&state.currentView!=='about'){
+        if(state.baselineScopedStudies)await refreshClinicalEvidence();
+        else if(mapIsOpen()){refreshEvidenceFreshness();const version=await savedMapVersion().catch(()=>null);if(version&&mapVersionChanged(version))await loadTreatmentMap(true);}
+      }
+      scheduleClinicalRefresh();
+    },60000);
   }
   async function loadData() {
     refreshEvidenceFreshness();
@@ -2139,5 +2224,6 @@ if (typeof document !== 'undefined') (() => {
   state.advancedExpanded=globalThis.AdvancedFilters.activeCount(state.advanced)>0;
   advancedPanel=globalThis.AdvancedFilterPanel.create({toggle:$('advanced-filter-toggle'),panel:$('advanced-filter-panel'),fields:$('advanced-filter-fields'),reset:$('reset-advanced-filters'),status:$('advanced-filter-status'),evidence:$('advanced-evidence-count'),onToggle:()=>{state.advancedExpanded=!state.advancedExpanded;renderAdvancedFilters();},onChange:advancedChanged,onReset:()=>advancedChanged()});
   displaySettings(); showView(location.hash.slice(1));
-  renderAnalysis(); renderMainArticles(); renderSummary(); renderMatrix(); renderPlanning(); renderPrisma(); loadData();
+  renderAnalysis(); renderMainArticles(); renderSummary(); renderMatrix(); renderPlanning(); renderPrisma(); refreshEvidenceFreshness();
+  if(mapIsOpen())loadTreatmentMap();else if(state.currentView!=='about'&&state.currentView!=='settings')ensureStudyData().catch(()=>{});
 })();

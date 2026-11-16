@@ -2,12 +2,16 @@
 from __future__ import annotations
 
 import argparse
+from datetime import timezone
+from email.utils import parsedate_to_datetime
 import errno
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import os
 import subprocess
 import sys
+from urllib.parse import urlsplit
 
 
 PROJECT = Path(__file__).resolve().parent
@@ -31,31 +35,70 @@ class ReviewHandler(SimpleHTTPRequestHandler):
         if any(part.startswith(".") for relative in relatives for part in relative.parts):
             self.send_error(404, "File not found")
             return None
+        # Leave directory redirects/listing rejection to the standard handler.
+        if target.is_dir():
+            if not urlsplit(self.path).path.endswith("/"):
+                return super().send_head()
+            target = next((path for path in paths[1:] if path.is_file()), target)
         # Public Git snapshots store large result files with lossless gzip.
         # Browsers decode this response before response.json(), preserving the
         # same URLs and exact scientific payload used by the local workspace.
         compressed = target.with_name(target.name + ".gz")
+        encoding = None
         if not target.exists() and target.suffix == ".json" and compressed.is_file():
             try:
                 compressed.resolve().relative_to(WEB_ROOT.resolve())
             except ValueError:
                 self.send_error(404, "File not found")
                 return None
-            handle = compressed.open("rb")
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Content-Encoding", "gzip")
-            self.send_header("Content-Length", str(compressed.stat().st_size))
+            target = compressed
+            encoding = "gzip"
+        if not target.is_file():
+            return super().send_head()
+        try:
+            handle = target.open("rb")
+        except OSError:
+            self.send_error(404, "File not found")
+            return None
+        stat = os.fstat(handle.fileno())
+        # A weak, file-version validator avoids rereading hundreds of megabytes
+        # merely to check for updates. Atomic replacement and same-size edits
+        # both invalidate it; plain and gzip files have distinct validators.
+        etag = 'W/"{:x}-{:x}-{:x}-{:x}"'.format(
+            stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns
+        )
+        validators = [value.strip().removeprefix("W/") for value in self.headers.get("If-None-Match", "").split(",")]
+        unchanged = "*" in validators or etag.removeprefix("W/") in validators
+        if "If-None-Match" not in self.headers and self.headers.get("If-Modified-Since"):
+            try:
+                modified_since = parsedate_to_datetime(self.headers["If-Modified-Since"])
+                if modified_since.tzinfo is None:
+                    modified_since = modified_since.replace(tzinfo=timezone.utc)
+                unchanged = int(stat.st_mtime) <= modified_since.timestamp()
+            except (TypeError, ValueError, OverflowError):
+                pass
+        self.send_response(304 if unchanged else 200)
+        self.send_header("ETag", etag)
+        self.send_header("Last-Modified", self.date_time_string(stat.st_mtime))
+        if unchanged:
+            handle.close()
             self.end_headers()
-            return handle
-        return super().send_head()
+            return None
+        self.send_header("Content-Type", "application/json; charset=utf-8" if encoding else self.guess_type(str(target)))
+        if encoding:
+            self.send_header("Content-Encoding", encoding)
+        self.send_header("Content-Length", str(stat.st_size))
+        self.end_headers()
+        return handle
 
     def list_directory(self, path):
         self.send_error(404, "File not found")
         return None
 
     def end_headers(self):
-        self.send_header("Cache-Control", "no-store")
+        # Keep the response on the device, but revalidate before reuse so a
+        # monthly evidence publication cannot leave stale scientific results.
+        self.send_header("Cache-Control", "no-cache")
         self.send_header("X-Content-Type-Options", "nosniff")
         super().end_headers()
 

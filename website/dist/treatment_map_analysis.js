@@ -1,7 +1,10 @@
 /* Exact-regimen evidence selection and ratio meta-analysis. No source records are modified. */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./treatment_map_effects.js'),require('./statistical_math.js'),require('./confidence_intervals.js'));
-  else root.TreatmentMapAnalysis = factory(root.TreatmentMapEffects,root.StatisticalMath,root.ConfidenceIntervals);
+  const node=typeof module==='object'&&module.exports;
+  const effects=node?require('./treatment_map_effects.js'):root.TreatmentMapEffects,stats=node?require('./statistical_math.js'):root.StatisticalMath,ci=node?require('./confidence_intervals.js'):root.ConfidenceIntervals;
+  const api=Object.freeze({...factory(effects,stats,ci),cacheSource:String(factory)+effects.cacheSource+stats.cacheSource+ci.cacheSource});
+  if (node) module.exports = api;
+  else root.TreatmentMapAnalysis = api;
 })(typeof globalThis === 'undefined' ? this : globalThis, function (Effects,Stats,ConfidenceIntervals) {
   'use strict';
   const EPS = 2.220446049250313e-16;

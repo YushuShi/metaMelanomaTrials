@@ -1,7 +1,9 @@
 /* Endpoint matching and display-only direction; saved source estimates are never rewritten. */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./confidence_intervals.js'));
-  else root.TreatmentMapEffects = factory(root.ConfidenceIntervals);
+  const ci=typeof module==='object'&&module.exports?require('./confidence_intervals.js'):root.ConfidenceIntervals;
+  const api=Object.freeze({...factory(ci),cacheSource:String(factory)+ci.cacheSource});
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.TreatmentMapEffects = api;
 })(typeof globalThis === 'undefined' ? this : globalThis, function (ConfidenceIntervals) {
   'use strict';
   const endpointDefinitions = [

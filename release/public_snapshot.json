@@ -2,16 +2,16 @@
   "schema_version": 1,
   "repository": "https://github.com/YushuShi/metaMelanomaTrials",
   "visibility": "public",
-  "built_at": "2026-11-15T04:45:06.226200+00:00",
+  "built_at": "2026-11-16T04:16:06.942137+00:00",
   "scientific_snapshot_changed": false,
   "files": [
     {
       "path": "app.py",
-      "sha256": "cd5d5ea51c671de681d3ed5baea62212058ebdd4900206da53ac1c123f9cb2fa",
-      "bytes": 5060,
+      "sha256": "01fe8e45e4e27dfdadf69c9b8821cd89a8d588d3ad7dfb8f1771ec07ed4a2e3d",
+      "bytes": 7228,
       "original_path": "app.py",
-      "original_sha256": "cd5d5ea51c671de681d3ed5baea62212058ebdd4900206da53ac1c123f9cb2fa",
-      "original_bytes": 5060,
+      "original_sha256": "01fe8e45e4e27dfdadf69c9b8821cd89a8d588d3ad7dfb8f1771ec07ed4a2e3d",
+      "original_bytes": 7228,
       "gzip": false
     },
     {
@@ -475,11 +475,11 @@
     },
     {
       "path": "docs/TREATMENT_MAP.md",
-      "sha256": "a81daaf72937962c11df26696a2f77678b9165044d753838206014d630bdc9db",
-      "bytes": 41479,
+      "sha256": "c93f76e1fd5b288a5f7d5affb422736d81f16fd35a9a1442f04680166168b254",
+      "bytes": 43180,
       "original_path": "docs/TREATMENT_MAP.md",
-      "original_sha256": "a81daaf72937962c11df26696a2f77678b9165044d753838206014d630bdc9db",
-      "original_bytes": 41479,
+      "original_sha256": "c93f76e1fd5b288a5f7d5affb422736d81f16fd35a9a1442f04680166168b254",
+      "original_bytes": 43180,
       "gzip": false
     },
     {
@@ -525,6 +525,24 @@
       "original_path": "scripts/build_public_repository.py",
       "original_sha256": "a53735f15fc63e75149122f0fd94f4087525df46bf05ae229c2f27ec57eb2f39",
       "original_bytes": 9327,
+      "gzip": false
+    },
+    {
+      "path": "scripts/export_complementary_csv.mjs",
+      "sha256": "2a22b63eda7d080e9f3d1dca4658cc768d44f017e2f832e15e65c945728528c3",
+      "bytes": 8826,
+      "original_path": "scripts/export_complementary_csv.mjs",
+      "original_sha256": "2a22b63eda7d080e9f3d1dca4658cc768d44f017e2f832e15e65c945728528c3",
+      "original_bytes": 8826,
+      "gzip": false
+    },
+    {
+      "path": "scripts/unpack_public_snapshot.py",
+      "sha256": "8dddd8597dc7d98262d1ab4e4b841ac3040b5fdf3d8011912fe9ee5d337a2acf",
+      "bytes": 1735,
+      "original_path": "scripts/unpack_public_snapshot.py",
+      "original_sha256": "8dddd8597dc7d98262d1ab4e4b841ac3040b5fdf3d8011912fe9ee5d337a2acf",
+      "original_bytes": 1735,
       "gzip": false
     },
     {
@@ -916,20 +934,20 @@
     },
     {
       "path": "src/metamelanoma/treatment_map.py",
-      "sha256": "7e8a4db8c5d221cadd8da1e50d0f4fe41d8f7bd61703c66214f7eafc8141d4e3",
-      "bytes": 6178,
+      "sha256": "e9d836ace9f1d35584014ac3939d2385b1b4bf5e093b49b85f0679e857fdb521",
+      "bytes": 7520,
       "original_path": "src/metamelanoma/treatment_map.py",
-      "original_sha256": "7e8a4db8c5d221cadd8da1e50d0f4fe41d8f7bd61703c66214f7eafc8141d4e3",
-      "original_bytes": 6178,
+      "original_sha256": "e9d836ace9f1d35584014ac3939d2385b1b4bf5e093b49b85f0679e857fdb521",
+      "original_bytes": 7520,
       "gzip": false
     },
     {
       "path": "src/metamelanoma/treatment_normalization.py",
-      "sha256": "1cb883c8ba0b98320590a51039dab7bc368b5a921bb95e071cd2064e0e7f3653",
-      "bytes": 15024,
+      "sha256": "27e120b7e98a1d7d97b89f6da1b7f519c1e7ddbfe3fef09443201f9dbd8ecc46",
+      "bytes": 15386,
       "original_path": "src/metamelanoma/treatment_normalization.py",
-      "original_sha256": "1cb883c8ba0b98320590a51039dab7bc368b5a921bb95e071cd2064e0e7f3653",
-      "original_bytes": 15024,
+      "original_sha256": "27e120b7e98a1d7d97b89f6da1b7f519c1e7ddbfe3fef09443201f9dbd8ecc46",
+      "original_bytes": 15386,
       "gzip": false
     },
     {
@@ -1132,11 +1150,11 @@
     },
     {
       "path": "tests/current/test_fulltext_export.py",
-      "sha256": "7885a2d09d083323c28b0a457396d79ac36ef563a2b077e52fd467bef57b352f",
-      "bytes": 23759,
+      "sha256": "04f57b6b9043e90e9749799c33a3be159ab45df600b3082c5a81bb01522b123e",
+      "bytes": 24022,
       "original_path": "tests/current/test_fulltext_export.py",
-      "original_sha256": "7885a2d09d083323c28b0a457396d79ac36ef563a2b077e52fd467bef57b352f",
-      "original_bytes": 23759,
+      "original_sha256": "04f57b6b9043e90e9749799c33a3be159ab45df600b3082c5a81bb01522b123e",
+      "original_bytes": 24022,
       "gzip": false
     },
     {
@@ -1218,6 +1236,15 @@
       "original_path": "tests/current/test_pmc_title_identity.py",
       "original_sha256": "609dd2ab7a0ddd95bbe3663b99198d2ecd5ff8db43b7307f55041c7e408c0721",
       "original_bytes": 3167,
+      "gzip": false
+    },
+    {
+      "path": "tests/current/test_public_snapshot_server.py",
+      "sha256": "d70b7dc4f3608e2c660605a6cd92132322710defd892d06eb5e8e0d7e2c44934",
+      "bytes": 6151,
+      "original_path": "tests/current/test_public_snapshot_server.py",
+      "original_sha256": "d70b7dc4f3608e2c660605a6cd92132322710defd892d06eb5e8e0d7e2c44934",
+      "original_bytes": 6151,
       "gzip": false
     },
     {
@@ -1366,20 +1393,20 @@
     },
     {
       "path": "tests/current/test_treatment_normalization.py",
-      "sha256": "57275723ecb90310bc2c86f41ae759a114f28a1557d30cb3becce5d3c4505d96",
-      "bytes": 12875,
+      "sha256": "4eb44902887be844db6f56c0f7d1e20a13cb01fe827273eedbf15e1a7952919f",
+      "bytes": 14378,
       "original_path": "tests/current/test_treatment_normalization.py",
-      "original_sha256": "57275723ecb90310bc2c86f41ae759a114f28a1557d30cb3becce5d3c4505d96",
-      "original_bytes": 12875,
+      "original_sha256": "4eb44902887be844db6f56c0f7d1e20a13cb01fe827273eedbf15e1a7952919f",
+      "original_bytes": 14378,
       "gzip": false
     },
     {
       "path": "tests/current/test_user_dispositions.py",
-      "sha256": "02cb769180f7d590c451505a851081794df857bb4229dbb1afd06e7dca8483c6",
-      "bytes": 9738,
+      "sha256": "f83e9d5058b7a9e6ce4450692f53889e572a894240ef749613b1e7ab340771ad",
+      "bytes": 10001,
       "original_path": "tests/current/test_user_dispositions.py",
-      "original_sha256": "02cb769180f7d590c451505a851081794df857bb4229dbb1afd06e7dca8483c6",
-      "original_bytes": 9738,
+      "original_sha256": "f83e9d5058b7a9e6ce4450692f53889e572a894240ef749613b1e7ab340771ad",
+      "original_bytes": 10001,
       "gzip": false
     },
     {
@@ -1411,11 +1438,11 @@
     },
     {
       "path": "website/dist/about_article_progress.js",
-      "sha256": "25471ea837a539b8b48d04709dd61bdf75d128850c4496eafcc96a09eb8868d1",
-      "bytes": 7939,
+      "sha256": "2e9324be19bec25ff73c4d8bb569ef53f6fa6e1e96e2c6a13bc67c784547ef51",
+      "bytes": 8445,
       "original_path": "website/dist/about_article_progress.js",
-      "original_sha256": "25471ea837a539b8b48d04709dd61bdf75d128850c4496eafcc96a09eb8868d1",
-      "original_bytes": 7939,
+      "original_sha256": "2e9324be19bec25ff73c4d8bb569ef53f6fa6e1e96e2c6a13bc67c784547ef51",
+      "original_bytes": 8445,
       "gzip": false
     },
     {
@@ -1447,11 +1474,11 @@
     },
     {
       "path": "website/dist/app.js",
-      "sha256": "8a439bc8dbb4ea042cc62b780e7fe57c4ff345ccccec4d96ae6590b33385fcb3",
-      "bytes": 223232,
+      "sha256": "e7058f2a7ff5d7cd5669087c77d2a1780104d82a0eb8c7713ffd91e7a1e5dfbd",
+      "bytes": 229699,
       "original_path": "website/dist/app.js",
-      "original_sha256": "8a439bc8dbb4ea042cc62b780e7fe57c4ff345ccccec4d96ae6590b33385fcb3",
-      "original_bytes": 223232,
+      "original_sha256": "e7058f2a7ff5d7cd5669087c77d2a1780104d82a0eb8c7713ffd91e7a1e5dfbd",
+      "original_bytes": 229699,
       "gzip": false
     },
     {
@@ -1483,11 +1510,11 @@
     },
     {
       "path": "website/dist/confidence_intervals.js",
-      "sha256": "7f16a45e24d521889630dabf781de8ce4e42c9e8716ce7c0423b86575c724bfe",
-      "bytes": 6002,
+      "sha256": "f06831b164ed92ded127a21a3c8a0cd45138780eb93e0beccbfb609a4b8a8385",
+      "bytes": 6142,
       "original_path": "website/dist/confidence_intervals.js",
-      "original_sha256": "7f16a45e24d521889630dabf781de8ce4e42c9e8716ce7c0423b86575c724bfe",
-      "original_bytes": 6002,
+      "original_sha256": "f06831b164ed92ded127a21a3c8a0cd45138780eb93e0beccbfb609a4b8a8385",
+      "original_bytes": 6142,
       "gzip": false
     },
     {
@@ -1623,6 +1650,24 @@
       "original_path": "website/dist/data/treatment_map.json",
       "original_sha256": "b2c329d6801aa4d25aaf4b1923ed41b62c311e357a719a924bceba8ca98fc002",
       "original_bytes": 45277527,
+      "gzip": true
+    },
+    {
+      "path": "website/dist/data/treatment_map_default.json.gz",
+      "sha256": "8cd03860254baf70ae00b19dffb64f401859b8ff79ce1b971872bc5af390b16e",
+      "bytes": 1897607,
+      "original_path": "website/dist/data/treatment_map_default.json",
+      "original_sha256": "d650a5fa6c4cc1f40137a3dd643fd492f22aa20262873b27b0eaaac8d21ad21d",
+      "original_bytes": 11342382,
+      "gzip": true
+    },
+    {
+      "path": "website/dist/data/treatment_map_version.json.gz",
+      "sha256": "beff9973adb69a14498cd9b8dc4164ac648f01a4d95e0a82dc0769160231b20c",
+      "bytes": 1944,
+      "original_path": "website/dist/data/treatment_map_version.json",
+      "original_sha256": "ba2cdadb713ab46abceba5aacce67f1a1faf29d3bfc37b5fa0213545e4b3aead",
+      "original_bytes": 4913,
       "gzip": true
     },
     {
@@ -1807,11 +1852,11 @@
     },
     {
       "path": "website/dist/statistical_math.js",
-      "sha256": "5314440d6bdd93c27fc75c08e2baee156c411aa37e3db6dded8f2f62ac48b76c",
-      "bytes": 3577,
+      "sha256": "8f12b0dc0203032ff65674d2dd97bfc248c70033477a41fcfe3ed7cd40b6d0a0",
+      "bytes": 3633,
       "original_path": "website/dist/statistical_math.js",
-      "original_sha256": "5314440d6bdd93c27fc75c08e2baee156c411aa37e3db6dded8f2f62ac48b76c",
-      "original_bytes": 3577,
+      "original_sha256": "8f12b0dc0203032ff65674d2dd97bfc248c70033477a41fcfe3ed7cd40b6d0a0",
+      "original_bytes": 3633,
       "gzip": false
     },
     {
@@ -1852,11 +1897,11 @@
     },
     {
       "path": "website/dist/treatment_map.js",
-      "sha256": "f95c6e6d57eb66ef4b805af8c42d44c3c70e1823d1db2854d0ceb10b303151cc",
-      "bytes": 122041,
+      "sha256": "0b9a7941e60b94d42f209c555536c39e001882e33151269b03841276e91ef0d9",
+      "bytes": 126258,
       "original_path": "website/dist/treatment_map.js",
-      "original_sha256": "f95c6e6d57eb66ef4b805af8c42d44c3c70e1823d1db2854d0ceb10b303151cc",
-      "original_bytes": 122041,
+      "original_sha256": "0b9a7941e60b94d42f209c555536c39e001882e33151269b03841276e91ef0d9",
+      "original_bytes": 126258,
       "gzip": false
     },
     {
@@ -1870,11 +1915,11 @@
     },
     {
       "path": "website/dist/treatment_map_analysis.js",
-      "sha256": "4d9abb1e05c44e377cbb9712a373d0bb2063335a4da14d4b4cc34366636e2e2c",
-      "bytes": 49745,
+      "sha256": "f9f979f6ea6c6581ee43f73b69b7ad5f6c53f4e49f8ceb4edff6a246a096fca3",
+      "bytes": 49931,
       "original_path": "website/dist/treatment_map_analysis.js",
-      "original_sha256": "4d9abb1e05c44e377cbb9712a373d0bb2063335a4da14d4b4cc34366636e2e2c",
-      "original_bytes": 49745,
+      "original_sha256": "f9f979f6ea6c6581ee43f73b69b7ad5f6c53f4e49f8ceb4edff6a246a096fca3",
+      "original_bytes": 49931,
       "gzip": false
     },
     {
@@ -1888,11 +1933,11 @@
     },
     {
       "path": "website/dist/treatment_map_effects.js",
-      "sha256": "bf0709183b7696278eda7e3420437237809f7fead138d732b45cfbec7ade0cc0",
-      "bytes": 8577,
+      "sha256": "7eb7b634aac1b1bb31606dad36162f768b8b5fcfa5c4e6573ad8b65947c4b0c2",
+      "bytes": 8708,
       "original_path": "website/dist/treatment_map_effects.js",
-      "original_sha256": "bf0709183b7696278eda7e3420437237809f7fead138d732b45cfbec7ade0cc0",
-      "original_bytes": 8577,
+      "original_sha256": "7eb7b634aac1b1bb31606dad36162f768b8b5fcfa5c4e6573ad8b65947c4b0c2",
+      "original_bytes": 8708,
       "gzip": false
     },
     {
@@ -2049,6 +2094,15 @@
       "gzip": false
     },
     {
+      "path": "website/scripts/treatment_map_defaults.cjs",
+      "sha256": "2ec4e09ffa2b747e749db2cfebd4ad1fa247be04cf510df759399ae8b61266e0",
+      "bytes": 4562,
+      "original_path": "website/scripts/treatment_map_defaults.cjs",
+      "original_sha256": "2ec4e09ffa2b747e749db2cfebd4ad1fa247be04cf510df759399ae8b61266e0",
+      "original_bytes": 4562,
+      "gzip": false
+    },
+    {
       "path": "website/scripts/treatment_map_evidence.cjs",
       "sha256": "4f17b52faa0c0ca68979cbbe0c884eb130f04c3224e2b7da15cb943c627ed69e",
       "bytes": 30903,
@@ -2154,6 +2208,15 @@
       "original_path": "website/tests/fixtures/tobemstomig_current_records.json",
       "original_sha256": "15b12e9dc1db4164ada2f8de6c26d86e4569f07b8c37b5ad9de03a41ca46d6c5",
       "original_bytes": 851526,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_about_lazy_loading.cjs",
+      "sha256": "bda3c7255f23a62ab44f4a5bb4da39d94ad00bef06aec662bda6340446948bf3",
+      "bytes": 2845,
+      "original_path": "website/tests/test_about_lazy_loading.cjs",
+      "original_sha256": "bda3c7255f23a62ab44f4a5bb4da39d94ad00bef06aec662bda6340446948bf3",
+      "original_bytes": 2845,
       "gzip": false
     },
     {
@@ -2742,6 +2805,15 @@
       "gzip": false
     },
     {
+      "path": "website/tests/test_treatment_map_defaults.cjs",
+      "sha256": "1736885c52ce73423366f9856e090115dd75335bab6999b62774d1d12f8dab16",
+      "bytes": 5380,
+      "original_path": "website/tests/test_treatment_map_defaults.cjs",
+      "original_sha256": "1736885c52ce73423366f9856e090115dd75335bab6999b62774d1d12f8dab16",
+      "original_bytes": 5380,
+      "gzip": false
+    },
+    {
       "path": "website/tests/test_treatment_map_effects.cjs",
       "sha256": "fdca777b8b2486c600610c76c68071e858cfa486b1acf0101209fb858ca1b6f1",
       "bytes": 13228,
@@ -2779,11 +2851,11 @@
     },
     {
       "path": "website/tests/test_treatment_map_meta_ui.cjs",
-      "sha256": "0e49699cb6f6934623d62c59c52d1e17712f65dfd7c50efaba5df2ae02faa4e0",
-      "bytes": 50835,
+      "sha256": "ddcbaf23d7e1d49a20866163d0f3389cc3eb04570c2accbbccbf253591a46916",
+      "bytes": 52681,
       "original_path": "website/tests/test_treatment_map_meta_ui.cjs",
-      "original_sha256": "0e49699cb6f6934623d62c59c52d1e17712f65dfd7c50efaba5df2ae02faa4e0",
-      "original_bytes": 50835,
+      "original_sha256": "ddcbaf23d7e1d49a20866163d0f3389cc3eb04570c2accbbccbf253591a46916",
+      "original_bytes": 52681,
       "gzip": false
     },
     {
@@ -2847,6 +2919,15 @@
       "original_path": "website/tests/test_treatment_map_sources.cjs",
       "original_sha256": "e60f6db3f7c92a2bca839aa0e4b88cb4a8e7c689fee3e31cf9cf7a8265e361c5",
       "original_bytes": 27135,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_treatment_map_startup.cjs",
+      "sha256": "a5c847d331e477185e6af25242e2120d236f6482504ad6f4cfdad4a133ee5e6d",
+      "bytes": 7313,
+      "original_path": "website/tests/test_treatment_map_startup.cjs",
+      "original_sha256": "a5c847d331e477185e6af25242e2120d236f6482504ad6f4cfdad4a133ee5e6d",
+      "original_bytes": 7313,
       "gzip": false
     },
     {
@@ -2946,33 +3027,6 @@
       "original_path": "website/tests/treatment_picker.cjs",
       "original_sha256": "81dba9a5b8ab76902a6a835de60a934fefd957c5aa36bac672235e12de20d585",
       "original_bytes": 12680,
-      "gzip": false
-    },
-    {
-      "path": "tests/current/test_public_snapshot_server.py",
-      "sha256": "74a8960f40dada9da9cd405fa992a87b989d19b299122de1311cce32bc257b00",
-      "bytes": 2805,
-      "original_path": "tests/current/test_public_snapshot_server.py",
-      "original_sha256": "74a8960f40dada9da9cd405fa992a87b989d19b299122de1311cce32bc257b00",
-      "original_bytes": 2805,
-      "gzip": false
-    },
-    {
-      "path": "scripts/unpack_public_snapshot.py",
-      "sha256": "8dddd8597dc7d98262d1ab4e4b841ac3040b5fdf3d8011912fe9ee5d337a2acf",
-      "bytes": 1735,
-      "original_path": "scripts/unpack_public_snapshot.py",
-      "original_sha256": "8dddd8597dc7d98262d1ab4e4b841ac3040b5fdf3d8011912fe9ee5d337a2acf",
-      "original_bytes": 1735,
-      "gzip": false
-    },
-    {
-      "path": "scripts/export_complementary_csv.mjs",
-      "sha256": "2a22b63eda7d080e9f3d1dca4658cc768d44f017e2f832e15e65c945728528c3",
-      "bytes": 8826,
-      "original_path": "scripts/export_complementary_csv.mjs",
-      "original_sha256": "2a22b63eda7d080e9f3d1dca4658cc768d44f017e2f832e15e65c945728528c3",
-      "original_bytes": 8826,
       "gzip": false
     }
   ]

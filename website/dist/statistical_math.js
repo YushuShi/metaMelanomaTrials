@@ -1,5 +1,5 @@
 /* Shared normal and gamma functions. No source data or statistical model policy. */
-(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.StatisticalMath=factory();})(typeof globalThis==='undefined'?this:globalThis,function(){
+(function(root,factory){const api=Object.freeze({...factory(),cacheSource:String(factory)});if(typeof module==='object'&&module.exports)module.exports=api;else root.StatisticalMath=api;})(typeof globalThis==='undefined'?this:globalThis,function(){
   'use strict';
   // Lanczos log-gamma and convergent gamma/beta fractions supply tail-safe p-values.
   function logGamma(z) {

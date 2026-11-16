@@ -616,3 +616,33 @@ unchanged. A fitted HR and rounded Kaplan–Meier estimates need not exactly
 reproduce each other under the proportional-hazards planning approximation.
 
 Source: [CheckMate 067 three-year report](https://pmc.ncbi.nlm.nih.gov/articles/PMC5706778/).
+# Prepared default views and loading
+
+The opening map reads `treatment_map_default.json`, a compact projection of the
+saved graph with precomputed OS analyses and layouts for the radial overview and
+every supported branch. It uses the same cohort selection and numerical engine
+as interactive analysis. Original evidence and full membership/provenance remain
+in `treatment_map.json` and the existing quantitative snapshot.
+
+Nondefault endpoints, evidence scopes, advanced filters, and study inclusion
+changes run the existing calculations locally. Returning to the untouched OS
+defaults reuses prepared results. A graph hash and a signature of the complete
+selection/statistical implementation invalidate stale prepared calculations.
+The browser also verifies the prepared file's SHA-256 against the small
+`treatment_map_version.json` release receipt before accepting it.
+
+Detailed study data loads when its table comes into view or Studies is opened.
+Revisiting the map preserves the loaded controller. Periodic refresh reads the
+small version receipt; unchanged releases do not download the evidence again.
+The Python server uses ETag revalidation for both ordinary and gzip artifacts.
+
+R2/R3 publication and treatment-map/normalization reconciliation rebuild the
+default views after source publication. To regenerate only these derived views
+after editing visualization or analysis code, run:
+
+```sh
+PYTHONPATH=src python -c "from pathlib import Path; from metamelanoma.treatment_map import refresh_defaults; refresh_defaults(Path('.'))"
+```
+
+This performs no model requests and changes no extracted scientific evidence.
+Keep both generated JSON files and their producing code in the same release.

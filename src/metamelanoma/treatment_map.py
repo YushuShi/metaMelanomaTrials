@@ -1,4 +1,4 @@
-"""Precompute the treatment map without retrieval, model calls or pooling."""
+"""Precompute the treatment map and default local analyses without API calls."""
 from __future__ import annotations
 
 import json
@@ -104,4 +104,28 @@ def reconcile(root, *, dry_run=False, audit_dir=None):
         for relative, before in ((SOURCE, source), (NORMALIZATIONS, treatments), (REGISTRY, registry)):
             if owned(root, relative).read_bytes() != before:
                 raise ValueError('Treatment map input changed during build; retry')
-        return save(root, result, dry_run=dry_run, audit_dir=audit_dir)
+        receipt = save(root, result, dry_run=dry_run, audit_dir=audit_dir)
+        if not dry_run:
+            receipt['default_views'] = refresh_defaults(root)
+        return receipt
+
+
+def refresh_defaults(root):
+    """Run after the source/map/classification publication is fully switched."""
+    from .treatment_normalization import _archive
+    root = Path(root).resolve()
+    process = subprocess.run(['node', str(owned(root, 'website/scripts/treatment_map_defaults.cjs')), str(root)],
+        cwd=root, capture_output=True, check=False, timeout=300)
+    if process.returncode:
+        raise ValueError('Default treatment map build failed: ' + process.stderr.decode(errors='replace')[-2000:])
+    receipt = json.loads(process.stdout)
+    version_bytes = owned(root, 'website/dist/data/treatment_map_version.json').read_bytes()
+    base = 'data/current/treatment_map/default_views/' + digest(version_bytes)
+    for name in ('treatment_map_default.json', 'treatment_map_version.json'):
+        _archive(root, base + '/' + name, owned(root, 'website/dist/data/' + name).read_bytes())
+    for name, expected in receipt['producer_sha256'].items():
+        content = owned(root, name).read_bytes()
+        if digest(content) != expected:
+            raise ValueError('Default map producer changed during publication; rebuild')
+        _archive(root, base + '/producing_code/' + name, content)
+    return receipt

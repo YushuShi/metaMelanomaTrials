@@ -9,22 +9,28 @@
   const view = document.getElementById('view-about');
   if (!panel || !view) return;
   let timer, pending;
+  const visible=()=>!view.hidden&&document.visibilityState!=='hidden';
   async function refresh() {
+    if(!visible()){schedule();return;}
     if (pending) return pending;
     pending = (async () => {
       try {
-        const compactResponse=await fetch('./data/quantitative_extraction.json',{cache:'no-store'}).catch(()=>null);
-        const compact=compactResponse?.ok?await compactResponse.json():root.MetaQuantitativeSnapshot;
-        let snapshot;
-        if(compact?.mode==='pilot'&&compact.publication_ready===true){
-          root.QuantitativeExtraction?.checked(compact);
-          if(!compact.about_progress)throw new Error('Pilot progress unavailable');
-          snapshot={...compact.about_progress,stage_scope:compact.about_progress.stage_scope||['R2']};
-        }else{
-          if(root.MetaQuantitativeSnapshot?.mode==='pilot')throw new Error('Pilot progress unavailable');
-          const response = await fetch('./data/article_review_progress.json', {cache:'no-store'});
-          if (!response.ok) throw new Error('Saved article progress unavailable');
-          snapshot = await response.json();
+        const versionResponse=await fetch('./data/treatment_map_version.json',{cache:'no-cache'}).catch(()=>null);
+        const version=versionResponse?.ok?await versionResponse.json():null;
+        if(!visible())return;
+        let snapshot=version?.schema_version===1?version.about_progress:null;
+        if(!snapshot){
+          const compact=root.MetaQuantitativeSnapshot;
+          if(compact?.mode==='pilot'&&compact.publication_ready===true){
+            root.QuantitativeExtraction?.checked(compact);
+            if(!compact.about_progress)throw new Error('Pilot progress unavailable');
+            snapshot={...compact.about_progress,stage_scope:compact.about_progress.stage_scope||['R2']};
+          }else{
+            if(compact?.mode==='pilot')throw new Error('Pilot progress unavailable');
+            const response = await fetch('./data/article_review_progress.json', {cache:'no-cache'});
+            if (!response.ok) throw new Error('Saved article progress unavailable');
+            snapshot = await response.json();
+          }
         }
         panel.innerHTML = api.render(snapshot);
         const date = new Date(snapshot.as_of), stamp = document.getElementById('article-progress-date');
@@ -35,17 +41,19 @@
       } catch (_) {
         if (!panel.querySelector('.article-stage')) panel.innerHTML = '<p role="status">Saved article progress could not be loaded. Reload to try again.</p>';
       } finally {
-        pending = null;
-        clearTimeout(timer);
-        timer = setTimeout(() => { if (!view.hidden) refresh(); else schedule(); },60000);
+        pending = null;schedule();
       }
     })();
     return pending;
   }
-  function schedule() { clearTimeout(timer);timer=setTimeout(() => { if (!view.hidden) refresh(); else schedule(); },60000); }
+  function schedule() { clearTimeout(timer);timer=setTimeout(() => { if (visible()) refresh(); else schedule(); },60000); }
   document.getElementById('refresh')?.addEventListener('click',refresh);
-  document.querySelector('[data-view="about"]')?.addEventListener('click',refresh);
-  refresh();
+  // The navigation button changes the hash before the app reveals About. Watch
+  // visibility itself so opening the page never depends on handler ordering.
+  root.addEventListener?.('hashchange',refresh);
+  document.addEventListener('visibilitychange',refresh);
+  if(typeof MutationObserver==='function')new MutationObserver(()=>{if(visible())refresh();}).observe(view,{attributes:true,attributeFilter:['hidden']});
+  if(visible())refresh();else schedule();
 })(typeof window === 'undefined' ? null : window, function (publishedReview) {
   'use strict';
   const valid = value => typeof value === 'number' && Number.isInteger(value) && value >= 0;

@@ -16,8 +16,10 @@ from metamelanoma.treatment_map import PUBLIC as MAP_PUBLIC
 
 REPO = Path(__file__).resolve().parents[2]
 RESOURCES = ['pipeline.py', REGISTRY, GENERATED_REGISTRY,
+    'config/sample_size_link_reviews.json', 'config/comparison_result_reviews.json',
+    'website/scripts/treatment_map_defaults.cjs',
     'website/scripts/treatment_normalization.cjs', 'website/scripts/build_drug_type_review.cjs', 'website/scripts/regimen_projection.cjs', 'website/scripts/treatment_map.cjs', 'website/scripts/treatment_map_model.cjs', 'website/scripts/treatment_map_evidence.cjs', 'website/scripts/treatment_map_cohorts.cjs', 'website/scripts/treatment_map_membership.cjs',
-    *['website/dist/'+name+'.js' for name in ('treatment_resolver','treatment_groups','regimen_definitions','regimen_source_rules','trial_identifiers')],
+    *['website/dist/'+name+'.js' for name in ('treatment_resolver','treatment_groups','regimen_definitions','regimen_source_rules','trial_identifiers','trial_registry','treatment_map','treatment_map_analysis','treatment_map_effects','treatment_map_charts','treatment_map_planning','statistical_math','confidence_intervals')],
     *['src/metamelanoma/'+name+'.py' for name in ('__init__','cli','io','treatment_normalization','treatment_map')]]
 
 
@@ -50,6 +52,9 @@ class TreatmentNormalizationTests(unittest.TestCase):
         for relative in RESOURCES:
             target=self.root/relative;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(REPO/relative,target)
         (self.root/SOURCE).parent.mkdir(parents=True,exist_ok=True)
+        # This normalization fixture has no clinical-filter classifications;
+        # the default-map version receipt still binds that empty publication.
+        (self.root/'website/dist/data/clinical_classifications.json').write_bytes(canonical({'content_sha256':digest(canonical({}))}))
 
     def source(self,names):
         value=payload_for(names);(self.root/SOURCE).write_bytes(canonical(value));return value
@@ -95,7 +100,16 @@ api:Object.values(side.comparisons).map(row=>row.roles.intervention.description.
         self.assertEqual(map_data['metadata']['source_file_sha256'],digest(source_before))
         self.assertTrue(any(row['id']=='agent:nivolumab' for row in map_data['nodes']))
         self.assertEqual(applied['treatment_map']['new_model_requests'],0)
-        before={path:(self.root/path).read_bytes() for path in (PUBLIC,QUEUE,AUDIT_PUBLIC,GENERATED_REGISTRY,MAP_PUBLIC,'website/dist/drug_type_review.json','website/dist/drug_type_review.html','website/dist/drug_type_review.txt')}
+        default_path='website/dist/data/treatment_map_default.json'
+        version_path='website/dist/data/treatment_map_version.json'
+        defaults=json.loads((self.root/default_path).read_bytes())
+        version=json.loads((self.root/version_path).read_bytes())
+        self.assertEqual(defaults['content_sha256'],map_data['content_sha256'])
+        self.assertEqual(version['default_snapshot_sha256'],digest((self.root/default_path).read_bytes()))
+        self.assertEqual(version['source_file_sha256'],digest(source_before))
+        self.assertIn('all',defaults['default_views']['layouts'])
+        self.assertEqual(applied['treatment_map']['default_views']['new_model_requests'],0)
+        before={path:(self.root/path).read_bytes() for path in (PUBLIC,QUEUE,AUDIT_PUBLIC,GENERATED_REGISTRY,MAP_PUBLIC,default_path,version_path,'website/dist/drug_type_review.json','website/dist/drug_type_review.html','website/dist/drug_type_review.txt')}
         repeated=self.command();self.assertFalse(repeated['normalization_changed']);self.assertEqual(repeated['changed_occurrences'],0)
         self.assertEqual({path:(self.root/path).read_bytes() for path in before},before)
         self.assertEqual(applied['new_model_requests'],0);self.assertEqual(first['new_source_requests'],0)
@@ -105,6 +119,8 @@ api:Object.values(side.comparisons).map(row=>row.roles.intervention.description.
         receipt=self.command('--dry-run','--audit-dir','data/audits/dry')
         self.assertFalse((self.root/PUBLIC).exists());self.assertFalse((self.root/QUEUE).exists())
         self.assertFalse((self.root/MAP_PUBLIC).exists())
+        self.assertFalse((self.root/'website/dist/data/treatment_map_default.json').exists())
+        self.assertFalse((self.root/'website/dist/data/treatment_map_version.json').exists())
         self.assertEqual((self.root/SOURCE).read_bytes(),before);self.assertEqual((self.root/GENERATED_REGISTRY).read_bytes(),js)
         self.assertTrue((self.root/receipt['audit']).exists())
 

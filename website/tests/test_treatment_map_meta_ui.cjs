@@ -73,6 +73,24 @@ function pooledGraph(){
  studies.push({...studies[0],id:'pool-one-r2',analysis:{...studies[0].analysis,source_completeness:0,source_stages:['R2']}});
  return {...graph,comparisons:studies};
 }
+test('prepared OS maps recalculate endpoint and inclusion changes and restore the same default estimate',()=>{
+ const source={...pooledGraph(),content_sha256:'synthetic-precomputed-map'};
+ const pfs={...source.comparisons[0],id:'pool-pfs',outcome:'PFS',estimate:.45,ci_lower:.3,ci_upper:.6,analysis:{...source.comparisons[0].analysis,compatibility:{...source.comparisons[0].analysis.compatibility,key:'PFS'}}};
+ source.comparisons.push(pfs);
+ const prepared=map.buildDefaultViews(map.prepare(source));
+ prepared.analyses=require('../scripts/treatment_map_defaults.cjs').packAnalyses(prepared.analyses);
+ const v=mount(JSON.parse(JSON.stringify({...source,default_views:prepared})));v.setBranch('agent:a');
+ const p=pair(v,'agent:a','ab');v.selectParallel(p.edge.id);
+ const original=v.edgeEvidence(p.edge);assert.equal(original.group.pooled.k,4);assert.equal(original.group.pooled.model,'random');
+ assert.equal(v.analysisFor(p.edge,original.comparison).result,map.savedAnalysis(v.model,p.edge,{endpoint:'OS:HR',studyScope:'all',tailId:'agent:a',headId:'ab'}));
+ v.endpointSelector.value='PFS:HR';v.endpointSelector.dispatchEvent({type:'change'});
+ assert.equal(v.selectedEndpoint,'PFS:HR');assert.equal(v.edgeEvidence(p.edge).effect.estimate,.45);assert.equal(v.edgeEvidence(p.edge).group.pooled,null);
+ v.endpointSelector.value='OS:HR';v.endpointSelector.dispatchEvent({type:'change'});
+ assert.equal(v.edgeEvidence(p.edge).group.pooled.estimate,original.group.pooled.estimate);
+ const before=v.edgeEvidence(p.edge).group.pooled.estimate;
+ v.setInclusion('pool-four',false);assert.equal(v.edgeEvidence(p.edge).group.pooled.k,3);assert.notEqual(v.edgeEvidence(p.edge).group.pooled.estimate,before);
+ v.resetInclusions();assert.equal(v.edgeEvidence(p.edge).group.pooled.k,4);assert.equal(v.edgeEvidence(p.edge).group.pooled.estimate,before);
+});
 test('one source per paper and independent trial, selectable design scope and pooled arrows',()=>{
  const v=mount(pooledGraph());v.setBranch('agent:a');const p=pair(v,'agent:a','ab');v.selectParallel(p.edge.id);
  assert.equal(v.model.comparisons.length,4,'R2/R3 same-paper effect contributes once');
