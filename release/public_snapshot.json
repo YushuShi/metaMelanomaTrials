@@ -2,16 +2,16 @@
   "schema_version": 1,
   "repository": "https://github.com/YushuShi/metaMelanomaTrials",
   "visibility": "public",
-  "built_at": "2026-11-16T04:16:06.942137+00:00",
+  "built_at": "2026-11-18T04:14:01.222756+00:00",
   "scientific_snapshot_changed": false,
   "files": [
     {
       "path": "app.py",
-      "sha256": "01fe8e45e4e27dfdadf69c9b8821cd89a8d588d3ad7dfb8f1771ec07ed4a2e3d",
-      "bytes": 7228,
+      "sha256": "b2e483ac7187d1f301517f45aad535a2eeb9341fa0fc45b2a145618d3490d663",
+      "bytes": 7328,
       "original_path": "app.py",
-      "original_sha256": "01fe8e45e4e27dfdadf69c9b8821cd89a8d588d3ad7dfb8f1771ec07ed4a2e3d",
-      "original_bytes": 7228,
+      "original_sha256": "b2e483ac7187d1f301517f45aad535a2eeb9341fa0fc45b2a145618d3490d663",
+      "original_bytes": 7328,
       "gzip": false
     },
     {
@@ -475,11 +475,11 @@
     },
     {
       "path": "docs/TREATMENT_MAP.md",
-      "sha256": "c93f76e1fd5b288a5f7d5affb422736d81f16fd35a9a1442f04680166168b254",
-      "bytes": 43180,
+      "sha256": "ed78b9a479a24e8efda761abf41197872d1d2e761ad52e82753c14635c1c7a8f",
+      "bytes": 42565,
       "original_path": "docs/TREATMENT_MAP.md",
-      "original_sha256": "c93f76e1fd5b288a5f7d5affb422736d81f16fd35a9a1442f04680166168b254",
-      "original_bytes": 43180,
+      "original_sha256": "ed78b9a479a24e8efda761abf41197872d1d2e761ad52e82753c14635c1c7a8f",
+      "original_bytes": 42565,
       "gzip": false
     },
     {
@@ -943,11 +943,11 @@
     },
     {
       "path": "src/metamelanoma/treatment_normalization.py",
-      "sha256": "27e120b7e98a1d7d97b89f6da1b7f519c1e7ddbfe3fef09443201f9dbd8ecc46",
-      "bytes": 15386,
+      "sha256": "3e11158af784faab9f557fb977c950a1642ea4121f769945b786c0141c21d14f",
+      "bytes": 16403,
       "original_path": "src/metamelanoma/treatment_normalization.py",
-      "original_sha256": "27e120b7e98a1d7d97b89f6da1b7f519c1e7ddbfe3fef09443201f9dbd8ecc46",
-      "original_bytes": 15386,
+      "original_sha256": "3e11158af784faab9f557fb977c950a1642ea4121f769945b786c0141c21d14f",
+      "original_bytes": 16403,
       "gzip": false
     },
     {
@@ -1393,11 +1393,11 @@
     },
     {
       "path": "tests/current/test_treatment_normalization.py",
-      "sha256": "4eb44902887be844db6f56c0f7d1e20a13cb01fe827273eedbf15e1a7952919f",
-      "bytes": 14378,
+      "sha256": "6c3db2865d3ca5b72ec48c42bf894435b4a3c739003a96dfafa2f5731aee0ad6",
+      "bytes": 14612,
       "original_path": "tests/current/test_treatment_normalization.py",
-      "original_sha256": "4eb44902887be844db6f56c0f7d1e20a13cb01fe827273eedbf15e1a7952919f",
-      "original_bytes": 14378,
+      "original_sha256": "6c3db2865d3ca5b72ec48c42bf894435b4a3c739003a96dfafa2f5731aee0ad6",
+      "original_bytes": 14612,
       "gzip": false
     },
     {
@@ -1425,6 +1425,33 @@
       "original_path": "website/config/article_progress.json",
       "original_sha256": "f5dbdebe17fc08680fe1ac1b48874c178ff75501d0ef3b49800a4b33dac4640a",
       "original_bytes": 2394,
+      "gzip": false
+    },
+    {
+      "path": "website/config/new_findings_crossref_dates.json",
+      "sha256": "8a0ea751c05829bafd7ef3d582d77caf3013f27aff7d2d94c3890475d0e7cddf",
+      "bytes": 2063,
+      "original_path": "website/config/new_findings_crossref_dates.json",
+      "original_sha256": "8a0ea751c05829bafd7ef3d582d77caf3013f27aff7d2d94c3890475d0e7cddf",
+      "original_bytes": 2063,
+      "gzip": false
+    },
+    {
+      "path": "website/config/new_findings_publication_dates.json",
+      "sha256": "5ace60a1499adce79fee3061628500fd356a5b7b802898367162d0eb7b5312c3",
+      "bytes": 37546,
+      "original_path": "website/config/new_findings_publication_dates.json",
+      "original_sha256": "5ace60a1499adce79fee3061628500fd356a5b7b802898367162d0eb7b5312c3",
+      "original_bytes": 37546,
+      "gzip": false
+    },
+    {
+      "path": "website/config/new_findings_source_notes.json",
+      "sha256": "f08643e192d6e859034d81f7041f3edaaf8011ecee853cf1d3abf29037021d32",
+      "bytes": 1085,
+      "original_path": "website/config/new_findings_source_notes.json",
+      "original_sha256": "f08643e192d6e859034d81f7041f3edaaf8011ecee853cf1d3abf29037021d32",
+      "original_bytes": 1085,
       "gzip": false
     },
     {
@@ -1474,11 +1501,11 @@
     },
     {
       "path": "website/dist/app.js",
-      "sha256": "e7058f2a7ff5d7cd5669087c77d2a1780104d82a0eb8c7713ffd91e7a1e5dfbd",
-      "bytes": 229699,
+      "sha256": "8e4ebd62ed27af87b3b15835bf26a5caf968a1a2df2c9bc562ed082e9a20bbfe",
+      "bytes": 231520,
       "original_path": "website/dist/app.js",
-      "original_sha256": "e7058f2a7ff5d7cd5669087c77d2a1780104d82a0eb8c7713ffd91e7a1e5dfbd",
-      "original_bytes": 229699,
+      "original_sha256": "8e4ebd62ed27af87b3b15835bf26a5caf968a1a2df2c9bc562ed082e9a20bbfe",
+      "original_bytes": 231520,
       "gzip": false
     },
     {
@@ -1572,6 +1599,15 @@
       "gzip": true
     },
     {
+      "path": "website/dist/data/new_findings.json.gz",
+      "sha256": "a61bda3499645528ce4c4ebdc28153fbfb1b14c9ecbfe532aa21e79ba350b7d2",
+      "bytes": 3157,
+      "original_path": "website/dist/data/new_findings.json",
+      "original_sha256": "c4ecbd0aa92b4638eb13706ba56c64af64950ba690d1c39202e82285d6cbd028",
+      "original_bytes": 18207,
+      "gzip": true
+    },
+    {
       "path": "website/dist/data/provisional_studies.json.gz",
       "sha256": "4046ea91eb76c2b090af079e3c81d9f5da67bd5e17edd017e86ff1b28cc80aaa",
       "bytes": 39873,
@@ -1654,19 +1690,19 @@
     },
     {
       "path": "website/dist/data/treatment_map_default.json.gz",
-      "sha256": "8cd03860254baf70ae00b19dffb64f401859b8ff79ce1b971872bc5af390b16e",
-      "bytes": 1897607,
+      "sha256": "e07259718a1d5b2c0729f15966cab4d52a851ac02c26297f1de5b57d2880fc27",
+      "bytes": 1897606,
       "original_path": "website/dist/data/treatment_map_default.json",
-      "original_sha256": "d650a5fa6c4cc1f40137a3dd643fd492f22aa20262873b27b0eaaac8d21ad21d",
+      "original_sha256": "4fe0d0e34dfa68a2282f868d3bf6277cb65fa84975d60dd68e6850dd9329e783",
       "original_bytes": 11342382,
       "gzip": true
     },
     {
       "path": "website/dist/data/treatment_map_version.json.gz",
-      "sha256": "beff9973adb69a14498cd9b8dc4164ac648f01a4d95e0a82dc0769160231b20c",
+      "sha256": "7c452a284263dd81fd1bd81c1d11434315509779271887efc6c31d440bedc76b",
       "bytes": 1944,
       "original_path": "website/dist/data/treatment_map_version.json",
-      "original_sha256": "ba2cdadb713ab46abceba5aacce67f1a1faf29d3bfc37b5fa0213545e4b3aead",
+      "original_sha256": "c71ec9cae47b0d448d891d39f07de0193b6355a6979b8501a146320f218579f0",
       "original_bytes": 4913,
       "gzip": true
     },
@@ -1707,6 +1743,15 @@
       "gzip": true
     },
     {
+      "path": "website/dist/data/underpowered_studies.json.gz",
+      "sha256": "19ebcc735ba582fdd87a1a4f118c4428fa02a0211ffa07bfa9ec7ded2f5422f7",
+      "bytes": 13827,
+      "original_path": "website/dist/data/underpowered_studies.json",
+      "original_sha256": "6f1b20129f32e834fd62d9d4511c3aa478b57039dd9fe3ff7775bb11cdcea1d8",
+      "original_bytes": 76625,
+      "gzip": true
+    },
+    {
       "path": "website/dist/drug_type_review.html",
       "sha256": "c512a2c8851d40fd2b64bfbb282c8fde173c5c412a29306fa3dcafc384379b6d",
       "bytes": 202290,
@@ -1744,11 +1789,11 @@
     },
     {
       "path": "website/dist/index.html",
-      "sha256": "ebf822795359addcf738a98634bb0882f294b42a433780b8a57689cb68934c2d",
-      "bytes": 16682,
+      "sha256": "9e462fb12a8ef9eb27c7434d80509aad2a2e5d7529f8d29bc5847606e7068c8c",
+      "bytes": 17508,
       "original_path": "website/dist/index.html",
-      "original_sha256": "ebf822795359addcf738a98634bb0882f294b42a433780b8a57689cb68934c2d",
-      "original_bytes": 16682,
+      "original_sha256": "9e462fb12a8ef9eb27c7434d80509aad2a2e5d7529f8d29bc5847606e7068c8c",
+      "original_bytes": 17508,
       "gzip": false
     },
     {
@@ -1758,6 +1803,15 @@
       "original_path": "website/dist/melanoma_scope.js",
       "original_sha256": "35b08595986bb2354eb973bd813cd565b9b75c25d9889578178151a24dedeb93",
       "original_bytes": 10070,
+      "gzip": false
+    },
+    {
+      "path": "website/dist/new_findings.js",
+      "sha256": "c9c0ac78cc1e43d1ec5c585a578dc146b6d6a4c19219ebe5efa6e26bbd0870ea",
+      "bytes": 2788,
+      "original_path": "website/dist/new_findings.js",
+      "original_sha256": "c9c0ac78cc1e43d1ec5c585a578dc146b6d6a4c19219ebe5efa6e26bbd0870ea",
+      "original_bytes": 2788,
       "gzip": false
     },
     {
@@ -1870,11 +1924,11 @@
     },
     {
       "path": "website/dist/styles.css",
-      "sha256": "0989a5ce58af7776111a52cfccfc83ea89dc5930983d144a80502732046b16d2",
-      "bytes": 91299,
+      "sha256": "a0b1dbb34cc50b4e88aaadabcb13a08cc0f9391c8c361ebeb6438116e0980964",
+      "bytes": 92978,
       "original_path": "website/dist/styles.css",
-      "original_sha256": "0989a5ce58af7776111a52cfccfc83ea89dc5930983d144a80502732046b16d2",
-      "original_bytes": 91299,
+      "original_sha256": "a0b1dbb34cc50b4e88aaadabcb13a08cc0f9391c8c361ebeb6438116e0980964",
+      "original_bytes": 92978,
       "gzip": false
     },
     {
@@ -1897,11 +1951,11 @@
     },
     {
       "path": "website/dist/treatment_map.js",
-      "sha256": "0b9a7941e60b94d42f209c555536c39e001882e33151269b03841276e91ef0d9",
-      "bytes": 126258,
+      "sha256": "9084dd5e6a32a3690015d1d485f7036550fc05cfbacd04622922003b0622dd21",
+      "bytes": 125735,
       "original_path": "website/dist/treatment_map.js",
-      "original_sha256": "0b9a7941e60b94d42f209c555536c39e001882e33151269b03841276e91ef0d9",
-      "original_bytes": 126258,
+      "original_sha256": "9084dd5e6a32a3690015d1d485f7036550fc05cfbacd04622922003b0622dd21",
+      "original_bytes": 125735,
       "gzip": false
     },
     {
@@ -1933,11 +1987,11 @@
     },
     {
       "path": "website/dist/treatment_map_effects.js",
-      "sha256": "7eb7b634aac1b1bb31606dad36162f768b8b5fcfa5c4e6573ad8b65947c4b0c2",
-      "bytes": 8708,
+      "sha256": "64144965b3763d79c37ea43a6f94ef6ba518e90c70ee104e00cd655406061ba8",
+      "bytes": 8612,
       "original_path": "website/dist/treatment_map_effects.js",
-      "original_sha256": "7eb7b634aac1b1bb31606dad36162f768b8b5fcfa5c4e6573ad8b65947c4b0c2",
-      "original_bytes": 8708,
+      "original_sha256": "64144965b3763d79c37ea43a6f94ef6ba518e90c70ee104e00cd655406061ba8",
+      "original_bytes": 8612,
       "gzip": false
     },
     {
@@ -2004,6 +2058,15 @@
       "gzip": false
     },
     {
+      "path": "website/dist/underpowered_studies.js",
+      "sha256": "581f7366d687e40eb80e1db22400fecb2f5b1c5a43a2c2e5e1b9a0ef587d8a3c",
+      "bytes": 6493,
+      "original_path": "website/dist/underpowered_studies.js",
+      "original_sha256": "581f7366d687e40eb80e1db22400fecb2f5b1c5a43a2c2e5e1b9a0ef587d8a3c",
+      "original_bytes": 6493,
+      "gzip": false
+    },
+    {
       "path": "website/dist/validation-explanations-v1.html",
       "sha256": "f380589e02eb737c7eb1dc96ccf6c6ba1ed29e2164df70059a8732be2217929a",
       "bytes": 91239,
@@ -2049,12 +2112,30 @@
       "gzip": false
     },
     {
+      "path": "website/scripts/build_new_findings.cjs",
+      "sha256": "c318fb640b939f868329bed6c1400ccd1087f8e4fe87dede878d3c897cacdda2",
+      "bytes": 5044,
+      "original_path": "website/scripts/build_new_findings.cjs",
+      "original_sha256": "c318fb640b939f868329bed6c1400ccd1087f8e4fe87dede878d3c897cacdda2",
+      "original_bytes": 5044,
+      "gzip": false
+    },
+    {
       "path": "website/scripts/clinical_evidence.py",
       "sha256": "7c2dace20de83d8128ed722e7434a3e238b4a114aa37fa6bce39ac5945bfc492",
       "bytes": 31137,
       "original_path": "website/scripts/clinical_evidence.py",
       "original_sha256": "7c2dace20de83d8128ed722e7434a3e238b4a114aa37fa6bce39ac5945bfc492",
       "original_bytes": 31137,
+      "gzip": false
+    },
+    {
+      "path": "website/scripts/new_findings_dates.py",
+      "sha256": "81c0c2b0adcb53a103396312cd22f3e7c886c32faa36dc71f648c3c70ef34c62",
+      "bytes": 6001,
+      "original_path": "website/scripts/new_findings_dates.py",
+      "original_sha256": "81c0c2b0adcb53a103396312cd22f3e7c886c32faa36dc71f648c3c70ef34c62",
+      "original_bytes": 6001,
       "gzip": false
     },
     {
@@ -2136,6 +2217,15 @@
       "original_path": "website/scripts/treatment_normalization.cjs",
       "original_sha256": "7def960ab71b5be397ed7f38ae0d50ddd48cfa2a19f3d99af3d30a054786e054",
       "original_bytes": 19739,
+      "gzip": false
+    },
+    {
+      "path": "website/scripts/underpowered_studies.cjs",
+      "sha256": "e56e624445ddaea8ea0483b59b0f8e37ffaac5800ede4843c85def8fb9ae8454",
+      "bytes": 14676,
+      "original_path": "website/scripts/underpowered_studies.cjs",
+      "original_sha256": "e56e624445ddaea8ea0483b59b0f8e37ffaac5800ede4843c85def8fb9ae8454",
+      "original_bytes": 14676,
       "gzip": false
     },
     {
@@ -2433,6 +2523,24 @@
       "original_path": "website/tests/test_melanoma_scope.py",
       "original_sha256": "181156eb5bd3a97fbe5bf9cd0770fdc58ddf798d440f1d7ecae36684890caf2f",
       "original_bytes": 10629,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_new_findings.cjs",
+      "sha256": "b6b645537af939861a93b1510d8f4ca5792cc62a1931f316b95e1edbabe52e7c",
+      "bytes": 1705,
+      "original_path": "website/tests/test_new_findings.cjs",
+      "original_sha256": "b6b645537af939861a93b1510d8f4ca5792cc62a1931f316b95e1edbabe52e7c",
+      "original_bytes": 1705,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_new_findings_dates.py",
+      "sha256": "317de94d0605e3298845d86dd853c3e636a6284494839237e0f643d2260e6701",
+      "bytes": 2117,
+      "original_path": "website/tests/test_new_findings_dates.py",
+      "original_sha256": "317de94d0605e3298845d86dd853c3e636a6284494839237e0f643d2260e6701",
+      "original_bytes": 2117,
       "gzip": false
     },
     {
@@ -2815,20 +2923,20 @@
     },
     {
       "path": "website/tests/test_treatment_map_effects.cjs",
-      "sha256": "fdca777b8b2486c600610c76c68071e858cfa486b1acf0101209fb858ca1b6f1",
-      "bytes": 13228,
+      "sha256": "80b5940e6300c04eb79debcd46224ccd5ada9e47cbdfb81f82505dbb1f7b9532",
+      "bytes": 13192,
       "original_path": "website/tests/test_treatment_map_effects.cjs",
-      "original_sha256": "fdca777b8b2486c600610c76c68071e858cfa486b1acf0101209fb858ca1b6f1",
-      "original_bytes": 13228,
+      "original_sha256": "80b5940e6300c04eb79debcd46224ccd5ada9e47cbdfb81f82505dbb1f7b9532",
+      "original_bytes": 13192,
       "gzip": false
     },
     {
       "path": "website/tests/test_treatment_map_endpoint_ui.cjs",
-      "sha256": "3ce07adbf222133230bfa2639abe002c2931c1ef880e4c8f8fe5474394ebe43a",
-      "bytes": 17635,
+      "sha256": "ee4b3a6050d2a0098cd1b67aee0fcdd1959f0f7865070894509301b3b6616d72",
+      "bytes": 17466,
       "original_path": "website/tests/test_treatment_map_endpoint_ui.cjs",
-      "original_sha256": "3ce07adbf222133230bfa2639abe002c2931c1ef880e4c8f8fe5474394ebe43a",
-      "original_bytes": 17635,
+      "original_sha256": "ee4b3a6050d2a0098cd1b67aee0fcdd1959f0f7865070894509301b3b6616d72",
+      "original_bytes": 17466,
       "gzip": false
     },
     {
@@ -2851,11 +2959,11 @@
     },
     {
       "path": "website/tests/test_treatment_map_meta_ui.cjs",
-      "sha256": "ddcbaf23d7e1d49a20866163d0f3389cc3eb04570c2accbbccbf253591a46916",
-      "bytes": 52681,
+      "sha256": "143098187de0d403cd797a4efaa7867a261878ca3af6da614fe67ad764a68d33",
+      "bytes": 52831,
       "original_path": "website/tests/test_treatment_map_meta_ui.cjs",
-      "original_sha256": "ddcbaf23d7e1d49a20866163d0f3389cc3eb04570c2accbbccbf253591a46916",
-      "original_bytes": 52681,
+      "original_sha256": "143098187de0d403cd797a4efaa7867a261878ca3af6da614fe67ad764a68d33",
+      "original_bytes": 52831,
       "gzip": false
     },
     {
@@ -2896,11 +3004,11 @@
     },
     {
       "path": "website/tests/test_treatment_map_radial_comparisons.cjs",
-      "sha256": "f0124fe441f3ffc3a75430ab44e09f915915a8f5102b4770640265efbe3ec5c9",
-      "bytes": 16916,
+      "sha256": "47638b1d228aca2130e0e280e0fb7d938de25d127b4e559ce07f41fac5a86a65",
+      "bytes": 16875,
       "original_path": "website/tests/test_treatment_map_radial_comparisons.cjs",
-      "original_sha256": "f0124fe441f3ffc3a75430ab44e09f915915a8f5102b4770640265efbe3ec5c9",
-      "original_bytes": 16916,
+      "original_sha256": "47638b1d228aca2130e0e280e0fb7d938de25d127b4e559ce07f41fac5a86a65",
+      "original_bytes": 16875,
       "gzip": false
     },
     {
@@ -3000,6 +3108,15 @@
       "original_path": "website/tests/test_trial_table_ui.cjs",
       "original_sha256": "0371402e503df85467faeabffe85d8997c7ff6764c04981903454a7dd97dab9b",
       "original_bytes": 6090,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_underpowered_studies.cjs",
+      "sha256": "80a275cb2cc9892ccd517dc1470dd17809e95747547082dde2c17f7bb464d5cf",
+      "bytes": 4581,
+      "original_path": "website/tests/test_underpowered_studies.cjs",
+      "original_sha256": "80a275cb2cc9892ccd517dc1470dd17809e95747547082dde2c17f7bb464d5cf",
+      "original_bytes": 4581,
       "gzip": false
     },
     {

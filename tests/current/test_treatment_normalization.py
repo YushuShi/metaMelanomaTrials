@@ -17,9 +17,10 @@ from metamelanoma.treatment_map import PUBLIC as MAP_PUBLIC
 REPO = Path(__file__).resolve().parents[2]
 RESOURCES = ['pipeline.py', REGISTRY, GENERATED_REGISTRY,
     'config/sample_size_link_reviews.json', 'config/comparison_result_reviews.json',
-    'website/scripts/treatment_map_defaults.cjs',
+    'website/scripts/treatment_map_defaults.cjs', 'website/scripts/underpowered_studies.cjs',
+    'website/scripts/build_new_findings.cjs', 'website/scripts/new_findings_dates.py',
     'website/scripts/treatment_normalization.cjs', 'website/scripts/build_drug_type_review.cjs', 'website/scripts/regimen_projection.cjs', 'website/scripts/treatment_map.cjs', 'website/scripts/treatment_map_model.cjs', 'website/scripts/treatment_map_evidence.cjs', 'website/scripts/treatment_map_cohorts.cjs', 'website/scripts/treatment_map_membership.cjs',
-    *['website/dist/'+name+'.js' for name in ('treatment_resolver','treatment_groups','regimen_definitions','regimen_source_rules','trial_identifiers','trial_registry','treatment_map','treatment_map_analysis','treatment_map_effects','treatment_map_charts','treatment_map_planning','statistical_math','confidence_intervals')],
+    *[str(path.relative_to(REPO)) for path in (REPO/'website/dist').glob('*.js') if path != REPO/GENERATED_REGISTRY],
     *['src/metamelanoma/'+name+'.py' for name in ('__init__','cli','io','treatment_normalization','treatment_map')]]
 
 
@@ -98,6 +99,10 @@ api:Object.values(side.comparisons).map(row=>row.roles.intervention.description.
         map_data=json.loads((self.root/MAP_PUBLIC).read_bytes())
         self.assertEqual(map_data['metadata']['normalization_content_sha256'],sidecar['content_sha256'])
         self.assertEqual(map_data['metadata']['source_file_sha256'],digest(source_before))
+        for table in ('underpowered_studies', 'new_findings'):
+            saved = (self.root/f'website/dist/data/{table}.json').read_bytes()
+            self.assertEqual(applied['study_tables'][table], digest(saved))
+            self.assertEqual(json.loads(saved)['source_file_sha256'], digest(source_before))
         self.assertTrue(any(row['id']=='agent:nivolumab' for row in map_data['nodes']))
         self.assertEqual(applied['treatment_map']['new_model_requests'],0)
         default_path='website/dist/data/treatment_map_default.json'

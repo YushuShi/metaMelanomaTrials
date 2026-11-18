@@ -43,6 +43,8 @@
   <script src="./treatment_map_charts.js" defer></script>
   <script src="./treatment_node_studies.js" defer></script>
   <script src="./treatment_map.js" defer></script>
+  <script src="./underpowered_studies.js" defer></script>
+  <script src="./new_findings.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./published_outcome_review.js" defer></script>
   <script src="./about_article_progress.js" defer></script>
@@ -97,7 +99,11 @@
         <div class="analysis-tabs" role="tablist" aria-label="Evidence analysis">
           <button role="tab" aria-selected="true" aria-controls="analysis-treatment-map" id="tab-treatment-map" data-analysis-tab="treatment-map">Treatment map</button>
           <button role="tab" aria-selected="false" aria-controls="analysis-articles" id="tab-articles" data-analysis-tab="articles" tabindex="-1">Studies</button>
+          <button role="tab" aria-selected="false" aria-controls="analysis-underpowered-studies" id="tab-underpowered-studies" data-analysis-tab="underpowered-studies" tabindex="-1">Underpowered studies</button>
+          <button role="tab" aria-selected="false" aria-controls="analysis-new-findings" id="tab-new-findings" data-analysis-tab="new-findings" tabindex="-1">New findings</button>
         </div>
+        <section class="panel analysis-panel evidence-tab" id="analysis-underpowered-studies" role="tabpanel" aria-labelledby="tab-underpowered-studies" hidden></section>
+        <section class="panel analysis-panel evidence-tab" id="analysis-new-findings" role="tabpanel" aria-labelledby="tab-new-findings" hidden></section>
         <section class="panel analysis-panel" id="analysis-articles" role="tabpanel" aria-labelledby="tab-articles" hidden>
           <div class="panel-heading study-table-heading">
             <div class="study-table-title"><h2>Studies <span class="articles-count" id="scoped-studies-count"></span></h2><p class="study-table-key" id="study-table-key"><span title="Results based on abstract-only extraction">* Abstract only</span><span>Gray rows: non-trial studies</span></p></div>

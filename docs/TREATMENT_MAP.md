@@ -135,27 +135,21 @@ Endpoint availability comes from the current prepared evidence. Keep ORR · RR
 and ORR · OR separate, and mark an unsupported measure unavailable. ORR
 percentages alone cannot establish a comparative direction.
 
-An arrow X → Y displays X versus Y: X is the tail, Y the head. External parallel
-comparisons run from the branch regimen to its opponent. For two internal
-regimens, follow the selected source's intervention → comparator. Add-on arrows
-run from the complete subset regimen to the complete expanded regimen. For
-example, reported HR(A+B versus A)=0.70 produces a magenta A → A+B arrow with
-display HR(A versus A+B)=1/0.70. This means A alone fares worse.
+An arrow X → Y displays the effect for Y (arrowhead intervention) versus X
+(arrow-tail comparator). External parallel comparisons point from the branch
+regimen to its opponent. Internal parallel comparisons follow the selected
+source’s comparator → intervention. Add-on arrows run from the original regimen
+to the expanded regimen. For example, HR(A+B versus A)=0.70 for overall survival
+produces a red A → A+B arrow labelled HR 0.700 because A alone fares worse.
 
-Keep the original reported tuple and direction accessible in details. When the arrow reverses
-it, label the display as a reciprocal and transform a valid interval together:
-[1/reported upper, 1/reported lower]. Do not alter stored estimates, bounds,
-models or sources. Invalid/nonpositive ratios cannot generate an arrow, and
-invalid or incomplete CIs are not manufactured. Lower survival HR favors the
-tail; higher ORR/DCR RR or OR favors the tail; lower adverse-event RR/OR favors
-the tail. Unknown polarity remains neutral.
+When the displayed comparison reverses the reported arms, invert the estimate
+and both confidence bounds together. The source tuple retains its reported
+orientation. Only valid positive ratio estimates support a comparison arrow.
 
-The four link colors are parallel-better blue (#2563eb), parallel-worse red
-(#dc2626), add-on-better cyan-blue (#0891b2), and add-on-worse magenta (#c026d3).
-Gray covers missing endpoint evidence or a neutral point estimate. Color
-describes direction, not statistical significance. The concise arrow keys state
-whether the tail fares better or worse; the longer explanatory sentences are
-omitted. Both radial and branch views show a separate treatment-class color
+Every comparison uses blue (#2563eb) when the tail fares better and red
+(#dc2626) when the tail fares worse for the selected endpoint. Gray indicates
+missing directional evidence or a neutral estimate. The confidence interval
+determines the dash style. Both radial and branch views show a separate treatment-class color
 legend above the arrow keys. The radial legend counts named agents in the
 catalogue. A branch legend includes only categories represented by its displayed
 node cards, including opposing arms, and counts cards carrying each visible
@@ -183,11 +177,9 @@ unchanged.
 Use the same endpoint and direction calculation as the branch plot. Default
 to OS on initial load and preserve an explicit endpoint selection across views.
 The overview's endpoint options come from its displayed parent–child comparison
-evidence only. A matching estimate produces a straight subset→expanded arrow, cyan when the tail
-fares better and magenta when it fares worse. Unsupported endpoints stay gray
-without arrows. The overview legend shows only these two add-on colors and the
-tail-perspective explanation. Source tooltip text retains complete regimens,
-the selected source and any explicitly labeled reciprocal.
+evidence only. A matching estimate produces a straight original-to-expanded
+arrow. The radial and branch views use the same two direction colors and legend.
+Unsupported endpoints stay gray without arrows.
 
 Radial connector ports use glyph centres and radii, not branch-card geometry.
 Keep arrow tips outside the dots through zoom changes. Do not duplicate a gray

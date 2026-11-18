@@ -1,0 +1,89 @@
+{
+  "42313848": {
+    "doi": "10.17116/patol20268803179",
+    "source": "https://api.crossref.org/works/10.17116/patol20268803179",
+    "sha256": "666258fd567e611457ed4bf91ba4d64e261913fd410cd56970fa5f98f76c4d30",
+    "retrieved_at": "2026-11-18T03:29:24.228299+00:00",
+    "published-print": [
+      2026,
+      6,
+      18
+    ],
+    "published": [
+      2026,
+      6,
+      18
+    ]
+  },
+  "42400624": {
+    "doi": "10.1007/s00259-026-08051-6",
+    "source": "https://api.crossref.org/works/10.1007/s00259-026-08051-6",
+    "sha256": "6a84e6d03728b1e1d757c747c456f56a84f8b946107eed96be5ea2e39c9d4f38",
+    "retrieved_at": "2026-11-18T03:29:24.229329+00:00",
+    "published-online": [
+      2026,
+      7,
+      4
+    ],
+    "published-print": [
+      2026,
+      10
+    ],
+    "published": [
+      2026,
+      7,
+      4
+    ]
+  },
+  "42550831": {
+    "doi": "10.1158/1078-0432.ccr-26-1402",
+    "source": "https://api.crossref.org/works/10.1158/1078-0432.ccr-26-1402",
+    "sha256": "b8bd129457c07027b848e42772f40b0c27d74120dfc1af55b57c509c10879e61",
+    "retrieved_at": "2026-11-18T03:29:24.229993+00:00",
+    "published-online": [
+      2026,
+      8,
+      4
+    ],
+    "published-print": [
+      2026,
+      10,
+      15
+    ],
+    "published": [
+      2026,
+      8,
+      4
+    ]
+  },
+  "42829042": {
+    "doi": "10.1016/j.apjo.2026.100380",
+    "source": "https://api.crossref.org/works/10.1016/j.apjo.2026.100380",
+    "sha256": "ad3f4256be4a94b74c9d18c05ac506ccb44592069726c8e78730cb8be9b4de5e",
+    "retrieved_at": "2026-11-18T03:29:24.230418+00:00",
+    "published-print": [
+      2026,
+      9
+    ],
+    "published": [
+      2026,
+      9
+    ]
+  },
+  "42854069": {
+    "doi": "10.1097/md.0000000000051069",
+    "source": "https://api.crossref.org/works/10.1097/md.0000000000051069",
+    "sha256": "64c3beacd9563efe42e9a80e53d4cb559166269e3b4294afa521cf9d4d193e42",
+    "retrieved_at": "2026-11-18T03:29:24.230792+00:00",
+    "published-print": [
+      2026,
+      10,
+      9
+    ],
+    "published": [
+      2026,
+      10,
+      9
+    ]
+  }
+}

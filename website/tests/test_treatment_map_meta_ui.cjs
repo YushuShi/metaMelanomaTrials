@@ -95,7 +95,7 @@ test('one source per paper and independent trial, selectable design scope and po
  const v=mount(pooledGraph());v.setBranch('agent:a');const p=pair(v,'agent:a','ab');v.selectParallel(p.edge.id);
  assert.equal(v.model.comparisons.length,4,'R2/R3 same-paper effect contributes once');
  assert.equal(v.edgeEvidence(p.edge).group.pooled.k,4);
- assert.equal(data(p.element,'effectState'),'addon-worse');
+ assert.equal(data(p.element,'effectState'),'worse');
  assert.ok(withClass(v.comparisonBand,'tm-pooled-summary').length);
  v.setStudyScope('trials');assert.equal(v.edgeEvidence(p.edge).group.pooled.k,3);
  v.setStudyScope('randomized');assert.equal(v.edgeEvidence(p.edge).group.pooled.k,2);
@@ -271,9 +271,13 @@ test('unsupported non95 map intervals show their estimate without public origina
  assert.equal(v.model.comparisons[0].ci_level,99);
  assert.equal(JSON.stringify(g),before);
 });
-test('the main navigation contains Studies and Treatment map, with diagnostics only inside comparisons',()=>{
+test('the evidence tabs have labelled panels, with meta-analysis diagnostics only inside comparisons',()=>{
  const fs=require('node:fs'),path=require('node:path'),html=fs.readFileSync(path.join(__dirname,'../dist/index.html'),'utf8');
- assert.ok(html.includes('data-analysis-tab="articles"'));assert.ok(html.includes('data-analysis-tab="treatment-map"'));
+ for (const tab of ['treatment-map','articles','underpowered-studies','new-findings']) {
+   assert.ok(html.includes('data-analysis-tab="'+tab+'"'));
+   assert.ok(html.includes('aria-controls="analysis-'+tab+'"'));
+   assert.ok(html.includes('aria-labelledby="tab-'+tab+'"'));
+ }
  for(const tab of ['forest','bias','sensitivity'])assert.ok(!html.includes('data-analysis-tab="'+tab+'"'));
 });
 

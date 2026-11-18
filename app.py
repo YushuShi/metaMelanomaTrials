@@ -22,6 +22,8 @@ EXPORTER = PROJECT / "website" / "scripts" / "refresh_article_progress.py"
 class ReviewHandler(SimpleHTTPRequestHandler):
     """Serve website assets, without exposing the workflow's project files."""
 
+    protocol_version = "HTTP/1.1"  # Reuse local connections across the page's scripts and tables.
+
     def send_head(self):
         target = Path(self.translate_path(self.path)).resolve()
         paths = [target]

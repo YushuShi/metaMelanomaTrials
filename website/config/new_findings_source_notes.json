@@ -1,0 +1,19 @@
+{
+  "42923311": {
+    "doi": "10.1016/j.gore.2026.102226",
+    "required_abstract_passages": [
+      "She received adjuvant ipilimumab and nivolumab for 3 cycles complicated by grade 3 transaminitis",
+      "The patient remains on single agent nivolumab without evidence of detectable disease almost 18 months after initial diagnosis."
+    ],
+    "finding": "Case report. Grade 3 transaminitis complicated a three-cycle course of ipilimumab plus nivolumab. No disease was detectable almost 18 months after diagnosis, during nivolumab monotherapy."
+  },
+  "42945901": {
+    "doi": "10.1016/j.seminoncol.2026.152567",
+    "required_abstract_passages": [
+      "melanoma (n = 377) analyses",
+      "Platelet count showed a U-shaped association with overall survival.",
+      "Similar patterns were observed in the validation and cancer-specific cohorts."
+    ],
+    "finding": "The melanoma analysis included 377 patients. The authors describe a similar U-shaped association between platelet count and OS in the cancer-specific cohorts. The abstract gives no melanoma-specific HR."
+  }
+}

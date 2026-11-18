@@ -1,0 +1,1262 @@
+{
+  "cutoff": "2026-10-01",
+  "citations": {
+    "42519790": {
+      "date": "2026-07-06",
+      "date_basis": "Online publication",
+      "report_id": "report-0207f1ea7264a86e1cffc2d3"
+    },
+    "42358556": {
+      "date": "2026-06-10",
+      "date_basis": "Online publication",
+      "report_id": "report-0b3854845439240cf04134ab"
+    },
+    "41746574": {
+      "date": "2026-02-26",
+      "date_basis": "Online publication",
+      "report_id": "report-113986f3eafefda41ab71db6"
+    },
+    "42820749": {
+      "date": "2026-01-21",
+      "date_basis": "Journal issue",
+      "report_id": "report-118132e15926b678892d6fe4"
+    },
+    "41635547": {
+      "date": "2025-12-19",
+      "date_basis": "Online publication",
+      "report_id": "report-11e74ad3da1b272d3bb589f4"
+    },
+    "42178946": {
+      "date": "2026-05",
+      "date_basis": "Journal issue",
+      "report_id": "report-14016c3c4c64b96160e7e871"
+    },
+    "41768125": {
+      "date": "2026-01-18",
+      "date_basis": "Online publication",
+      "report_id": "report-17dad743d4e98535946474f5"
+    },
+    "41479589": {
+      "date": "2025-11-24",
+      "date_basis": "Online publication",
+      "report_id": "report-1eab0c11d7189712c776d587"
+    },
+    "42338299": {
+      "date": "2026-06-24",
+      "date_basis": "Online publication",
+      "report_id": "report-207d98ecf043130aecf80b92"
+    },
+    "41745331": {
+      "date": "2026-02-09",
+      "date_basis": "Online publication",
+      "report_id": "report-21f89c74a99af54505e9cff4"
+    },
+    "42467079": {
+      "date": "2026-07-17",
+      "date_basis": "Online publication",
+      "report_id": "report-2481a5745e76d5e8e0a89d0c"
+    },
+    "41611998": {
+      "date": "2026-01-29",
+      "date_basis": "Online publication",
+      "report_id": "report-268cd828817e0c07b519b30b"
+    },
+    "42527077": {
+      "date": "2026-08",
+      "date_basis": "Journal issue",
+      "report_id": "report-2ad015773fe90d3a1cee1319"
+    },
+    "42189441": {
+      "date": "2026-05-26",
+      "date_basis": "Online publication",
+      "report_id": "report-2c798d1ed5b608055d4df154"
+    },
+    "42926136": {
+      "date": "2026-10-24",
+      "date_basis": "Online publication",
+      "report_id": "report-2d9eecd964427117a0d5dd5f"
+    },
+    "42522061": {
+      "date": "2026-07-29",
+      "date_basis": "Online publication",
+      "report_id": "report-319ff7177791056b8f761c4a"
+    },
+    "41698381": {
+      "date": "2026-02-13",
+      "date_basis": "Online publication",
+      "report_id": "report-3341dd99510a837ed1d28e22"
+    },
+    "42882866": {
+      "date": "2026-10-01",
+      "date_basis": "Online publication",
+      "report_id": "report-37c50864cc76a90ee0ca3f29"
+    },
+    "41740065": {
+      "date": "2026-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-3b1349135b58ada241f859c4"
+    },
+    "42938858": {
+      "date": "2026-10-15",
+      "date_basis": "Online publication",
+      "report_id": "report-3b72f10df7efeb8888030144"
+    },
+    "42826365": {
+      "date": "2026-10-02",
+      "date_basis": "Online publication",
+      "report_id": "report-404d7c6b7e6174f59d8cc449"
+    },
+    "41977352": {
+      "date": "2026-03-31",
+      "date_basis": "Online publication",
+      "report_id": "report-43076f560e0e0d1ac8cab6c0"
+    },
+    "42352494": {
+      "date": "2026-06-16",
+      "date_basis": "Online publication",
+      "report_id": "report-46dfba71fb2f6a4314ecf608"
+    },
+    "41701511": {
+      "date": "2026-02-15",
+      "date_basis": "Journal issue",
+      "report_id": "report-4b8f7c0f2163c5f194c91922"
+    },
+    "41999744": {
+      "date": "2026-04-17",
+      "date_basis": "Online publication",
+      "report_id": "report-4fada495a35328ca2753b95c"
+    },
+    "41701495": {
+      "date": "2026-02-02",
+      "date_basis": "Online publication",
+      "report_id": "report-619c87ef2db6ff27409c56b4"
+    },
+    "41732954": {
+      "date": "2026-02-24",
+      "date_basis": "Online publication",
+      "report_id": "report-63c64dcdaefc33167561fafe"
+    },
+    "41308875": {
+      "date": "2025-11-25",
+      "date_basis": "Online publication",
+      "report_id": "report-6d21a777028a6ec45c4b1b33"
+    },
+    "42285609": {
+      "date": "2026-06-12",
+      "date_basis": "Online publication",
+      "report_id": "report-7745f38c97cb02e1c662a29e"
+    },
+    "42501621": {
+      "date": "2026-07-21",
+      "date_basis": "Online publication",
+      "report_id": "report-7984af3337783539535d7e0a"
+    },
+    "42453555": {
+      "date": "2026-07-07",
+      "date_basis": "Online publication",
+      "report_id": "report-7ba55514e7e0acd54c053191"
+    },
+    "41537702": {
+      "date": "2026-04-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-8143d52389fa89b496003d6a"
+    },
+    "41421462": {
+      "date": "2025-12-18",
+      "date_basis": "Online publication",
+      "report_id": "report-87a6c9a7d05c701a868d4f89"
+    },
+    "42335437": {
+      "date": "2026-06-23",
+      "date_basis": "Online publication",
+      "report_id": "report-8d5f5ae2848c7c7351eda9da"
+    },
+    "41997122": {
+      "date": "2026-04-16",
+      "date_basis": "Journal issue",
+      "report_id": "report-9142e861f0c625184d46355f"
+    },
+    "42209932": {
+      "date": "2026-05-28",
+      "date_basis": "Online publication",
+      "report_id": "report-91f34b670ae62544adb89e7f"
+    },
+    "42829042": {
+      "date": "2026-09",
+      "date_basis": "Print publication",
+      "report_id": "report-9239ce2bc15cd04a3f24a60c"
+    },
+    "42208280": {
+      "date": "2026-05-25",
+      "date_basis": "Online publication",
+      "report_id": "report-92b5c72e12db41dcc4cbcd4a"
+    },
+    "42158424": {
+      "date": "2026-05-04",
+      "date_basis": "Online publication",
+      "report_id": "report-98b8b16424a3d1c415748bd7"
+    },
+    "42251234": {
+      "date": "2026-06-06",
+      "date_basis": "Online publication",
+      "report_id": "report-991f1679dac97dc8c31e4bd5"
+    },
+    "42888027": {
+      "date": "2026-10-16",
+      "date_basis": "Online publication",
+      "report_id": "report-9f6af16c8bc6d4d0c7429d0a"
+    },
+    "41838427": {
+      "date": "2026-03-15",
+      "date_basis": "Journal issue",
+      "report_id": "report-a4ebb88575f07498a9c53d17"
+    },
+    "41548933": {
+      "date": "2026-01-16",
+      "date_basis": "Online publication",
+      "report_id": "report-a50aaaf3941b230c76be64b0"
+    },
+    "42926306": {
+      "date": "2026-10-24",
+      "date_basis": "Online publication",
+      "report_id": "report-ad07b0b9ab3ed553da6456e5"
+    },
+    "42630564": {
+      "date": "2026-08-20",
+      "date_basis": "Online publication",
+      "report_id": "report-b01c70d560b3deb58db04c45"
+    },
+    "41913413": {
+      "date": "2026-03-30",
+      "date_basis": "Online publication",
+      "report_id": "report-b1f387278086f47606aa3239"
+    },
+    "41971443": {
+      "date": "2026-03-26",
+      "date_basis": "Online publication",
+      "report_id": "report-b33a846aac39042a406b8bb2"
+    },
+    "42465267": {
+      "date": "2026-07-07",
+      "date_basis": "Online publication",
+      "report_id": "report-b78e60221bdb71493a282521"
+    },
+    "42223134": {
+      "date": "2026-06-01",
+      "date_basis": "Online publication",
+      "report_id": "report-bf854214173ad47cd5af919e"
+    },
+    "41413897": {
+      "date": "2025-12-18",
+      "date_basis": "Online publication",
+      "report_id": "report-c036a0036d8d195887b4cd15"
+    },
+    "42052130": {
+      "date": "2026-04-22",
+      "date_basis": "Online publication",
+      "report_id": "report-c053972ed7fd94c53ee81a13"
+    },
+    "42187293": {
+      "date": "2026-05-26",
+      "date_basis": "Online publication",
+      "report_id": "report-c06b9e2faa7a25f05357022d"
+    },
+    "41478278": {
+      "date": "2025-12-31",
+      "date_basis": "Online publication",
+      "report_id": "report-c709bd9818231ba8e0f46e18"
+    },
+    "41843165": {
+      "date": "2026-03-17",
+      "date_basis": "Online publication",
+      "report_id": "report-c857e50c96fb43a92cc00c6e"
+    },
+    "42056853": {
+      "date": "2026-05-03",
+      "date_basis": "Online publication",
+      "report_id": "report-da7d42297e40d68d6d299f25"
+    },
+    "42313848": {
+      "date": "2026-06-18",
+      "date_basis": "Print publication",
+      "report_id": "report-dc8205ec79d5d02b38182bd5"
+    },
+    "42093981": {
+      "date": "2026-04-21",
+      "date_basis": "Online publication",
+      "report_id": "report-eaee7f400f2477857ee6e7a9"
+    },
+    "41606118": {
+      "date": "2026-01-28",
+      "date_basis": "Online publication",
+      "report_id": "report-ed33b99ea9f039b7a344837b"
+    },
+    "42341939": {
+      "date": "2026-06-24",
+      "date_basis": "Online publication",
+      "report_id": "report-f0621807815aa8b9a79e06ae"
+    },
+    "42282857": {
+      "date": "2026-06-10",
+      "date_basis": "Online publication",
+      "report_id": "report-f68634647d0efa5c25f0d740"
+    },
+    "42149143": {
+      "date": "2026-08-03",
+      "date_basis": "Journal issue",
+      "report_id": "report-f770190b18e085cdde63f88a"
+    },
+    "42593482": {
+      "date": "2026-08-13",
+      "date_basis": "Online publication",
+      "report_id": "report-f97b0681f008233618ee5070"
+    },
+    "41863996": {
+      "date": "2026-03-20",
+      "date_basis": "Online publication",
+      "report_id": "report-fde0615547ae1fdd1c6faa7b"
+    },
+    "42849920": {
+      "date": "2026-10-07",
+      "date_basis": "Online publication",
+      "report_id": "report-ffd4efa18dbd543a835223c9"
+    },
+    "41817901": {
+      "date": "2026-03-12",
+      "date_basis": "Online publication",
+      "report_id": "report-02f1eb37fd8ee48631422351"
+    },
+    "42013417": {
+      "date": "2026-09-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-1b8d2fc8bb3996995d2b8a53"
+    },
+    "41664938": {
+      "date": "2026-02-10",
+      "date_basis": "Online publication",
+      "report_id": "report-eef152ba193f217882190742"
+    },
+    "41231502": {
+      "date": "2026-01-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-ffa8b6441d4104c9d14052f7"
+    },
+    "42500564": {
+      "date": "2026-07-16",
+      "date_basis": "Online publication",
+      "report_id": "report-0281d41d40f8ac1531cbc1bd"
+    },
+    "42594762": {
+      "date": "2026-08-13",
+      "date_basis": "Online publication",
+      "report_id": "report-02884bd902e62f9d9eee3812"
+    },
+    "41698954": {
+      "date": "2026-02-16",
+      "date_basis": "Online publication",
+      "report_id": "report-04caae9ad5c6e61f64b46286"
+    },
+    "40715648": {
+      "date": "2025-07-27",
+      "date_basis": "Online publication",
+      "report_id": "report-05a2434825924fb5019e9085"
+    },
+    "42852354": {
+      "date": "2026-09-21",
+      "date_basis": "Online publication",
+      "report_id": "report-06028a51c81cd54c4c83e008"
+    },
+    "41637041": {
+      "date": "2026-02-04",
+      "date_basis": "Online publication",
+      "report_id": "report-0643c19ec806d083f3dab159"
+    },
+    "41452615": {
+      "date": "2026-02-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-072c52491dde0db72595ea7c"
+    },
+    "42913258": {
+      "date": "2026-10-17",
+      "date_basis": "Online publication",
+      "report_id": "report-08b9c573489789635db411c5"
+    },
+    "41238504": {
+      "date": "2025-10-22",
+      "date_basis": "Online publication",
+      "report_id": "report-08dd9c20a63e60b30d20a4a2"
+    },
+    "41423587": {
+      "date": "2026-05-04",
+      "date_basis": "Journal issue",
+      "report_id": "report-0b97194566bf0a7f2a545f64"
+    },
+    "42212155": {
+      "date": "2026-05-13",
+      "date_basis": "Online publication",
+      "report_id": "report-0c214329cfeef78b115c3420"
+    },
+    "41988088": {
+      "date": "2026-04-14",
+      "date_basis": "Online publication",
+      "report_id": "report-0db4f7870a7bade56bb45c42"
+    },
+    "41596524": {
+      "date": "2026-01-15",
+      "date_basis": "Online publication",
+      "report_id": "report-0e20893e3688f0ad782297ef"
+    },
+    "41945490": {
+      "date": "2026-07-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-0e6a25968a8a303b5319de85"
+    },
+    "42358547": {
+      "date": "2026-06-10",
+      "date_basis": "Online publication",
+      "report_id": "report-0f318a3ce4f5a698236676c9"
+    },
+    "42363820": {
+      "date": "2026-06-27",
+      "date_basis": "Online publication",
+      "report_id": "report-15810cda53c73f749a95b127"
+    },
+    "42137148": {
+      "date": "2026-04-29",
+      "date_basis": "Online publication",
+      "report_id": "report-15caca9931bac0b848517e2d"
+    },
+    "42192919": {
+      "date": "2026-05-12",
+      "date_basis": "Online publication",
+      "report_id": "report-1a7b46e53c2db4ac4fbd636c"
+    },
+    "42585631": {
+      "date": "2026-08-12",
+      "date_basis": "Online publication",
+      "report_id": "report-1a9e3c8d4df51aeb17295715"
+    },
+    "42589874": {
+      "date": "2026-07-23",
+      "date_basis": "Citation publication date",
+      "report_id": "report-1ae93ccfca70515c50483315"
+    },
+    "41791143": {
+      "date": "2026-02-14",
+      "date_basis": "Online publication",
+      "report_id": "report-1b2ef26ecacfcba73ebcfc98"
+    },
+    "42127887": {
+      "date": "2026-05-13",
+      "date_basis": "Online publication",
+      "report_id": "report-1bbf6b8a872c00c32f08790d"
+    },
+    "41799519": {
+      "date": "2026-02-24",
+      "date_basis": "Online publication",
+      "report_id": "report-1d73a04693037888bbe0a998"
+    },
+    "42190314": {
+      "date": "2026-06",
+      "date_basis": "Citation publication date",
+      "report_id": "report-1e135003ed19308574f4594c"
+    },
+    "41920966": {
+      "date": "2026-04-01",
+      "date_basis": "Online publication",
+      "report_id": "report-1ec309a45374b4c53b8d90db"
+    },
+    "42427861": {
+      "date": "2026-06-29",
+      "date_basis": "Online publication",
+      "report_id": "report-1fa45d0aa57aaae587d022bc"
+    },
+    "42234938": {
+      "date": "2026-06-03",
+      "date_basis": "Online publication",
+      "report_id": "report-20c76315181fd8f08501765e"
+    },
+    "41481311": {
+      "date": "2026-03-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-20ea7a3bca180ae3d3996737"
+    },
+    "42062531": {
+      "date": "2026-08",
+      "date_basis": "Citation publication date",
+      "report_id": "report-21b6b82140dc0ef9a183bb87"
+    },
+    "42688434": {
+      "date": "2026-08-19",
+      "date_basis": "Online publication",
+      "report_id": "report-24ff246b874b53f908341e21"
+    },
+    "40948045": {
+      "date": "2025-09-15",
+      "date_basis": "Online publication",
+      "report_id": "report-26794caf65f1429138960292"
+    },
+    "42588703": {
+      "date": "2026-08-03",
+      "date_basis": "Citation publication date",
+      "report_id": "report-279b0aacdfac9903e1931eed"
+    },
+    "42237509": {
+      "date": "2026-05",
+      "date_basis": "Journal issue",
+      "report_id": "report-27e9ce9424a6aba5895f8d09"
+    },
+    "42923311": {
+      "date": "2026-10-03",
+      "date_basis": "Online publication",
+      "report_id": "report-2907d57296a19e8935296eff",
+      "abstract_note": "Case report. Grade 3 transaminitis complicated a three-cycle course of ipilimumab plus nivolumab. No disease was detectable almost 18 months after diagnosis, during nivolumab monotherapy."
+    },
+    "42217632": {
+      "date": "2026-05-30",
+      "date_basis": "Online publication",
+      "report_id": "report-29b064352c6aee4775a133f1"
+    },
+    "41124198": {
+      "date": "2025-10-18",
+      "date_basis": "Online publication",
+      "report_id": "report-2daec1780a77e9d4849ae16f"
+    },
+    "41976386": {
+      "date": "2026-04-04",
+      "date_basis": "Online publication",
+      "report_id": "report-3865606a4a48f0e8ef391053"
+    },
+    "42430500": {
+      "date": "2026-07-10",
+      "date_basis": "Online publication",
+      "report_id": "report-3e1392eda1e5bbd265cb4437"
+    },
+    "41849224": {
+      "date": "2026-06-15",
+      "date_basis": "Citation publication date",
+      "report_id": "report-3e2b40b6cc50c168429337d2"
+    },
+    "42226303": {
+      "date": "2026-06-01",
+      "date_basis": "Online publication",
+      "report_id": "report-3f6751419c53d9c2dd8ad92d"
+    },
+    "41962308": {
+      "date": "2026-04",
+      "date_basis": "Citation publication date",
+      "report_id": "report-4029e38d055aa6d582cf2b25"
+    },
+    "41747312": {
+      "date": "2026-02-20",
+      "date_basis": "Online publication",
+      "report_id": "report-4094d14c5b682fedc2c21f64"
+    },
+    "42037468": {
+      "date": "2026-04-27",
+      "date_basis": "Online publication",
+      "report_id": "report-40b7e2b5ea48b92d1dee2a89"
+    },
+    "42703371": {
+      "date": "2026-08-07",
+      "date_basis": "Online publication",
+      "report_id": "report-42aff5e715c29bde2d30b7c7"
+    },
+    "41851580": {
+      "date": "2026-03-18",
+      "date_basis": "Online publication",
+      "report_id": "report-432db1be1ee77fe423287ae1"
+    },
+    "42945901": {
+      "date": "2026-10-09",
+      "date_basis": "Online publication",
+      "report_id": "report-448c3a04432f1cc11fa28b9a",
+      "abstract_note": "The melanoma analysis included 377 patients. The authors describe a similar U-shaped association between platelet count and OS in the cancer-specific cohorts. The abstract gives no melanoma-specific HR."
+    },
+    "42094820": {
+      "date": "2026-04-24",
+      "date_basis": "Online publication",
+      "report_id": "report-46c4569ca08c52c93edfb322"
+    },
+    "42418322": {
+      "date": "2026-07-08",
+      "date_basis": "Online publication",
+      "report_id": "report-476f93ad5835d001796da656"
+    },
+    "41218172": {
+      "date": "2026-02-16",
+      "date_basis": "Journal issue",
+      "report_id": "report-48674ebef51418ad64b9c873"
+    },
+    "42542205": {
+      "date": "2026-08-01",
+      "date_basis": "Online publication",
+      "report_id": "report-4a5e35d82048ad088eeaf171"
+    },
+    "42799678": {
+      "date": "2026-09-26",
+      "date_basis": "Citation publication date",
+      "report_id": "report-4b53684f4403e04ec473f74a"
+    },
+    "40588803": {
+      "date": "2025-07-01",
+      "date_basis": "Online publication",
+      "report_id": "report-4d5823d1f9f1ffbd0109d96f"
+    },
+    "42678143": {
+      "date": "2026-08",
+      "date_basis": "Journal issue",
+      "report_id": "report-4f3100dfede40e84d49d0f92"
+    },
+    "40905153": {
+      "date": "2026-01-27",
+      "date_basis": "Journal issue",
+      "report_id": "report-50756ba163e97e43fdddf70c"
+    },
+    "41731971": {
+      "date": "2026-03-01",
+      "date_basis": "Online publication",
+      "report_id": "report-5155acfcd1309d4f6fc5e873"
+    },
+    "42482405": {
+      "date": "2026-07-21",
+      "date_basis": "Online publication",
+      "report_id": "report-53ecc161785ba52480f68f1d"
+    },
+    "41819233": {
+      "date": "2026-03-10",
+      "date_basis": "Online publication",
+      "report_id": "report-542dc1f2ba416b030e9d3f09"
+    },
+    "42095629": {
+      "date": "2026-08-03",
+      "date_basis": "Journal issue",
+      "report_id": "report-5481168a1ab387de0893ffb6"
+    },
+    "42229563": {
+      "date": "2026-06-01",
+      "date_basis": "Online publication",
+      "report_id": "report-569e4779a1077f9f8aa6e94b"
+    },
+    "41997080": {
+      "date": "2026-04-14",
+      "date_basis": "Online publication",
+      "report_id": "report-575889d47c45152d851d75a1"
+    },
+    "41277783": {
+      "date": "2025-11-24",
+      "date_basis": "Online publication",
+      "report_id": "report-5bd702ec7a13817930932b5b"
+    },
+    "42065248": {
+      "date": "2026-05-01",
+      "date_basis": "Online publication",
+      "report_id": "report-5c8ab0e58969896e34fa83f7"
+    },
+    "41694351": {
+      "date": "2026-01-29",
+      "date_basis": "Online publication",
+      "report_id": "report-5cd7a2cdb5a62bc3807f771d"
+    },
+    "41593482": {
+      "date": "2026-01-27",
+      "date_basis": "Online publication",
+      "report_id": "report-5f766e587e477965697873e5"
+    },
+    "42613601": {
+      "date": "2026-08-17",
+      "date_basis": "Citation publication date",
+      "report_id": "report-610fea7bc7a8ba10a02df01c"
+    },
+    "42947736": {
+      "date": "2026-10-13",
+      "date_basis": "Online publication",
+      "report_id": "report-61d957ac3aabd4cfc119abcd"
+    },
+    "42372205": {
+      "date": "2026-06-29",
+      "date_basis": "Online publication",
+      "report_id": "report-6250dd3195e35751a160d8b8"
+    },
+    "42618927": {
+      "date": "2026-08-11",
+      "date_basis": "Citation publication date",
+      "report_id": "report-632c6b5a336795d0b2a0a20d"
+    },
+    "41912203": {
+      "date": "2026-01-30",
+      "date_basis": "Online publication",
+      "report_id": "report-6350b198eed49b7f27480344"
+    },
+    "42855460": {
+      "date": "2026-10-09",
+      "date_basis": "Online publication",
+      "report_id": "report-63bd801298f3171c39607585"
+    },
+    "42581280": {
+      "date": "2026-08-11",
+      "date_basis": "Online publication",
+      "report_id": "report-66218cd9a77d4989b974183c"
+    },
+    "42624531": {
+      "date": "2026-08-20",
+      "date_basis": "Online publication",
+      "report_id": "report-6909b081d7ea462a3ca2e445"
+    },
+    "41604813": {
+      "date": "2026-01-27",
+      "date_basis": "Online publication",
+      "report_id": "report-6a83587a95af1fb4c2631193"
+    },
+    "42056527": {
+      "date": "2026-04-29",
+      "date_basis": "Online publication",
+      "report_id": "report-6c778dbe1d42114bc8a8ca76"
+    },
+    "42598699": {
+      "date": "2026-07-31",
+      "date_basis": "Online publication",
+      "report_id": "report-6e2baca4231b8b0f824f712f"
+    },
+    "42013310": {
+      "date": "2026-09-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-6ecb9295f927cdcad24cb40e"
+    },
+    "41850738": {
+      "date": "2026-03-18",
+      "date_basis": "Online publication",
+      "report_id": "report-6f870a9fdde6a41dcaea4772"
+    },
+    "42697593": {
+      "date": "2026-09-04",
+      "date_basis": "Online publication",
+      "report_id": "report-70084cc88fb33c37b900b90b"
+    },
+    "42770835": {
+      "date": "2026-08",
+      "date_basis": "Journal issue",
+      "report_id": "report-71c722daf7a5500dbf7ae4cb"
+    },
+    "41390131": {
+      "date": "2025-12-11",
+      "date_basis": "Online publication",
+      "report_id": "report-76acb6d775c37d9e02bfac49"
+    },
+    "42692071": {
+      "date": "2026-09-03",
+      "date_basis": "Online publication",
+      "report_id": "report-7aa7a08015f738b72149b86a"
+    },
+    "41775435": {
+      "date": "2026-03-03",
+      "date_basis": "Online publication",
+      "report_id": "report-7e8469c36fa25131b6a81383"
+    },
+    "42918419": {
+      "date": "2026-10-23",
+      "date_basis": "Online publication",
+      "report_id": "report-7e9034751203cea46b11872c"
+    },
+    "41772244": {
+      "date": "2026-06",
+      "date_basis": "Journal issue",
+      "report_id": "report-7ed245ca4f6b00f8c06e23b9"
+    },
+    "42126592": {
+      "date": "2026-08-14",
+      "date_basis": "Journal issue",
+      "report_id": "report-8187123fa2aa4cf75ccdf2ac"
+    },
+    "42151556": {
+      "date": "2026-05-18",
+      "date_basis": "Online publication",
+      "report_id": "report-821d35568780ae22bafa9841"
+    },
+    "42824944": {
+      "date": "2026-09-25",
+      "date_basis": "Online publication",
+      "report_id": "report-8320f6909124b77f8d497e36"
+    },
+    "41960901": {
+      "date": "2026-04-01",
+      "date_basis": "Citation publication date",
+      "report_id": "report-834279cc05ab34b5a10473b4"
+    },
+    "42025759": {
+      "date": "2026-07",
+      "date_basis": "Citation publication date",
+      "report_id": "report-84e527155c4184ab43589068"
+    },
+    "42149124": {
+      "date": "2026-08-14",
+      "date_basis": "Journal issue",
+      "report_id": "report-85d267b79788780e43c71107"
+    },
+    "42519309": {
+      "date": "2026-07-06",
+      "date_basis": "Online publication",
+      "report_id": "report-8622ac75e9bd07bc759a4db3"
+    },
+    "41530380": {
+      "date": "2026-01-13",
+      "date_basis": "Online publication",
+      "report_id": "report-86458389f89e21f7d41a5270"
+    },
+    "41606121": {
+      "date": "2026-01-28",
+      "date_basis": "Online publication",
+      "report_id": "report-86b84bd91d5cf5337060f6da"
+    },
+    "41701163": {
+      "date": "2026-02-05",
+      "date_basis": "Journal issue",
+      "report_id": "report-870328aa44f1a75ab2bc4f5b"
+    },
+    "42046135": {
+      "date": "2026-04-27",
+      "date_basis": "Online publication",
+      "report_id": "report-875df5905da2862fc0c86fa8"
+    },
+    "41993624": {
+      "date": "2026-03-12",
+      "date_basis": "Online publication",
+      "report_id": "report-88c0a6094d498c8a60b35d54"
+    },
+    "41589477": {
+      "date": "2026-01-27",
+      "date_basis": "Online publication",
+      "report_id": "report-890d804416bf42d054565385"
+    },
+    "42378040": {
+      "date": "2026-06-30",
+      "date_basis": "Online publication",
+      "report_id": "report-892eb9026c1317adc009aedf"
+    },
+    "41895714": {
+      "date": "2026-03-27",
+      "date_basis": "Online publication",
+      "report_id": "report-8a9d467ea0e8530d694d027f"
+    },
+    "42835050": {
+      "date": "2026-09-21",
+      "date_basis": "Online publication",
+      "report_id": "report-8b2354517349c08b50bc2d1e"
+    },
+    "42114556": {
+      "date": "2026-06-08",
+      "date_basis": "Online publication",
+      "report_id": "report-8becdea8b8ccfc3d3bfa272e"
+    },
+    "42578969": {
+      "date": "2026-08-11",
+      "date_basis": "Citation publication date",
+      "report_id": "report-8df893ed077747233363baea"
+    },
+    "41526168": {
+      "date": "2026-01-12",
+      "date_basis": "Online publication",
+      "report_id": "report-8ed4e297eaf6019febe0ba21"
+    },
+    "42809340": {
+      "date": "2026-09-29",
+      "date_basis": "Online publication",
+      "report_id": "report-8fa20805ef2e9582db8e5476"
+    },
+    "42012456": {
+      "date": "2026-07-17",
+      "date_basis": "Journal issue",
+      "report_id": "report-9090e12dd7aaeef6a5086e59"
+    },
+    "42173654": {
+      "date": "2026-05-22",
+      "date_basis": "Online publication",
+      "report_id": "report-90cf7f3772a8275b0e97b213"
+    },
+    "42495619": {
+      "date": "2026-07-09",
+      "date_basis": "Online publication",
+      "report_id": "report-918eb982a40929b4668d733e"
+    },
+    "41793593": {
+      "date": "2026-03-07",
+      "date_basis": "Online publication",
+      "report_id": "report-9564a6299abafccf3b39f0d8"
+    },
+    "42070986": {
+      "date": "2026-04-30",
+      "date_basis": "Online publication",
+      "report_id": "report-95bc6fbaefa63ff49b81d370"
+    },
+    "41573380": {
+      "date": "2025-12-19",
+      "date_basis": "Online publication",
+      "report_id": "report-965d26560e2e8590c827782e"
+    },
+    "42292485": {
+      "date": "2026-05-28",
+      "date_basis": "Online publication",
+      "report_id": "report-97b2ccb5f18d9f220c4cac00"
+    },
+    "41319158": {
+      "date": "2025-11-30",
+      "date_basis": "Online publication",
+      "report_id": "report-991a7cda432d9158c6e61890"
+    },
+    "42005511": {
+      "date": "2026-02-06",
+      "date_basis": "Online publication",
+      "report_id": "report-9937fee82a965b911910d563"
+    },
+    "42310271": {
+      "date": "2026-09",
+      "date_basis": "Journal issue",
+      "report_id": "report-999447e9bbed3def1306ce0e"
+    },
+    "41603643": {
+      "date": "2026-02",
+      "date_basis": "Journal issue",
+      "report_id": "report-9cc84f1db3f7b12a6ba511bf"
+    },
+    "41824279": {
+      "date": "2026-03-13",
+      "date_basis": "Online publication",
+      "report_id": "report-9d54c56d85dc62946542106e"
+    },
+    "42550831": {
+      "date": "2026-08-04",
+      "date_basis": "Online publication",
+      "report_id": "report-9eeeca4719684d9d4fe8cda0"
+    },
+    "42733787": {
+      "date": "2026-09-03",
+      "date_basis": "Online publication",
+      "report_id": "report-a21db2b897ca58450cc8840b"
+    },
+    "42218345": {
+      "date": "2026-05-30",
+      "date_basis": "Online publication",
+      "report_id": "report-a2f132a32f86d2b58fc597b1"
+    },
+    "42883966": {
+      "date": "2026-09-29",
+      "date_basis": "Online publication",
+      "report_id": "report-a3ac67c4931f330b15280c05"
+    },
+    "42146906": {
+      "date": "2026-05-14",
+      "date_basis": "Online publication",
+      "report_id": "report-a5597c68744fbf78a949ec8f"
+    },
+    "42400624": {
+      "date": "2026-07-04",
+      "date_basis": "Online publication",
+      "report_id": "report-a749fc1284e8e5963d498701"
+    },
+    "42240785": {
+      "date": "2026-08",
+      "date_basis": "Citation publication date",
+      "report_id": "report-a9001964c911c7f34a1e79c5"
+    },
+    "42162051": {
+      "date": "2026-05-20",
+      "date_basis": "Online publication",
+      "report_id": "report-a9deece38dc528705c787efc"
+    },
+    "42105744": {
+      "date": "2026-05-08",
+      "date_basis": "Journal issue",
+      "report_id": "report-aa1f838a7f49f894129c7454"
+    },
+    "42640721": {
+      "date": "2026-08-25",
+      "date_basis": "Online publication",
+      "report_id": "report-aa8262e084da2c13617899b4"
+    },
+    "42352510": {
+      "date": "2026-06-18",
+      "date_basis": "Citation publication date",
+      "report_id": "report-ad932f743b9a5e4765426dba"
+    },
+    "41672547": {
+      "date": "2026-02-11",
+      "date_basis": "Online publication",
+      "report_id": "report-ae1fae143e38f645f51dc9fb"
+    },
+    "42157596": {
+      "date": "2026-05-19",
+      "date_basis": "Online publication",
+      "report_id": "report-b1d2fd392d481b2c40785dd0"
+    },
+    "42452684": {
+      "date": "2026-07-03",
+      "date_basis": "Online publication",
+      "report_id": "report-b4d49366142576ed3e8e3667"
+    },
+    "41187371": {
+      "date": "2025-10-30",
+      "date_basis": "Online publication",
+      "report_id": "report-b67c82e1b9b534ebc6aee25a"
+    },
+    "42044727": {
+      "date": "2026-09",
+      "date_basis": "Citation publication date",
+      "report_id": "report-b6d6482eeccc566fb5fd63d0"
+    },
+    "42805115": {
+      "date": "2026-09-28",
+      "date_basis": "Online publication",
+      "report_id": "report-b7634bedcd808b74925b5762"
+    },
+    "42886752": {
+      "date": "2026-10-16",
+      "date_basis": "Online publication",
+      "report_id": "report-b7a6762c665d0416fb94d074"
+    },
+    "42249694": {
+      "date": "2026-06-06",
+      "date_basis": "Online publication",
+      "report_id": "report-b7d6d863ff65ecd0755ca4ad"
+    },
+    "42587371": {
+      "date": "2026-08-12",
+      "date_basis": "Online publication",
+      "report_id": "report-b7eb307e51e7c1da98f41cef"
+    },
+    "41979863": {
+      "date": "2026-06",
+      "date_basis": "Citation publication date",
+      "report_id": "report-bb5a71eeb432c8ab5a484a4a"
+    },
+    "42526429": {
+      "date": "2026-07-29",
+      "date_basis": "Online publication",
+      "report_id": "report-be258a63069e18893086885c"
+    },
+    "42900960": {
+      "date": "2026-10-20",
+      "date_basis": "Online publication",
+      "report_id": "report-beb7b2978cada65e4cf46b68"
+    },
+    "42878911": {
+      "date": "2026-10-15",
+      "date_basis": "Online publication",
+      "report_id": "report-bf6229fa9589e5dc6a59e5ea"
+    },
+    "42854069": {
+      "date": "2026-10-09",
+      "date_basis": "Print publication",
+      "report_id": "report-bf661518efa49659028617ec"
+    },
+    "42566510": {
+      "date": "2026-08-07",
+      "date_basis": "Online publication",
+      "report_id": "report-c1103b412637af4f29d72fa3"
+    },
+    "42064056": {
+      "date": "2026-04-15",
+      "date_basis": "Online publication",
+      "report_id": "report-c1174f1f3a2f8ec418799315"
+    },
+    "42129932": {
+      "date": "2026-05-13",
+      "date_basis": "Online publication",
+      "report_id": "report-c13267ab8afe45abcfdb7983"
+    },
+    "42906119": {
+      "date": "2026-10-20",
+      "date_basis": "Online publication",
+      "report_id": "report-c169cbde9192b39553b861d6"
+    },
+    "41703729": {
+      "date": "2026-02-17",
+      "date_basis": "Online publication",
+      "report_id": "report-c1c2af467693c8d050c9d850"
+    },
+    "42320980": {
+      "date": "2026-06-19",
+      "date_basis": "Online publication",
+      "report_id": "report-c5b482e4b2f1e4ef1fd9606d"
+    },
+    "42168180": {
+      "date": "2026-05-21",
+      "date_basis": "Online publication",
+      "report_id": "report-c97a47cd428b32e03ac457c9"
+    },
+    "42601873": {
+      "date": "2026-08-07",
+      "date_basis": "Online publication",
+      "report_id": "report-caae17751902ae9d4306d938"
+    },
+    "42476727": {
+      "date": "2026-07-20",
+      "date_basis": "Online publication",
+      "report_id": "report-cc212c6a35810580a3d1e720"
+    },
+    "42360644": {
+      "date": "2026-09",
+      "date_basis": "Citation publication date",
+      "report_id": "report-cc39a7c85d3aae913b5becb4"
+    },
+    "42162665": {
+      "date": "2026-05-19",
+      "date_basis": "Online publication",
+      "report_id": "report-cc952f0201d863d23c94e63f"
+    },
+    "42140948": {
+      "date": "2026-05-16",
+      "date_basis": "Online publication",
+      "report_id": "report-cda906c56d3884426fbda638"
+    },
+    "41894647": {
+      "date": "2026-03-27",
+      "date_basis": "Online publication",
+      "report_id": "report-d1cfbc64e67dc378f78d7a4d"
+    },
+    "41914670": {
+      "date": "2026-03-31",
+      "date_basis": "Online publication",
+      "report_id": "report-d39322305222eb3cd11ae5ab"
+    },
+    "42228402": {
+      "date": "2026-06-02",
+      "date_basis": "Online publication",
+      "report_id": "report-d6527fd14b26eae432bcc58a"
+    },
+    "41899279": {
+      "date": "2026-03-19",
+      "date_basis": "Citation publication date",
+      "report_id": "report-d7146de95d71d8cd76b1b8de"
+    },
+    "41888981": {
+      "date": "2026-03-27",
+      "date_basis": "Online publication",
+      "report_id": "report-d80b09bbf12ec3ef4305ae31"
+    },
+    "42052497": {
+      "date": "2026-04-13",
+      "date_basis": "Online publication",
+      "report_id": "report-d8db0a09dabd0120676d3d7c"
+    },
+    "42670281": {
+      "date": "2026-08-31",
+      "date_basis": "Online publication",
+      "report_id": "report-d91da2727f291753ef526ef4"
+    },
+    "42657315": {
+      "date": "2026-07-28",
+      "date_basis": "Online publication",
+      "report_id": "report-d9db8fde913375978a503bc1"
+    },
+    "41734401": {
+      "date": "2026-01-30",
+      "date_basis": "Online publication",
+      "report_id": "report-dabb88e44171337a457b8a77"
+    },
+    "42532700": {
+      "date": "2026-07-30",
+      "date_basis": "Online publication",
+      "report_id": "report-df1b9102aa04b6e710ab90b0"
+    },
+    "42599167": {
+      "date": "2026-08-14",
+      "date_basis": "Online publication",
+      "report_id": "report-e1d9be561dd08d4a10a9ad6e"
+    },
+    "41381843": {
+      "date": "2025-12-11",
+      "date_basis": "Online publication",
+      "report_id": "report-e4a2357802976bd8503696a9"
+    },
+    "42098288": {
+      "date": "2026-05-08",
+      "date_basis": "Online publication",
+      "report_id": "report-e63b2963b2bef56567064ac7"
+    },
+    "42851436": {
+      "date": "2026-09-24",
+      "date_basis": "Online publication",
+      "report_id": "report-e8891efa9b21a8a2885efb4d"
+    },
+    "42898737": {
+      "date": "2026-07-06",
+      "date_basis": "Online publication",
+      "report_id": "report-eb1aebd4acb683faca84e268"
+    },
+    "41577704": {
+      "date": "2026-01-23",
+      "date_basis": "Online publication",
+      "report_id": "report-ecb4eff4abe604969712af6b"
+    },
+    "41926962": {
+      "date": "2026-04",
+      "date_basis": "Journal issue",
+      "report_id": "report-ee41ffd7cafd36e4303b19ee"
+    },
+    "42573404": {
+      "date": "2026-08-11",
+      "date_basis": "Online publication",
+      "report_id": "report-eef331c4405564694634ab57"
+    },
+    "41984455": {
+      "date": "2026-06-01",
+      "date_basis": "Citation publication date",
+      "report_id": "report-ef49ad62855bd4e126189148"
+    },
+    "41785896": {
+      "date": "2026-03",
+      "date_basis": "Journal issue",
+      "report_id": "report-ef5ccb20180018f268286795"
+    },
+    "42695539": {
+      "date": "2026-09-04",
+      "date_basis": "Online publication",
+      "report_id": "report-f17178e953e15a6893179224"
+    },
+    "42487497": {
+      "date": "2026-08-01",
+      "date_basis": "Journal issue",
+      "report_id": "report-f1d5c58e6619ec6a6400ccd1"
+    },
+    "42322356": {
+      "date": "2026-06-20",
+      "date_basis": "Online publication",
+      "report_id": "report-f1f9c3b1e2c389e2aceb85fb"
+    },
+    "42818244": {
+      "date": "2026-09-27",
+      "date_basis": "Online publication",
+      "report_id": "report-f3d2aa1a725357b9b7c7a795"
+    },
+    "41681970": {
+      "date": "2026-02-03",
+      "date_basis": "Online publication",
+      "report_id": "report-f4429dd66a1ccda1cf0dd320"
+    },
+    "42925158": {
+      "date": "2026-10-23",
+      "date_basis": "Online publication",
+      "report_id": "report-f51af36d43ccce9a9ccf7bd5"
+    },
+    "42061045": {
+      "date": "2026-04-29",
+      "date_basis": "Online publication",
+      "report_id": "report-f52b8abbaa2dd34200eb8bf2"
+    },
+    "41958668": {
+      "date": "2026-03-25",
+      "date_basis": "Online publication",
+      "report_id": "report-fab8d215e3310e01b3133b98"
+    },
+    "42140743": {
+      "date": "2026-05-15",
+      "date_basis": "Online publication",
+      "report_id": "report-ff521571b68a7eef06b47264"
+    },
+    "42213438": {
+      "date": "2026-05-01",
+      "date_basis": "Online publication",
+      "report_id": "report-ff52615464d732060ab3ac47"
+    }
+  }
+}

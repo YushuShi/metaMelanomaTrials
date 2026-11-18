@@ -41,7 +41,7 @@ test('arrow head versus tail shows reported AB/A and reverses only when the arro
   assert.equal(reverse.ci_level, 95); assert.equal(reverse.ci_valid, true);
   assert.equal(reverse.reversed, true); assert.equal(reverse.derived, true); assert.match(reverse.derivation, /Reciprocal/);
   assert.equal(reverse.direction, 'better'); assert.equal(reverse.tail_label, 'Agent A + Agent B'); assert.equal(reverse.head_label, 'Agent A');
-  assert.equal(effects.effectStyle('addon', reverse.direction).state, 'addon-better');
+  assert.equal(effects.effectStyle('addon', reverse.direction).state, 'better');
   assert.equal(reverse.original, original); assert.equal(JSON.stringify(original), before);
   const forward = effects.directedEffect(original, 'a', 'ab');
   assert.equal(forward.estimate, 0.7); assert.equal(forward.ci_lower, 0.6); assert.equal(forward.ci_upper, 0.9);
@@ -110,11 +110,11 @@ test('neutral controls use the same stable display identity and retain original 
   assert.equal(effects.armId({ node_id: 'agent:a', label: 'Any source label' }), 'agent:a');
 });
 
-test('four requested colors separate relationship kind and direction, with explicit neutral gray', () => {
-  assert.deepEqual(effects.effectStyle('parallel', 'better'), { state: 'parallel-better', color: '#2563eb' });
-  assert.deepEqual(effects.effectStyle('parallel', 'worse'), { state: 'parallel-worse', color: '#dc2626' });
-  assert.deepEqual(effects.effectStyle('addon', 'better'), { state: 'addon-better', color: '#0891b2' });
-  assert.deepEqual(effects.effectStyle('addon', 'worse'), { state: 'addon-worse', color: '#c026d3' });
+test('both comparison kinds use blue for better and red for worse at the tail, with neutral gray', () => {
+  assert.deepEqual(effects.effectStyle('parallel', 'better'), { state: 'better', color: '#2563eb' });
+  assert.deepEqual(effects.effectStyle('parallel', 'worse'), { state: 'worse', color: '#dc2626' });
+  assert.deepEqual(effects.effectStyle('addon', 'better'), { state: 'better', color: '#2563eb' });
+  assert.deepEqual(effects.effectStyle('addon', 'worse'), { state: 'worse', color: '#dc2626' });
   for (const [kind, direction] of [['parallel', 'neutral'], ['addon', 'neutral'], ['contains', 'better'], ['parallel', undefined]]) assert.deepEqual(effects.effectStyle(kind, direction), { state: 'neutral', color: '#9ca3af' });
 });
 

@@ -85,12 +85,12 @@ test('endpoint control defaults to OS in the concise sidebar and the plot names 
 test('parallel arrows follow the centered complete arm and colors reverse when the branch is rerooted', () => {
   const { view } = mount(), a = pair(view, 'agent:a', 'agent:b');
   assert.equal(data(a.element, 'tailId'), 'agent:a'); assert.equal(data(a.element, 'headId'), 'agent:b');
-  assert.equal(data(a.element, 'comparisonKind'), 'parallel'); assert.equal(data(a.element, 'effectState'), 'parallel-worse');
+  assert.equal(data(a.element, 'comparisonKind'), 'parallel'); assert.equal(data(a.element, 'effectState'), 'worse');
   assert.ok(hasArrow(arrowPath(a.element)));
   assert.equal(Number(data(a.element,'estimate')),0.7);
   view.setBranch('agent:b'); const b = pair(view, 'agent:a', 'agent:b');
   assert.equal(data(b.element, 'tailId'), 'agent:b'); assert.equal(data(b.element, 'headId'), 'agent:a');
-  assert.equal(data(b.element, 'effectState'), 'parallel-better');
+  assert.equal(data(b.element, 'effectState'), 'better');
   assert.equal(Number(data(b.element,'estimate')),1/0.7);
   assert.equal(view.model.comparisons.find(item => item.id === 'b-a-os-primary').estimate, 0.7);
 });
@@ -99,7 +99,7 @@ test('A to A+B shows AB/A without reciprocal clutter while retaining the reporte
   const before = JSON.stringify(graph), { view } = mount(), item = pair(view, 'agent:a', 'ab');
   assert.equal(data(item.element, 'comparisonKind'), 'addon');
   assert.equal(data(item.element, 'tailId'), 'agent:a'); assert.equal(data(item.element, 'headId'), 'ab');
-  assert.equal(data(item.element, 'effectState'), 'addon-worse');
+  assert.equal(data(item.element, 'effectState'), 'worse');
   item.element.click();
   assert.equal(view.activeComparisonId, 'ab-a-os');
   assert.match(view.comparisonBand.textContent, /HR 0\.7/);
@@ -116,10 +116,10 @@ test('endpoint changes filter both direct choices and arrow colors without mixin
   view.endpointSelector.value = 'PFS:HR'; view.endpointSelector.dispatchEvent({ type: 'change' });
   assert.equal(view.selectedEndpoint, 'PFS:HR'); assert.match(view.endpointBadge.textContent, /Progression-free survival|Progression free survival/i);
   assert.deepEqual(view.comparisonChoices().map(item => item.id), ['b-a-pfs']);
-  assert.equal(state(view, 'agent:a', 'agent:b'), 'parallel-better');
+  assert.equal(state(view, 'agent:a', 'agent:b'), 'better');
   view.setEndpoint('ORR:RR');
   assert.deepEqual(view.comparisonChoices().map(item => item.id), ['a-b-orr-rr']);
-  assert.equal(state(view, 'agent:a', 'agent:b'), 'parallel-better', 'RR above 1 favors the numerator for ORR');
+  assert.equal(state(view, 'agent:a', 'agent:b'), 'better', 'RR above 1 favors the numerator for ORR');
   assert.equal(Number(data(pair(view,'agent:a','agent:b').element,'estimate')),1/1.4);
   assert.match(withClass(view.comparisonBand,'tm-effect-link')[0].textContent,/RR 0\.71/); assert.doesNotMatch(view.comparisonBand.textContent, /OR 2\.2/);
   view.setEndpoint('ORR:OR'); assert.deepEqual(view.comparisonChoices().map(item => item.id), ['a-b-orr-or']);
@@ -150,9 +150,9 @@ test('endpoint selection persists across branch and overview navigation while ov
 test('shared-background comparisons use complete source intervention direction, not the common central agent', () => {
   const { view } = mount(), shared = pair(view, 'ab', 'ac'), deeper = pair(view, 'abd', 'ac');
   assert.equal(data(shared.element, 'tailId'), 'ab'); assert.equal(data(shared.element, 'headId'), 'ac');
-  assert.equal(data(shared.element, 'effectState'), 'parallel-worse');
+  assert.equal(data(shared.element, 'effectState'), 'worse');
   assert.equal(data(deeper.element, 'tailId'), 'ac'); assert.equal(data(deeper.element, 'headId'), 'abd');
-  assert.equal(data(deeper.element, 'effectState'), 'parallel-better');
+  assert.equal(data(deeper.element, 'effectState'), 'better');
   deeper.element.click(); assert.equal(view.activeComparisonId, 'abd-ac-os');
   assert.match(view.comparisonBand.textContent, /Agent A \+ Agent B \+ Agent D/);
   assert.match(view.comparisonBand.textContent, /Agent A \+ Agent C/);
@@ -162,9 +162,9 @@ test('ranked defaults do not favor effect magnitude and selecting a source recol
   const { view } = mount();
   const addonBefore = state(view, 'agent:a', 'ab'), siblingBefore = state(view, 'ab', 'ac');
   const item = pair(view, 'agent:a', 'agent:b'); item.element.click();
-  assert.equal(view.activeComparisonId, 'b-a-os-primary'); assert.equal(state(view, 'agent:a', 'agent:b'), 'parallel-worse');
+  assert.equal(view.activeComparisonId, 'b-a-os-primary'); assert.equal(state(view, 'agent:a', 'agent:b'), 'worse');
   chooseSource(view, 'b-a-os-alternative');
-  assert.equal(state(view, 'agent:a', 'agent:b'), 'parallel-better');
+  assert.equal(state(view, 'agent:a', 'agent:b'), 'better');
   assert.equal(state(view, 'agent:a', 'ab'), addonBefore); assert.equal(state(view, 'ab', 'ac'), siblingBefore);
   assert.match(view.comparisonBand.textContent, /HR 1\.2/);
 });
@@ -175,19 +175,19 @@ test('selecting an oppositely reported shared-background contrast updates its ar
   assert.match(withClass(view.comparisonBand, 'tm-arrow-interpretation')[0].textContent, /Agent A \+ Agent B → Agent A \+ Agent C/);
   chooseSource(view, 'ab-ac-reverse');
   assert.equal(data(item.element, 'tailId'), 'ac'); assert.equal(data(item.element, 'headId'), 'ab');
-  assert.equal(data(item.element, 'effectState'), 'parallel-better');
+  assert.equal(data(item.element, 'effectState'), 'better');
   assert.match(withClass(view.comparisonBand, 'tm-arrow-interpretation')[0].textContent, /Agent A \+ Agent C → Agent A \+ Agent B/);
   assert.doesNotMatch(withClass(view.comparisonBand, 'tm-arrow-interpretation')[0].textContent, /reciprocal/i);
   assert.equal(Number(data(item.element,'estimate')),1.25);
   assert.match(view.comparisonBand.textContent, /HR 1\.25/);
 });
 
-test('legend explains the tail perspective and marks all four comparison colors separately', () => {
+test('branch legend has two direction keys for all comparison kinds', () => {
   const { root, view } = mount();
   assert.doesNotMatch(view.legend.textContent, /does not mean that the treatment at the arrowhead is harmful|Colors describe the point estimate, not statistical significance/i);
   assert.match(view.legend.textContent, /tail fares worse/i);
   assert.match(view.legend.textContent,/comparator → intervention.*intervention versus comparator/i);
-  for (const key of ['parallel-better', 'parallel-worse', 'addon-better', 'addon-worse']) assert.ok(descendants(view.legend).some(element => data(element, 'effectState') === key), key);
+  assert.deepEqual(withClass(view.legend, 'tm-effect-key').map(element => data(element, 'effectState')), ['better', 'worse']);
   assert.match(view.legend.textContent, /Gray: no result for this endpoint or no directional difference/);
   assert.match(view.legend.textContent,/CI includes 0 on the log scale/);
   assert.equal(view.categoryLegend.hidden,false);

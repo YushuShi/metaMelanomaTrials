@@ -107,12 +107,13 @@
     };
   }
   const styles = Object.freeze({
-    'parallel-better': Object.freeze({ state: 'parallel-better', color: '#2563eb' }),
-    'parallel-worse': Object.freeze({ state: 'parallel-worse', color: '#dc2626' }),
-    'addon-better': Object.freeze({ state: 'addon-better', color: '#0891b2' }),
-    'addon-worse': Object.freeze({ state: 'addon-worse', color: '#c026d3' }),
+    better: Object.freeze({ state: 'better', color: '#2563eb' }),
+    worse: Object.freeze({ state: 'worse', color: '#dc2626' }),
     neutral: Object.freeze({ state: 'neutral', color: '#9ca3af' }),
   });
-  function effectStyle(kind, direction) { return styles[kind + '-' + direction] || styles.neutral; }
+  function effectStyle(kind, direction) {
+    if ((kind === 'parallel' || kind === 'addon') && (direction === 'better' || direction === 'worse')) return styles[direction];
+    return styles.neutral;
+  }
   return Object.freeze({ endpoints, endpointKey, comparisonMatchesEndpoint, availableEndpointOptions, measureKey, armId, directedEffect, styles, effectStyle });
 });

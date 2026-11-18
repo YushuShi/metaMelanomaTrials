@@ -1407,8 +1407,46 @@ if (typeof document !== 'undefined') (() => {
   let toastTimer;
   function toast(message) { text('toast', message); $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').hidden = true; }, 3200); }
 
+  const evidenceTabs = {
+    'underpowered-studies': { path: './data/underpowered_studies.json', render: (panel, data) => globalThis.UnderpoweredStudies.mount(panel, data) },
+    'new-findings': { path: './data/new_findings.json', render: (panel, data) => globalThis.NewFindings.render(panel, data) }
+  };
+  const tabLoads = new Map();
+
+  function loadEvidenceTab(name) {
+    if (tabLoads.has(name)) return tabLoads.get(name);
+    const panel = $('analysis-' + name);
+    const message = document.createElement('p');
+    message.className = 'evidence-tab-note';
+    message.setAttribute('role', 'status');
+    message.textContent = 'Loading studies…';
+    if (!panel.dataset.sourceVersion) panel.replaceChildren(message);
+    const tab = evidenceTabs[name];
+    const request = (async () => {
+      const version = await savedMapVersion();
+      if (panel.dataset.sourceVersion && panel.dataset.sourceVersion === version.source_file_sha256) return;
+      const data = await fetchJson(tab.path);
+      if (!data.source_file_sha256 || data.source_file_sha256 !== version.source_file_sha256)
+        throw new Error('The saved table and study publication differ.');
+      tab.render(panel, data);
+      panel.dataset.sourceVersion = data.source_file_sha256;
+    })().catch(() => {
+      delete panel.dataset.sourceVersion;
+      message.textContent = 'The saved study table could not be loaded. ';
+      const retry = document.createElement('button');
+      retry.type = 'button';
+      retry.className = 'secondary-button';
+      retry.textContent = 'Try again';
+      retry.addEventListener('click', () => loadEvidenceTab(name));
+      message.appendChild(retry);
+      panel.replaceChildren(message);
+    }).finally(() => tabLoads.delete(name));
+    tabLoads.set(name, request);
+    return request;
+  }
+
   function showView(name, focus = false) {
-    const treatmentMapRequested=!name||name==='treatment-map'||(!Object.hasOwn(titles,name)&&!['tracking','overview','usage','sources','reports'].includes(name));
+    const requestedTab = Object.hasOwn(evidenceTabs, name) ? name : name === 'analysis' ? 'articles' : 'treatment-map';
     if (name === 'tracking') { name = 'about'; if (typeof history !== 'undefined' && location.hash === '#tracking') history.replaceState(null, '', '#about'); }
     if (['overview', 'usage', 'sources', 'reports'].includes(name)) name = 'about';
     if (!Object.hasOwn(titles, name)) name = 'analysis';
@@ -1421,7 +1459,7 @@ if (typeof document !== 'undefined') (() => {
       if (selected) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
     });
     document.title = `${titles[name]} · metaMelanomaTrials`;
-    if(name==='analysis')selectAnalysisTab(treatmentMapRequested?'treatment-map':'articles');
+    if(name==='analysis')selectAnalysisTab(requestedTab);
     if (focus) $('main').focus({ preventScroll: true });
   }
   function go(name) { if (location.hash !== `#${name}`) location.hash = name; else showView(name, true); }
@@ -1850,9 +1888,9 @@ if (typeof document !== 'undefined') (() => {
   }
   function selectAnalysisTab(name, focus = false) {
     if (name === 'extracted' || name === 'studies') name = 'articles';
-    if (!['articles', 'treatment-map'].includes(name)) name = 'articles';
-    $('analysis-form').hidden=name==='treatment-map';
-    if(state.currentView==='analysis')document.title=(name==='treatment-map'?'Treatment map':'Studies')+' · metaMelanomaTrials';
+    if (!Object.hasOwn(evidenceTabs, name) && !['articles', 'treatment-map'].includes(name)) name = 'articles';
+    $('analysis-form').hidden = name !== 'articles';
+    if (state.currentView === 'analysis') document.title = $('tab-' + name).textContent.trim() + ' · metaMelanomaTrials';
     for (const button of document.querySelectorAll('[data-analysis-tab]')) {
       const selected = button.dataset.analysisTab === name;
       button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1;
@@ -1860,8 +1898,10 @@ if (typeof document !== 'undefined') (() => {
       if (selected && focus) button.focus();
     }
     if(name==='treatment-map')loadTreatmentMap();
+    else if (Object.hasOwn(evidenceTabs, name)) loadEvidenceTab(name);
     else ensureStudyData().catch(()=>{});
-    if(name==='treatment-map'||location.hash==='#treatment-map')history.replaceState(null,'',name==='treatment-map'?'#treatment-map':'#analysis');
+    const hash = name === 'articles' ? '#analysis' : '#' + name;
+    if (location.hash !== hash) history.replaceState(null, '', hash);
   }
 
   function normalizeReports(payload) {
@@ -2225,5 +2265,5 @@ if (typeof document !== 'undefined') (() => {
   advancedPanel=globalThis.AdvancedFilterPanel.create({toggle:$('advanced-filter-toggle'),panel:$('advanced-filter-panel'),fields:$('advanced-filter-fields'),reset:$('reset-advanced-filters'),status:$('advanced-filter-status'),evidence:$('advanced-evidence-count'),onToggle:()=>{state.advancedExpanded=!state.advancedExpanded;renderAdvancedFilters();},onChange:advancedChanged,onReset:()=>advancedChanged()});
   displaySettings(); showView(location.hash.slice(1));
   renderAnalysis(); renderMainArticles(); renderSummary(); renderMatrix(); renderPlanning(); renderPrisma(); refreshEvidenceFreshness();
-  if(mapIsOpen())loadTreatmentMap();else if(state.currentView!=='about'&&state.currentView!=='settings')ensureStudyData().catch(()=>{});
+  if (state.currentView !== 'analysis' && state.currentView !== 'about' && state.currentView !== 'settings') ensureStudyData().catch(()=>{});
 })();

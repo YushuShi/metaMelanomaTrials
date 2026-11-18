@@ -99,10 +99,10 @@ test('radial add-on arrows show expanded-versus-original ratios while colors des
     assert.equal(data(item.element, 'tailId'), item.edge.root_id); assert.equal(data(item.element, 'headId'), item.edge.opponent_id);
     assert.ok(hasArrow(withClass(item.element, 'tm-parallel-edge')[0]));
   }
-  assert.equal(data(worse.element, 'effectState'), 'addon-worse'); assert.ok(Math.abs(Number(data(worse.element, 'estimate')) - 0.7) < 1e-12);
-  assert.equal(data(better.element, 'effectState'), 'addon-better'); assert.equal(Number(data(better.element, 'estimate')), 1.25);
-  assert.equal(Effects.styles['addon-better'].color, '#0891b2'); assert.equal(Effects.styles['addon-worse'].color, '#c026d3');
-  assert.deepEqual(visibleLegendStates(view), ['addon-better', 'addon-worse']);
+  assert.equal(data(worse.element, 'effectState'), 'worse'); assert.ok(Math.abs(Number(data(worse.element, 'estimate')) - 0.7) < 1e-12);
+  assert.equal(data(better.element, 'effectState'), 'better'); assert.equal(Number(data(better.element, 'estimate')), 1.25);
+  assert.equal(better.element.style.getPropertyValue('--tm-effect-color'), '#2563eb'); assert.equal(worse.element.style.getPropertyValue('--tm-effect-color'), '#dc2626');
+  assert.deepEqual(visibleLegendStates(view), ['better', 'worse']);
   for (const element of view.parallelLinks.values()) assert.equal(data(element, 'comparisonKind'), 'addon');
 });
 
@@ -112,10 +112,10 @@ test('radial endpoint change recolors only matching add-on evidence and keeps un
   assert.equal(data(pfs.element, 'effectState'), 'neutral'); assert.ok(!hasArrow(withClass(pfs.element, 'tm-parallel-edge')[0]));
   view.endpointSelector.value = 'PFS:HR'; view.endpointSelector.dispatchEvent({ type: 'change' });
   assert.equal(view.selectedEndpoint, 'PFS:HR'); assert.match(view.endpointBadge.textContent, /Progression-free survival/);
-  assert.equal(data(pfs.element, 'effectState'), 'addon-worse'); assert.ok(hasArrow(withClass(pfs.element, 'tm-parallel-edge')[0]));
+  assert.equal(data(pfs.element, 'effectState'), 'worse'); assert.ok(hasArrow(withClass(pfs.element, 'tm-parallel-edge')[0]));
   const os = pair(view, 'agent:a', 'ac'); assert.equal(data(os.element, 'effectState'), 'neutral'); assert.ok(!hasArrow(withClass(os.element, 'tm-parallel-edge')[0]));
   view.setEndpoint('ORR:RR'); const response = pair(view, 'agent:b', 'bc');
-  assert.equal(data(response.element, 'effectState'), 'addon-worse', 'the baseline tail has lower response probability than the expanded regimen');
+  assert.equal(data(response.element, 'effectState'), 'worse', 'the baseline tail has lower response probability than the expanded regimen');
   assert.equal(Number(data(response.element, 'estimate')), 1.6);
   view.setEndpoint('DFS:HR');
   for (const element of view.parallelLinks.values()) { assert.equal(data(element, 'effectState'), 'neutral'); assert.ok(!hasArrow(withClass(element, 'tm-parallel-edge')[0])); }
@@ -143,7 +143,7 @@ test('Open this branch carries the selected radial pair to the full comparison d
   assert.match(view.comparisonBand.textContent, /HR 0\.8/);
   assert.match(view.branchTitle.textContent, /A \+ B branch/);
   for (const link of view.parallelLinks.values()) assert.match(withClass(link, 'tm-parallel-edge')[0].getAttribute('d'), /C|Q/, 'branch comparison lines stay curved');
-  assert.deepEqual(visibleLegendStates(view), ['addon-better', 'addon-worse', 'parallel-better', 'parallel-worse']);
+  assert.deepEqual(visibleLegendStates(view), ['better', 'worse']);
   view.setBranch('all'); assert.equal(view.selectedEndpoint, 'PFS:HR'); assert.equal(view.endpointSelector.value, 'PFS:HR');
 });
 

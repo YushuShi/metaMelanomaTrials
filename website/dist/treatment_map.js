@@ -511,8 +511,8 @@
       this.stage = this.make('div', 'tm-stage', visual); this.stage.tabIndex = 0; this.stage.setAttribute('aria-label', 'Interactive treatment map. Arrow keys pan. Plus and minus zoom. Home fits the map. Tab to select treatment nodes.');
       this.svg = this.svgElement('svg', { class: 'tm-svg', role: 'group', 'aria-label': 'Treatment branches' }, this.stage);
       const defs = this.svgElement('defs', {}, this.svg); this.comparisonMarkers = [];
-      for (const kind of ['parallel', 'addon']) for (const direction of ['better', 'worse', 'neutral']) {
-        const style = Effects.effectStyle(kind, direction), marker = this.svgElement('marker', { id: this.id + '-arrow-' + kind + '-' + direction, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 10, markerHeight: 10, orient: 'auto-start-reverse', markerUnits: 'userSpaceOnUse' }, defs);
+      for (const style of Object.values(Effects.styles)) {
+        const marker = this.svgElement('marker', { id: this.id + '-arrow-' + style.state, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 10, markerHeight: 10, orient: 'auto-start-reverse', markerUnits: 'userSpaceOnUse' }, defs);
         this.svgElement('path', { d: 'M1 1 L9 5 L1 9 Z', fill: style.color }, marker); this.comparisonMarkers.push(marker);
       }
       this.world = this.svgElement('g', { class: 'tm-world' }, this.svg);
@@ -521,11 +521,12 @@
       this.legend = this.make('div', 'tm-legend', visual);
       const inclusionKey = this.make('span', '', this.legend); this.make('i', 'tm-solid', inclusionKey); this.make('span', '', inclusionKey, 'Component inclusion · no comparison arrow');
       this.comparisonLegendItem = this.make('div', 'tm-effect-legend', this.legend);
-      this.comparisonLegendKeys = [];
-      for (const [kind, direction, label] of [['parallel', 'better', 'Parallel · tail fares better'], ['parallel', 'worse', 'Parallel · tail fares worse'], ['addon', 'better', 'Add-on · tail fares better'], ['addon', 'worse', 'Add-on · tail fares worse']]) {
-        const item = this.make('span', 'tm-effect-key', this.comparisonLegendItem), style = Effects.effectStyle(kind, direction); item.style.setProperty('--tm-effect-color', style.color); item.dataset.effectState = style.state;
-        this.comparisonLegendKeys.push({ item, kind });
-        this.make('i', 'tm-arrow', item); this.make('span', '', item, label);
+      for (const direction of ['better', 'worse']) {
+        const item = this.make('span', 'tm-effect-key', this.comparisonLegendItem);
+        item.style.setProperty('--tm-effect-color', Effects.styles[direction].color);
+        item.dataset.effectState = direction;
+        this.make('i', 'tm-arrow', item);
+        this.make('span', '', item, 'Arrow tail fares ' + direction);
       }
       for (const [className, text] of [['tm-ci-dashed','Dashed · CI includes 0 on the log scale'],['tm-ci-solid','Solid · CI excludes 0 or is unavailable']]) {
         const item = this.make('span','tm-ci-key',this.comparisonLegendItem); this.make('i',className,item); this.make('span','',item,text);
@@ -563,7 +564,6 @@
       this.tree = preparedLayout(this.model, this.branchId); this.allButton.setAttribute('aria-pressed', String(this.branchId === 'all'));
       this.root.classList.toggle('tm-overview', this.tree.overview);
       this.branchCount.hidden = this.tree.overview; this.comparisonLegendItem.hidden = false;
-      for (const { item, kind } of this.comparisonLegendKeys) item.hidden = this.tree.overview && kind === 'parallel';
       this.endpointBadge.hidden = false; this.endpointBadge.textContent = this.endpointDefinition().label;
       if (this.branchId !== 'all') this.selectedId = this.branchId;
       this.branchTitle.hidden = this.tree.overview;
@@ -990,7 +990,7 @@
         const ciState=effect?.ciExcludesNull;
         element.setAttribute('data-ci-excludes-null',ciState===true?'true':ciState===false?'false':'unknown');
         metadata.path.setAttribute('stroke-dasharray',ciState===false?'6 4':'none');
-        const arrow = effect?.valid ? `url(#${this.id}-arrow-${edge.kind}-${effect.direction})` : 'none';
+        const arrow = effect?.valid ? `url(#${this.id}-arrow-${style.state})` : 'none';
         metadata.path.setAttribute('marker-start', effect?.valid && headId === edge.opponent_id ? arrow : 'none');
         metadata.path.setAttribute('marker-end', effect?.valid && headId === edge.root_id ? arrow : 'none');
         const label = source && effect?.valid ? `${this.nodeFor(headId).label} versus ${this.nodeFor(tailId).label}. ${this.endpointDefinition().label}. ${directedLabel(effect)}. Tail fares ${effect.direction === 'neutral' ? 'neither better nor worse by the point estimate' : effect.direction}. ${group?.pooled ? Charts.modelLabel(group.pooled)+' meta-analysis of '+group.pooled.k+' independent cohorts. '+group.label : 'Individual study, PMID '+source.pmid}. ${ciState===true?'Solid: confidence interval excludes 0 on the log scale.':ciState===false?'Dashed: confidence interval includes 0 on the log scale.':'Solid: a valid confidence interval is unavailable.'} Select a study and outcome.` : `${this.nodeFor(edge.opponent_id).label} versus ${this.nodeFor(edge.root_id).label}. No matching ${this.endpointDefinition().label} estimate; no comparison arrow. Select another endpoint. Custom regimen counts remain unchanged.`;

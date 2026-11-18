@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 
 from .io import atomic_bytes, canonical, digest, owned
 
@@ -211,6 +212,24 @@ def publication(root, payload, *, source_bytes, source_path=SOURCE):
         if 'treatment_map' in result:
             from .treatment_map import refresh_defaults
             receipt['treatment_map']['default_views'] = refresh_defaults(root)
+            if source_path == SOURCE:
+                receipt['study_tables'] = refresh_study_tables(root)
+
+
+def refresh_study_tables(root):
+    """Rebuild both study tabs from the just-published retained evidence."""
+    scripts = Path(__file__).resolve().parents[2] / 'website/scripts'
+    commands = [
+        [sys.executable, scripts / 'new_findings_dates.py', '--root', root],
+        ['node', scripts / 'build_new_findings.cjs', root],
+        ['node', scripts / 'underpowered_studies.cjs', root],
+    ]
+    for command in commands:
+        result = subprocess.run(command, cwd=root, capture_output=True, text=True, timeout=600)
+        if result.returncode:
+            raise ValueError(f'{command[1].name} failed: {result.stderr[-1800:]}')
+    return {name: digest(owned(root, f'website/dist/data/{name}.json').read_bytes())
+            for name in ('underpowered_studies', 'new_findings')}
 
 
 def reconcile(root, *, dry_run=False, source_path=SOURCE, registry_path=REGISTRY,
@@ -230,4 +249,6 @@ def reconcile(root, *, dry_run=False, source_path=SOURCE, registry_path=REGISTRY
         if not dry_run and 'treatment_map' in result:
             from .treatment_map import refresh_defaults
             receipt['treatment_map']['default_views'] = refresh_defaults(root)
+            if source_path == SOURCE:
+                receipt['study_tables'] = refresh_study_tables(root)
         return receipt
