@@ -123,8 +123,19 @@ def refresh_snapshot():
 
 
 def main(argv=None):
+    # Railway sets RAILWAY_ENVIRONMENT_ID automatically for deployed services.
+    # Bind to all interfaces on Railway, but stay on localhost for local work.
+    is_railway = bool(os.environ.get("RAILWAY_ENVIRONMENT_ID"))
+    host = "0.0.0.0" if is_railway else "127.0.0.1"
+    default_port = int(os.environ.get("PORT", "5021")) if is_railway else 5021
+
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--port", type=int, default=5021, help="Local port (default: 5021)")
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=default_port,
+        help="Local port (default: 5021; Railway uses PORT)",
+    )
     parser.add_argument("--refresh", action="store_true", help="Refresh saved progress while preserving the merged scientific snapshot")
     parser.add_argument("--no-refresh", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
@@ -135,7 +146,7 @@ def main(argv=None):
         return 1
     try:
         server = ThreadingHTTPServer(
-            ("127.0.0.1", args.port), partial(ReviewHandler, directory=str(WEB_ROOT))
+            (host, args.port), partial(ReviewHandler, directory=str(WEB_ROOT))
         )
     except OSError as exc:
         if exc.errno == errno.EADDRINUSE:
@@ -153,7 +164,7 @@ def main(argv=None):
         if not all(path.is_file() or path.with_name(path.name + ".gz").is_file() for path in required):
             print("The saved website data is incomplete. Run the scoped study exporter before starting the app.", file=sys.stderr)
             return 1
-        print("\nmetaMelanomaTrials: http://127.0.0.1:{}".format(args.port), flush=True)
+        print("\nmetaMelanomaTrials: http://{}:{}".format(host, args.port), flush=True)
         print("No sign-in required. Press Ctrl+C to stop.\n", flush=True)
         try:
             server.serve_forever()
