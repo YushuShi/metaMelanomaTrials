@@ -27,7 +27,8 @@ random-effects. Related publications are consolidated before pooling.
 This repository includes the current published R2/R3 website snapshot. The fixed
 review scope contains 2,538 articles, with 1,072 completed full-text assessments
 in this published snapshot. Counts of articles and independent cohorts differ.
-The ongoing complementary Opus verification has not been applied to this snapshot.
+This snapshot includes source-verified corrections and additions from the
+complementary Opus review. Unresolved GPT–Opus discrepancies are listed in About.
 Missing estimates and screening/validation limitations remain visible in the data.
 
 Large result JSON files are stored as deterministic `.json.gz` files. The Python

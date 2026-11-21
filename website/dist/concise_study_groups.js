@@ -609,7 +609,20 @@
     }
   }
   function reviewedPresentationAliases(entries,study,registry){
-    const rules=list(cohortRules).filter(rule=>rule.pmid===study.pmid);
+    const bindings=list(study.details?.quantitative_extraction).map(w=>w.complementary_review_bindings)
+      .filter(b=>b?.cohort_scope_unchanged);
+    const rules=list(cohortRules).filter(rule=>rule.pmid===study.pmid).map(rule=>{
+      if(!bindings.length)return rule;
+      const contexts=rule.contexts.map(context=>{
+        const match=bindings.find(b=>b.original===context.binding);
+        return match?{...context,binding:match.effective}:context;
+      });
+      const evidence=rule.evidence.map(item=>{
+        const match=bindings.find(b=>item.id.startsWith('CE-'+b.original.slice(0,24)+'-'));
+        return match?{...item,id:'CE-'+match.effective.slice(0,24)+item.id.slice(27)}:item;
+      });
+      return {...rule,contexts,evidence};
+    });
     if(!rules.length)return;
     const contexts=new Map(entries.map(entry=>[entry,refinementContext(study,entry.row,{allow_missing_arm:true})]));
     for(const rule of rules){
@@ -619,7 +632,7 @@
       const matches=rule.contexts.map(expected=>entries.filter(entry=>{
         const actual=contexts.get(entry);
         if(actual?.record.stage==='R3'){
-          const saved=list(study.details?.quantitative_extraction).find(item=>item.stage==='R3'&&item.record===actual.record);
+          const saved=list(study.details?.quantitative_extraction).find(item=>item.stage==='R3'&&compact.effectiveRecord(item)===actual.record);
           if(!/^[a-f0-9]{64}$/.test(saved?.source_proof_ref?.sha256||''))return false;
         }
         return actual&&actual.record.stage===expected.stage&&actual.source===expected.source&&actual.binding===expected.binding&&actual.population===expected.population&&JSON.stringify(entry.samples)===JSON.stringify(rule.samples)&&actual.comparator===expected.comparator&&(actual.intervention===expected.intervention||expected.allow_missing_arm===true&&!actual.intervention)&&list(actual.record.arms).some(arm=>arm.id===expected.intervention);

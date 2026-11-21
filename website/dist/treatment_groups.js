@@ -13,7 +13,7 @@
     ['lag3','LAG-3 inhibitors'],['pd1-lag3','PD-1 / LAG-3 bispecific inhibitors'],['braf','BRAF inhibitors'],['mek','MEK inhibitors'],
     ['other-targeted','Other targeted therapies'],['chemotherapy','Chemotherapy'],
     ['cytokines','Cytokines'],['vaccines','Therapeutic vaccines'],['cell-therapies','Cell therapies'],
-    ['oncolytic-viruses','Oncolytic viruses'],['immunotherapy','Other / unspecified immunotherapy'],
+    ['oncolytic-viruses','Oncolytic viruses'],['microbiome-therapies','Microbiome therapies'],['immunotherapy','Other / unspecified immunotherapy'],
     ['endocrine','Endocrine therapy'],['radiotherapy','Radiotherapy'],['surgery','Surgery'],
     ['supportive','Supportive care / observation / placebo'],
     ['no-comparator','No comparator'],['combinations','Combination treatments'],
@@ -66,8 +66,51 @@
     return definitions.get('other');
   }
   // One persistent registry supplies both exact identities and class aliases.
-  const canonicalAgents=registry.products.map(entry=>[entry.id,entry.label,[entry.label,...entry.aliases]]);
+  const catalogueTreatments=resolver.catalogueTreatments(registry);
+  const canonicalAgents=catalogueTreatments.map(entry=>[entry.id,entry.label,[entry.label,...entry.aliases]]);
   const agentNames=new Map(canonicalAgents.map(([id,name])=>[id,name]));
+  // Subgroup order is the display priority for agents with more than one target.
+  // Membership uses curated identities, never a substring of an arm or mechanism.
+  const subgroups = registry.display_subgroups || [];
+  const subgroupIds = new Set(subgroups.map(group => group.id));
+  const groupsForIdentity = new Map();
+  const groupsForCategory = new Map();
+  const registryEntries = [...registry.products, ...registry.generic_classes];
+  for (const group of subgroups) {
+    const view = Object.freeze({id: group.id, label: group.label});
+    if (!definitions.has(group.id)) definitions.set(group.id, view);
+    if (!groupsForCategory.has(group.broad_category)) groupsForCategory.set(group.broad_category, []);
+    groupsForCategory.get(group.broad_category).push(group.id);
+    for (const entry of registryEntries) {
+      if (!(group.member_ids || []).includes(entry.id) && !(group.class_ids || []).includes(entry.class_id)) continue;
+      if (!groupsForIdentity.has(entry.id)) groupsForIdentity.set(entry.id, []);
+      groupsForIdentity.get(entry.id).push(view);
+    }
+  }
+  function subgroupsForAgent(id) {
+    return groupsForIdentity.get(String(id || '').replace(/^agent:/, '')) || [];
+  }
+  function descriptionSubgroups(description) {
+    if (description.kind === 'context') return [];
+    const found = new Set();
+    for (const agent of description.agent_ids) {
+      for (const group of subgroupsForAgent(agent)) found.add(group.id);
+    }
+    // The structured projection retains a generic identity even when its class is broad.
+    // Only the given component of an optional regimen carries exposure evidence.
+    const visit = part => {
+      if (!part || part.kind === 'context') return;
+      if (part.kind === 'class') {
+        const genericId = part.normalization?.generic_id || part.resolution?.generic_id
+          || (part.key === 'class:cytokines:gm-csf' ? 'gmcsf-unspecified' : null);
+        for (const group of subgroupsForAgent(genericId)) found.add(group.id);
+      }
+      const children = part.components || [];
+      (part.kind === 'optional' ? children.slice(0, 1) : children).forEach(visit);
+    };
+    visit(description);
+    return [...found];
+  }
   const parentLabels={immune:'Immune checkpoint inhibitors (ICI)',ici:'Immune checkpoint inhibitors (ICI)','other-immunotherapy':'Other immunotherapy',targeted:'Targeted therapy',controls:'Supportive care / no comparator','ici-unspecified':'Unspecified immune checkpoint inhibitor'};
   const immuneClasses=new Set(['ctla4','pd1','pdl1','lag3','pd1-lag3','pd1-tim3','pd1-pdl1-unspecified','ici-other','ici-unspecified']);
   const iciClasses=new Set(['ctla4','pd1','pdl1','lag3','pd1-lag3','pd1-tim3','pd1-pdl1-unspecified','ici-other','ici-unspecified']);
@@ -94,7 +137,8 @@
     if(key==='ici-unspecified')return {label:'Immune checkpoint inhibitor',key:'class:ici-unspecified',kind:'class',components:[],known:true,class_ids:['ici-unspecified'],agent_ids:[]};
     const resolved=resolver.resolve(text);
     if(resolved.status==='ambiguous'||resolved.status==='context')return {label:text,key:'context:'+key,kind:resolved.status==='context'?'context':'unknown',components:[],known:false,class_ids:[],agent_ids:[],resolution:resolved};
-    if(resolved.canonical_id)return {label:title(agentNames.get(resolved.canonical_id)),key:'agent:'+resolved.canonical_id,kind:'agent',agent_id:resolved.canonical_id,components:[],known:true,class_ids:[resolved.class_id],agent_ids:[resolved.canonical_id],resolution:resolved};
+    const agentId=resolved.canonical_id||(resolved.status==='non_drug'&&agentNames.has(resolved.generic_id)?resolved.generic_id:null);
+    if(agentId)return {label:title(agentNames.get(agentId)),key:'agent:'+agentId,kind:'agent',agent_id:agentId,components:[],known:true,class_ids:[resolved.class_id],agent_ids:[agentId],resolution:resolved};
     if(resolved.class_id&&resolved.class_id!=='other')return {label:resolved.label,key:'class:'+resolved.class_id+(resolved.generic_id?':'+resolved.generic_id:''),kind:'class',components:[],known:true,class_ids:resolved.class_ids||[resolved.class_id],agent_ids:[],resolution:resolved};
     const paired=/^(.+?)\s*\(([^()]+)\)$/.exec(text);
     if(paired){
@@ -459,7 +503,14 @@
     const principal=base.active_exposure!==false&&!['conditioning','adjuvant','preparation','prior_history','negated','control','structural','unclear'].includes(base.role);
     const other=node.unspecified_other_treatments===true;
     if(node.type==='agent')return {...base,label:title(agentNames.get(node.agent_id))+(other&&!node.display_drug_only?' (with other treatments)':''),key:'agent:'+node.agent_id+(other?':with-other':''),kind:'agent',agent_id:node.agent_id,known:!other,class_ids:node.class_id?[node.class_id]:['other'],principal_class_ids:principal?[node.class_id||'other']:[],agent_ids:[node.agent_id],simple_concurrent:!other&&principal,concurrent_agent_ids:other||!principal?[]:[node.agent_id],...(other?{unspecified_other_treatments:true}:{})};
-    if(node.type==='class')return {...base,label:node.single_arm_trial?(node.display_no_comparator?'No comparator':'Single-arm trial'):(node.name||classLabel(node.class_id))+(other&&!node.display_drug_only?' (with other treatments)':''),key:'class:'+node.class_id+(other?':with-other':''),kind:'class',known:!other,class_ids:node.normalization?.class_ids||[node.class_id],principal_class_ids:principal?(node.normalization?.class_ids||[node.class_id]):[],agent_ids:[],simple_concurrent:false,concurrent_agent_ids:[],inactive:node.inactive===true,...(other?{unspecified_other_treatments:true}:{}),...(node.single_arm_trial?{single_arm_trial:true}:{})};
+    if (node.type === 'class') {
+      // Unnamed regimens such as IL-2 and GM-CSF share a broad class. Their
+      // filter choices still need distinct keys after normalization/deduplication.
+      const genericId = node.normalization?.generic_id;
+      const specific = subgroupsForAgent(genericId).some(group => group.id !== node.class_id);
+      const classKey = 'class:' + node.class_id + (specific ? ':' + genericId : '');
+      return {...base,label:node.single_arm_trial?(node.display_no_comparator?'No comparator':'Single-arm trial'):(node.name||classLabel(node.class_id))+(other&&!node.display_drug_only?' (with other treatments)':''),key:classKey+(other?':with-other':''),kind:'class',known:!other,class_ids:node.normalization?.class_ids||[node.class_id],principal_class_ids:principal?(node.normalization?.class_ids||[node.class_id]):[],agent_ids:[],simple_concurrent:false,concurrent_agent_ids:[],inactive:node.inactive===true,...(other?{unspecified_other_treatments:true}:{}),...(node.single_arm_trial?{single_arm_trial:true}:{})};
+    }
     if(node.type==='unknown')return {...base,label:node.raw_label||node.name||'Unspecified treatment',key:'reported:'+norm(node.name||node.raw_label||''),kind:'unknown',known:false,class_ids:[],agent_ids:[],simple_concurrent:false,concurrent_agent_ids:[]};
     const all=node.children.map(describeNode),activeParts=node.type==='and'?all.filter(part=>!part.inactive):all;
     // Merge repeated aliases only within one concurrent context. Literal source
@@ -502,8 +553,13 @@
       // node, dose, route, schedule and evidence metadata must still agree.
       if(definitionEqual(promoted,expected))return promoted;
     }
-    if(previous?.children&&expected?.children&&previous.type===expected.type&&previous.children.length===expected.children.length)
-      return {...previous,children:previous.children.map((node,i)=>reviewedIdentityProjection(node,expected.children[i]))};
+    if(previous?.children&&expected?.children&&previous.type===expected.type&&previous.children.length===expected.children.length){
+      const projected={...previous,children:previous.children.map((node,i)=>reviewedIdentityProjection(node,expected.children[i]))};
+      // A compound source label retains the original leaf as well as its parsed agents.
+      if(previous.native_leaf_source&&expected.native_leaf_source)
+        projected.native_leaf_source=reviewedIdentityProjection(previous.native_leaf_source,expected.native_leaf_source);
+      return projected;
+    }
     return previous;
   }
   function validateDefinition(definition,options={}){
@@ -596,6 +652,7 @@
       if(!d.agent_ids.length&&d.kind!=='combination'&&d.kind!=='alternative')out.add(id+'-unspecified');
     }
     for(const id of d.agent_ids){out.add('agent:'+id);if(d.kind==='combination')out.add('agent:'+id+':combinations');}
+    for (const id of descriptionSubgroups(d)) out.add(id);
     return [...out];
   }
   function matchesClass(label,id){return memberships(label).includes(String(id||'').replace(/^treatment-class:/,''));}
@@ -617,52 +674,86 @@
   const classId=value=>typeof value==='string'&&value.startsWith('treatment-class:')&&validClass(value.slice(16))?value.slice(16):'';
   function searchText(label){
     const d=describe(label),names=d.agent_ids.flatMap(id=>canonicalAgents.find(row=>row[0]===id)?.[2]||[]);
-    return [...new Set([d.label,...names,...d.class_ids.map(classLabel)])].join(' ');
+    return [...new Set([d.label,...names,...d.class_ids.map(classLabel),...descriptionSubgroups(d).map(nodeLabel)])].join(' ');
   }
   function catalog(){
-    const agents=registry.products.map(entry=>({...entry,name:title(entry.label),aliases:[...entry.aliases],type:definitions.get(entry.class_id)?.label||entry.broad_category,memberships:memberships(entry.label)}));
+    const agents=catalogueTreatments.map(entry=>({...entry,name:title(entry.label),aliases:[...entry.aliases],type:definitions.get(entry.class_id)?.label||entry.broad_category,memberships:memberships(entry.label)}));
     const named=new Set(canonicalAgents.flatMap(row=>row[2].map(norm)));
     const additional_labels=Object.entries(catalogAliases).flatMap(([class_id,names])=>names.filter(name=>!named.has(norm(name))).map(name=>({name,class_id,type:definitions.get(class_id).label})));
     return {registry_version:registry.version,agents,additional_labels,groups:[...definitions.values()].map(row=>({...row}))};
   }
   function optionTree(entries){
     const input=(entries instanceof Map?[...entries]:entries||[]).map(row=>Array.isArray(row)?{value:row[0],label:row[1]}:row).filter(row=>row&&row.value!==undefined&&typeof row.label==='string');
-    const items=input.map(row=>({...row,description:describe(row.definition||row.label)}));
-    const output=[],emitted=new Set();
-    const node=(id,depth)=>{const value=classValue(id);if(value&&!emitted.has(value)){output.push({value,label:nodeLabel(id),depth,class_id:id,search_text:searchText(id.startsWith('agent:')?agentNames.get(id.split(':')[1]):nodeLabel(id))});emitted.add(value);}};
+    const items = input.map(row => {
+      const description = describe(row.definition || row.label);
+      return {...row, description, groups: new Set(memberships(description))};
+    });
+    const output = [], emitted = new Set();
+    function node(id, depth, category, path) {
+      const value = classValue(id);
+      const key = path + '|' + value;
+      if (!value || emitted.has(key)) return;
+      output.push({value, label:nodeLabel(id), depth, class_id:id, color_class:category,
+        subgroup:subgroupIds.has(id), search_text:searchText(id.startsWith('agent:') ? agentNames.get(id.slice(6)) : nodeLabel(id))});
+      emitted.add(key);
+    }
     const redundant=(d,branch)=>{
       if(d.placebo||d.single_arm_trial||['optional','context','combination','alternative'].includes(d.kind))return false;
       if(d.kind==='agent'&&d.known&&!d.unspecified_other_treatments&&branch==='agent:'+d.agent_id)return true;
       return d.kind==='class'&&d.class_ids.length===1&&['class:'+d.class_ids[0],'class:'+d.class_ids[0]+':with-other','class:'+d.class_ids[0]+':'+d.class_ids[0]+'-unspecified'].includes(d.key);
     };
-    const leaves=(list,depth,branch)=>{for(const row of [...list].sort((a,b)=>a.description.label.localeCompare(b.description.label))){
-      const unique=branch+'|'+row.value;if(emitted.has(unique))continue;
-      output.push({value:row.value,label:row.description.label,depth,class_id:branch,search_text:searchText(row.definition||row.label),hidden:redundant(row.description,branch)});emitted.add(unique);
-    }};
-    const top=[
-      ['immune',['ici-unspecified','ctla4','pd1','pdl1','pd1-pdl1-unspecified','lag3','pd1-lag3','pd1-tim3','ici-other']],
-      ['other-immunotherapy',['immunotherapy']],
-      ['cytokines',['cytokines']],['vaccines',['vaccines']],['cell-therapies',['cell-therapies']],['oncolytic-viruses',['oncolytic-viruses']],
-      ['targeted',['braf','mek','braf-mek-unspecified','other-targeted']],['chemotherapy',['chemotherapy']],['endocrine',['endocrine']],
-      ['radiotherapy',['radiotherapy']],['surgery',['surgery']],['controls',['supportive','no-comparator']],['alternatives',['alternatives']],['other',['other']]
+    function leaves(list, depth, branch, category, path) {
+      for (const row of [...list].sort((a,b) => a.description.label.localeCompare(b.description.label))) {
+        const key = path + '|' + row.value;
+        if (emitted.has(key)) continue;
+        output.push({value:row.value, label:row.description.label, depth, class_id:branch, color_class:category,
+          search_text:searchText(row.definition || row.label), hidden:redundant(row.description, branch)});
+        emitted.add(key);
+      }
+    }
+    const orderedBranches = [
+      ['immune','ici'], ['targeted','targeted'], ['chemotherapy','chemotherapy'],
+      ['other-immunotherapy','immunotherapy'], ['cytokines','cytokines'], ['vaccines','vaccines'],
+      ['cell-therapies','cell-therapies'], ['oncolytic-viruses','oncolytic-viruses'], ['microbiome-therapies','microbiome-therapies'],
+      ['endocrine','endocrine'], ['radiotherapy','radiotherapy'], ['surgery','surgery'], ['controls','controls'],
+      ['alternatives','alternatives'], ['other','other']
     ];
-    for(const[root,children]of top){
-      if(!items.some(row=>memberships(row.description).includes(root)))continue;node(root,0);
-      for(const cls of children){
-        const chosen=items.filter(row=>memberships(row.description).includes(cls));if(!chosen.length)continue;
-        const direct=root===cls||cls==='ici-unspecified'||root==='other-immunotherapy';
-        const depth=direct?0:1;if(!direct)node(cls,depth);
-        if(cls==='other'||cls==='alternatives'){leaves(chosen,depth+1,cls);continue;}
-        const unclassified=chosen.filter(row=>!row.description.agent_ids.length);leaves(unclassified,depth+1,cls);
-        const agents=[...new Set(chosen.flatMap(row=>row.description.agent_ids))].filter(id=>leaf(agentNames.get(id))===cls).sort((a,b)=>agentNames.get(a).localeCompare(agentNames.get(b)));
-        for(const id of agents){
-          node('agent:'+id,depth+1);
-          leaves(chosen.filter(row=>row.description.agent_ids.includes(id)),depth+2,'agent:'+id);
+    const catalogueById = new Map(catalogueTreatments.map(entry => [entry.id, entry]));
+    for (const [root, category] of orderedBranches) {
+      const eligible = items.filter(row => row.groups.has(root));
+      if (!eligible.length) continue;
+      node(root, 0, category, root);
+      if (root === 'other' || root === 'alternatives') {
+        leaves(eligible, 1, root, category, root);
+        continue;
+      }
+      function renderBranch(branch, rows, depth, matchingAgent) {
+        const path = root + '/' + branch;
+        const unclassified = rows.filter(row => !row.description.agent_ids.length ||
+          !row.description.agent_ids.some(matchingAgent));
+        leaves(unclassified, depth, branch, category, path);
+        const agentIds = new Set(rows.flatMap(row => row.description.agent_ids).filter(matchingAgent));
+        for (const id of [...agentIds].sort((a,b) => agentNames.get(a).localeCompare(agentNames.get(b)))) {
+          const agent = 'agent:' + id;
+          node(agent, depth, category, path);
+          leaves(rows.filter(row => row.description.agent_ids.includes(id)), depth+1, agent, category, path+'/'+agent);
         }
       }
+      const children = root === 'controls' ? ['supportive','no-comparator'] : (groupsForCategory.get(category) || []);
+      for (const child of children) {
+        const rows = eligible.filter(row => row.groups.has(child));
+        if (!rows.length) continue;
+        node(child, 1, category, root);
+        renderBranch(child, rows, 2, id => subgroupsForAgent(id).some(group => group.id === child)
+          || catalogueById.get(id)?.class_id === child);
+      }
+      const ungroupedAgent = id => catalogueById.get(id)?.broad_category === category && !subgroupsForAgent(id).length;
+      const remainder = eligible.filter(row => !children.some(child => row.groups.has(child)) ||
+        row.description.agent_ids.some(ungroupedAgent));
+      renderBranch(root, remainder, 1, ungroupedAgent);
     }
     return output;
   }
-  return Object.freeze({registry_version:registry.version,resolver,classify,groups,classValue,classId,describe,memberships,matchesClass,optionTree,searchText,catalog,
+  return Object.freeze({registry_version:registry.version,resolver,classify,groups,classValue,classId,describe,subgroupsForAgent,memberships,matchesClass,optionTree,searchText,catalog,
     definitionFromLabel,definitionFromNative,validateDefinition,rematerializeDefinition,describeDefinition,subsetDefinition});
 });

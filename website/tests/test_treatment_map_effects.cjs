@@ -33,6 +33,18 @@ test('endpoint matching accepts explicit aliases without broad outcome inference
   assert.equal(effects.endpointKey(null), null);
 });
 
+test('calculated binary endpoints preserve the clinical event, grade, time and ratio measure',()=>{
+  const safety=(definition,measure,time)=>source({measure,outcome:'AE_grade_ge3',calculation:{outcome_context:{definition,assessment_time:time,time_unit:'weeks',safety_attribution:'treatment_related'}}});
+  const different=[safety('Neutropenia','RR',6),safety('Thrombocytopenia','RR',6),safety('Neutropenia','OR',6),safety('Neutropenia','RR',12)];
+  const keys=different.map(effects.endpointKey);assert.equal(new Set(keys).size,4);
+  for(const comparison of different){
+    assert.equal(effects.directedEffect(comparison,'a','ab').direction,'worse');
+    assert.ok(effects.availableEndpointOptions(different).find(o=>o.key===effects.endpointKey(comparison)&&o.label.includes('weeks')));
+  }
+  assert.equal(effects.endpointKey(source({outcome:'ORR',measure:'RR',calculation:{outcome_context:{definition:'Objective response rate'}}})),'ORR:RR');
+  assert.notEqual(effects.endpointKey(source({outcome:'ORR',measure:'RR',outcome_definition:'Intracranial objective response rate'})),'ORR:RR');
+});
+
 test('arrow head versus tail shows reported AB/A and reverses only when the arrow reverses', () => {
   const original = freeze(source()), before = JSON.stringify(original);
   const reverse = effects.directedEffect(original, 'ab', 'a');

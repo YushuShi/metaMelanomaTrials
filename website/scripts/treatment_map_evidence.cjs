@@ -190,7 +190,10 @@ function enrich({source,effect,population,left,right,identity,cohort=null,source
     // the current estimate's rate assumptions, even within the same trial.
     if(conflictingCutoff(cutoff,analysisCutoff)&&!context.certified_same_analysis&&context!==contexts[0])continue;
     for(const [section,rows] of [['survival',s.record.survival],['binary',s.record.binary]])for(const row of list(rows)){
-      if(row.population_id!==context.population.id||row.endpoint!==effect.endpoint||row.origin!=='own_report'||!anchored(s,row.evidence)||!accepted(s,row)||conflictingCutoff(row.cutoff,cutoff))continue;
+      const inputs=effect.calculation&&[effect.calculation.intervention,effect.calculation.reference];
+      const input=inputs?.find(arm=>arm?.row_id===row.id&&arm.arm_id===row.arm_id&&arm.population_id===row.population_id);
+      if(inputs?(section!=='binary'||s!==source||!input):row.population_id!==context.population.id)continue;
+      if(row.endpoint!==effect.endpoint||row.origin!=='own_report'||!anchored(s,row.evidence)||!accepted(s,row)||conflictingCutoff(row.cutoff,cutoff))continue;
       const role=row.arm_id===context.left.id?'intervention':row.arm_id===context.right.id?'comparator':!text(row.arm_id)?'overall':null;
       if(!role||fieldProblem(row,/estimate|percentage|numerator|denominator|time|population|arm|cutoff/))continue;
       const common={id:'assumption:'+digest([s.key,section,row.id]),arm_role:role,arm_id:text(row.arm_id)||null,population_id:row.population_id,outcome:row.endpoint,
@@ -203,7 +206,7 @@ function enrich({source,effect,population,left,right,identity,cohort=null,source
         planning.push({...common,kind:'survival_probability',probability,events:null,n:!fieldProblem(row,/analysis_n/)?number(row.analysis_n):null,
           reported_value:value,reported_unit:row.unit,time:row.time,time_unit:row.time_unit});
       }else{
-        const events=number(row.numerator),n=number(row.denominator),percent=number(row.percentage);
+        const events=number(input?input.numerator:row.numerator),n=number(input?input.denominator:row.denominator),percent=number(row.percentage);
         const validCounts=events!==null&&n!==null&&Number.isInteger(events)&&Number.isInteger(n)&&n>0&&events>=0&&events<=n;
         if(events!==null&&n!==null&&!validCounts)continue;
         const probability=validCounts?events/n:percent!==null&&percent>=0&&percent<=100?percent/100:null;
@@ -215,7 +218,7 @@ function enrich({source,effect,population,left,right,identity,cohort=null,source
           if(populationArms.length!==2||!populationArms.every(arm=>[context.left.id,context.right.id].includes(arm.id)))continue;
         }
         planning.push({...common,kind:survivalEndpoint?'event_fraction':'binary_probability',probability,events:validCounts?events:null,n:validCounts?n:null,
-          reported_percentage:percent,provenance:validCounts?'reported_counts':'reported_percentage',time:row.assessment_time,time_unit:row.time_unit,
+          reported_percentage:percent,provenance:input?.basis==='reconstructed_counts'?'reconstructed_counts':validCounts?'reported_counts':'reported_percentage',time:row.assessment_time,time_unit:row.time_unit,
           response_criteria:text(row.response_criteria)||null,safety_attribution:text(row.safety_attribution)||null});
       }
     }
@@ -232,7 +235,9 @@ function enrich({source,effect,population,left,right,identity,cohort=null,source
   // links; no count is transferred across publications or subgroup boundaries.
   const resolveSample=context=>{
     const {source,effect,population}=context,own=context,rawN=number(effect.analysis_n),counts=list(source.record.sample_sizes).filter(s=>s.population_id===population.id&&anchored(source,s.evidence)&&accepted(source,s)&&!fieldProblem(s,/\bn\b|population|arm|count_purpose/)&&!conflictingCutoff(s.cutoff,text(effect.cutoff)||analysisCutoff));
-    const countRefs=[];let sampleN=rawN!==null&&!fieldProblem(effect,/analysis_n/)?rawN:null,sampleBasis=sampleN!==null?'reported_analysis_n':null;
+    if(effect.complementary_count_scope==='source_reviewed_unavailable')
+      return {n:null,basis:null,source_refs:[],population_n:null,population_purpose:null,population_refs:[],scope_checked:true};
+    const countRefs=[];let sampleN=rawN!==null&&!fieldProblem(effect,/analysis_n/)?rawN:null,sampleBasis=sampleN!==null?(effect.calculation?'arm_outcome_analysis_total':'reported_analysis_n'):null;
     if(sampleN===null){
       const direct=counts.filter(s=>s.result_id===effect.id&&number(s.n)!==null&&(!text(s.arm_id)));
       const displayIds=list(effect.display_n?.count_ids),displayCounts=counts.filter(s=>displayIds.includes(s.id));
@@ -287,14 +292,14 @@ function enrich({source,effect,population,left,right,identity,cohort=null,source
   const ownSample=resolveSample(contexts[0]);
   const complementary=matched.filter(c=>c!==contexts[0]&&c.certified_same_analysis).map(resolveSample).filter(s=>s.n!==null);
   let sample=ownSample;
-  if(sample.n===null&&complementary.length&&unique(complementary.map(s=>s.n)).length===1){
+  if(!sample.scope_checked&&sample.n===null&&complementary.length&&unique(complementary.map(s=>s.n)).length===1){
     sample={...complementary[0],basis:'linked_same_analysis_'+complementary[0].basis,
       source_refs:complementary.flatMap(s=>s.source_refs)};
   }
   // A manually source-checked association can repair an isolated masked R3
   // number without declaring that extraction valid. It is bound to both
   // immutable source hashes, exact directional links, counts and table quote.
-  for(const review of sample.n===null?sampleLinkReviews:[]){
+  for(const review of !sample.scope_checked&&sample.n===null?sampleLinkReviews:[]){
     if(source.pmid!==review.pmid||source.record.stage!=='R2'||source.record.source_sha256!==review.effect_source_sha256||
       effect.id!==review.effect_id||population.id!==review.population_id||
       ['endpoint','measure','estimate','ci_lower','ci_upper','ci_level','cutoff','intervention_arm_id','reference_arm_id'].some(key=>effect[key]!==review[key]))continue;
@@ -322,7 +327,9 @@ function enrich({source,effect,population,left,right,identity,cohort=null,source
     sample_n_count_purpose:sampleN===null&&populationN!==null?ownSample.population_purpose:null,
     sample_n_source_refs:sampleN!==null?sample.source_refs:ownSample.population_refs}:null;
   const primaryReview=comparisonResultReviews.find(review=>
-    source.pmid===review.pmid&&source.record.source_sha256===review.source_sha256&&source.binding===review.review_binding_sha256&&
+    source.pmid===review.pmid&&source.record.source_sha256===review.source_sha256&&
+    (source.binding===review.review_binding_sha256||(source.review_bindings?.comparison_scope_unchanged&&
+      source.review_bindings.effective===source.binding&&source.review_bindings.original===review.review_binding_sha256))&&
     effect.id===review.effect_id&&population.id===review.population_id&&
     ['endpoint','measure','estimate','ci_lower','ci_upper','ci_level','cutoff','intervention_arm_id','reference_arm_id'].every(key=>effect[key]===review[key])&&
     review.evidence.length>0&&review.evidence.every(proof=>list(effect.evidence).includes(proof.id)&&anchored(source,[proof.id])&&

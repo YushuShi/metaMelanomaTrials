@@ -44,3 +44,16 @@ test('table preserves distinct treatment classes instead of folding other therap
   const mixed=context.treatmentTag('Nivolumab + aldesleukin');
   assert.match(mixed,/data-treatment-class="ici"/);assert.match(mixed,/data-treatment-class="cytokines"/);
 });
+
+test('saved arm badges share Studies colors while keeping each drug’s dose and sequence',()=>{
+  const label='Nivolumab 1 mg/kg + ipilimumab 3 mg/kg, followed by temozolomide';
+  const html=charts.savedTreatmentTag(label);
+  assert.equal(html.replace(/<[^>]*>/g,''),label);
+  for(const drug of ['Nivolumab','ipilimumab','temozolomide']){
+    const expected=context.treatmentTag(drug).match(/data-treatment-class="([^"]+)"/)[1];
+    assert.ok(html.includes(`data-treatment-class="${expected}">${drug}</span>`));
+  }
+  const source=charts.savedTreatmentTag('Nivolumab <script> & placebo');
+  assert.doesNotMatch(source,/<script>/);
+  assert.match(source,/&lt;script&gt; &amp;/);
+});

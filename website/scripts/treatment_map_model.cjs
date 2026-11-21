@@ -1,4 +1,5 @@
 'use strict';
+const {effectiveRecord}=require('../dist/quantitative_extraction.js');
 /* Prepared treatment graph. Counts use source arms, never table rows or PMIDs as studies.
  * All name and regimen parsing is delegated to the shared treatment implementation.
  * This module is deliberately conservative about unproven participant independence.
@@ -125,9 +126,10 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       if(!preparedArms.has(key))preparedArms.set(key,{...def,source_binding:role.source_binding});
     }
   }
-  const modalities=list(registry.generic_classes).filter(p=>p.id==='radiosurgery'&&p.entity_status==='non_drug'),mapTreatments=[...registry.products,...modalities];
+  const mapTreatments=groups.resolver.catalogueTreatments(registry);
   for(const p of mapTreatments)nodes.set('agent:'+p.id,{id:'agent:'+p.id,type:'drug',entity_type:p.entity_status==='non_drug'?'modality':'drug',label:p.label,components:[p.id],class_id:p.class_id,
-    broad_category:p.broad_category,aliases:uniq([p.label,...list(p.aliases)]),contribution_ids:[],comparison_ids:[],parent_ids:[],overview_parent_id:null});
+    broad_category:p.broad_category,radial_subgroup:groups.subgroupsForAgent(p.id)[0]||null,
+    aliases:uniq([p.label,...list(p.aliases)]),contribution_ids:[],comparison_ids:[],parent_ids:[],overview_parent_id:null});
   const addCombo=ids=>{
     if(ids.length<2||ids.some(id=>!nodes.has('agent:'+id)))return null;
     const id=nodeId(ids);
@@ -160,7 +162,8 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
     const article=articles.get(String(raw.pmid));
     if(!article?.current_main_eligible)continue;
     for(const wrapper of list(raw.records)){
-      const record=wrapper.record||{};
+      const rawRecord=wrapper.record||{};
+      const record=effectiveRecord(wrapper);
       if(record.decision?.status==='exclude'||record.validation?.decision_valid===false)continue;
       const study=record.study||{},pmid=String(raw.pmid),binding=sourceBindings.get(sourceKey(pmid,record.stage,record.source_sha256))||null;
       const fromShared=identifiers.get(article,{registry:evidence});
@@ -171,7 +174,7 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       const reportedNames=uniq([...cataloguedNames,...formalNames(study.name),...fromShared.own_trial_names]);
       const trialIdentity=identifiers.harmonize({names:reportedNames,nct_ids:reportedNcts,pmid});
       const ncts=trialIdentity.nct_ids,names=trialIdentity.names;
-      const source={pmid,article,record,binding,ncts,names,trial_identity:trialIdentity,task_id:wrapper.task_id||null,raw_record_sha256:hash(record),source_url:'https://pubmed.ncbi.nlm.nih.gov/'+pmid+'/',key:sourceKey(pmid,record.stage,record.source_sha256)};
+      const source={pmid,article,record,binding,calculated_effects:list(wrapper.calculated_effects),source_preferences:wrapper.source_preferences,review_bindings:wrapper.complementary_review_bindings,ncts,names,trial_identity:trialIdentity,task_id:wrapper.task_id||null,raw_record_sha256:hash(rawRecord),source_url:'https://pubmed.ncbi.nlm.nih.gov/'+pmid+'/',key:sourceKey(pmid,record.stage,record.source_sha256)};
       const design=record.study_details&&anchored(source,record.study_details.evidence)?text(record.study_details.design_description):'';
       source.non_direct_design=nonDirectDesign([study.study_type,article.title,study.name,design].join(' '));
       // The quoted methods can identify secondary pooling even when the compact
@@ -377,9 +380,18 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       arm.candidates.push({sample,n:rawN,rank,allocation,population:pop,population_state:state,
         partial:state.subgroup||rank>=3||sample.complete==='no',disjoint:sample.disjoint==='yes'||sample.count_purpose==='randomized'||state.disjoint});
     }
-    for(const effect of list(record.effects)){
+    for(const effect of [...list(record.effects), ...source.calculated_effects]){
       const left=arms.get(effect.intervention_arm_id),right=arms.get(effect.reference_arm_id),pop=populations.get(effect.population_id);
       const state=populationState(source,pop),estimate=numeric(effect.estimate),lo=numeric(effect.ci_lower),hi=numeric(effect.ci_upper);
+      // Rates in separate treatment-only child populations may support a
+      // comparison at their shared parent. Verify both original rows and arms.
+      const coversArm=(arm,side)=>{
+        if(descendantOf(effect.population_id,arm.population_id))return true;
+        const input=effect.calculation?.[side];
+        return input?.arm_id===arm.id&&input.population_id===arm.population_id&&populations.get(arm.population_id)?.parent_id===effect.population_id&&
+          list(record.binary).some(row=>row.id===input.row_id&&row.arm_id===arm.id&&row.population_id===arm.population_id&&
+            row.endpoint===effect.endpoint&&row.origin==='own_report'&&anchored(source,row.evidence)&&(!requireEvidence||canonicalResults.has(source.key+'|'+row.id)));
+      };
       let reason=null;
       if(source.pooled)reason='pooled_or_indirect_report';
       else if(!state.eligible)reason='subgroup_or_unresolved_effect_population';
@@ -389,7 +401,7 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       else if(!anchored(source,effect.evidence))reason='effect_source_evidence_unavailable';
       else if(!left||!right)reason='unresolved_comparison_direction';
       else if(!left.semantics.endpoint||!right.semantics.endpoint&&!right.semantics.control)reason='incomplete_comparison_endpoints';
-      else if(!descendantOf(effect.population_id,left.arm.population_id)||!descendantOf(effect.population_id,right.arm.population_id))reason='comparison_population_mismatch';
+      else if(!coversArm(left.arm,'intervention')||!coversArm(right.arm,'reference'))reason='comparison_population_mismatch';
       else if(estimate===null||!text(effect.endpoint)||!text(effect.measure))reason='nonnumeric_or_unspecified_effect';
       else if((lo===null)!==(hi===null)||lo!==null&&(lo>estimate||hi<estimate||lo>hi))reason='invalid_confidence_interval';
       else if(['HR','OR','RR'].includes(effect.measure)&&(estimate<=0||lo!==null&&lo<=0))reason='invalid_ratio_effect';
@@ -405,12 +417,13 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       const effectId='effect:'+hash([source.key,effect.id]).slice(0,24);
       if(comparisons.some(c=>c.id===effectId))continue;
       comparisons.push({id:effectId,
+        ...(effect.calculation ? {calculation:effect.calculation} : {}),
         intervention:{node_id:interventionId,label:nodes.get(interventionId).label,arm_id:left.arm.id,source_arm_label:left.arm.label},
         comparator:{node_id:comparatorId,label:comparatorId?nodes.get(comparatorId).label:right.definition.raw_label||right.arm.label,arm_id:right.arm.id,source_arm_label:right.arm.label},
         outcome:effect.endpoint,outcome_definition:text(effect.endpoint_definition)||null,measure:effect.measure,estimate,ci_lower:lo,ci_upper:hi,ci_level:numeric(effect.ci_level),
         ...ident,pmid:source.pmid,source_url:source.source_url,title:source.article.title||null,year:source.article.year||null,population:pop.label,
         direction:'intervention versus comparator',cutoff:text(effect.cutoff)||null,model:text(effect.model)||null,adjusted:text(effect.adjusted)||null,source_refs:[sourceRef],
-        source_conflict:list(record.r2_links).some(l=>l.section==='effects'&&l.r3_id===effect.id&&l.relation==='conflict'),
+        source_conflict:source.source_preferences?.effects?.[effect.id]?.status!=='main_text'&&list(record.r2_links).some(l=>l.section==='effects'&&l.r3_id===effect.id&&l.relation==='conflict'),
         analysis:analysisEvidence.enrich({source,effect,population:pop,left,right,identity:analysisIdentity(source,pop),cohort:cohortResolver.describe(source,pop,analysisIdentity(source,pop)),sources,refs,anchored,quote,
           accepted:(s,row)=>!requireEvidence||canonicalResults.has(s.key+'|'+row.id),identify:analysisIdentity,
           armEquivalent:(sa,a,sb,b)=>{
@@ -551,7 +564,7 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
   const aliasRows=[...aliasIndex].sort(([a],[b])=>a.localeCompare(b)).map(([alias,ids])=>({alias,nct_ids:[...ids].sort(),unambiguous:ids.size===1}));
   const output={schema_version:1,record_kind:'prepared_treatment_map',metadata:{
     scope_label:'Prepared retained evidence; node counts cover the catalogue; comparison analyses apply the current study filters.',
-    catalogue_agents:mapTreatments.length,catalogue_drug_agents:registry.products.length,catalogue_modalities:modalities.length,observed_combinations:[...nodes.values()].filter(n=>n.type==='combination').length,
+    catalogue_agents:mapTreatments.length,catalogue_drug_agents:registry.products.length,catalogue_modalities:mapTreatments.length-registry.products.length,observed_combinations:[...nodes.values()].filter(n=>n.type==='combination').length,
     eligible_publications:new Set(sources.map(s=>s.pmid)).size,identified_studies:uniq(contributions.filter(c=>c.independent_cohort_count_eligible!==false).map(independentStudy)).length,
     source_path:input.source_path||null,source_file_sha256:input.source_file_sha256||null,clinical_content_sha256:clinical.content_sha256||null,
     registry_version:registry.version,registry_sha256:registryHash,normalization_content_sha256:normalizations?.content_sha256||null,

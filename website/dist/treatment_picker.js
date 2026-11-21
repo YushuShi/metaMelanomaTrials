@@ -93,7 +93,7 @@
         const depth = Number.isInteger(entry.depth) && entry.depth >= 0 ? Math.min(entry.depth, 16) : 0;
         while (stack.length && stack[stack.length - 1].depth >= depth) stack.pop();
         const parent = stack[stack.length - 1] || null;
-        const family = entry.class_id && !entry.class_id.startsWith('agent:') ? entry.class_id : parent?.family || 'other';
+        const family = entry.color_class || (entry.class_id && !entry.class_id.startsWith('agent:') ? entry.class_id : parent?.family || 'other');
         const node = { entry, depth, parent, children: [], key: String(this.nodes.length), family };
         (parent ? parent.children : this.roots).push(node); this.nodes.push(node); stack.push(node);
       }
@@ -103,8 +103,15 @@
     render() {
       this.cacheOptions();
       const query = normalized(this.search.value), previousScroll = this.list.scrollTop;
+      const matchingAgents = new Set();
       const scan = (node, ancestorMatch) => {
         node.directMatch = !!query && normalized(node.entry.label + ' ' + node.entry.value + ' ' + (node.entry.class_id || '') + ' ' + (node.entry.search_text || '')).includes(query);
+        // Shared targets can put one product in several branches. Its own name or
+        // alias should still return a single selectable product in search.
+        if (node.directMatch && !ancestorMatch && node.entry.value.startsWith('treatment-class:agent:')) {
+          if (matchingAgents.has(node.entry.value)) node.directMatch = false;
+          matchingAgents.add(node.entry.value);
+        }
         node.children.forEach((child) => scan(child, ancestorMatch || node.directMatch));
         node.visible = !query || ancestorMatch || node.directMatch || node.children.some((child) => child.visible);
         node.open = query ? node.children.some((child) => child.visible) && !this.searchCollapsed.has(node.key) : this.expanded.has(node.key);
@@ -160,7 +167,8 @@
 
     open() {
       if (this.destroyed || this.select.disabled || this.opened) return;
-      this.opened = true; this.expanded.clear(); this.searchCollapsed.clear(); this.search.value = ''; this.render();
+      this.opened = true; this.expanded.clear(); this.searchCollapsed.clear(); this.search.value = '';
+      this.render();
       this.popup.hidden = false; this.trigger.setAttribute('aria-expanded', 'true'); this.position(); this.search.focus();
     }
     close(restoreFocus) {

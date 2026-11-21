@@ -50,8 +50,10 @@ expressions remain available for review.
 The underlying graph retains multiple proper-subset parents. The radial
 overview uses a deterministic nearest proper-subset parent; each constituent
 drug can also expose the relevant combinations in its selected branch.
-In the radial overview, named agents of the same registry category occupy
-contiguous sectors. Light annular bands and a class legend use the same shared
+In the radial overview, named agents of the same broad registry category occupy
+contiguous sectors. Within a sector, a gap separates each treatment subgroup.
+Each agent appears once in its primary subgroup, including agents with multiple
+targets. Hovering over a band identifies its subgroup. Light annular bands and a class legend use the same shared
 treatment palette as table badges and map markers. A combination follows its
 displayed parent sector; its component markers retain each agent's own class
 color. Each category dot sits immediately beside its drug name. Sector placement

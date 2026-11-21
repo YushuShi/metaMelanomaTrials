@@ -47,6 +47,7 @@
   <script src="./new_findings.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./published_outcome_review.js" defer></script>
+  <script src="./complementary_review.js" defer></script>
   <script src="./about_article_progress.js" defer></script>
 </head>
 <body>
@@ -175,7 +176,11 @@
 
       <section class="view" id="view-about" aria-labelledby="about-title" hidden>
         <div class="app-identity tracking-heading"><h1 id="about-title">About</h1><div class="snapshot-line"><span id="article-progress-date"></span><button class="icon-button" id="refresh" aria-label="Refresh article progress" title="Refresh article progress"><svg class="icon"><use href="#i-refresh"/></svg></button></div></div>
+        <address class="about-contact">Contact Yushu Shi at <a href="mailto:shiyushu2006@gmail.com">shiyushu2006@gmail.com</a>.</address>
+        <p class="past-outcome-review"><a href="./drug_type_review.html">Treatment names and types</a></p>
         <div id="article-review-progress" aria-live="polite"><p>Loading saved article progress…</p></div>
+        <div id="complementary-review"><p role="status">Loading findings for review…</p></div>
+        <p class="past-outcome-review"><a href="./reviews/outcome_review.html" target="_blank" rel="noopener noreferrer">Earlier review of published outcome differences</a></p>
       </section>
       <footer class="main-footer"><span>metaMelanomaTrials</span></footer>
     </main>

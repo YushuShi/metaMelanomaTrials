@@ -82,6 +82,7 @@
     ['cell-therapies', 'Cell therapies', 'Cell therapies', 'cell-therapies'],
     ['vaccines', 'Therapeutic vaccines', 'Vaccines', 'vaccines'],
     ['oncolytic-viruses', 'Oncolytic viruses', 'Oncolytic viruses', 'oncolytic-viruses'],
+    ['microbiome-therapies', 'Microbiome therapies', 'Microbiome therapies', 'microbiome-therapies'],
     ['endocrine', 'Endocrine therapy', 'Endocrine therapy', 'endocrine'],
     ['radiotherapy', 'Radiotherapy', 'Radiotherapy', 'radiotherapy'],
     ['surgery', 'Surgery', 'Surgery', 'surgery'],
@@ -91,6 +92,9 @@
     const id = node.broad_category || 'other', index = categoryDefinitions.findIndex((item) => item[0] === id);
     if (index >= 0) { const [, label, short_label, class_id] = categoryDefinitions[index]; return { id, label, short_label, class_id, order: index }; }
     return { id, label: id.replace(/[-_]/g, ' ').replace(/^./, (letter) => letter.toUpperCase()), short_label: id.replace(/[-_]/g, ' '), class_id: 'other', order: categoryDefinitions.length };
+  }
+  function mapColor(node, overview) {
+    return overview && node?.broad_category ? categoryInfo(node).class_id : node?.class_id || 'other';
   }
   function annularSectorPath(inner, outer, start, end) {
     const finish = Math.min(end, start + Math.PI * 2 - 0.00001), large = finish - start > Math.PI ? 1 : 0;
@@ -363,14 +367,75 @@
     }
     return parents;
   }
+  function radialSectors(roots, children, positions) {
+    const categories = new Map(), weights = new Map();
+    function weigh(node) {
+      const descendants = children.get(node.id) || [];
+      const weight = Math.max(1, descendants.reduce((sum, child) => sum + weigh(child), 0));
+      weights.set(node.id, weight);
+      return weight;
+    }
+    // Roots arrive in label order. A multi-target agent has one primary display
+    // subgroup, so it occupies exactly one place on the circle.
+    const rootPadding = 0.65;
+    let totalWeight = 0;
+    for (const root of roots) {
+      const info = categoryInfo(root);
+      if (!categories.has(info.id)) categories.set(info.id, { ...info, subgroups: new Map() });
+      const category = categories.get(info.id);
+      const subgroup = root.radial_subgroup || { id: 'unclassified', label: 'Other or unspecified' };
+      if (!category.subgroups.has(subgroup.id)) category.subgroups.set(subgroup.id, { ...subgroup, roots: [] });
+      category.subgroups.get(subgroup.id).roots.push(root);
+      totalWeight += weigh(root) + rootPadding;
+    }
+    if (!categories.size) return [];
+    const ordered = [...categories.values()].sort((a, b) => a.order - b.order || byLabel(a, b));
+    const segmentCount = ordered.reduce((n, group) => n + group.subgroups.size, 0);
+    // Keep clefts visible without letting many small subgroups consume the ring.
+    const broadBoundaries = ordered.length > 1 ? ordered.length : 0;
+    const subgroupBoundaries = segmentCount > 1 ? segmentCount - broadBoundaries : 0;
+    const broadGap = broadBoundaries ? Math.min(0.064, 0.8 / broadBoundaries) : 0;
+    const subgroupGap = subgroupBoundaries ? Math.min(0.034, 0.9 / subgroupBoundaries) : 0;
+    const unit = (2 * Math.PI - broadGap * broadBoundaries - subgroupGap * subgroupBoundaries) / totalWeight;
+    let cursor = -Math.PI / 2 + (broadGap || subgroupGap) / 2;
+    function place(node, start, span, depth, categoryId, subgroupId) {
+      const angle = start + span / 2, radius = 335 + depth * 155;
+      positions.set(node.id, { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius,
+        angle, depth, group_id: categoryId, subgroup_id: subgroupId, width: 14, height: 14 });
+      let next = start;
+      for (const child of children.get(node.id) || []) {
+        const childSpan = span * weights.get(child.id) / weights.get(node.id);
+        place(child, next, childSpan, depth + 1, categoryId, subgroupId);
+        next += childSpan;
+      }
+    }
+    return ordered.map(({ subgroups, ...category }) => {
+      const groups = [...subgroups.values()].sort((a, b) =>
+        Number(a.id === 'unclassified') - Number(b.id === 'unclassified') || byLabel(a, b));
+      const segments = groups.map(({ id, label, roots }, index) => {
+        const start = cursor;
+        for (const root of roots) {
+          const span = unit * weights.get(root.id);
+          place(root, cursor + unit * rootPadding / 2, span, 0, category.id, id);
+          cursor += span + unit * rootPadding;
+        }
+        const end = cursor;
+        cursor += index === groups.length - 1 && broadGap ? broadGap : subgroupGap;
+        return { id, label, root_ids: roots.map(root => root.id), agent_count: roots.filter(root => root.type === 'drug').length, start, end };
+      });
+      return { ...category, root_ids: segments.flatMap(s => s.root_ids), agent_count: segments.reduce((n, s) => n + s.agent_count, 0),
+        start: segments[0].start, end: segments[segments.length - 1].end, inner_radius: 273, outer_radius: 365, segments };
+    });
+  }
   function layout(model, branchId) {
     const nodes = branchNodes(model, branchId), parents = displayParents(model, nodes, branchId);
     const children = new Map(nodes.map((node) => [node.id, []]));
     for (const [id, parentId] of parents) children.get(parentId)?.push(model.byId.get(id));
     children.forEach((value) => value.sort(byLabel));
-    const roots = nodes.filter((node) => !parents.has(node.id)).sort(byLabel), positions = new Map(), sectors = [];
+    const roots = nodes.filter((node) => !parents.has(node.id)).sort(byLabel), positions = new Map();
     const overview = !branchId || branchId === 'all';
     const comparisons = overview ? { nodes: [], edges: [] } : branchComparisons(model, branchId);
+    const sectors = overview ? radialSectors(roots, children, positions) : [];
     if (!overview) {
       let row = 0;
       const visit = (node, depth) => {
@@ -380,29 +445,6 @@
         positions.set(node.id, { x: depth * 330, y, depth, width: 258, height: 82 });
       };
       roots.forEach((node) => visit(node, 0));
-    } else {
-      const weights = new Map();
-      const weight = (node) => { const value = Math.max(1, (children.get(node.id) || []).reduce((sum, child) => sum + weight(child), 0)); weights.set(node.id, value); return value; };
-      const total = roots.reduce((sum, node) => sum + weight(node) + 0.65, 0), grouped = new Map();
-      for (const root of roots) { const info = categoryInfo(root); if (!grouped.has(info.id)) grouped.set(info.id, { ...info, roots: [], agent_count: 0 }); const group = grouped.get(info.id); group.roots.push(root); if (root.type === 'drug') group.agent_count++; }
-      const groups = [...grouped.values()].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id, 'en'));
-      const gap = groups.length > 1 ? 0.055 : 0, available = Math.PI * 2 - gap * groups.length;
-      const visit = (node, start, span, depth, groupId) => {
-        const angle = start + span / 2, radius = 335 + depth * 155;
-        positions.set(node.id, { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius, angle, depth, group_id: groupId, width: 14, height: 14 });
-        let cursor = start;
-        for (const child of children.get(node.id) || []) { const childSpan = span * weights.get(child.id) / weights.get(node.id); visit(child, cursor, childSpan, depth + 1, groupId); cursor += childSpan; }
-      };
-      let cursor = -Math.PI / 2;
-      for (const group of groups) {
-        const start = cursor + gap / 2, groupWeight = group.roots.reduce((sum, root) => sum + weights.get(root.id) + 0.65, 0), span = available * groupWeight / total;
-        sectors.push({ ...group, root_ids: group.roots.map((root) => root.id), roots: undefined, start, end: start + span, inner_radius: 273, outer_radius: 365 });
-        cursor = start;
-        for (const root of group.roots) { const rootSpan = available * weights.get(root.id) / total; visit(root, cursor, rootSpan, 0, group.id); cursor += available * (weights.get(root.id) + 0.65) / total; }
-        cursor = start + span + gap / 2;
-      }
-    }
-    if (!overview) {
       // Reserve a comparison column before any descendant with an external arm.
       // Shared opponents (including Placebo) remain one node, left of every anchor.
       const anchors = new Map(comparisons.nodes.map(node => {
@@ -459,7 +501,7 @@
     drugNameParts(node,relative=false) {
       const parent=relative&&this.model.byId.get(this.tree.parents.get(node.id)),added=parent?node.components.filter(id=>!parent.components.includes(id)):[];
       const ids=added.length?added:list(node.components);
-      return {prefix:added.length?'+ ':'',parts:ids.map(id=>({id,label:this.model.byAgent.get(id)?.label||id,class_id:this.model.byAgent.get(id)?.class_id||'other'}))};
+      return {prefix:added.length?'+ ':'',parts:ids.map(id=>({id,label:this.model.byAgent.get(id)?.label||id,class_id:mapColor(this.model.byAgent.get(id),this.tree?.overview)}))};
     }
     svgDrugNames(parent,node,attrs,{relative=false,maxChars=29,maxLines=1}={}) {
       const names=this.drugNameParts(node,relative),lines=[{prefix:names.prefix,parts:[],length:names.prefix.length}];
@@ -486,9 +528,10 @@
       return container;
     }
     build() {
-      const heading = this.make('div', 'tm-heading', this.root), title = this.make('div', '', heading);
+      const heading = this.make('div', 'tm-heading', this.root), title = this.make('div', 'tm-title-controls', heading);
       this.make('h2', '', title, 'Treatment map');
       this.catalogCount = this.make('p', 'tm-catalog-count', heading, `${number(this.model.agents.length)} agents, ${number(this.model.nodes.filter((node) => node.type === 'combination').length)} combinations`);
+      if(this.options.mountAdvanced)this.filterPanel=this.options.mountAdvanced(title,this.root);
       const toolbar = this.make('div', 'tm-toolbar', this.root), branchField = this.make('div', 'tm-branch-field', toolbar);
       const label = this.make('label', '', branchField, 'Explore a treatment branch'); label.htmlFor = this.id + '-branch'; label.id = label.htmlFor + '-label';
       this.selector = this.make('select', '', branchField); this.selector.id = label.htmlFor;
@@ -574,10 +617,12 @@
       this.renderCategoryLegend(); this.renderGraph(); this.select(this.selectedId, { announce: false }); this.fit(false);
       return this;
     }
-    endpointDefinition() { return Effects.endpoints.find((endpoint) => endpoint.key === this.selectedEndpoint) || Effects.endpoints[0]; }
+    endpointDefinition(key=this.selectedEndpoint) {
+      return Effects.endpoints.find(endpoint=>endpoint.key===key)||this.availableEndpoints?.find(endpoint=>endpoint.key===key);
+    }
     setEndpoint(key) {
       this.analysisTab = 'comparison';
-      if (!Effects.endpoints.some((endpoint) => endpoint.key === key)) return this;
+      if (!this.endpointDefinition(key)) return this;
       this.selectedEndpoint = key; this.endpointBadge.textContent = this.endpointDefinition().label;
       this.activeComparisonId = null; this.activeComparisonExplicit = false;
       this.select(this.selectedId, { comparisonPairId: this.selectedComparisonPairId, announce: false, preserveMode:true });
@@ -585,27 +630,27 @@
       return this;
     }
     edgeChoices(edge) { return this.model.comparisons.filter((item) => edge.comparison_ids.includes(item.id) && Effects.comparisonMatchesEndpoint(item, this.selectedEndpoint) && Analysis.matchesScope(item,this.studyScope)).sort(byComparison); }
-    edgeEvidence(edge) {
+    edgeEvidence(edge, advanced=this.advanced) {
       const choices = this.edgeChoices(edge), remembered = this.selectedComparisonByPair.get(edge.id + '|' + this.selectedEndpoint);
       const candidate = choices.find((item) => item.id === this.activeComparisonId) || choices.find((item) => item.id === remembered) || choices[0] || null;
-      let comparison = remembered ? candidate : this.latestSupportedComparison(edge, candidate);
-      let direction = comparisonDirection(this.tree, edge, comparison), { result, group } = this.analysisFor(edge,comparison);
+      let comparison = remembered ? candidate : this.latestSupportedComparison(edge, candidate, advanced);
+      let direction = comparisonDirection(this.tree, edge, comparison), { result, group } = this.analysisFor(edge,comparison,advanced);
       const latest=group?.latest_fallback?.row?.comparison;
       if(latest&&latest.id!==comparison?.id){
         comparison=latest;direction=comparisonDirection(this.tree,edge,comparison);
-        ({result,group}=this.analysisFor(edge,comparison));
+        ({result,group}=this.analysisFor(edge,comparison,advanced));
       }
       const planningRows=group?.tableRows?.filter(row=>row.planning_included===true),selectedRows=group?.selected||[];
-      const legacySource=!comparison?.analysis&&!this.advanced?.active&&this.inclusionOverrides[comparison?.id]!==false;
+      const legacySource=!comparison?.analysis&&!advanced?.active&&this.inclusionOverrides[comparison?.id]!==false;
       const chosenRows=legacySource||planningRows===undefined?null:selectedRows.length?selectedRows:planningRows;
       const effectSource=group?.latest_fallback?.row?.comparison||(chosenRows===null?comparison:(chosenRows.find(row=>row.comparison?.id===comparison?.id)||chosenRows[0])?.comparison||null);
       let effect = effectSource ? Effects.directedEffect(effectSource, direction.tailId, direction.headId) : null;
       if(group?.pooled){const p=group.pooled;effect=Effects.directedEffect({measure:this.endpointDefinition().measure,outcome:this.endpointDefinition().endpoint,estimate:p.estimate,ci_lower:p.ci_lower,ci_upper:p.ci_upper,ci_level:95,intervention:{node_id:direction.headId,label:this.nodeFor(direction.headId).label},comparator:{node_id:direction.tailId,label:this.nodeFor(direction.tailId).label}},direction.tailId,direction.headId);}
       return { comparison:effectSource||comparison,displayComparison:comparison, ...direction, effect, analysis:result,group,style: Effects.effectStyle(edge.kind, effect?.direction || 'neutral') };
     }
-    latestSupportedComparison(edge, source) {
+    latestSupportedComparison(edge, source, advanced=this.advanced) {
       if (!source?.analysis) return source;
-      const { result, group } = this.analysisFor(edge, source);
+      const { result, group } = this.analysisFor(edge, source, advanced);
       if(group?.latest_fallback?.row?.comparison)return group.latest_fallback.row.comparison;
       const heldGroup = result.groups.find(group => group.excluded.some(row => row.comparison?.id === source.id && (row.reason === 'superseded_same_trial' || /newer_trial|superseded_less_specific/.test(row.reason))));
       const held = heldGroup?.excluded.find(row => row.comparison?.id === source.id);
@@ -614,10 +659,10 @@
       const newer = result.groups.flatMap(group => group.selected).map(row => row.comparison).filter(item => permitted.has(item.id) && item.analysis?.independent_id === source.analysis.independent_id).sort(byComparison);
       return newer[0] || source;
     }
-    analysisFor(edge, source) {
+    analysisFor(edge, source, advanced=this.advanced) {
       const direction = comparisonDirection(this.tree, edge, source);
-      const key = analysisKey(edge,this.selectedEndpoint,this.studyScope,direction);
-      const options={...direction,endpoint:this.selectedEndpoint,studyScope:this.studyScope,inclusionOverrides:this.inclusionOverrides,inclusionOrder:this.inclusionOrder,advanced:this.advanced};
+      const key = analysisKey(edge,this.selectedEndpoint,this.studyScope,direction)+(advanced!==this.advanced?'|unfiltered':'');
+      const options={...direction,endpoint:this.selectedEndpoint,studyScope:this.studyScope,inclusionOverrides:this.inclusionOverrides,inclusionOrder:this.inclusionOrder,advanced};
       if (!this.analysisCache.has(key)) this.analysisCache.set(key, savedAnalysis(this.model,edge,options)||Analysis.analyze(this.model.comparisons.filter(item => edge.comparison_ids.includes(item.id)), options));
       const result = this.analysisCache.get(key);
       return { result, group: result.groups[0] || null };
@@ -633,8 +678,8 @@
       if(!this.advancedNote)return;
       this.advancedNote.replaceChildren();this.advancedNote.hidden=!this.advanced?.active;
       if(!this.advanced?.active)return;
-      this.make('span','',this.advancedNote,'Advanced filters: '+(this.advanced.label||'selected in Studies'));
-      if(this.options.onOpenStudies)this.button(this.advancedNote,'Edit in Studies',()=>this.options.onOpenStudies(),'tm-text-button');
+      this.make('span','',this.advancedNote,(this.advanced.label||'Advanced filters')+' · Gray indicates no matching evidence.');
+      if(!this.filterPanel&&this.options.onOpenStudies)this.button(this.advancedNote,'Edit in Studies',()=>this.options.onOpenStudies(),'tm-text-button');
     }
     setInclusion(id,included) {
       this.inclusionOverrides[id]=!!included;this.inclusionOrder=this.inclusionOrder.filter(value=>value!==id);this.inclusionOrder.push(id);
@@ -828,8 +873,12 @@
         const sectors = this.svgElement('g', { class: 'tm-category-sectors', 'aria-label': 'Treatment class sectors' }, this.world);
         for (const sector of this.tree.sectors) {
           const group = this.svgElement('g', { 'data-category-id': sector.id, 'data-treatment-class': sector.class_id }, sectors);
-          const path = this.svgElement('path', { class: 'tm-category-sector', d: annularSectorPath(sector.inner_radius, sector.outer_radius, sector.start, sector.end) }, group);
-          this.svgElement('title', {}, path, `${sector.label}: ${number(sector.agent_count)} named agents`);
+          for (const segment of sector.segments) {
+            const path = this.svgElement('path', { class: 'tm-category-sector', 'data-subgroup-id': segment.id,
+              d: annularSectorPath(sector.inner_radius, sector.outer_radius, segment.start, segment.end) }, group);
+            const label = segment.id === 'unclassified' && sector.segments.length === 1 ? sector.label : sector.label + ' · ' + segment.label;
+            this.svgElement('title', {}, path, `${label} · ${number(segment.agent_count)} named agent${segment.agent_count === 1 ? '' : 's'}`);
+          }
         }
       }
       const edgeGroup = this.svgElement('g', { class: 'tm-edges', 'aria-hidden': 'true' }, this.world);
@@ -857,14 +906,15 @@
       for (const node of [...this.tree.nodes, ...this.tree.parallelNodes]) {
         const point = this.tree.positions.get(node.id), evidence = node.type === 'control' ? 'Neutral comparison arm' : `${studyLabel(node)}. ${countLabel(node)}`;
         const direct = this.tree.overview && this.directParallelIds.has(node.id);
+        const center = !this.tree.overview && node.id === this.branchId;
         const comparisonHint = direct ? ' Direct parallel-arm comparison available.' : '';
-        const group = this.svgElement('g', { class: 'tm-node ' + (this.tree.overview ? 'tm-radial-node' : 'tm-tree-node') + (point.parallel ? ' tm-parallel-node' : '') + (node.type === 'control' ? ' tm-control-node' : '') + (direct ? ' tm-direct-comparison-node' : ''), transform: `translate(${point.x},${point.y})`, tabindex: 0, role: 'button', 'aria-label': `${node.label}. ${evidence}.${comparisonHint} Select for evidence.`, 'data-node-id': node.id, 'data-category-id': point.group_id || categoryInfo(node).id, 'data-treatment-class': node.type === 'drug' || node.type === 'control' ? node.class_id || 'other' : 'combination', ...(this.tree.overview ? { 'data-direct-comparison': direct } : {}) }, nodesGroup);
+        const group = this.svgElement('g', { class: 'tm-node ' + (this.tree.overview ? 'tm-radial-node' : 'tm-tree-node') + (center ? ' tm-branch-center' : '') + (point.parallel ? ' tm-parallel-node' : '') + (node.type === 'control' ? ' tm-control-node' : '') + (direct ? ' tm-direct-comparison-node' : ''), transform: `translate(${point.x},${point.y})`, tabindex: 0, role: 'button', 'aria-label': `${node.label}.${center ? ' Branch center.' : ''} ${evidence}.${comparisonHint} Select for evidence.`, 'data-node-id': node.id, 'data-category-id': point.group_id || categoryInfo(node).id, 'data-treatment-class': node.type === 'drug' || node.type === 'control' ? mapColor(node,this.tree.overview) : 'combination', ...(this.tree.overview ? { 'data-direct-comparison': direct, 'data-subgroup-id': point.subgroup_id } : {}) }, nodesGroup);
         this.svgElement('title', {}, group, node.label + ' · ' + evidence + comparisonHint);
         if (this.tree.overview) {
           const size = direct ? 2 : 1;
           this.svgElement('circle', { r: direct ? 18 : 13, class: 'tm-hit-target' }, group);
           if (node.type === 'drug') this.svgElement('circle', { r: 5.5 * size, class: 'tm-agent-dot' }, group);
-          else { this.svgElement('circle', { r: 6 * size, class: 'tm-combination-dot' }, group); node.components.slice(0, 5).forEach((id, index) => { const angle = index * Math.PI * 2 / Math.min(5, node.components.length), agent = this.model.byAgent.get(id); this.svgElement('circle', { cx: Math.cos(angle) * 4 * size, cy: Math.sin(angle) * 4 * size, r: 2.4 * size, class: 'tm-component-dot', 'data-treatment-class': agent?.class_id || 'other' }, group); }); }
+          else { this.svgElement('circle', { r: 6 * size, class: 'tm-combination-dot' }, group); node.components.slice(0, 5).forEach((id, index) => { const angle = index * Math.PI * 2 / Math.min(5, node.components.length), agent = this.model.byAgent.get(id); this.svgElement('circle', { cx: Math.cos(angle) * 4 * size, cy: Math.sin(angle) * 4 * size, r: 2.4 * size, class: 'tm-component-dot', 'data-treatment-class': mapColor(agent,true) }, group); }); }
           const right = Math.cos(point.angle) >= 0;
           this.overviewLabels.set(node.id, this.svgDrugNames(group,node,{ x: right ? 14 : -14, y: 4, 'text-anchor': right ? 'start' : 'end', class: 'tm-overview-label' },{maxChars:28})[0]);
         } else this.drawCard(group, node, point);
@@ -980,20 +1030,33 @@
     updateSelection() {
       const comparison = this.model.comparisons.find((item) => item.id === this.activeComparisonId);
       const activePair = this.tree.comparisonEdges.find((edge) => edge.comparison_ids.includes(this.activeComparisonId));
-      for (const [id, element] of this.nodeElements) { element.setAttribute('aria-pressed', String(id === this.selectedId)); element.classList.toggle('tm-selected', id === this.selectedId); element.classList.toggle('tm-comparison-endpoint', id === comparison?.intervention.node_id || id === comparison?.comparator.node_id || id === activePair?.opponent_id); }
+      for (const [id, element] of this.nodeElements) {
+        element.setAttribute('aria-pressed', String(id === this.selectedId));
+        element.classList.toggle('tm-selected', id === this.selectedId);
+        element.classList.toggle('tm-comparison-endpoint', id === comparison?.intervention.node_id || id === comparison?.comparator.node_id || id === activePair?.opponent_id);
+        const muted=this.advanced.active&&this.advanced.nodeIds&&!this.advanced.nodeIds.has(id);
+        element.classList.toggle('tm-filter-muted',!!muted);
+        element.setAttribute('aria-description',muted?'No matching evidence for the selected clinical filters.':'');
+      }
       for (const [id, element] of this.parallelLinks) {
         const active = id === activePair?.id, metadata = this.parallelLinkTitles.get(id), edge = this.tree.comparisonEdges.find((item) => item.id === id);
-        const { comparison: source, tailId, headId, effect, style,group } = this.edgeEvidence(edge);
+        const evidence=this.edgeEvidence(edge),{comparison:source,effect,style,group}=evidence;
+        const filteredOut=this.advanced.active&&!this.edgeChoices(edge).some(item=>this.advanced.matches?.[item.id]?.matched);
+        // Preserve an existing arrow's geometry when its clinical cohort is
+        // filtered out. Its original estimate never enters the filtered analysis.
+        const original=filteredOut?this.edgeEvidence(edge,{active:false,matches:{}}):evidence;
+        const {headId,tailId}=original.effect?.valid?original:evidence;
+        element.classList.toggle('tm-filter-muted',!!filteredOut);
         element.classList.toggle('tm-active-comparison', active); element.setAttribute('aria-pressed', String(active));
         element.style.setProperty('--tm-effect-color', style.color);
         for (const [key, value] of Object.entries({ 'data-tail-id': tailId, 'data-head-id': headId, 'data-effect-state': style.state, 'data-endpoint-key': this.selectedEndpoint, 'data-comparison-id': source?.id || '', 'data-estimate': effect?.valid ? effect.estimate : '', 'data-reversed': !!effect?.reversed })) element.setAttribute(key, value);
         const ciState=effect?.ciExcludesNull;
         element.setAttribute('data-ci-excludes-null',ciState===true?'true':ciState===false?'false':'unknown');
         metadata.path.setAttribute('stroke-dasharray',ciState===false?'6 4':'none');
-        const arrow = effect?.valid ? `url(#${this.id}-arrow-${style.state})` : 'none';
-        metadata.path.setAttribute('marker-start', effect?.valid && headId === edge.opponent_id ? arrow : 'none');
-        metadata.path.setAttribute('marker-end', effect?.valid && headId === edge.root_id ? arrow : 'none');
-        const label = source && effect?.valid ? `${this.nodeFor(headId).label} versus ${this.nodeFor(tailId).label}. ${this.endpointDefinition().label}. ${directedLabel(effect)}. Tail fares ${effect.direction === 'neutral' ? 'neither better nor worse by the point estimate' : effect.direction}. ${group?.pooled ? Charts.modelLabel(group.pooled)+' meta-analysis of '+group.pooled.k+' independent cohorts. '+group.label : 'Individual study, PMID '+source.pmid}. ${ciState===true?'Solid: confidence interval excludes 0 on the log scale.':ciState===false?'Dashed: confidence interval includes 0 on the log scale.':'Solid: a valid confidence interval is unavailable.'} Select a study and outcome.` : `${this.nodeFor(edge.opponent_id).label} versus ${this.nodeFor(edge.root_id).label}. No matching ${this.endpointDefinition().label} estimate; no comparison arrow. Select another endpoint. Custom regimen counts remain unchanged.`;
+        const arrow = original.effect?.valid ? `url(#${this.id}-arrow-${style.state})` : 'none';
+        metadata.path.setAttribute('marker-start', headId === edge.opponent_id ? arrow : 'none');
+        metadata.path.setAttribute('marker-end', headId === edge.root_id ? arrow : 'none');
+        const label = filteredOut ? `${this.nodeFor(headId).label} versus ${this.nodeFor(tailId).label}. No matching ${this.endpointDefinition().label} evidence for the selected filters.` : source && effect?.valid ? `${this.nodeFor(headId).label} versus ${this.nodeFor(tailId).label}. ${this.endpointDefinition().label}. ${directedLabel(effect)}. Tail fares ${effect.direction === 'neutral' ? 'neither better nor worse by the point estimate' : effect.direction}. ${group?.pooled ? Charts.modelLabel(group.pooled)+' meta-analysis of '+group.pooled.k+' independent cohorts. '+group.label : 'Individual study, PMID '+source.pmid}. ${ciState===true?'Solid: confidence interval excludes 0 on the log scale.':ciState===false?'Dashed: confidence interval includes 0 on the log scale.':'Solid: a valid confidence interval is unavailable.'} Select a study and outcome.` : `${this.nodeFor(edge.opponent_id).label} versus ${this.nodeFor(edge.root_id).label}. No matching ${this.endpointDefinition().label} estimate; no comparison arrow. Select another endpoint. Custom regimen counts remain unchanged.`;
         metadata.title.textContent = this.tree.overview ? label : effect?.valid ? `${effect.measure} ${effectNumber(effect.estimate)}` : 'Effect estimate unavailable';
         element.setAttribute('aria-label', label);
       }
@@ -1040,6 +1103,7 @@
       const sources = this.model.comparisons.filter((item) => this.tree.overview ? pairIds.has(item.id) : coreIds.has(item.intervention.node_id) || coreIds.has(item.comparator.node_id) || pairIds.has(item.id));
       const endpoints = Effects.availableEndpointOptions(sources);
       if (!endpoints.some((item) => item.key === this.selectedEndpoint)) endpoints.push({ ...this.endpointDefinition(), count: 0, disabled: false });
+      this.availableEndpoints=endpoints;
       for (const endpoint of endpoints) { const option = this.make('option', '', this.endpointSelector, endpoint.label + (endpoint.count ? '' : ' — no estimates')); option.value = endpoint.key; option.disabled = endpoint.disabled && endpoint.key !== this.selectedEndpoint; }
       this.endpointSelector.value = this.selectedEndpoint;
       this.endpointSelector.addEventListener('change', () => this.setEndpoint(this.endpointSelector.value));
@@ -1097,6 +1161,7 @@
           if(display.ci_converted){const note=this.make('small','tm-ci-converted',effect,'95% CI, converted');note.title=display.conversion_note||'Approximate Wald conversion from the reported confidence level.';}
         }
         else this.make('small','tm-inclusion-status',effect,display.ci_95_unavailable?'95% CI unavailable':'CI unavailable');
+        if(source.calculation)this.make('small','tm-inclusion-status',effect,'Calculated from arm rates');
       }
     }
     renderComparison() {
@@ -1138,7 +1203,7 @@
         const display={...evidence.effect,
           intervention:{node_id:evidence.headId,label:this.nodeFor(evidence.headId).label},
           comparator:{node_id:evidence.tailId,label:this.nodeFor(evidence.tailId).label}};
-        this.make('p', 'tm-reported-label', this.comparisonBand, pooled?'Pooled estimate':'Study estimate');
+        this.make('p', 'tm-reported-label', this.comparisonBand, pooled?'Pooled estimate':comparison.calculation?'Study estimate · calculated from arm rates':'Study estimate');
         const diagram = this.make('div', 'tm-comparison-diagram', this.comparisonBand);
         const endpoint = (record, role) => { const box = this.make('div', 'tm-comparison-arm', diagram); this.make('small', '', box, role); const label = !record.node_id && neutralControl(record.label)?.id === 'control:placebo' ? 'Placebo' : record.label || this.model.byId.get(record.node_id)?.label || 'Complete arm';const node = this.model.byId.get(record.node_id);if(node)this.htmlDrugNames(box,node);else{this.make('strong','',box,label);box.classList.add('tm-neutral-arm');}return box; };
         endpoint(display.intervention, 'Intervention');
@@ -1212,7 +1277,7 @@
       this.listen(this.stage, 'pointerup', stop); this.listen(this.stage, 'pointercancel', stop);
       this.listen(this.stage, 'keydown', (event) => { if (event.key === '+' || event.key === '=') { event.preventDefault(); this.zoom(1.3); } else if (event.key === '-') { event.preventDefault(); this.zoom(1 / 1.3); } else if (event.key === 'Home') { event.preventDefault(); this.fit(true); } else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) { event.preventDefault(); this.camera.x += event.key === 'ArrowLeft' ? 55 : event.key === 'ArrowRight' ? -55 : 0; this.camera.y += event.key === 'ArrowUp' ? 55 : event.key === 'ArrowDown' ? -55 : 0; this.applyCamera(); } });
     }
-    destroy() { this.nodeStudiesController?.destroy(); this.cleanups.forEach((cleanup) => cleanup()); this.resizeObserver?.disconnect(); this.picker?.destroy(); this.root.replaceChildren(); this.root.classList.remove('treatment-map'); }
+    destroy() { this.filterPanel?.destroy(); this.nodeStudiesController?.destroy(); this.cleanups.forEach((cleanup) => cleanup()); this.resizeObserver?.disconnect(); this.picker?.destroy(); this.root.replaceChildren(); this.root.classList.remove('treatment-map'); }
   }
   return Object.freeze({ mount: (root, graph, options) => new MapView(root, graph, options), prepare, branchNodes, displayParents, layout, parallelArms, branchComparisons, branchNodeLabel, parallelLinkGeometry, radialComparisonGeometry, directParallelNodeIds, neutralControl, effectLabel, countLabel, countedContributions, categoryInfo, annularSectorPath, studyLabel, recordCoverage, engineSignature, preparedDefaults, buildDefaultViews, preparedLayout, serializeLayout, savedAnalysis, analysisKey, comparisonDirection });
 });

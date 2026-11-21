@@ -27,3 +27,21 @@ test('present the publication month with correct precision and link findings by 
   assert.match(host.innerHTML,/1 more result/);
   assert.match(host.innerHTML,/Grade 3 toxicity/);
 });
+
+test('study metadata spans the distinct treatment and population rows', () => {
+  const host = {};
+  render(host, {schema_version:2, reports:[{pmid:'7',title:'Melanoma',author:'Test et al.',date:'2026-10-18',
+    date_basis:'Print publication',trial:'Named trial',nct:'NCT00000001',abstract_only:true,nontrial:true,groups:[
+      {group:'All participants',comparator:'Nivolumab',intervention:'Temozolomide',add_on:true,samples:[{sample_size:'157'}],effects:[{endpoint:'OS · HR',value:'0.800'}]},
+      {group:'Subgroup',comparator:'Ipilimumab 3 mg/kg',intervention:'Ipilimumab 10 mg/kg',comparator_n:10,intervention_n:11,samples:[],effects:[]}
+    ]}]});
+  for (const label of ['Trial name','Comparator','Intervention','Sample size','Effect size (CI)']) assert.ok(host.innerHTML.includes('>'+label+'</th>'));
+  assert.equal((host.innerHTML.match(/Named trial/g) || []).length,1);
+  assert.match(host.innerHTML,/<td rowspan="2">Named trial/);
+  assert.match(host.innerHTML,/data-treatment-class="ici">Nivolumab<\/span>/);
+  assert.match(host.innerHTML,/treatment-add-on"[^>]*>\+<\/span> <span class="treatment-tag" data-treatment-class="chemotherapy">Temozolomide<\/span>/);
+  assert.match(host.innerHTML,/Ipilimumab<\/span> 3 mg\/kg<\/span> <span class="treatment-arm-n">\(N=10\)/);
+  assert.match(host.innerHTML,/Ipilimumab<\/span> 10 mg\/kg<\/span> <span class="treatment-arm-n">\(N=11\)/);
+  assert.match(host.innerHTML,/N=157/);
+  assert.match(host.innerHTML,/Abstract only/);
+});

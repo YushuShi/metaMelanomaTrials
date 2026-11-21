@@ -12,6 +12,9 @@
     .replace(/\s*([/+])\s*/g,'$1').replace(/\s*-\s*/g,'-')
     .replace(/\s+/g,' ').trim().toLowerCase();
   const entriesOf=data=>[...list(data?.products).map(entry=>({...entry,entity_type:'product'})),...list(data?.generic_classes).map(entry=>({...entry,entity_type:'generic'}))];
+  function catalogueTreatments(data) {
+    return [...list(data.products), ...list(data.generic_classes).filter(entry => entry.selectable_modality && entry.entity_status === 'non_drug')];
+  }
   function indexFor(data){
     const index=new Map();
     for(const entry of entriesOf(data))for(const alias of [entry.label,...list(entry.aliases)]){
@@ -33,6 +36,20 @@
       if(ids.has(entry.id))errors.push('Duplicate registry identity: '+entry.id);ids.add(entry.id);
       if(categories&&categories[entry.class_id]!==entry.broad_category)errors.push('Inconsistent class/broad category: '+entry.id);
       if(!list(entry.source_ids).length||entry.source_ids.some(id=>!sources.has(id)))errors.push('Registry entry needs valid supporting sources: '+entry.id);
+    }
+    const broadById = new Map(entriesOf(data).map(entry => [entry.id, entry.broad_category]));
+    const subgroupIds = new Set();
+    for (const group of list(data?.display_subgroups)) {
+      if (!group.id || !group.label || subgroupIds.has(group.id)) errors.push('Invalid display subgroup: ' + group.id);
+      subgroupIds.add(group.id);
+      if (!list(group.class_ids).length && !list(group.member_ids).length) errors.push('Empty display subgroup: ' + group.id);
+      for (const id of list(group.member_ids)) {
+        if (broadById.get(id) !== group.broad_category) errors.push('Invalid display subgroup member: ' + id);
+      }
+      for (const id of list(group.class_ids)) {
+        if (categories?.[id] !== group.broad_category) errors.push('Invalid display subgroup class: ' + id);
+      }
+      if (list(group.source_ids).some(id => !sources.has(id))) errors.push('Unknown display subgroup source: ' + group.id);
     }
     for(const [alias,values]of index)if(values.length>1)collisions.push({normalized_alias:alias,identities:values.map(entry=>entry.id)});
     return {valid:!errors.length&&!collisions.length,errors,collisions};
@@ -113,7 +130,6 @@
         return generic(raw,'other-targeted','BRAF and MEK inhibitor combination','targeted','Combined BRAF and MEK inhibition',{combination_status:'combination',targets:['BRAF','MEK'],class_ids:['braf','mek']});
       if(/^(?:surgery|surgery alone|excision|resection)$/.test(text))return result(raw,{status:'non_drug',label:'Surgery',class_id:'surgery',broad_category:'surgery',role:'principal',active_exposure:true,match_method:'complete_modality_phrase',review_reason:null});
       if(/^(?:radiotherapy|radiation(?: therapy)?|srs|sbrt|stereotactic radiosurgery)$/.test(text))return result(raw,{status:'non_drug',label:'Radiotherapy',class_id:'radiotherapy',broad_category:'radiotherapy',role:'principal',active_exposure:true,match_method:'complete_modality_phrase',review_reason:null});
-      if(/^(?:faecal|fecal) microbiota transplantation$/.test(text))return result(raw,{status:'non_drug',label:'Fecal microbiota transplantation',class_id:'other',broad_category:'other',mechanism:'Microbiome intervention',role:'principal',active_exposure:true,match_method:'complete_modality_phrase',review_reason:null});
       if(/^(?:standard[- ](?:of[- ])?care|investigator'?s choice|usual care|systemic therapy|bispecifics|mage-a3 blocker|bmsca2098fc)$/.test(text))
         return result(raw,{review_reason:'The reported wording does not establish the administered product or regimen.'});
       return result(raw);
@@ -121,5 +137,5 @@
     return Object.freeze({registry:data,validation,normalize,resolve,exact:raw=>exact(raw).map(entry=>({...entry}))});
   }
   const api=create(registry);
-  return Object.freeze({...api,create,validateRegistry});
+  return Object.freeze({...api,create,validateRegistry,catalogueTreatments});
 });

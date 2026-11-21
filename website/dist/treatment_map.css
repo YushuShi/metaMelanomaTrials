@@ -40,6 +40,7 @@
 .tm-card-count.tm-linkage-pending{font-size:10px}
 .tm-tree-node:hover .tm-card,.tm-tree-node:focus .tm-card{stroke:#555;stroke-width:1.6}
 .tm-tree-node.tm-selected .tm-card{stroke:#252525;stroke-width:2;fill:#fafafa}
+.tm-tree-node.tm-branch-center .tm-card{fill:#ffdaea}
 .tm-tree-node.tm-comparison-endpoint .tm-card{stroke-dasharray:4 2}.tm-tree-node.tm-selected .tm-card{stroke-dasharray:none}
 .tm-tiny-tree .tm-card-compact{display:block;font-size:calc(10px * var(--tm-inverse-scale,1))}.tm-tiny-tree .tm-card-compact-count{display:block;font-size:calc(9px * var(--tm-inverse-scale,1));fill:#777}.tm-tiny-tree .tm-card-label,.tm-tiny-tree .tm-card-count,.tm-tiny-tree .tm-component-dot{display:none}.tm-micro-tree .tm-card-compact-count,.tm-micro-tree .tm-tree-node:not(.tm-selected) .tm-card-compact{display:none}
 .tm-legend{display:flex;flex-wrap:wrap;gap:9px 22px;padding:13px 22px;font-size:10px;color:#666;border-top:1px solid #e7e7e7;background:#fff}
@@ -109,3 +110,12 @@
 @media(max-width:650px){.tm-node-studies-container{padding:.8rem}.tm-node-studies .study-table-actions{display:flex;gap:.5rem;flex-wrap:wrap}}
 
 .tm-node-studies .tm-exact-studies-table th:nth-child(1){width:18%}.tm-node-studies .tm-exact-studies-table th:nth-child(2){width:6%}.tm-node-studies .tm-exact-studies-table th:nth-child(3){width:4%}.tm-node-studies .tm-exact-studies-table th:nth-child(4){width:6%}.tm-node-studies .tm-exact-studies-table th:nth-child(5){width:7%}.tm-node-studies .tm-exact-studies-table th:nth-child(6){width:8%}.tm-node-studies .tm-exact-studies-table th:nth-child(7){width:11%}.tm-node-studies .tm-exact-studies-table th:nth-child(8){width:10%}.tm-node-studies .tm-exact-studies-table th:nth-child(9){width:10%}.tm-node-studies .tm-exact-studies-table th:nth-child(10){width:8%}.tm-node-studies .tm-exact-studies-table th:nth-child(11){width:12%}
+
+.tm-title-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.tm-title-controls .advanced-filter-toggle{padding:4px 0}
+.treatment-map>.advanced-filters{margin:0;padding:16px 28px;border-top:0;border-bottom:1px solid var(--line,#ddd)}
+.tm-node.tm-filter-muted{filter:grayscale(1);opacity:.55}
+.tm-node.tm-filter-muted:focus-visible{opacity:1}
+.tm-parallel-link.tm-filter-muted .tm-parallel-edge{stroke:#9ca3af}
+.tm-node.tm-filter-muted :is(.tm-agent-dot,.tm-component-dot,.tm-name-dot,.tm-card-accent){fill:#80858b}
+.tm-tree-node.tm-filter-muted .tm-card{fill:#efefef}

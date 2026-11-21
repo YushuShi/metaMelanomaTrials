@@ -193,6 +193,16 @@ test('single trial without precision keeps diagnostic tabs disabled but calculat
  const tabs=withClass(v.comparisonBand,'tm-comparison-tab');assert.ok(tabs.slice(1).every(t=>t.disabled));
  withClass(v.details,'tm-planning-toggle')[0].click();const plan=v.planningFor(p.edge);assert.ok(plan.required.events>0);assert.ok(plan.rows[0].own.n);assert.equal(plan.rows[0].pooled,null);
 });
+test('arm percentages alone display a calculated point estimate and keep pooling disabled',()=>{
+ const g=pooledGraph(),src=g.comparisons[0];
+ g.comparisons=[{...src,outcome:'ORR',measure:'RR',estimate:1.8,ci_lower:null,ci_upper:null,ci_level:null,
+   calculation:{method:'from_arm_binary_outcomes',outcome_context:{endpoint:'ORR'}},
+   analysis:{...src.analysis,planning_assumptions:[{id:'p0',kind:'binary_probability',arm_role:'comparator',probability:.12,source_refs:[]}]}}];
+ const v=mount(g);v.setBranch('agent:a');v.setEndpoint('ORR:RR');const {edge}=pair(v,'agent:a','ab');v.selectParallel(edge.id);
+ assert.equal(v.edgeEvidence(edge).effect.estimate,1.8);assert.equal(v.edgeEvidence(edge).effect.ci_valid,false);
+ assert.match(v.comparisonBand.textContent,/Study estimate · calculated from arm rates/);
+ assert.ok(withClass(v.comparisonBand,'tm-comparison-tab').slice(1).every(tab=>tab.disabled));
+});
 test('insufficient study sample sizes use one latest result for arrows, Study estimate and planning',()=>{
  for(const availableN of [0,1]){
   const g=pooledGraph();g.nodes=g.nodes.map(node=>node.id==='ab'?{...node,overview_parent_id:'agent:a'}:node);
@@ -528,4 +538,26 @@ test('treatment category dots are adjacent to the named agent rather than detach
  assert.equal(withClass(v.nodeElements.get('ab'),'tm-component-dot').length,0,'no detached category-dot row in branch cards');
  const p=pair(v,'agent:a','ab');v.selectParallel(p.edge.id);const names=withClass(v.comparisonBand,'tm-inline-drug-name');assert.ok(names.length>=3);assert.ok(names.every(name=>name.children[0].classList.contains('tm-inline-name-dot')));
  const neutral=v.htmlDrugNames(v.comparisonBand,{id:'control:placebo',label:'Placebo',components:[]});assert.equal(neutral.textContent,'Placebo','a neutral comparator without named drugs still displays its label');
+});
+
+test('clinical filters mute exact nodes independently of their arrows and preserve the branch and radial geometry',()=>{
+ const v=mount(cohortFixture());v.setBranch('agent:a');
+ const original=[...v.nodeElements.keys()],p=pair(v,'agent:a','ab');
+ assert.ok(hasArrow(v.parallelLinkTitles.get(p.edge.id).path));
+ v.setAdvancedFilters({active:true,selections:{stage:'iii'},matches:{},nodeIds:new Set(['agent:a'])});
+ const check=()=>{
+   const edge=pair(v,'agent:a','ab').edge,link=v.parallelLinks.get(edge.id);
+   assert.equal(v.nodeElements.get('agent:a').classList.contains('tm-filter-muted'),false);
+   assert.equal(v.nodeElements.get('ab').classList.contains('tm-filter-muted'),true);
+   assert.ok(link.classList.contains('tm-filter-muted'));
+   assert.equal(data(link,'effectState'),'neutral');assert.equal(data(link,'estimate'),'');
+   assert.ok(hasArrow(v.parallelLinkTitles.get(edge.id).path));
+   assert.equal(v.edgeEvidence(edge).effect,null);
+   assert.equal(v.nodeElements.get('ab').getAttribute('tabindex'),'0');
+ };
+ check();assert.deepEqual([...v.nodeElements.keys()],original);
+ v.setBranch('all');check();
+ v.setAdvancedFilters({active:false,matches:{}});
+ assert.equal(withClass(v.world,'tm-filter-muted').length,0);
+ assert.ok(v.edgeEvidence(pair(v,'agent:a','ab').edge).effect?.valid);
 });

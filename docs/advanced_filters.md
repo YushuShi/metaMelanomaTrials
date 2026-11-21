@@ -4,6 +4,13 @@ Open **Advanced filter** below Comparator to browse the current study table by
 clinical subgroup. **Endpoint is optional.** With All endpoints selected, users
 can choose, for example, Stage III and see its report count and matching studies.
 
+The same clinical filters are available beside the Treatment map and
+Underpowered studies headings. Selecting a subgroup on the map keeps the
+radial and branch layouts intact. A node stays colored when its exact regimen
+has matching evidence. A comparison arrow stays colored when the selected
+endpoint has eligible evidence for that comparison. Underpowered studies applies
+the selection to the population for each effect estimate.
+
 The controls are treatment setting, disease stage, melanoma type, BRAF mutation
 status, advanced-disease treatment line and baseline LDH. Stage I–IV includes
 substages. Unknown and inseparable mixed stages are not assigned to a pure-stage

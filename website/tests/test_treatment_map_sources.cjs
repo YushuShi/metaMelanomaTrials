@@ -111,7 +111,8 @@ test('actual SRS source retains complete concurrent regimens and original OS/PFS
   assert.deepEqual(nivo.components,['nivolumab','radiosurgery']);assert.deepEqual(ipi.components,['ipilimumab','radiosurgery']);
   assert.equal(nivo.count_summary.known_n,35);assert.equal(ipi.count_summary.known_n,45);
   assert.equal(sum(graph,'agent:nivolumab'),0);assert.equal(sum(graph,'agent:ipilimumab'),0);assert.equal(sum(graph,'agent:radiosurgery'),0);
-  assert.deepEqual(graph.comparisons.map(c=>[c.outcome,c.estimate,c.ci_lower,c.ci_upper]).sort(),[['OS',0.51,0.28,0.81],['PFS',0.54,0.32,0.92]]);
+  assert.deepEqual(graph.comparisons.filter(c=>!c.calculation).map(c=>[c.outcome,c.estimate,c.ci_lower,c.ci_upper]).sort(),[['OS',0.51,0.28,0.81],['PFS',0.54,0.32,0.92]]);
+  assert.ok(graph.comparisons.filter(c=>c.calculation).every(c=>[nivo.id,ipi.id].includes(c.intervention.node_id)&&[nivo.id,ipi.id].includes(c.comparator.node_id)));
   const m=graph.study_memberships.find(m=>m.node_id===ipi.id);
   assert.deepEqual(m.source_bindings.map(b=>b.stage).sort(),['R2','R3']);assert.ok(m.source_bindings.every(b=>b.task_id&&b.raw_record_sha256&&b.review_binding_sha256));
   assert.ok(m.source_bindings.some(b=>b.result_ids.length>0));assert.equal(m.canonical_regimen.label,ipi.label);
@@ -288,7 +289,28 @@ test('actual multi-NCT biomarker publication never merges CheckMate 066 and 067 
   assert.equal(sum(graph,'agent:nivolumab','nct:NCT01844505'),316);
   assert.equal(sum(graph,'agent:ipilimumab','nct:NCT01844505'),315);
   assert.ok(rows(graph).filter(r=>r.n!==null).every(r=>(r.nct_ids||[]).length<=1));
-  assert.ok(graph.comparisons.every(c=>c.pmid!=='34389558'),'biomarker contrasts are not treatment comparisons');
+  const contrasts=graph.comparisons.filter(c=>c.pmid==='34389558');
+  // CheckMate 067 Table 1 (all treated) and CheckMate 066 Supplementary Table 7 (high TMB).
+  for(const [trial,population,expected] of [
+    ['nct:NCT01844505','pop-067',[['ipilimumab',60,311],['nivolumab',141,313]]],
+    ['nct:NCT01721772','pop-066-tmb-high',[['dacarbazine',6,36],['nivolumab',14,23]]],
+  ]){
+    assert.ok(contrasts.some(c=>{
+      if(c.study_id!==trial||c.measure!=='RR'||!c.calculation)return false;
+      const inputs=[c.calculation.intervention,c.calculation.reference];
+      return inputs.every(input=>input.population_id===population)
+        && expected.every(([label,events,n])=>inputs.some(i=>i.label===label&&i.numerator===events&&i.denominator===n));
+    }),`source-supported response counts in ${trial}, ${population}`);
+  }
+  for(const contrast of contrasts){
+    assert.ok(contrast.calculation,'biomarker coefficients are not treatment comparisons');
+    assert.equal(contrast.outcome,'ORR');
+    const trial=({'nct:NCT01721772':'066','nct:NCT01844505':'067'})[contrast.study_id];assert.ok(trial);
+    const {intervention,reference}=contrast.calculation;
+    assert.notEqual(intervention.arm_id,reference.arm_id);
+    assert.equal(intervention.population_id,reference.population_id,'compare treatments in the same biomarker stratum');
+    assert.ok([intervention,reference].every(input=>input.row_id.startsWith('orr-'+trial+'-')),'both source rates belong to the identified trial');
+  }
 });
 
 test('actual HR stays bound to the complete combination versus ipilimumab with its outcome and source tuple',()=>{
@@ -375,14 +397,21 @@ test('every full-catalogue N reconciles and is bound to an accepted original sou
 
 test('every displayed full-catalogue effect preserves its original tuple and resolvable evidence',()=>{
   const graph=actualGraph('all',quantitative.articles.map(a=>a.pmid));
-  const records=new Map(quantitative.articles.flatMap(a=>a.records.map(w=>[[a.pmid,w.record.stage,w.record.source_sha256].join('|'),w.record])));
+  const records=new Map(quantitative.articles.flatMap(a=>a.records.map(w=>[[a.pmid,w.record.stage,w.record.source_sha256].join('|'),w])));
   const evidence=quantitative.clinical_evidence.evidence_registry;
   for(const effect of graph.comparisons){
     assert.ok(effect.source_refs.length,effect.id);
     assert.notEqual(effect.intervention.node_id,effect.comparator.node_id,effect.id);
     assert.match(effect.source_url,new RegExp(effect.pmid));
     for(const ref of effect.source_refs){
-      const source=records.get([ref.pmid,ref.stage,ref.source_sha256].join('|')).effects.find(e=>e.id===ref.effect_id);
+      const wrapper=records.get([ref.pmid,ref.stage,ref.source_sha256].join('|'));
+      const source=(effect.calculation?wrapper.calculated_effects:wrapper.record.effects).find(e=>e.id===ref.effect_id);
+      if(effect.calculation){
+        for(const side of ['intervention','reference']){
+          const input=effect.calculation[side];
+          assert.ok(wrapper.record.binary.some(r=>r.id===input.row_id&&r.arm_id===input.arm_id&&r.population_id===input.population_id&&r.endpoint===effect.outcome),effect.id+' '+side);
+        }
+      }
       for(const field of ['estimate','ci_lower','ci_upper','ci_level'])assert.equal(effect[field],typeof source[field]==='number'?source[field]:null,effect.id+' '+field);
       assert.equal(effect.measure,source.measure);assert.equal(effect.outcome,source.endpoint);
       assert.equal(effect.intervention.arm_id,source.intervention_arm_id);assert.equal(effect.comparator.arm_id,source.reference_arm_id);

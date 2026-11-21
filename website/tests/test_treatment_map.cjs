@@ -88,6 +88,40 @@ test('class mapping keeps ICI, other immunotherapy, cytokines and unknown regist
   assert.equal(map.categoryInfo({ broad_category: 'new_registry_kind' }).class_id, 'other');
   assert.equal(map.categoryInfo({}).label, 'Other / unclassified');
 });
+test('radial subgroups occupy separate clefts in one broad color in saved and live views', () => {
+  const agent = (id, label, category, subgroup) => ({
+    ...drug(id,label), broad_category:category, class_id:subgroup.id, radial_subgroup:subgroup,
+  });
+  const pd1={id:'pd1',label:'PD-1 inhibitors'}, ctla4={id:'ctla4',label:'CTLA-4 inhibitors'}, vegf={id:'vegf',label:'VEGF inhibitors'};
+  const source={content_sha256:'subgroup-fixture', nodes:[
+    agent('a','A PD-1','ici',pd1), agent('b','B CTLA-4','ici',ctla4),
+    agent('c','C PD-1','ici',pd1), agent('d','D VEGF','targeted',vegf),
+    regimen('ad',['a','d']),
+  ]};
+  const model=map.prepare(source), tree=map.layout(model,'all');
+  const [checkpoint,targeted]=tree.sectors;
+  const [ctla,pd]=checkpoint.segments;
+  assert.deepEqual(checkpoint.root_ids,['agent:b','agent:a','agent:c']);
+  assert.deepEqual([ctla.id,pd.id,targeted.segments[0].id],['ctla4','pd1','vegf']);
+  assert.ok(pd.start>ctla.end);
+  assert.ok(targeted.start-checkpoint.end>pd.start-ctla.end);
+  assert.equal(tree.positions.get('ad').subgroup_id,'pd1');
+  assert.ok(tree.positions.get('ad').angle>=pd.start && tree.positions.get('ad').angle<=pd.end);
+  const saved=map.buildDefaultViews(model);
+  const loaded=map.prepare({...source,default_views:JSON.parse(JSON.stringify(saved))});
+  assert.deepEqual(map.preparedLayout(loaded,'all').sectors,tree.sectors);
+  const {root,view}=mountedFixture(source);view.setBranch('all');
+  const paths=withClass(root,'tm-category-sector');
+  assert.deepEqual(paths.map(p=>p.getAttribute('data-subgroup-id')),['ctla4','pd1','vegf']);
+  assert.match(paths[0].textContent,/CTLA-4 inhibitors/);
+  assert.equal(view.nodeElements.get('agent:a').getAttribute('data-treatment-class'),'ici');
+  assert.equal(view.nodeElements.get('agent:b').getAttribute('data-treatment-class'),'ici');
+  assert.deepEqual(withClass(view.nodeElements.get('ad'),'tm-component-dot').map(dot=>dot.getAttribute('data-treatment-class')),['ici','targeted']);
+  // An overview with only one broad category still has a cleft at the seam.
+  const single=map.layout(map.prepare({nodes:source.nodes.slice(0,3)}),'all').sectors[0];
+  assert.ok(single.start+Math.PI*2-single.end>0.03);
+  view.destroy();
+});
 test('source-supported regimens awaiting study linkage show publications rather than zero studies', () => {
   const node = { count_summary: { identified_studies: 0, publication_count: 1, unlinked_publications: 1, known_n: 14, status: 'provisional' } };
   assert.equal(map.studyLabel(node), '1 supporting publication; study linkage pending');
@@ -156,6 +190,21 @@ test('mounted branch → overview → branch clears detailed evidence and restor
   assert.equal(withClass(view.details, 'tm-detail-comparisons').length, 0); assert.equal(withClass(view.details, 'tm-arms').length, 0);
   assert.doesNotMatch(view.details.textContent, /Direct comparisons|Study & outcome|Counted treatment arms|Uncounted arms & source review/);
   view.destroy(); assert.equal(root.children.length, 0);
+});
+
+test('the branch center stays pink when other nodes are selected and follows each new root', () => {
+  const { view } = mountedFixture();
+  const centers = () => [...view.nodeElements].filter(([, element]) => element.classList.contains('tm-branch-center')).map(([id]) => id);
+  view.setBranch('agent:a');
+  assert.deepEqual(centers(), ['agent:a']);
+  assert.match(view.nodeElements.get('agent:a').getAttribute('aria-label'), /Branch center/);
+  assert.ok(withClass(view.nodeElements.get('agent:a'), 'tm-name-dot').length);
+  view.select('ab');
+  assert.deepEqual(centers(), ['agent:a']);
+  view.setBranch('ab');
+  assert.deepEqual(centers(), ['ab']);
+  view.setBranch('all');
+  assert.deepEqual(centers(), []);
 });
 
 test('branch category counts follow visible add-on labels, opposing regimens and controls rather than the catalogue',()=>{

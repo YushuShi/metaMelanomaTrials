@@ -86,7 +86,7 @@
   const numericalPrecision = (record) => sum([record.estimate, record.ci_lower, record.ci_upper].filter((v) => positive(v) !== null).map(decimalPlaces));
   const completeness = (record) => Number(record?.analysis?.source_completeness || 0);
   function representativeOrder(a, b) {
-    return Number(fullInterval(b)) - Number(fullInterval(a)) || numericalPrecision(b) - numericalPrecision(a) || completeness(b) - completeness(a) || text(a.id).localeCompare(text(b.id));
+    return Number(fullInterval(b)) - Number(fullInterval(a)) || Number(!!a.calculation) - Number(!!b.calculation) || numericalPrecision(b) - numericalPrecision(a) || completeness(b) - completeness(a) || text(a.id).localeCompare(text(b.id));
   }
   function cutoff(record) {
     const value = record.analysis?.analysis_date || record.cutoff;
@@ -316,6 +316,8 @@
       const adjusted = row => [row.comparison.analysis?.adjusted, row.comparison.adjusted, row.comparison.analysis?.compatibility?.adjusted].find(value => !missing(value)) === 'yes';
       if (adjusted(a) !== adjusted(b)) return adjusted(a) ? -1 : 1;
     }
+    if (a.comparison.pmid && a.comparison.pmid === b.comparison.pmid && !!a.comparison.calculation !== !!b.comparison.calculation)
+      return a.comparison.calculation ? 1 : -1;
     if (x[1] !== y[1]) return y[1] > x[1] ? 1 : -1;
     for (let i = 2; i < x.length; i += 1) if (x[i] !== y[i]) return y[i] > x[i] ? 1 : -1;
     return 0;

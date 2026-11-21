@@ -351,7 +351,7 @@ test('external subset arrows retain their complete comparison and smaller-to-exp
     assert.equal(evidence.tailId, edge.root_id);
     assert.equal(evidence.headId, edge.opponent_id);
     assert.equal(evidence.effect.estimate, 0.7);
-    assert.equal(evidence.style.color, '#c026d3');
+    assert.equal(evidence.style.color, '#dc2626');
     assert.deepEqual(view.comparisonChoices().map((item) => item.id), [sourceId]);
     assert.equal(withClass(view.comparisonBand, 'tm-comparison-arm')[0].textContent, 'Intervention' + view.nodeFor(edge.opponent_id).label);
     assert.equal(withClass(view.comparisonBand, 'tm-comparison-arm')[1].textContent, 'Comparator' + view.nodeFor(edge.root_id).label);

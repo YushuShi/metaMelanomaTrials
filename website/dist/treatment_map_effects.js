@@ -21,9 +21,20 @@
     ['AE', 'Adverse events', 'RR', 'lower'],
     ['AE', 'Adverse events', 'OR', 'lower'],
   ];
+  const binaryOutcomes = [
+    ['CR','Complete response'], ['PR','Partial response'], ['pCR','Pathologic complete response'],
+    ['AE_any','Any adverse event'], ['AE_grade_ge3','Grade ≥3 adverse events'],
+    ['AE_grade_3_4','Grade 3–4 adverse events'], ['AE_serious','Serious adverse events'],
+    ['AE_immune_related','Immune-related adverse events'], ['AE_discontinuation','Discontinuation due to adverse events'],
+    ['treatment_related_death','Treatment-related death']
+  ];
+  for(const [code,name] of binaryOutcomes){
+    const polarity=code.startsWith('AE_')||code==='treatment_related_death'?'lower':'higher';
+    for(const measure of ['RR','OR'])endpointDefinitions.push([code,name,measure,polarity]);
+  }
   const endpoints = Object.freeze(endpointDefinitions.map(([abbreviation, name, measure, polarity]) => Object.freeze({
     key: abbreviation + ':' + measure, endpoint: abbreviation, abbreviation, name, measure, polarity,
-    label: `${name} (${abbreviation})` + (measure === 'HR' ? '' : ' · ' + measure),
+    label: (abbreviation.includes('_') ? name : `${name} (${abbreviation})`) + (measure === 'HR' ? '' : ' · ' + measure),
     shortLabel: abbreviation + (measure === 'HR' ? '' : ' · ' + measure),
   })));
   const byKey = new Map(endpoints.map((endpoint) => [endpoint.key, endpoint]));
@@ -38,24 +49,44 @@
   ]) aliases.set(normalized(name), abbreviation);
   const measureAliases = new Map([['hr', 'HR'], ['hazard ratio', 'HR'], ['rr', 'RR'], ['risk ratio', 'RR'], ['relative risk', 'RR'], ['or', 'OR'], ['odds ratio', 'OR']]);
   function measureKey(value) { return measureAliases.get(normalized(value)) || null; }
-  function endpointKey(comparison) {
-    if (!comparison || typeof comparison !== 'object') return null;
-    const abbreviation = aliases.get(normalized(comparison.outcome)), measure = measureKey(comparison.measure);
-    const key = abbreviation && measure ? abbreviation + ':' + measure : null;
-    return byKey.has(key) ? key : null;
+  function baseEndpoint(comparison) {
+    const code=aliases.get(normalized(comparison?.outcome));
+    return byKey.get(code+':'+measureKey(comparison?.measure));
   }
-  function comparisonMatchesEndpoint(comparison, key) { return byKey.has(key) && endpointKey(comparison) === key; }
-  function availableEndpointOptions(comparisons, options) {
-    const counts = new Map();
-    for (const comparison of Array.isArray(comparisons) ? comparisons : []) {
-      const key = endpointKey(comparison); if (key) counts.set(key, (counts.get(key) || 0) + 1);
+  function comparisonEndpoint(comparison) {
+    const base=baseEndpoint(comparison);
+    if(!base||base.measure==='HR')return base;
+    const ctx=comparison.calculation?.outcome_context||{};
+    const detail=value=>value!=null&&!/^(?:na|n\/a|unknown|unspecified)$/i.test(String(value).trim())?String(value).trim():'';
+    const definition=detail(ctx.definition)||detail(comparison.outcome_definition);
+    const facets=[];
+    if(base.endpoint.startsWith('AE_')||base.endpoint==='treatment_related_death'){
+      if(definition&&normalized(definition)!==normalized(base.name))facets.push(definition);
+      if(detail(ctx.safety_attribution))facets.push(detail(ctx.safety_attribution).replace(/_/g,' '));
+    } else{
+      const context=[ctx.response_criteria,definition].map(detail).join(' ');
+      if(/\biRECIST\b|immune.related (?:response|recist)|\birRC\b|\birRECIST\b/i.test(context))facets.push('immune response criteria');
+      if(/intracranial|extracranial|intralesional|pathologi(?:c|cal) response/i.test(context))facets.push(definition||context.trim());
     }
-    const required = new Set(['ORR:RR', ...(options?.includeDefault === false ? [] : ['OS:HR'])]);
-    return endpoints.filter((endpoint) => required.has(endpoint.key) || counts.has(endpoint.key)).map((endpoint) => ({
-      ...endpoint, count: counts.get(endpoint.key) || 0,
-      // OS remains selectable to show an honest no-OS-evidence state. Reported OR is never substituted for RR.
-      disabled: endpoint.key !== 'OS:HR' && !counts.has(endpoint.key),
-    }));
+    if(detail(ctx.assessment_time)&&detail(ctx.time_unit))facets.push(ctx.assessment_time+' '+ctx.time_unit);
+    if(!facets.length)return base;
+    const description=facets.join(' · ');
+    return {...base,key:base.key+'|'+JSON.stringify(facets.map(normalized)),label:base.label+' · '+description,shortLabel:base.shortLabel+' · '+description};
+  }
+  function endpointKey(comparison) { return comparisonEndpoint(comparison)?.key||null; }
+  function comparisonMatchesEndpoint(comparison,key){return !!key&&endpointKey(comparison)===key;}
+  function availableEndpointOptions(comparisons,options){
+    const required=['ORR:RR',...(options?.includeDefault===false?[]:['OS:HR'])];
+    const optionsByKey=new Map(required.map(key=>[key,{...byKey.get(key),count:0}]));
+    for(const comparison of Array.isArray(comparisons)?comparisons:[]){
+      const endpoint=comparisonEndpoint(comparison);
+      if(!endpoint)continue;
+      const prior=optionsByKey.get(endpoint.key);
+      optionsByKey.set(endpoint.key,{...endpoint,count:(prior?.count||0)+1});
+    }
+    const order=key=>endpoints.findIndex(e=>e.key===key.split('|')[0]);
+    return [...optionsByKey.values()].sort((a,b)=>order(a.key)-order(b.key)||a.label.localeCompare(b.label))
+      .map(endpoint=>({...endpoint,disabled:endpoint.key!=='OS:HR'&&!endpoint.count}));
   }
   function armId(arm) {
     if (!arm || typeof arm !== 'object') return null;
@@ -69,7 +100,7 @@
     const number = Number(value); return Number.isFinite(number) && number > 0 ? number : null;
   }
   function directedEffect(comparison, tailId, headId) {
-    const original = comparison || null, measure = measureKey(comparison?.measure), key = endpointKey(comparison), endpoint = byKey.get(key);
+    const original = comparison || null, measure = measureKey(comparison?.measure), endpoint = comparisonEndpoint(comparison), key = endpoint?.key || null;
     const output = {
       valid: false, estimate: null, ci_lower: null, ci_upper: null, ci_level: comparison?.ci_level ?? null,
       measure, endpoint_key: key, polarity: endpoint?.polarity || null, direction: 'neutral',

@@ -133,7 +133,11 @@
   }
   function renderForest(doc, root, group, rows, options, measure) {
     const pooled = group.pooled, width = 1280, plotLeft = 360, plotRight = 765, ratioColumn = 795, logColumn = 1035;
-    const labels = rows.map(row => wrapText(rowLabel(row), 45));
+    const labels = rows.map(row => {
+      const lines=wrapText(rowLabel(row),45);
+      if(row.comparison?.calculation)lines.push('Calculated from arm rates');
+      return lines;
+    });
     const positions = []; let cursor = 52;
     labels.forEach(lines => { const height = Math.max(44, lines.length * 15 + 19); positions.push({ y: cursor + height / 2, height }); cursor += height; });
     const pooledY = cursor + 31, axisY = pooledY + 30, height = axisY + 70;

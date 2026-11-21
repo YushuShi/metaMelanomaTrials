@@ -201,3 +201,17 @@ test('serialized legacy and native history/negation roles cannot be promoted to 
   const value=groups.definitionFromNative({...native([nativeNode('r','SEQUENTIAL',null,['n','i']),nativeNode('n','drug','nivolumab'),nativeNode('i','drug','ipilimumab')]),label:'Ipilimumab following nivolumab'});
   assert.equal(value.role,'actual_regimen');assert.equal(groups.describe(value).kind,'sequential');
 });
+
+test('registry updates preserve the source leaf of a parsed compound regimen',()=>{
+  const graph=native([nativeNode('r','OR',null,['cp','pac']),
+    nativeNode('cp','drug','carboplatin/paclitaxel'),nativeNode('pac','drug','paclitaxel')]);
+  const current=groups.definitionFromNative(graph,{source_binding:binding});
+  const previous=structuredClone(current);
+  previous.registry_version='1.0.0';
+  const nested=previous.root.children[0].native_leaf_source;
+  assert.ok(nested?.normalization);
+  nested.normalization.registry_version='1.0.0';
+  assert.deepEqual(groups.validateDefinition(previous),current);
+  nested.dose='source dose changed';
+  assert.throws(()=>groups.validateDefinition(previous),/differs from native graph/);
+});

@@ -1,10 +1,10 @@
 Treatment names and types
-Registry 1.0.0
+Registry 1.2.1
 
 Curated treatment registry and source-bound R2/R3 normalization review. Report counts overlap; they are not counts of independent studies. This is not a list of approved melanoma therapies.
 Verified complete aliases and broad classes use one registry. Unknown identities, formulations and source-dependent roles remain in the review queue. Original evidence and numerical results are unchanged.
 
-CURATED PRODUCTS
+NAMED TREATMENTS
 Abemaciclib → targeted → other-targeted; aliases: abemaciclib; Verzenio; LY2835219 [observed reports: 3]
 Abiraterone → endocrine → endocrine; aliases: abiraterone; Zytiga; Yonsa; CB7630; abiraterone acetate [observed reports: 0]
 Adagrasib → targeted → other-targeted; aliases: adagrasib; Krazati; MRTX849 [observed reports: 0]
@@ -16,6 +16,7 @@ Alectinib → targeted → other-targeted; aliases: alectinib; Alecensa; CH54248
 Alpelisib → targeted → other-targeted; aliases: alpelisib; Piqray; BYL719 [observed reports: 1]
 Amivantamab → targeted → other-targeted; aliases: amivantamab; Rybrevant; JNJ-61186372 [observed reports: 0]
 Anastrozole → endocrine → endocrine; aliases: anastrozole; Arimidex [observed reports: 0]
+Anlotinib → targeted → other-targeted; aliases: anlotinib; catequentinib; AL3818; AL-3818; anlotinib hydrochloride; catequentinib hydrochloride [observed reports: 2]
 Apalutamide → endocrine → endocrine; aliases: apalutamide; Erleada; ARN-509 [observed reports: 0]
 Apatinib → targeted → other-targeted; aliases: Apatinib; Rivoceranib; Apatinib mesylate; Rivoceranib mesylate; YN968D1; YN-968D1 [observed reports: 6]
 AS15 → immunotherapy → immunotherapy; aliases: AS15; AS-15; AS 15; AS15 immunostimulant; AS15 adjuvant [observed reports: 7]
@@ -42,6 +43,7 @@ Carboplatin → chemotherapy → chemotherapy; aliases: carboplatin; Paraplatin 
 Carmustine → chemotherapy → chemotherapy; aliases: Carmustine; BiCNU; BCNU; bis-chloronitrosourea; SK 27702; WR-139021 [observed reports: 11]
 Cemiplimab → ici → pd1; aliases: cemiplimab; Libtayo; REGN2810 [observed reports: 7]
 Ceralasertib → targeted → other-targeted; aliases: ceralasertib; AZD6738; ATR kinase inhibitor AZD6738 [observed reports: 2]
+Cetrelimab → ici → pd1; aliases: cetrelimab; JNJ-63723283; JNJ63723283 [observed reports: 1]
 Cetuximab → targeted → other-targeted; aliases: cetuximab; Erbitux [observed reports: 1]
 Cisplatin → chemotherapy → chemotherapy; aliases: cisplatin; Platinol [observed reports: 38]
 Cobimetinib → targeted → mek; aliases: cobimetinib; Cotellic; GDC-0973 [observed reports: 38]
@@ -112,6 +114,7 @@ Lifileucel → cell-therapies → cell-therapies; aliases: lifileucel; Amtagvi; 
 Lomustine → chemotherapy → chemotherapy; aliases: Lomustine; Gleostine; CCNU; RB-1509; WR-139017 [observed reports: 6]
 Lomvastomig → ici → pd1-tim3; aliases: Lomvastomig; RO7121661; RO-7121661; RO 7121661 [observed reports: 1]
 Lorlatinib → targeted → other-targeted; aliases: lorlatinib; Lorbrena; PF-06463922 [observed reports: 0]
+MEDI0680 → ici → pd1; aliases: MEDI0680; MEDI-0680; AMP-514; AMP514 [observed reports: 1]
 Melphalan → chemotherapy → chemotherapy; aliases: melphalan; Alkeran; L-PAM; CB-3025; WR-19813; L-phenylalanine mustard; phenylalanine mustard [observed reports: 13]
 Mirvetuximab soravtansine → targeted → other-targeted; aliases: mirvetuximab_soravtansine; mirvetuximab soravtansine; Elahere; IMGN853; mirvetuximab soravtansine-gynx [observed reports: 0]
 Molgramostim → cytokines → cytokines; aliases: molgramostim; Leucomax; Sch 39300 [observed reports: 1]
@@ -135,6 +138,7 @@ Pemigatinib → targeted → other-targeted; aliases: pemigatinib; Pemazyre; INC
 Pertuzumab → targeted → other-targeted; aliases: pertuzumab; Perjeta [observed reports: 0]
 Poly-ICLC → immunotherapy → immunotherapy; aliases: Poly-ICLC; Poly ICLC; Hiltonol; polyinosinic-polycytidylic acid stabilized with polylysine and carboxymethylcellulose [observed reports: 9]
 Pomalidomide → immunotherapy → immunotherapy; aliases: pomalidomide; Pomalyst [observed reports: 0]
+Porustobart → ici → ctla4; aliases: porustobart; HBM4003; HBM-4003 [observed reports: 1]
 Pralsetinib → targeted → other-targeted; aliases: pralsetinib; Gavreto; BLU-667 [observed reports: 0]
 QS-21 → immunotherapy → immunotherapy; aliases: QS-21; QS21; QS 21; QS-21 adjuvant; Stimulon QS-21 Adjuvant; NIAID VEU 016 [observed reports: 4]
 Ramucirumab → targeted → other-targeted; aliases: ramucirumab; Cyramza [observed reports: 2]
@@ -151,6 +155,7 @@ Sacituzumab govitecan → targeted → other-targeted; aliases: sacituzumab_govi
 Sargramostim → cytokines → cytokines; aliases: sargramostim; Leukine; Prokine; DRG-0012; sargramostatin [observed reports: 10]
 Selpercatinib → targeted → other-targeted; aliases: selpercatinib; Retevmo; LOXO-292 [observed reports: 0]
 Selumetinib → targeted → mek; aliases: Selumetinib; Selumetinib sulfate; Selumetinib sulphate; AZD6244; AZD-6244; AZD 6244; AZD6244 hydrogen sulfate; AZD6244 hydrogen sulphate; Koselugo [observed reports: 5]
+SER-401 → microbiome-therapies → microbiome-therapies; aliases: SER401; SER 401 [observed reports: 1]
 Sipuleucel-T → vaccines → vaccines; aliases: sipuleucel_T; sipuleucel-T; Provenge [observed reports: 0]
 Sorafenib → targeted → other-targeted; aliases: sorafenib; Nexavar; BAY 43-9006 [observed reports: 26]
 Sotigalimab → immunotherapy → immunotherapy; aliases: Sotigalimab; APX005M; APX-005M; APX 005M; EPI-0050 [observed reports: 4]
@@ -188,6 +193,8 @@ Vincristine → chemotherapy → chemotherapy; aliases: Vincristine; Vincristine
 Vorasidenib → targeted → other-targeted; aliases: vorasidenib; Voranigo; AG-881 [observed reports: 0]
 Vusolimogene oderparepvec → oncolytic-viruses → oncolytic-viruses; aliases: vusolimogene_oderparepvec; vusolimogene oderparepvec; Tudriqev; RP1; RP-1; vusolimogene oderparepvec-wtpg; HSV-1 oncolytic viral strain RP1; oncolytic virus RP1 [observed reports: 1]
 Zanidatamab → targeted → other-targeted; aliases: zanidatamab; Ziihera; ZW25 [observed reports: 0]
+Fecal microbiota transplantation → microbiome-therapies → microbiome-therapies; aliases: FMT; fecal microbiota transplant; faecal microbiota transplant; faecal microbiota transplantation; fecal microbiome transplant; fecal microbiome transplantation; faecal microbiome transplant; faecal microbiome transplantation; fecal microbiota transfer; faecal microbiota transfer; stool transplant; stool transplantation; fecal transplant; faecal transplant; fecal microbiota transplantation (FMT); faecal microbiota transplantation (FMT) [observed reports: 6]
+Radiosurgery → radiotherapy → radiotherapy; aliases: Radiosurgery; radiosurgery; stereotactic radiosurgery [observed reports: 13]
 
 GENERIC CLASSES, CONTROLS AND MODALITIES
 Antibody-drug conjugate, product unspecified → targeted → other-targeted; aliases: Antibody-drug conjugate, product unspecified; antibody-drug conjugate; antibody-drug conjugates; antibody drug conjugate; antibody drug conjugates; ADC; ADCs
@@ -201,6 +208,7 @@ CTLA-4 inhibitor, unspecified → ici → ctla4; aliases: CTLA-4 inhibitor, unsp
 Cytokine therapy, product unspecified → cytokines → cytokines; aliases: Cytokine therapy, product unspecified; cytokine; cytokines; cytokine therapy; cytokine therapies
 Antigen-loaded dendritic-cell vaccine, product unspecified → vaccines → vaccines; aliases: Antigen-loaded dendritic-cell vaccine, product unspecified; antigen-loaded dendritic-cell vaccine; antigen loaded dendritic cell vaccine; autologous tumor mRNA-transfected dendritic cell vaccine; tumor lysate, particle-loaded, dendritic cell vaccine; tumor lysate, particle-loaded, dendritic cell (TLPLDC) vaccine; autologous tumor lysate, particle-loaded, dendritic cell vaccine; autologous tumor lysate, particle-loaded, dendritic cell (TLPLDC) vaccine; tumor lysate particle-loaded dendritic cell vaccine; tumor lysate particle-loaded, dendritic cell vaccine; tumor lysate, particle loaded, dendritic cell vaccine; TLPLDC vaccine; dendritic-cell vaccine; dendritic cell vaccine; dendritic-cell vaccines; dendritic cell vaccines; autologous dendritic-cell vaccine; autologous dendritic-cell vaccines; DC vaccine; DC vaccines
 Endocrine therapy, agent unspecified → endocrine → endocrine; aliases: Endocrine therapy, agent unspecified; endocrine therapy; endocrine therapies; hormone therapy; hormone therapies; hormonal therapy; hormonal therapies
+Fecal microbiota transplantation → microbiome-therapies → microbiome-therapies; aliases: FMT; fecal microbiota transplant; faecal microbiota transplant; faecal microbiota transplantation; fecal microbiome transplant; fecal microbiome transplantation; faecal microbiome transplant; faecal microbiome transplantation; fecal microbiota transfer; faecal microbiota transfer; stool transplant; stool transplantation; fecal transplant; faecal transplant; fecal microbiota transplantation (FMT); faecal microbiota transplantation (FMT)
 GM-CSF, product unspecified → cytokines → cytokines; aliases: GM-CSF, product unspecified; GM-CSF; GMCSF; granulocyte-macrophage colony-stimulating factor; granulocyte macrophage colony stimulating factor; recombinant human granulocyte-macrophage colony-stimulating factor; recombinant granulocyte-macrophage colony-stimulating factor; recombinant human GM-CSF; recombinant human granulocyte macrophage colony stimulating factor; granulocyte-macrophage colony stimulating factor; granulocyte macrophage colony-stimulating factor; granulocyte-macrophage colony-stimulating factor (GM-CSF); rhGM-CSF
 gp100:209-217(210M) peptide vaccine → vaccines → vaccines; aliases: gp100:209-217(210M) peptide vaccine; gp100:209–217(210m) peptide vaccine
 gp100 peptide vaccine, formulation unspecified → vaccines → vaccines; aliases: gp100 peptide vaccine, formulation unspecified; gp100 peptide vaccine
@@ -239,6 +247,7 @@ Tyrosine kinase inhibitor, agent unspecified → targeted → other-targeted; al
 Tumor necrosis factor, product unspecified → cytokines → cytokines; aliases: Tumor necrosis factor; Tumour necrosis factor; TNF; TNF-alpha; TNF alfa; Tumor necrosis factor alpha; Recombinant tumor necrosis factor
 Tumor-cell vaccine, product unspecified → vaccines → vaccines; aliases: Tumor-cell vaccine, product unspecified; tumor cell vaccine; autologous tumor cell vaccine; irradiated autologous tumor cell vaccine; allogeneic melanoma cell vaccine; mitomycin C-treated allogeneic melanoma cell vaccine
 Therapeutic vaccine, product unspecified → vaccines → vaccines; aliases: Therapeutic vaccine, product unspecified; vaccines; vaccine; therapeutic vaccine; therapeutic vaccines; vaccination; cancer vaccine; cancer vaccines; unspecified therapeutic vaccine
+VEGF / VEGFR inhibitor, agent unspecified → targeted → other-targeted; aliases: VEGF inhibitor; VEGF inhibitors; anti-VEGF; anti-VEGF therapy; VEGF-targeted therapy; VEGFR inhibitor; VEGFR inhibitors; anti-VEGFR; VEGFR-targeted therapy; VEGF receptor inhibitor; VEGF receptor inhibitors; VEGF/VEGFR inhibitor
 
 REVIEW QUEUE
 Chemotherapy; chemotherapy → The report must establish whether this product is the principal intervention or an adjunct. [source_dependent_role; reports: 52; PMIDs: 1162562, 11683284, 15048279, 21282551, 21498393, 22909342, 22969990, 24504441, 24811686, 25538264, 26716894, 27172483, 27596353, 27824739, 28500560, 28746931, 28811958, 28961465, 29044660, 29067881, 29449192, 29552542, 29672342, 3056274, 30864295, 32404734, 32746839, 33593827, 33789203, 33796413, 34051732, 34228489, 34295326, 35050320, 35861701, 35978940, 3731130, 37860695, 38279601, 38398099, 38443899, 39421183, 39677742, 40924661, 41402893, 41976386, 42452684, 42913258, 6680859, 7780484, 8453558, 9615073]
@@ -262,7 +271,6 @@ tilsotolimod → Unregistered or underspecified complete treatment label. [new_d
 tumor antigen-presenting cells → Unregistered or underspecified complete treatment label. [new_drug; reports: 3; PMIDs: 21292818, 22552381, 38675738]
 tyrosinase(1-9) peptide → Unregistered or underspecified complete treatment label. [new_drug; reports: 3; PMIDs: 11874634, 14577912, 19935776]
 vindesine → Unregistered or underspecified complete treatment label. [new_drug; reports: 3; PMIDs: 18781134, 3595669, 7423151]
-anlotinib → Unregistered or underspecified complete treatment label. [new_drug; reports: 3; PMIDs: 34692475, 37625814, 42358547]
 2141-v11 → Unregistered or underspecified complete treatment label. [new_drug; reports: 2; PMIDs: 38883779, 40816292]
 6 melanoma helper peptides → Unregistered or underspecified complete treatment label. [new_drug; reports: 2; PMIDs: 25126421, 41960901]
 amsacrine → Unregistered or underspecified complete treatment label. [new_drug; reports: 2; PMIDs: 6688199, 6897858]
@@ -528,7 +536,6 @@ cea peptide-pulsed dendritic cell-activated killer cells → Unregistered or und
 cedazuridine → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 42882866]
 celecoxib → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 22426890]
 cetirizine → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 39596506]
-cetrelimab → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 35298698]
 ch14.18 → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 16187086]
 ch5126766 → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 33128873]
 checkpoint blockade immunotherapy → Unregistered or underspecified complete treatment label. [known_generic_class; reports: 1; PMIDs: 30736858]
@@ -650,7 +657,6 @@ granulocyte colony-stimulating factor → Unregistered or underspecified complet
 granulocyte-monocyte colony-stimulating factor → Unregistered or underspecified complete treatment label. [known_generic_class; reports: 1; PMIDs: 19228745]
 gsk2141795 → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 28921907]
 gvax → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 18287062]
-hbm4003 → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 39366752]
 heat-shock protein peptide complex 96 vaccine → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 12394193]
 heat-shock therapy → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 28679643]
 heparin → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 20204368]
@@ -782,7 +788,6 @@ mature mart1/mage-3/gp100/tyrosinase rna-transfected dendritic cell vaccine (imm
 mavorixafor → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 36923305]
 maytansine → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 371803]
 mb-cart20.1 → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 42913258]
-medi0680 → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 31439037]
 medi3617 → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 34772758]
 melan-a → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 27330808]
 melan-a peptide analog → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 12576434]
@@ -972,7 +977,6 @@ selected autologous tumor-infiltrating lymphocytes → Unregistered or underspec
 selective internal radiotherapy with yttrium-90 resin microspheres → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 41381843]
 selinexor → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 39816915]
 semustine → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 773589]
-ser-401 → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 38588588]
 seviprotimut-l → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 34599031]
 simlukafusp alfa → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 39895413]
 sirolimus → Unregistered or underspecified complete treatment label. [new_drug; reports: 1; PMIDs: 27103123]
@@ -1215,9 +1219,26 @@ original_apatinib: Apatinib phase I trial — https://pubmed.ncbi.nlm.nih.gov/20
 original_as15: Original MAG-Tn3/AS15 clinical vaccine study — https://pubmed.ncbi.nlm.nih.gov/32034426/
 original_csf470: Original CSF-470 melanoma vaccine trial — https://pmc.ncbi.nlm.nih.gov/articles/PMC5449770/
 original_emilia_2012_adc_alias: Trastuzumab emtansine for HER2-positive advanced breast cancer. — https://pubmed.ncbi.nlm.nih.gov/23020162/
+original_fmt_33542131: Davar et al. Fecal microbiota transplant overcomes resistance to anti-PD-1 therapy in melanoma patients — https://pubmed.ncbi.nlm.nih.gov/33542131/
+original_fmt_40759441: Hadi et al. Final results of the MIMic phase I melanoma trial — https://pubmed.ncbi.nlm.nih.gov/40759441/
 original_il12_til: Original IL12-engineered TIL clinical trial — https://aacrjournals.org/clincancerres/article-abstract/21/10/2278/117305
 original_io102_io103: Original IO102/IO103 melanoma vaccine trial — https://www.nature.com/articles/s41591-021-01544-x
 original_microbiome_placebo_38588588: Original microbiome modulation/placebo trial, PMID38588588 — https://pubmed.ncbi.nlm.nih.gov/38588588/
+original_ser401_38588588: Glitza et al. Randomized placebo-controlled phase Ib microbiome modulation in melanoma — https://pubmed.ncbi.nlm.nih.gov/38588588/
 original_tlpldc_33641012: Primary randomized TLPLDC melanoma vaccine trial — https://pubmed.ncbi.nlm.nih.gov/33641012/
 original_tlpldc_34193804: Original autologous TLPLDC vaccine study — https://pubmed.ncbi.nlm.nih.gov/34193804/
 tobemstomig_phase1: Phase I trial: PD-1/LAG-3 bispecific antibody — https://doi.org/10.1158/1078-0432.CCR-25-4478
+nci_bevacizumab_target: NCI Drug Dictionary: bevacizumab — https://www.cancer.gov/publications/dictionaries/cancer-drug/def/bevacizumab
+nlm_lenvatinib_targets: DailyMed: LENVIMA, Clinical Pharmacology — https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=f4bedd21-efde-44c6-9d9c-b48b78d7ed1e
+nlm_cabozantinib_targets: DailyMed: CABOMETYX, Clinical Pharmacology — https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3850cce2-6137-42e5-a792-d318c4a4b3b5
+nlm_pazopanib_targets: DailyMed: VOTRIENT, Clinical Pharmacology — https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=eeaaaf38-fb86-4d9f-a19d-0f61daac2fd7
+nlm_regorafenib_targets: DailyMed: STIVARGA, Clinical Pharmacology — https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=824f19c9-0546-4a8a-8d8f-c4055c04f7c7
+nlm_sunitinib_targets: DailyMed: sunitinib, Clinical Pharmacology — https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=7579e3d0-2de6-4239-a7a8-118ed92075f5
+nlm_sorafenib_targets: DailyMed: sorafenib, Clinical Pharmacology — https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=dae598f7-823f-405c-ae31-f924594187b9
+medi0680_phase1: MEDI0680 (AMP-514), phase I anti-PD-1 study — https://pmc.ncbi.nlm.nih.gov/articles/PMC6704567/
+cetrelimab_phase1: Cetrelimab (JNJ-63723283), phase 1/2 anti-PD-1 study — https://pubmed.ncbi.nlm.nih.gov/35298698/
+hbm4003_phase1: HBM4003, an anti-CTLA-4 antibody, with toripalimab in melanoma — https://pubmed.ncbi.nlm.nih.gov/39366752/
+porustobart_identity: Porustobart (HBM4003) plus toripalimab, phase I study — https://doi.org/10.1158/1078-0432.CCR-24-3412
+nmpa_anlotinib: NMPA approval summary of anlotinib (AL3818), drug targets and pharmacology — https://pmc.ncbi.nlm.nih.gov/articles/PMC6585030/
+fda_anlotinib_identity: FDA Global Substance Registration System, catequentinib and development-code aliases — https://precision.fda.gov/uniisearch/srs/unii/gkf8s4c432
+anlotinib_melanoma: Phase Ib study of anlotinib plus TQB2450 in acral melanoma — https://pubmed.ncbi.nlm.nih.gov/37625814/

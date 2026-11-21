@@ -12,6 +12,53 @@
     const scope=row?.scope&&typeof row.scope==='object'?row.scope:row;
     return !!binding.source_input_sha256&&!!binding.review_binding_sha256&&scope.source_input_sha256===binding.source_input_sha256&&scope.review_binding_sha256===binding.review_binding_sha256&&(!binding.report_id||!scope.report_id||scope.report_id===binding.report_id);
   }
+  // One PMID can supply several arms and clinical populations. Bind the actual
+  // result or count to its exact regimen before testing a clinical selection.
+  function filterIndex(graph,clinical,comparisons,controlFor){
+    const reports=new Map(),records=new Map(),nodesByRecord=new Map(),used=new Map();
+    for(const report of list(clinical?.articles)){
+      if(!report.current_main_eligible||report.publication_hold)continue;
+      const pmid=String(report.pmid);
+      reports.set(pmid,{study:{pmid},results:[],browse_samples:[]});
+      for(const row of [...list(report.quantitative_results),...list(report.sample_size_records)]){
+        if(!row.main_result_eligible)continue;
+        const id=row.result_id||row.sample_record_id;
+        if(id&&String(row.pmid)===pmid)records.set(id,row);
+      }
+    }
+    function add(binding,id,nodeId){
+      const row=records.get(id);
+      if(!nodeId||!row||String(binding.pmid)!==String(row.pmid)||!sourceMatches(row,binding))return;
+      if(!nodesByRecord.has(id)){
+        const report=reports.get(String(row.pmid));
+        (row.result_id?report.results:report.browse_samples).push(row);
+        used.set(String(row.pmid),report);
+        nodesByRecord.set(id,new Set());
+      }
+      nodesByRecord.get(id).add(nodeId);
+    }
+    for(const member of list(graph.study_memberships)){
+      for(const binding of list(member.source_bindings)){
+        if(String(binding.pmid)!==String(member.pmid))continue;
+        for(const id of [...list(binding.result_ids),...list(binding.sample_ids)])add(binding,id,member.node_id);
+      }
+    }
+    for(const comparison of list(comparisons)){
+      for(const arm of [comparison.intervention,comparison.comparator]){
+        const nodeId=arm?.node_id||controlFor?.(arm?.label)?.id;
+        for(const binding of list(comparison.analysis?.filter_bindings))add(binding,binding.result_id,nodeId);
+      }
+    }
+    return {base:[...used.values()],nodesByRecord};
+  }
+  function matchingNodes(index,matches){
+    const ids=new Set();
+    for(const match of matches){
+      for(const row of [...list(match.results),...list(match.browse_samples)])
+        for(const id of index.nodesByRecord.get(row.result_id||row.sample_record_id)||[])ids.add(id);
+    }
+    return ids;
+  }
   function subsetStudy(study,bindings){
     const details=study.details||{},raw=list(details.quantitative_results||study.quantitative_results);
     const results=raw.filter(row=>bindings.some(b=>sourceMatches(row,b)&&list(b.result_ids).includes(row.result_id)));
@@ -155,5 +202,5 @@
     trials.addEventListener('click',()=>{state.trialsOnly=!state.trialsOnly;state.page=1;render();});previous.addEventListener('click',()=>{state.page--;render();});next.addEventListener('click',()=>{state.page++;render();});csv.addEventListener('click',()=>download(api.studyTableCSV(selected(),{...options,include_missing_n:true}),node));
     render();return {matches:all,render,destroy(){root.replaceChildren();}};
   }
-  return Object.freeze({sourceMatches,subsetStudy,matches,counterpartCounts,independentStudyIds,mount});
+  return Object.freeze({sourceMatches,filterIndex,matchingNodes,subsetStudy,matches,counterpartCounts,independentStudyIds,mount});
 });

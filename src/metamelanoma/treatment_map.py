@@ -18,7 +18,7 @@ CODE_PATHS = [RUNNER, 'website/scripts/treatment_map_model.cjs', 'config/sample_
     'website/scripts/treatment_normalization.cjs',
     *['website/dist/' + name + '.js' for name in (
         'treatment_resolver', 'treatment_groups', 'regimen_definitions',
-        'regimen_source_rules', 'trial_registry', 'trial_identifiers')],
+        'regimen_source_rules', 'trial_registry', 'trial_identifiers', 'quantitative_extraction')],
     'src/metamelanoma/treatment_map.py']
 
 

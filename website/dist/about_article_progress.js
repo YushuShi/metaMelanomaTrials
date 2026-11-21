@@ -8,10 +8,13 @@
   const panel = document.getElementById('article-review-progress');
   const view = document.getElementById('view-about');
   if (!panel || !view) return;
+  const complementaryPanel = document.getElementById('complementary-review');
+  const review = complementaryPanel && root.MetaComplementaryReview?.create(complementaryPanel);
   let timer, pending;
   const visible=()=>!view.hidden&&document.visibilityState!=='hidden';
   async function refresh() {
     if(!visible()){schedule();return;}
+    review?.load();
     if (pending) return pending;
     pending = (async () => {
       try {
@@ -47,7 +50,10 @@
     return pending;
   }
   function schedule() { clearTimeout(timer);timer=setTimeout(() => { if (visible()) refresh(); else schedule(); },60000); }
-  document.getElementById('refresh')?.addEventListener('click',refresh);
+  document.getElementById('refresh')?.addEventListener('click',()=>{
+    if(visible())review?.load(true);
+    refresh();
+  });
   // The navigation button changes the hash before the app reveals About. Watch
   // visibility itself so opening the page never depends on handler ordering.
   root.addEventListener?.('hashchange',refresh);
@@ -104,7 +110,7 @@
     if (snapshot?.schema_version !== 1 || snapshot.unit !== 'articles') throw new Error('Article snapshot required');
     const stages=snapshot.stage_scope||['R2','R3'];
     if(!Array.isArray(stages)||!stages.length||new Set(stages).size!==stages.length||stages.some(stage=>!['R2','R3'].includes(stage)))throw new Error('Checked stage scope required');
-    return `<div class="article-stage-grid">${stages.map(stage=>stageCard(snapshot.stages?.[stage],stage)).join('')}</div>${publishedDifferences()}`;
+    return `<div class="article-stage-grid">${stages.map(stage=>stageCard(snapshot.stages?.[stage],stage)).join('')}</div>`;
   }
   return {render,stageCard,stageView,reasons,number,publishedDifferences};
 });

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "version": "1.0.0",
+  "version": "1.2.1",
   "normalization_version": "1.0.0",
-  "curated_on": "2026-11-09",
+  "curated_on": "2026-11-20",
   "scope": "Pharmacological identity and broad mechanism registry; not an eligibility or approval list. Raw source labels and formulations remain immutable.",
   "products": [
     {
@@ -264,6 +264,33 @@
         "agent:anastrozole"
       ],
       "modality": "endocrine_agent"
+    },
+    {
+      "id": "anlotinib",
+      "label": "Anlotinib",
+      "class_id": "other-targeted",
+      "broad_category": "targeted",
+      "mechanism": "VEGFR;FGFR;PDGFR;RET;KIT directed small_molecule_inhibitor",
+      "aliases": [
+        "anlotinib",
+        "catequentinib",
+        "AL3818",
+        "AL-3818",
+        "anlotinib hydrochloride",
+        "catequentinib hydrochloride"
+      ],
+      "source_ids": [
+        "nmpa_anlotinib",
+        "fda_anlotinib_identity",
+        "anlotinib_melanoma"
+      ],
+      "verification": "source_verified_identity_and_class",
+      "memberships": [
+        "other-targeted",
+        "targeted",
+        "agent:anlotinib"
+      ],
+      "modality": "small_molecule_inhibitor"
     },
     {
       "id": "apalutamide",
@@ -853,6 +880,29 @@
         "targeted",
         "agent:ceralasertib"
       ]
+    },
+    {
+      "id": "cetrelimab",
+      "label": "Cetrelimab",
+      "class_id": "pd1",
+      "broad_category": "ici",
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "aliases": [
+        "cetrelimab",
+        "JNJ-63723283",
+        "JNJ63723283"
+      ],
+      "source_ids": [
+        "cetrelimab_phase1"
+      ],
+      "verification": "source_verified_identity_and_class",
+      "memberships": [
+        "pd1",
+        "immune",
+        "ici",
+        "agent:cetrelimab"
+      ],
+      "modality": "checkpoint_antibody"
     },
     {
       "id": "cetuximab",
@@ -2450,6 +2500,30 @@
       "modality": "small_molecule_inhibitor"
     },
     {
+      "id": "medi0680",
+      "label": "MEDI0680",
+      "class_id": "pd1",
+      "broad_category": "ici",
+      "mechanism": "PD-1 directed checkpoint_antibody",
+      "aliases": [
+        "MEDI0680",
+        "MEDI-0680",
+        "AMP-514",
+        "AMP514"
+      ],
+      "source_ids": [
+        "medi0680_phase1"
+      ],
+      "verification": "source_verified_identity_and_class",
+      "memberships": [
+        "pd1",
+        "immune",
+        "ici",
+        "agent:medi0680"
+      ],
+      "modality": "checkpoint_antibody"
+    },
+    {
       "id": "melphalan",
       "label": "Melphalan",
       "class_id": "chemotherapy",
@@ -3001,6 +3075,30 @@
       "modality": "small_molecule_immune_modulator"
     },
     {
+      "id": "porustobart",
+      "label": "Porustobart",
+      "class_id": "ctla4",
+      "broad_category": "ici",
+      "mechanism": "CTLA-4 directed checkpoint_antibody",
+      "aliases": [
+        "porustobart",
+        "HBM4003",
+        "HBM-4003"
+      ],
+      "source_ids": [
+        "hbm4003_phase1",
+        "porustobart_identity"
+      ],
+      "verification": "source_verified_identity_and_class",
+      "memberships": [
+        "ctla4",
+        "immune",
+        "ici",
+        "agent:porustobart"
+      ],
+      "modality": "checkpoint_antibody"
+    },
+    {
       "id": "pralsetinib",
       "label": "Pralsetinib",
       "class_id": "other-targeted",
@@ -3363,6 +3461,26 @@
       ],
       "verification": "primary_source_verified_2026-11-09",
       "analysis_identity_rule": "Explicit parent-drug/salt grouping; preserve the reported salt in raw labels and source records."
+    },
+    {
+      "id": "ser_401",
+      "label": "SER-401",
+      "class_id": "microbiome-therapies",
+      "broad_category": "microbiome-therapies",
+      "mechanism": "Investigational microbiome therapy",
+      "aliases": [
+        "SER401",
+        "SER 401"
+      ],
+      "source_ids": [
+        "original_ser401_38588588"
+      ],
+      "verification": "source_verified_identity_and_class",
+      "memberships": [
+        "microbiome-therapies",
+        "agent:ser_401"
+      ],
+      "modality": "live_microbiome_product"
     },
     {
       "id": "sipuleucel_T",
@@ -4466,6 +4584,38 @@
       "agent_unspecified": true
     },
     {
+      "id": "fecal-microbiota-transplantation",
+      "label": "Fecal microbiota transplantation",
+      "class_id": "microbiome-therapies",
+      "broad_category": "microbiome-therapies",
+      "mechanism": "Microbiota transplantation",
+      "aliases": [
+        "FMT",
+        "fecal microbiota transplant",
+        "faecal microbiota transplant",
+        "faecal microbiota transplantation",
+        "fecal microbiome transplant",
+        "fecal microbiome transplantation",
+        "faecal microbiome transplant",
+        "faecal microbiome transplantation",
+        "fecal microbiota transfer",
+        "faecal microbiota transfer",
+        "stool transplant",
+        "stool transplantation",
+        "fecal transplant",
+        "faecal transplant",
+        "fecal microbiota transplantation (FMT)",
+        "faecal microbiota transplantation (FMT)"
+      ],
+      "source_ids": [
+        "original_fmt_33542131",
+        "original_fmt_40759441"
+      ],
+      "verification": "source_verified_treatment_modality",
+      "entity_status": "non_drug",
+      "selectable_modality": true
+    },
+    {
       "id": "gmcsf-unspecified",
       "label": "GM-CSF, product unspecified",
       "class_id": "cytokines",
@@ -5149,7 +5299,8 @@
       ],
       "verification": "primary_class_supported_product_unspecified",
       "agent_unspecified": true,
-      "entity_status": "non_drug"
+      "entity_status": "non_drug",
+      "selectable_modality": true
     },
     {
       "id": "stereotactic-radiotherapy",
@@ -5358,6 +5509,32 @@
       ],
       "source_ids": [
         "nci_vaccines_current"
+      ],
+      "verification": "primary_class_supported_product_unspecified",
+      "agent_unspecified": true
+    },
+    {
+      "id": "vegf-inhibitor-unspecified",
+      "label": "VEGF / VEGFR inhibitor, agent unspecified",
+      "class_id": "other-targeted",
+      "broad_category": "targeted",
+      "mechanism": "Inhibition of VEGF or VEGF receptor signaling; product unspecified",
+      "aliases": [
+        "VEGF inhibitor",
+        "VEGF inhibitors",
+        "anti-VEGF",
+        "anti-VEGF therapy",
+        "VEGF-targeted therapy",
+        "VEGFR inhibitor",
+        "VEGFR inhibitors",
+        "anti-VEGFR",
+        "VEGFR-targeted therapy",
+        "VEGF receptor inhibitor",
+        "VEGF receptor inhibitors",
+        "VEGF/VEGFR inhibitor"
+      ],
+      "source_ids": [
+        "nci_angiogenesis"
       ],
       "verification": "primary_class_supported_product_unspecified",
       "agent_unspecified": true
@@ -6313,6 +6490,22 @@
       "verification_basis": "Already tracked original PubMed citation/abstract; T-DM1 bridges the regulatory-prefixed generic name and unprefixed trial-report alias."
     },
     {
+      "id": "original_fmt_33542131",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33542131/",
+      "title": "Davar et al. Fecal microbiota transplant overcomes resistance to anti-PD-1 therapy in melanoma patients",
+      "verified_on": "2026-11-20",
+      "rationale": "The melanoma trial identifies fecal microbiota transplantation (FMT) as a treatment given with anti-PD-1.",
+      "source_type": "primary"
+    },
+    {
+      "id": "original_fmt_40759441",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40759441/",
+      "title": "Hadi et al. Final results of the MIMic phase I melanoma trial",
+      "verified_on": "2026-11-20",
+      "rationale": "The trial reports a microbiota transplant followed by anti-PD-1 treatment.",
+      "source_type": "primary"
+    },
+    {
       "id": "original_il12_til",
       "url": "https://aacrjournals.org/clincancerres/article-abstract/21/10/2278/117305",
       "title": "Original IL12-engineered TIL clinical trial",
@@ -6337,6 +6530,14 @@
       "source_type": "primary"
     },
     {
+      "id": "original_ser401_38588588",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38588588/",
+      "title": "Glitza et al. Randomized placebo-controlled phase Ib microbiome modulation in melanoma",
+      "verified_on": "2026-11-20",
+      "rationale": "The trial identifies SER-401 as the active microbiome therapy and separately names the microbiome placebo.",
+      "source_type": "primary"
+    },
+    {
       "id": "original_tlpldc_33641012",
       "url": "https://pubmed.ncbi.nlm.nih.gov/33641012/",
       "title": "Primary randomized TLPLDC melanoma vaccine trial",
@@ -6356,6 +6557,90 @@
       "id": "tobemstomig_phase1",
       "title": "Phase I trial: PD-1/LAG-3 bispecific antibody",
       "url": "https://doi.org/10.1158/1078-0432.CCR-25-4478"
+    },
+    {
+      "id": "nci_bevacizumab_target",
+      "title": "NCI Drug Dictionary: bevacizumab",
+      "url": "https://www.cancer.gov/publications/dictionaries/cancer-drug/def/bevacizumab",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "nlm_lenvatinib_targets",
+      "title": "DailyMed: LENVIMA, Clinical Pharmacology",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=f4bedd21-efde-44c6-9d9c-b48b78d7ed1e",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "nlm_cabozantinib_targets",
+      "title": "DailyMed: CABOMETYX, Clinical Pharmacology",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3850cce2-6137-42e5-a792-d318c4a4b3b5",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "nlm_pazopanib_targets",
+      "title": "DailyMed: VOTRIENT, Clinical Pharmacology",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=eeaaaf38-fb86-4d9f-a19d-0f61daac2fd7",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "nlm_regorafenib_targets",
+      "title": "DailyMed: STIVARGA, Clinical Pharmacology",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=824f19c9-0546-4a8a-8d8f-c4055c04f7c7",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "nlm_sunitinib_targets",
+      "title": "DailyMed: sunitinib, Clinical Pharmacology",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=7579e3d0-2de6-4239-a7a8-118ed92075f5",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "nlm_sorafenib_targets",
+      "title": "DailyMed: sorafenib, Clinical Pharmacology",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=dae598f7-823f-405c-ae31-f924594187b9",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "medi0680_phase1",
+      "title": "MEDI0680 (AMP-514), phase I anti-PD-1 study",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6704567/",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "cetrelimab_phase1",
+      "title": "Cetrelimab (JNJ-63723283), phase 1/2 anti-PD-1 study",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35298698/",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "hbm4003_phase1",
+      "title": "HBM4003, an anti-CTLA-4 antibody, with toripalimab in melanoma",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39366752/",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "porustobart_identity",
+      "title": "Porustobart (HBM4003) plus toripalimab, phase I study",
+      "url": "https://doi.org/10.1158/1078-0432.CCR-24-3412",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "nmpa_anlotinib",
+      "title": "NMPA approval summary of anlotinib (AL3818), drug targets and pharmacology",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6585030/",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "fda_anlotinib_identity",
+      "title": "FDA Global Substance Registration System, catequentinib and development-code aliases",
+      "url": "https://precision.fda.gov/uniisearch/srs/unii/gkf8s4c432",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "anlotinib_melanoma",
+      "title": "Phase Ib study of anlotinib plus TQB2450 in acral melanoma",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37625814/",
+      "accessed": "2026-11-20"
     }
   ],
   "policy": {
@@ -6372,7 +6657,8 @@
     "Additional frequent omissions were checked against NCI/FDA/NLM or original clinical publications; ambiguous short aliases and distinct formulations remain separate.",
     "Complete TLPLDC vaccine labels are classified before comma-based regimen interpretation; source wording, particle loading and autologous specificity are preserved.",
     "Migration QA restored previously supported broad classes and complete control/modality labels; these do not invent named agents or conflate antigen positions.",
-    "The baseline broad vocabulary is shared by every consumer. Structural no-comparator labels are inactive non-drug descriptors, not observed control treatments; standard/usual care remain unresolved without the actual regimen."
+    "The baseline broad vocabulary is shared by every consumer. Structural no-comparator labels are inactive non-drug descriptors, not observed control treatments; standard/usual care remain unresolved without the actual regimen.",
+    "Study filters and the radial overview use the same source-backed target and mechanism subgroups. An agent may be browsed under several groups. Its first applicable subgroup is its sole position in the overview. These navigation groups do not change treatment identity or eligibility."
   ],
   "class_categories": {
     "braf": "targeted",
@@ -6388,6 +6674,7 @@
     "immunotherapy": "immunotherapy",
     "lag3": "ici",
     "mek": "targeted",
+    "microbiome-therapies": "microbiome-therapies",
     "no-comparator": "other",
     "oncolytic-viruses": "oncolytic-viruses",
     "other": "other",
@@ -6401,5 +6688,802 @@
     "supportive": "controls",
     "surgery": "surgery",
     "vaccines": "vaccines"
-  }
+  },
+  "display_subgroups": [
+    {
+      "id": "pd1-lag3",
+      "label": "PD-1 / LAG-3 bispecific inhibitors",
+      "broad_category": "ici",
+      "class_ids": [
+        "pd1-lag3"
+      ]
+    },
+    {
+      "id": "pd1-tim3",
+      "label": "PD-1 / TIM-3 bispecific inhibitors",
+      "broad_category": "ici",
+      "class_ids": [
+        "pd1-tim3"
+      ]
+    },
+    {
+      "id": "pd1",
+      "label": "PD-1 inhibitors",
+      "broad_category": "ici",
+      "member_ids": [
+        "tobemstomig",
+        "lomvastomig"
+      ],
+      "class_ids": [
+        "pd1"
+      ]
+    },
+    {
+      "id": "ctla4",
+      "label": "CTLA-4 inhibitors",
+      "broad_category": "ici",
+      "class_ids": [
+        "ctla4"
+      ]
+    },
+    {
+      "id": "pdl1",
+      "label": "PD-L1 inhibitors",
+      "broad_category": "ici",
+      "class_ids": [
+        "pdl1"
+      ]
+    },
+    {
+      "id": "lag3",
+      "label": "LAG-3 inhibitors",
+      "broad_category": "ici",
+      "member_ids": [
+        "tobemstomig"
+      ],
+      "class_ids": [
+        "lag3"
+      ]
+    },
+    {
+      "id": "tim3",
+      "label": "TIM-3 inhibitors",
+      "broad_category": "ici",
+      "member_ids": [
+        "cobolimab",
+        "sabatolimab",
+        "lomvastomig"
+      ]
+    },
+    {
+      "id": "tigit",
+      "label": "TIGIT inhibitors",
+      "broad_category": "ici",
+      "member_ids": [
+        "tiragolumab",
+        "vibostolimab"
+      ]
+    },
+    {
+      "id": "pd1-pdl1-unspecified",
+      "label": "PD-1 / PD-L1 inhibitor, target unspecified",
+      "broad_category": "ici",
+      "class_ids": [
+        "pd1-pdl1-unspecified"
+      ]
+    },
+    {
+      "id": "braf",
+      "label": "BRAF inhibitors",
+      "broad_category": "targeted",
+      "class_ids": [
+        "braf"
+      ]
+    },
+    {
+      "id": "mek",
+      "label": "MEK inhibitors",
+      "broad_category": "targeted",
+      "class_ids": [
+        "mek"
+      ]
+    },
+    {
+      "id": "braf-mek-unspecified",
+      "label": "BRAF / MEK therapy, regimen unspecified",
+      "broad_category": "targeted",
+      "class_ids": [
+        "braf-mek-unspecified"
+      ]
+    },
+    {
+      "id": "vegf",
+      "label": "VEGF / VEGFR inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "bevacizumab",
+        "ramucirumab",
+        "lenvatinib",
+        "sorafenib",
+        "regorafenib",
+        "apatinib",
+        "axitinib",
+        "cabozantinib",
+        "pazopanib",
+        "sunitinib",
+        "vegf-inhibitor-unspecified",
+        "anlotinib"
+      ],
+      "source_ids": [
+        "nci_bevacizumab_target",
+        "nlm_lenvatinib_targets",
+        "nlm_cabozantinib_targets",
+        "nlm_pazopanib_targets",
+        "nlm_regorafenib_targets",
+        "nlm_sunitinib_targets",
+        "nlm_sorafenib_targets",
+        "nmpa_anlotinib"
+      ]
+    },
+    {
+      "id": "pan-raf",
+      "label": "RAF family inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "regorafenib",
+        "sorafenib",
+        "tovorafenib"
+      ],
+      "source_ids": [
+        "nlm_regorafenib_targets",
+        "nlm_sorafenib_targets"
+      ]
+    },
+    {
+      "id": "kit",
+      "label": "KIT inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "avapritinib",
+        "imatinib",
+        "ripretinib",
+        "pazopanib",
+        "regorafenib",
+        "sunitinib",
+        "sorafenib",
+        "lenvatinib",
+        "cabozantinib",
+        "anlotinib"
+      ],
+      "source_ids": [
+        "nlm_lenvatinib_targets",
+        "nlm_cabozantinib_targets",
+        "nlm_pazopanib_targets",
+        "nlm_regorafenib_targets",
+        "nlm_sunitinib_targets",
+        "nlm_sorafenib_targets",
+        "nmpa_anlotinib"
+      ]
+    },
+    {
+      "id": "pdgfr",
+      "label": "PDGFR inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "avapritinib",
+        "imatinib",
+        "ripretinib",
+        "pazopanib",
+        "regorafenib",
+        "sunitinib",
+        "sorafenib",
+        "lenvatinib",
+        "anlotinib"
+      ],
+      "source_ids": [
+        "nlm_lenvatinib_targets",
+        "nlm_pazopanib_targets",
+        "nlm_regorafenib_targets",
+        "nlm_sunitinib_targets",
+        "nlm_sorafenib_targets",
+        "nmpa_anlotinib"
+      ]
+    },
+    {
+      "id": "egfr",
+      "label": "EGFR-directed agents",
+      "broad_category": "targeted",
+      "member_ids": [
+        "afatinib",
+        "amivantamab",
+        "cetuximab",
+        "erlotinib",
+        "gefitinib",
+        "osimertinib",
+        "panitumumab"
+      ]
+    },
+    {
+      "id": "her2",
+      "label": "HER2-directed agents",
+      "broad_category": "targeted",
+      "member_ids": [
+        "afatinib",
+        "ado_trastuzumab_emtansine",
+        "pertuzumab",
+        "trastuzumab",
+        "trastuzumab_deruxtecan",
+        "zanidatamab"
+      ]
+    },
+    {
+      "id": "fgfr",
+      "label": "FGFR inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "erdafitinib",
+        "futibatinib",
+        "lenvatinib",
+        "pazopanib",
+        "pemigatinib",
+        "regorafenib",
+        "anlotinib"
+      ],
+      "source_ids": [
+        "nlm_lenvatinib_targets",
+        "nlm_pazopanib_targets",
+        "nlm_regorafenib_targets",
+        "nmpa_anlotinib"
+      ]
+    },
+    {
+      "id": "met",
+      "label": "MET-directed agents",
+      "broad_category": "targeted",
+      "member_ids": [
+        "amivantamab",
+        "cabozantinib",
+        "capmatinib",
+        "crizotinib",
+        "tepotinib"
+      ],
+      "source_ids": [
+        "nlm_cabozantinib_targets"
+      ]
+    },
+    {
+      "id": "alk",
+      "label": "ALK inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "alectinib",
+        "brigatinib",
+        "crizotinib",
+        "lorlatinib"
+      ]
+    },
+    {
+      "id": "ros1",
+      "label": "ROS1 inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "cabozantinib",
+        "crizotinib",
+        "entrectinib",
+        "lorlatinib",
+        "repotrectinib"
+      ],
+      "source_ids": [
+        "nlm_cabozantinib_targets"
+      ]
+    },
+    {
+      "id": "trk",
+      "label": "TRK inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "entrectinib",
+        "larotrectinib",
+        "repotrectinib"
+      ]
+    },
+    {
+      "id": "ret",
+      "label": "RET inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "pralsetinib",
+        "selpercatinib",
+        "lenvatinib",
+        "cabozantinib",
+        "regorafenib",
+        "sorafenib",
+        "sunitinib",
+        "anlotinib"
+      ],
+      "source_ids": [
+        "nlm_lenvatinib_targets",
+        "nlm_cabozantinib_targets",
+        "nlm_regorafenib_targets",
+        "nlm_sunitinib_targets",
+        "nlm_sorafenib_targets",
+        "nmpa_anlotinib"
+      ]
+    },
+    {
+      "id": "pi3k-akt-mtor",
+      "label": "PI3K / AKT / mTOR pathway inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "alpelisib",
+        "capivasertib",
+        "everolimus",
+        "inavolisib",
+        "temsirolimus"
+      ]
+    },
+    {
+      "id": "cdk46",
+      "label": "CDK4/6 inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "abemaciclib",
+        "palbociclib",
+        "ribociclib"
+      ]
+    },
+    {
+      "id": "parp",
+      "label": "PARP inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "niraparib",
+        "olaparib",
+        "rucaparib",
+        "talazoparib"
+      ]
+    },
+    {
+      "id": "kras-g12c",
+      "label": "KRAS G12C inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "adagrasib",
+        "sotorasib"
+      ]
+    },
+    {
+      "id": "adc",
+      "label": "Antibody–drug conjugates",
+      "broad_category": "targeted",
+      "member_ids": [
+        "adc-unspecified",
+        "ado_trastuzumab_emtansine",
+        "datopotamab_deruxtecan",
+        "enfortumab_vedotin",
+        "mirvetuximab_soravtansine",
+        "sacituzumab_govitecan",
+        "tisotumab_vedotin",
+        "trastuzumab_deruxtecan"
+      ]
+    },
+    {
+      "id": "il2r-cytotoxin",
+      "label": "IL-2 receptor-directed cytotoxins",
+      "broad_category": "targeted",
+      "member_ids": [
+        "denileukin_diftitox",
+        "denileukin_diftitox_cxdl"
+      ]
+    },
+    {
+      "id": "atr",
+      "label": "ATR inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "ceralasertib"
+      ]
+    },
+    {
+      "id": "ezh2",
+      "label": "EZH2 inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "tazemetostat"
+      ]
+    },
+    {
+      "id": "hif2",
+      "label": "HIF-2α inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "belzutifan"
+      ]
+    },
+    {
+      "id": "idh",
+      "label": "IDH inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "vorasidenib"
+      ]
+    },
+    {
+      "id": "proteasome",
+      "label": "Proteasome inhibitors",
+      "broad_category": "targeted",
+      "member_ids": [
+        "bortezomib"
+      ]
+    },
+    {
+      "id": "retinoid",
+      "label": "Retinoic acid receptor agonists",
+      "broad_category": "targeted",
+      "member_ids": [
+        "tretinoin"
+      ]
+    },
+    {
+      "id": "platinum",
+      "label": "Platinum compounds",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "carboplatin",
+        "cisplatin"
+      ]
+    },
+    {
+      "id": "taxane",
+      "label": "Taxanes",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "docetaxel",
+        "nab_paclitaxel",
+        "paclitaxel"
+      ]
+    },
+    {
+      "id": "alkylating",
+      "label": "Alkylating agents",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "carmustine",
+        "cyclophosphamide",
+        "dacarbazine",
+        "fotemustine",
+        "ifosfamide",
+        "lomustine",
+        "melphalan",
+        "temozolomide"
+      ]
+    },
+    {
+      "id": "antimetabolite",
+      "label": "Antimetabolites",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "capecitabine",
+        "decitabine",
+        "fludarabine",
+        "fluorouracil",
+        "gemcitabine",
+        "guadecitabine",
+        "hydroxyurea",
+        "pemetrexed"
+      ]
+    },
+    {
+      "id": "vinca",
+      "label": "Vinca alkaloids",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "vinblastine",
+        "vincristine"
+      ]
+    },
+    {
+      "id": "anthracycline",
+      "label": "Anthracyclines",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "doxorubicin",
+        "epirubicin"
+      ]
+    },
+    {
+      "id": "cytotoxic-antibiotic",
+      "label": "Other antitumor antibiotics",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "bleomycin",
+        "dactinomycin"
+      ]
+    },
+    {
+      "id": "other-microtubule",
+      "label": "Other microtubule inhibitors",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "eribulin"
+      ]
+    },
+    {
+      "id": "dna-binding",
+      "label": "DNA minor-groove binders",
+      "broad_category": "chemotherapy",
+      "member_ids": [
+        "trabectedin"
+      ]
+    },
+    {
+      "id": "il2",
+      "label": "IL-2 therapies",
+      "broad_category": "cytokines",
+      "member_ids": [
+        "aldesleukin",
+        "bempegaldesleukin",
+        "hu14_18_il2",
+        "il2-unspecified"
+      ]
+    },
+    {
+      "id": "interferons",
+      "label": "Interferons",
+      "broad_category": "cytokines",
+      "member_ids": [
+        "interferon_alfa_2a",
+        "interferon_alfa_2b",
+        "interferon_gamma_1b",
+        "peginterferon_alfa_2a",
+        "peginterferon_alfa_2b",
+        "interferon-alpha-unspecified",
+        "interferon-alpha2-unspecified",
+        "interferon-beta-unspecified",
+        "interferon-gamma-unspecified",
+        "interferon-unspecified"
+      ]
+    },
+    {
+      "id": "gmcsf",
+      "label": "GM-CSF therapies",
+      "broad_category": "cytokines",
+      "member_ids": [
+        "gmcsf-unspecified",
+        "molgramostim",
+        "sargramostim"
+      ]
+    },
+    {
+      "id": "il15",
+      "label": "IL-15 therapies",
+      "broad_category": "cytokines",
+      "member_ids": [
+        "nogapendekin_alfa_inbakicept"
+      ]
+    },
+    {
+      "id": "tnf",
+      "label": "TNF therapies",
+      "broad_category": "cytokines",
+      "member_ids": [
+        "tasonermin",
+        "tnf-unspecified"
+      ]
+    },
+    {
+      "id": "immune-adjuvant",
+      "label": "Vaccine adjuvants",
+      "broad_category": "immunotherapy",
+      "member_ids": [
+        "as15",
+        "qs21",
+        "montanide_isa51",
+        "montanide_isa51_vg",
+        "montanide-unspecified"
+      ]
+    },
+    {
+      "id": "imide",
+      "label": "Immunomodulatory imide drugs",
+      "broad_category": "immunotherapy",
+      "member_ids": [
+        "lenalidomide",
+        "pomalidomide",
+        "thalidomide"
+      ]
+    },
+    {
+      "id": "tcell-engager",
+      "label": "T-cell engagers",
+      "broad_category": "immunotherapy",
+      "member_ids": [
+        "tebentafusp"
+      ]
+    },
+    {
+      "id": "ido1",
+      "label": "IDO1 inhibitors",
+      "broad_category": "immunotherapy",
+      "member_ids": [
+        "epacadostat"
+      ]
+    },
+    {
+      "id": "cd40",
+      "label": "CD40 agonists",
+      "broad_category": "immunotherapy",
+      "member_ids": [
+        "sotigalimab"
+      ]
+    },
+    {
+      "id": "apc-activation",
+      "label": "MHC class II agonists",
+      "broad_category": "immunotherapy",
+      "member_ids": [
+        "eftilagimod_alpha"
+      ]
+    },
+    {
+      "id": "tlr-agonist",
+      "label": "Toll-like receptor agonists",
+      "broad_category": "immunotherapy",
+      "member_ids": [
+        "imiquimod",
+        "poly_iclc"
+      ]
+    },
+    {
+      "id": "contact-sensitizer",
+      "label": "Contact sensitizers",
+      "broad_category": "immunotherapy",
+      "member_ids": [
+        "diphencyprone"
+      ]
+    },
+    {
+      "id": "til",
+      "label": "Tumor-infiltrating lymphocytes (TIL)",
+      "broad_category": "cell-therapies",
+      "member_ids": [
+        "lifileucel",
+        "til-unspecified",
+        "il12-til-unspecified"
+      ]
+    },
+    {
+      "id": "engineered-tcr",
+      "label": "TCR-engineered T cells",
+      "broad_category": "cell-therapies",
+      "member_ids": [
+        "afamitresgene_autoleucel",
+        "tcr-t-unspecified"
+      ]
+    },
+    {
+      "id": "car-t",
+      "label": "CAR T cells",
+      "broad_category": "cell-therapies",
+      "member_ids": [
+        "car-t-unspecified"
+      ]
+    },
+    {
+      "id": "lak",
+      "label": "Lymphokine-activated killer cells",
+      "broad_category": "cell-therapies",
+      "member_ids": [
+        "lak-unspecified"
+      ]
+    },
+    {
+      "id": "neoantigen-vaccine",
+      "label": "Neoantigen vaccines",
+      "broad_category": "vaccines",
+      "member_ids": [
+        "intismeran_autogene",
+        "neoantigen-vaccine-unspecified"
+      ]
+    },
+    {
+      "id": "peptide-vaccine",
+      "label": "Peptide vaccines",
+      "broad_category": "vaccines",
+      "member_ids": [
+        "uv1",
+        "io102_io103",
+        "peptide-vaccine-unspecified",
+        "gp100-209217-210m-vaccine",
+        "gp100-peptide-vaccine-unspecified"
+      ]
+    },
+    {
+      "id": "cellular-vaccine",
+      "label": "Cell-based vaccines",
+      "broad_category": "vaccines",
+      "member_ids": [
+        "csf470",
+        "sipuleucel_T",
+        "dendritic-vaccine-unspecified",
+        "tumor-cell-vaccine-unspecified"
+      ]
+    },
+    {
+      "id": "oncolytic-hsv",
+      "label": "Oncolytic herpesviruses",
+      "broad_category": "oncolytic-viruses",
+      "member_ids": [
+        "talimogene_laherparepvec",
+        "vusolimogene_oderparepvec"
+      ]
+    },
+    {
+      "id": "oncolytic-adeno",
+      "label": "Oncolytic adenoviruses",
+      "broad_category": "oncolytic-viruses",
+      "member_ids": [
+        "igrelimogene_litadenorepvec"
+      ]
+    },
+    {
+      "id": "oncolytic-entero",
+      "label": "Oncolytic enteroviruses",
+      "broad_category": "oncolytic-viruses",
+      "member_ids": [
+        "gebasaxturev"
+      ]
+    },
+    {
+      "id": "ar",
+      "label": "Androgen receptor inhibitors",
+      "broad_category": "endocrine",
+      "member_ids": [
+        "apalutamide",
+        "bicalutamide",
+        "darolutamide",
+        "enzalutamide"
+      ]
+    },
+    {
+      "id": "estrogen-receptor",
+      "label": "Estrogen receptor-directed agents",
+      "broad_category": "endocrine",
+      "member_ids": [
+        "elacestrant",
+        "fulvestrant",
+        "tamoxifen"
+      ]
+    },
+    {
+      "id": "aromatase",
+      "label": "Aromatase inhibitors",
+      "broad_category": "endocrine",
+      "member_ids": [
+        "anastrozole",
+        "exemestane",
+        "letrozole"
+      ]
+    },
+    {
+      "id": "gnrh",
+      "label": "GnRH receptor-directed agents",
+      "broad_category": "endocrine",
+      "member_ids": [
+        "degarelix",
+        "goserelin",
+        "leuprolide",
+        "relugolix",
+        "triptorelin"
+      ]
+    },
+    {
+      "id": "cyp17",
+      "label": "CYP17 inhibitors",
+      "broad_category": "endocrine",
+      "member_ids": [
+        "abiraterone"
+      ]
+    }
+  ]
 }

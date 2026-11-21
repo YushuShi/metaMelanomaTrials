@@ -69,6 +69,50 @@ def selected_n(row, record, *, collection):
     return selected['n'], basis, evidence
 
 
+def population_entity(population, ids):
+    if population is None:
+        return None
+    return {'entity_id': population['id'], 'kind': 'population', 'label': population['label'],
+        'population_scope': {'yes': 'melanoma', 'no': 'mixed_cancers'}.get(population['melanoma_only'], 'unclear'),
+        'parent_id': population['parent_id'] if present(population['parent_id']) else None,
+        'evidence_ids': ids(population['evidence']), 'result_scope': population['scope']}
+
+
+def arm_entity(arm, ids):
+    if arm is None:
+        return None
+    return {'entity_id': arm['id'], 'kind': 'arm', 'label': regimen_label(arm),
+            'evidence_ids': ids(arm['evidence'])}
+
+
+def projection_fields(record, binding):
+    stage = record['stage']
+    return {'report_id': record['report_id'], 'pmid': record['pmid'], 'review_stage': stage,
+        'reviewer': 'Luna' if stage == 'R3' else 'Sol', 'review_binding_sha256': binding,
+        'source_input_sha256': record['source_sha256'], 'scope': 'observed',
+        'evidence_origin': 'own_report_results', 'validated': False,
+        'API_verification_pending': False, **{f: False for f in FLAGS}}
+
+
+def project_sample(sample, *, common, eligible, prefix, population, arm, ids):
+    p = population(sample['population_id'])
+    if not numeric(sample['n']) or not p or p['population_scope'] != 'melanoma':
+        return None
+    purpose = {'ITT': 'eligible', 'outcome_analysis': 'eligible'}.get(sample['count_purpose'], sample['count_purpose'])
+    if purpose not in ('enrolled', 'eligible', 'randomized', 'treated', 'response_evaluable', 'safety'):
+        return None
+    anchors = ids(sample['evidence'])
+    arm_id = sample['arm_id'] if present(sample['arm_id']) else None
+    return {**common, 'sample_record_id': prefix + 'N-' + sample['id'], 'record_kind': 'canonical_patient_context',
+        'n': wrap(sample['n'], 'sample_size', anchors, 'patients'),
+        'population_id': prefix + sample['population_id'], 'population': p,
+        'arm_id': prefix + arm_id if arm_id else None, 'arm': arm(arm_id),
+        'sample_context_role': purpose, 'quantity_label': sample['count_purpose'],
+        'evidence_ids': anchors, 'main_result_eligible': eligible,
+        'original_fact': {'count_context': sample['count_purpose'], 'result_population_id': sample['population_id'], 'arm_id': arm_id},
+        'quantitative_record': deepcopy(sample)}
+
+
 def project_article(citation, result, *, allow_fulltext=False):
     validation = result['validation']
     if not validation.get('valid') or validation.get('global_errors'):
@@ -93,15 +137,9 @@ def project_article(citation, result, *, allow_fulltext=False):
     populations = {p['id']: p for p in record['populations']}
     arms = {a['id']: a for a in record['arms']}
     def population(ident):
-        p = populations.get(ident)
-        return None if p is None else {'entity_id': ident, 'kind': 'population',
-            'label': p['label'], 'population_scope': 'melanoma' if p['melanoma_only'] == 'yes' else 'mixed_cancers' if p['melanoma_only'] == 'no' else 'unclear',
-            'parent_id': p['parent_id'] if present(p['parent_id']) else None,
-            'evidence_ids': ids(p['evidence']), 'result_scope': p['scope']}
+        return population_entity(populations.get(ident), ids)
     def arm(ident):
-        a = arms.get(ident)
-        return None if a is None else {'entity_id': ident, 'kind': 'arm',
-            'label': regimen_label(a), 'evidence_ids': ids(a['evidence'])}
+        return arm_entity(arms.get(ident), ids)
     def native(a):
         if not a:
             return None
@@ -116,10 +154,7 @@ def project_article(citation, result, *, allow_fulltext=False):
     publication_hold = citation.get('publication_hold') or False
     eligible = record['decision']['status'] == 'retain' and not publication_hold
     rows, samples, comparisons = [], [], []
-    common = {'report_id': report_id, 'pmid': pmid, 'review_stage': stage, 'reviewer': 'Luna' if stage == 'R3' else 'Sol',
-        'review_binding_sha256': binding, 'source_input_sha256': record['source_sha256'],
-        'scope': 'observed', 'evidence_origin': 'own_report_results', 'validated': False,
-        'API_verification_pending': False, **{f: False for f in FLAGS}}
+    common = projection_fields(record, binding)
     for collection in ('effects', 'survival', 'binary'):
         for r in record[collection]:
             p = population(r['population_id'])
@@ -209,20 +244,9 @@ def project_article(citation, result, *, allow_fulltext=False):
             comparison['comparison_filter_eligible'] |= main
             comparison['comparator_filter_eligible'] |= bool(main and comparator)
     for s in record['sample_sizes']:
-        p = population(s['population_id'])
-        if not numeric(s['n']) or not p or p['population_scope'] != 'melanoma':
-            continue
-        purpose = {'ITT': 'eligible', 'outcome_analysis': 'eligible'}.get(s['count_purpose'], s['count_purpose'])
-        if purpose not in ('enrolled', 'eligible', 'randomized', 'treated', 'response_evaluable', 'safety'):
-            continue
-        samples.append({**common, 'sample_record_id': prefix + 'N-' + s['id'],
-            'record_kind': 'canonical_patient_context', 'n': wrap(s['n'], 'sample_size', ids(s['evidence']), 'patients'),
-            'population_id': prefix + s['population_id'], 'population': p,
-            'arm_id': prefix + s['arm_id'] if present(s['arm_id']) else None, 'arm': arm(s['arm_id']),
-            'sample_context_role': purpose, 'quantity_label': s['count_purpose'],
-            'evidence_ids': ids(s['evidence']), 'main_result_eligible': eligible,
-            'original_fact': {'count_context': s['count_purpose'], 'result_population_id': s['population_id'], 'arm_id': s['arm_id'] if present(s['arm_id']) else None},
-            'quantitative_record': deepcopy(s)})
+        projected = project_sample(s, common=common, eligible=eligible, prefix=prefix, population=population, arm=arm, ids=ids)
+        if projected:
+            samples.append(projected)
     # An explicitly single-group report still has a searchable treatment when
     # its abstract supplies patient counts but no accepted numerical outcome.
     # Never infer a reference direction for a comparative report from arm order.
@@ -460,6 +484,8 @@ def publish(root, plan, records):
     payload = project_pilot(plan, records)
     from .user_dispositions import apply, check_preserved
     payload = apply(root, payload)
+    from .binary_effects import apply as calculate_binary_effects
+    calculate_binary_effects(payload)
     script = owned(root, 'website/scripts/regimen_projection.cjs')
     result = subprocess.run(['node', str(script)], input=json.dumps(payload['clinical_evidence']),
         text=True, capture_output=True, timeout=180, check=False)

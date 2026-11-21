@@ -251,7 +251,8 @@ def _supplement(old, new, links, old_record, new_record, catalog, source_spans):
                 _suppress(right, left)
                 actions.append({**deepcopy(link), 'display_action': 'refined_count_grouped' if refined else 'duplicate_count_grouped'})
             continue
-        fill = [key for key in NUMBER_FIELDS if not numeric(_number_value(left, key)[0]) and numeric(_number_value(right, key)[0])]
+        fill = [key for key in NUMBER_FIELDS if not numeric(_number_value(left, key)[0]) and numeric(_number_value(right, key)[0])
+                and not (key in ('analysis_n', 'denominator') and prior.get('complementary_count_scope') == 'source_reviewed_unavailable')]
         # Never splice bounds/levels from distinct intervals into a synthetic CI.
         if all(not numeric(_number_value(left, key)[0]) for key in ('ci_lower', 'ci_upper')) and all(numeric(_number_value(right, key)[0]) for key in CI_FIELDS) and not any(right[key].get('derived') for key in CI_FIELDS):
             fill.extend(key for key in CI_FIELDS if not numeric(_number_value(left, key)[0]))
@@ -274,6 +275,48 @@ def _supplement(old, new, links, old_record, new_record, catalog, source_spans):
             left['source_reported_numbers'] = [deepcopy(n) for n in left['reported_numbers'] if not n.get('derived')]
         _suppress(right, left)
         actions.append({**deepcopy(link), 'display_action': 'refined_context_supplemented' if refined and fill else 'refined_context_grouped' if refined else 'supplemented' if fill else 'duplicate_result_grouped', 'fields': fill})
+    return actions
+
+
+def merge_fulltext_article(existing, registry, citation, result, r2_record, drug_catalog, report_complete):
+    """Merge two source-bound stage projections using the same display reconciliation."""
+    pmid = citation['pmid']
+    record = result['validation']['record']
+    actions = []
+    incoming, evidence = project_article(citation, result, allow_fulltext=True)
+    links = record.get('r2_links', [])
+    uses = {key: Counter((link['section'], link[key]) for link in links) for key in ('r2_id', 'r3_id')}
+    safe_links = []
+    for link in links:
+        if any(uses[key][(link['section'], link[key])] != 1 for key in uses):
+            actions.append({'pmid': pmid, **deepcopy(link), 'display_action': 'ambiguous_links_kept_separate'})
+        else:
+            safe_links.append(link)
+    actions.extend({'pmid': pmid, **action} for action in _supplement(existing, incoming,
+        safe_links, r2_record, record, drug_catalog or {},
+        {s['span_id']: s['text'] for s in catalog_for(result['source'])['spans']}))
+    for key, value in evidence.items():
+        prior = registry.get(key)
+        if prior is not None and prior != value:
+            raise ValueError('Full-text source ID collision')
+        registry[key] = value
+    for key in ('quantitative_results', 'sample_size_records', 'comparisons', 'reviews'):
+        existing[key].extend(incoming[key])
+    for key in ('current_screening_status', 'current_main_eligible', 'decision_reason'):
+        existing[key] = incoming[key]
+    existing['current_review_stage'] = 'R3'
+    existing['R3_report_complete'] = report_complete
+    for row in existing['quantitative_results']:
+        row['main_result_eligible'] = bool(existing['current_main_eligible'] and not row.get('display_duplicate_of') and
+            row.get('population', {}).get('population_scope') == 'melanoma' and numeric(row['estimate']['value']))
+    for row in existing['sample_size_records']:
+        row['main_result_eligible'] = bool(existing['current_main_eligible'] and not row.get('display_duplicate_of'))
+    visible_ids = {row['result_id'] for row in existing['quantitative_results'] if row['main_result_eligible']}
+    for comparison in existing['comparisons']:
+        allowed = existing['current_main_eligible'] and (any(i in visible_ids for i in comparison['result_ids']) or
+            comparison.get('result_relation') == 'patient_context')
+        comparison['comparison_filter_eligible'] = bool(allowed)
+        comparison['comparator_filter_eligible'] = bool(allowed and comparison.get('comparator_arm_id'))
     return actions
 
 
@@ -316,41 +359,8 @@ def project_fulltext(baseline, *, baseline_ref, phase_id, reports, records, snap
         if not validation.get('valid') or validation.get('global_errors') or record['stage'] != 'R3':
             raise ValueError('Accepted R3 validation required')
         citation = {k: clinical[pmid].get(k) for k in ('pmid', 'report_id', 'title', 'year', 'doi', 'first_author_surname', 'publication_hold')}
-        incoming, evidence = project_article(citation, result, allow_fulltext=True)
-        existing = clinical[pmid]
-        links = record.get('r2_links', [])
-        uses = {key: Counter((link['section'], link[key]) for link in links) for key in ('r2_id', 'r3_id')}
-        safe_links = []
-        for link in links:
-            if any(uses[key][(link['section'], link[key])] != 1 for key in uses):
-                actions.append({'pmid': pmid, **deepcopy(link), 'display_action': 'ambiguous_links_kept_separate'})
-            else:
-                safe_links.append(link)
-        actions.extend({'pmid': pmid, **action} for action in _supplement(existing, incoming,
-            safe_links, saved_r2['record'], record, drug_catalog or {},
-            {s['span_id']: s['text'] for s in catalog_for(result['source'])['spans']}))
-        for key, value in evidence.items():
-            prior = payload['clinical_evidence']['evidence_registry'].get(key)
-            if prior is not None and prior != value:
-                raise ValueError('Full-text source ID collision')
-            payload['clinical_evidence']['evidence_registry'][key] = value
-        for key in ('quantitative_results', 'sample_size_records', 'comparisons', 'reviews'):
-            existing[key].extend(incoming[key])
-        for key in ('current_screening_status', 'current_main_eligible', 'decision_reason'):
-            existing[key] = incoming[key]
-        existing['current_review_stage'] = 'R3'
-        existing['R3_report_complete'] = report['report_complete']
-        for row in existing['quantitative_results']:
-            row['main_result_eligible'] = bool(existing['current_main_eligible'] and not row.get('display_duplicate_of') and
-                row.get('population', {}).get('population_scope') == 'melanoma' and numeric(row['estimate']['value']))
-        for row in existing['sample_size_records']:
-            row['main_result_eligible'] = bool(existing['current_main_eligible'] and not row.get('display_duplicate_of'))
-        visible_ids = {row['result_id'] for row in existing['quantitative_results'] if row['main_result_eligible']}
-        for comparison in existing['comparisons']:
-            allowed = existing['current_main_eligible'] and (any(i in visible_ids for i in comparison['result_ids']) or
-                comparison.get('result_relation') == 'patient_context')
-            comparison['comparison_filter_eligible'] = bool(allowed)
-            comparison['comparator_filter_eligible'] = bool(allowed and comparison.get('comparator_arm_id'))
+        actions.extend(merge_fulltext_article(clinical[pmid], payload['clinical_evidence']['evidence_registry'],
+            citation, result, saved_r2['record'], drug_catalog or {}, report['report_complete']))
         compact[pmid]['records'].append({'stage': 'R3', 'task_id': result['task_id'], 'review_origin': 'model_extraction',
             'artifact_ref': deepcopy(result['artifact_ref']), 'R2_artifact_ref': deepcopy(result['R2_artifact_ref']),
             'source_proof_ref': deepcopy(result['source_proof_ref']),
@@ -446,6 +456,12 @@ def publish(root, payload):
         raise ValueError('Explicit R3 publication contract required')
     from .user_dispositions import apply
     payload = apply(root, payload)
+    from .complementary_publication import apply as apply_complementary
+    payload = apply_complementary(root, payload, archive_baseline=True)
+    from .source_preference import apply as prefer_main_text
+    prefer_main_text(root, payload)
+    from .binary_effects import apply as calculate_binary_effects
+    calculate_binary_effects(payload)
     result = subprocess.run(['node', str(owned(root, 'website/scripts/regimen_projection.cjs'))],
         input=json.dumps(payload['clinical_evidence'], ensure_ascii=False, separators=(',', ':'), allow_nan=False),
         text=True, capture_output=True, timeout=180)
@@ -467,6 +483,8 @@ def publish(root, payload):
     handle = os.open(lock, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
     try:
         fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        from .complementary_publication import archive_decisions
+        archive_decisions(root, payload)
         previous_ref = None
         if public.exists():
             previous = public.read_bytes()
@@ -487,6 +505,8 @@ def publish(root, payload):
             atomic_bytes(public, public_bytes)
         from .evidence_freshness import write as write_freshness
         freshness_ref = write_freshness(root)
+        from .source_preference import write_review
+        write_review(root)
     finally:
         fcntl.flock(handle, fcntl.LOCK_UN)
         os.close(handle)

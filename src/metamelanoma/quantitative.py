@@ -1003,6 +1003,8 @@ def validate(payload, source, *, drug_catalog=None):
 
 def select_sample_size(outcome, counts, *, section='effects', arms=None):
     """An outcome's actual N outranks randomized/ITT/treated/enrolled fallbacks."""
+    if outcome.get('complementary_count_scope') == 'source_reviewed_unavailable':
+        return {'n': NA, 'count_purpose': 'outcome_analysis', 'count_ids': [], 'status': 'source_reviewed_unavailable'}
     primary = 'denominator' if section == 'binary' else 'analysis_n'
     if _integer(outcome.get(primary)) and outcome[primary] > 0:
         return {'n': outcome[primary], 'count_purpose': 'outcome_analysis', 'count_ids': [], 'status': 'reported'}

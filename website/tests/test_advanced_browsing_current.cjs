@@ -2,7 +2,9 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const charts=require('../dist/app.js'),clinical=require('../dist/clinical_evidence.js'),regimens=require('../dist/regimen_definitions.js'),advanced=require('../dist/advanced_filters.js');
 const fixture=require('../../data/audits/subgroup_browsing_20261109/current_fixture.json');
-const classifications=require('../dist/data/clinical_classifications.json');
+// The November 9 report fixture must use the classifications from the same release.
+const classifications=require('../../data/map_guidance_visible_legend_20261113/previous_clinical_classifications.json');
+assert.equal(classifications.clinical_content_sha256,fixture.clinical_meta.content_sha256);
 const raw=new Map(fixture.articles.map(article=>[article.pmid,article.records]));
 const merged=clinical.merge([],{}, {...fixture.clinical_meta,articles:fixture.clinical,evidence_registry:fixture.evidence_registry});
 const studies=regimens.prepareStudies(merged.studies.map(study=>({...study,quantitative_only:true,details:{...study.details,quantitative_extraction:raw.get(study.pmid)}})));

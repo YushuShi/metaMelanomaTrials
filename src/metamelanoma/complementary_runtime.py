@@ -355,6 +355,8 @@ class Journal:
             os.close(self.lease)
             raise RuntimeError('Another model coordinator owns the project lease') from None
         try:
+            initial = path.stat()
+            self.database_identity = (initial.st_dev, initial.st_ino)
             self.db = sqlite3.connect(path, timeout=30)
             self.db.row_factory = sqlite3.Row
             self.db.execute('PRAGMA synchronous=FULL')
@@ -380,6 +382,7 @@ class Journal:
                     provider_id TEXT PRIMARY KEY, attempt_id TEXT NOT NULL);
             ''')
             self.verify_events()
+            self._ensure_current_database()
         except BaseException:
             if hasattr(self, 'db'):
                 self.db.close()
@@ -391,9 +394,65 @@ class Journal:
         if threading.get_ident() != self.owner:
             raise RuntimeError('Only the coordinator may write complementary accounting')
 
+
+    def _ensure_current_database(self):
+        """Reopen an identical atomic replacement while retaining the writer lease.
+
+        OneDrive may replace an idle database inode. SQLite refuses writes to the
+        old inode; adopting a changed ledger instead would lose accounting. Both
+        histories and all complementary state must agree before reopening.
+        """
+        self.check_owner()
+        path = owned(self.root, JOURNAL)
+        for suffix in ('', '-wal', '-shm', '-journal'):
+            candidate = owned(self.root, str(path) + suffix)
+            if candidate.exists() and (not candidate.is_file() or candidate.stat().st_nlink != 1):
+                raise ValueError('Owned single-link journal required')
+        current = path.stat(); identity = (current.st_dev, current.st_ino)
+        if identity == self.database_identity:
+            return
+        if self.db.in_transaction:
+            raise RuntimeError('Journal inode changed during an open transaction; recovery required')
+        def head(db):
+            row = db.execute('SELECT seq,event_hash FROM complementary_events ORDER BY seq DESC LIMIT 1').fetchone()
+            return tuple(row) if row else (0, '0' * 64)
+        def states(db):
+            hasher = hashlib.sha256()
+            for table, order in (('complementary_runs','run_id'), ('complementary_articles','run_id,pmid'),
+                                 ('complementary_attempts','attempt_id'), ('complementary_provider_ids','provider_id')):
+                hasher.update(table.encode())
+                cursor = db.execute('SELECT * FROM ' + table + ' ORDER BY ' + order)
+                hasher.update(canonical([column[0] for column in cursor.description]))
+                for row in cursor:
+                    hasher.update(canonical(list(row))); hasher.update(b'\n')
+            return hasher.digest()
+        replacement = sqlite3.connect(path, timeout=30)
+        replacement.row_factory = sqlite3.Row
+        try:
+            replacement.execute('PRAGMA synchronous=FULL')
+            replacement.execute('PRAGMA foreign_keys=ON')
+            old_head = head(self.db)
+            if old_head != head(replacement):
+                raise ValueError('Replacement journal event head differs; refusing to resume')
+            if [row[0] for row in replacement.execute('PRAGMA quick_check')] != ['ok']:
+                raise ValueError('Replacement journal integrity check failed')
+            self.verify_events(connection=replacement)
+            if states(self.db) != states(replacement):
+                raise ValueError('Replacement journal state differs; refusing to resume')
+            latest = path.stat()
+            if identity != (latest.st_dev, latest.st_ino) or old_head != head(replacement):
+                raise ValueError('Journal changed again during replacement verification')
+        except BaseException:
+            replacement.close()
+            raise
+        previous = self.db
+        self.db = replacement; self.database_identity = identity
+        previous.close()
+
     @contextmanager
     def transaction(self):
         self.check_owner()
+        self._ensure_current_database()
         with self.db:
             yield
 
@@ -406,9 +465,10 @@ class Journal:
         self.db.execute('INSERT INTO complementary_events(previous_hash,event_hash,payload) VALUES(?,?,?)',
                         (previous, hashed, payload))
 
-    def verify_events(self):
+    def verify_events(self, connection=None):
         previous = '0' * 64
-        for row in self.db.execute('SELECT * FROM complementary_events ORDER BY seq'):
+        connection = self.db if connection is None else connection
+        for row in connection.execute('SELECT * FROM complementary_events ORDER BY seq'):
             if row['previous_hash'] != previous or digest((previous + '\n' + row['payload']).encode()) != row['event_hash']:
                 raise ValueError('Complementary event-chain integrity check failed')
             previous = row['event_hash']
@@ -511,6 +571,102 @@ def approve_parallel(root, run_id=RUN_ID):
     return status(root, run_id)
 
 
+
+def _replacement_approval(journal, approval_ref, run_id):
+    """Validate one finite, source-bound user authorization; never infer consent."""
+    approval = verified_json(journal.root, approval_ref)
+    if (approval.get('schema_version') != 1
+            or approval.get('record_kind') != 'user_approved_uncertain_send_replacements'
+            or approval.get('run_id') != run_id or approval.get('authorized_by') != 'user'
+            or approval.get('authorization') != 'Approve one replacement per article'
+            or approval.get('additional_calls_per_article') != 1
+            or approval.get('preserve_unknown_costs') is not True
+            or not isinstance(approval.get('articles'), list) or not approval['articles']):
+        raise ValueError('Explicit single-replacement approval required')
+    grants = {}
+    for item in approval['articles']:
+        pmid = str(item.get('pmid', ''))
+        previous = journal.db.execute(
+            'SELECT * FROM complementary_attempts WHERE attempt_id=? AND run_id=? AND pmid=?',
+            (item.get('previous_attempt_id'), run_id, pmid)).fetchone()
+        article = journal.db.execute('SELECT pmid FROM complementary_articles WHERE run_id=? AND pmid=?',
+                                     (run_id, pmid)).fetchone()
+        if (not article or not previous or pmid in grants or previous['state'] != 'held_uncertain_send'
+                or previous['ordinal'] != item.get('previous_ordinal')
+                or item.get('next_ordinal') != previous['ordinal'] + 1
+                or digest(previous['record'].encode()) != item.get('previous_record_sha256')):
+            raise ValueError('Replacement approval must match one exact uncertain prior attempt')
+        record = json.loads(previous['record'])
+        if (record.get('packet_ref') != item.get('packet_ref')
+                or record.get('result_ref') != item.get('previous_result_ref')):
+            raise ValueError('Replacement source or prior result binding differs')
+        verified_json(journal.root, item['packet_ref'])
+        if item['previous_result_ref']:
+            verified_json(journal.root, item['previous_result_ref'])
+        grants[pmid] = {**item, 'approval_ref': approval_ref}
+    return grants
+
+
+def _replacement_grants(journal, run_id):
+    """Only approvals already bound into the checked journal event chain count."""
+    grants = {}
+    rows = journal.db.execute(
+        "SELECT payload FROM complementary_events WHERE payload LIKE '%user_approved_uncertain_send_replacements%'")
+    seen = set()
+    for row in rows:
+        event = json.loads(row['payload'])
+        if event.get('kind') != 'user_approved_uncertain_send_replacements' or event.get('run_id') != run_id:
+            continue
+        ref = event.get('approval_ref'); key = canonical(ref)
+        if key in seen:
+            continue
+        seen.add(key)
+        checked = _replacement_approval(journal, ref, run_id)
+        if set(grants) & set(checked):
+            raise ValueError('An article already has a single replacement authorization')
+        grants.update(checked)
+    return grants
+
+
+def approve_replacements(root, approval_ref, run_id=RUN_ID):
+    """Activate a previously recorded explicit approval without changing old costs."""
+    with Journal(root) as journal:
+        _run_row(journal, run_id)
+        grants = _replacement_approval(journal, approval_ref, run_id)
+        existing = _replacement_grants(journal, run_id)
+        overlap = set(grants) & set(existing)
+        if overlap:
+            if set(grants) <= set(existing) and all(existing[p]['approval_ref'] == approval_ref for p in grants):
+                return {'already_activated': True, 'articles': len(grants), 'approval_ref': approval_ref}
+            raise ValueError('Replacement authorization overlaps an earlier grant')
+        for pmid, grant in grants.items():
+            row = journal.db.execute('SELECT * FROM complementary_articles WHERE run_id=? AND pmid=?',
+                                     (run_id, pmid)).fetchone()
+            if (row['state'] != 'held_uncertain_send' or row['attempts'] != grant['previous_ordinal']
+                    or json.loads(row['packet_ref']) != grant['packet_ref']):
+                raise ValueError('Article changed since replacement approval')
+        with journal.transaction():
+            journal.event('user_approved_uncertain_send_replacements', run_id=run_id,
+                          approval_ref=approval_ref, articles=len(grants), old_attempts_and_costs_unchanged=True)
+            for pmid in grants:
+                journal.db.execute('UPDATE complementary_articles SET state=?,next_retry=0 WHERE run_id=? AND pmid=?',
+                                   ('ready', run_id, pmid))
+    return {'already_activated': False, 'articles': len(grants), 'approval_ref': approval_ref}
+
+
+def _replacement_for(journal, grants, candidate, ordinal):
+    grant = grants.get(candidate['pmid'])
+    if grant:
+        existing = journal.db.execute('SELECT attempt_id FROM complementary_attempts WHERE run_id=? AND pmid=? AND ordinal=?',
+                                      (candidate['run_id'], candidate['pmid'], ordinal)).fetchone()
+        if (ordinal != grant['next_ordinal'] or candidate['attempts'] != grant['previous_ordinal']
+                or json.loads(candidate['packet_ref']) != grant['packet_ref'] or existing):
+            raise ValueError('The single authorized replacement is consumed or mismatched')
+    elif ordinal > MAX_ATTEMPTS:
+        raise ValueError('Attempt ceiling violated')
+    return grant
+
+
 def _artifact_base(run_id, pmid, ordinal):
     return f'data/current/complementary/{run_id}/attempts/{pmid}/a{ordinal}'
 
@@ -587,7 +743,7 @@ def _complete(journal, record, result, *, validator, clock):
                 'reported_cost_excluded_as_duplicate': cost['gateway_reported_cost_usd']}
     if result['status'] == 'completed':
         state = 'completed_with_holds' if validation.get('held_findings') else 'completed'
-    elif result.get('retryable') and record['ordinal'] < MAX_ATTEMPTS:
+    elif result.get('retryable') and not record.get('replacement_approval_ref') and record['ordinal'] < MAX_ATTEMPTS:
         state = 'retry_wait'
     elif str(result.get('error', '')).startswith('uncertain_'):
         state = 'held_uncertain_send'
@@ -727,6 +883,7 @@ def run(root, run_id=RUN_ID, *, limit=None, workers=32, max_workers=128, pmids=N
                     return status(root, run_id)
         transport = ComplementaryTransport(root=root, expected_endpoint=policy['endpoint'], sender=sender,
                                           settings_loader=settings_loader, timeout_seconds=timeout_seconds)
+        replacement_grants = _replacement_grants(journal, run_id)
         admitted, futures, pause_until = set(), {}, 0.0
         with journal.transaction():
             journal.db.execute('UPDATE complementary_runs SET state=? WHERE run_id=?', ('running', run_id))
@@ -774,14 +931,17 @@ def run(root, run_id=RUN_ID, *, limit=None, workers=32, max_workers=128, pmids=N
                             journal.event('complementary_source_hold', run_id=run_id, pmid=pmid, reason=str(exc))
                         continue
                     ordinal = candidate['attempts'] + 1
-                    if ordinal > MAX_ATTEMPTS:
-                        raise ValueError('Attempt ceiling violated')
+                    replacement = _replacement_for(journal, replacement_grants, candidate, ordinal)
                     attempt_id = f'{run_id}-{pmid}-a{ordinal}'
                     artifact_dir = _artifact_base(run_id, pmid, ordinal)
                     record = {'run_id': run_id, 'pmid': pmid, 'attempt_id': attempt_id, 'ordinal': ordinal,
                               'packet_ref': packet_ref, 'body_sha256': digest(canonical(body)),
                               'endpoint': policy['endpoint'], 'max_output_tokens': output_tokens,
                               'artifact_dir': artifact_dir, 'reserved_at': now()}
+                    if replacement:
+                        record.update(replacement_approval_ref=replacement['approval_ref'],
+                                      replaces_attempt_id=replacement['previous_attempt_id'],
+                                      automatic_replacement_retries=0)
                     with journal.transaction():
                         journal.db.execute('INSERT INTO complementary_attempts(attempt_id,run_id,pmid,ordinal,state,record,cost_status) VALUES(?,?,?,?,?,?,?)',
                             (attempt_id, run_id, pmid, ordinal, 'running', canonical(record).decode(), 'unknown'))

@@ -99,7 +99,7 @@ test('complete administered cell products win over constituent preparation words
 });
 
 test('non-drug modalities stay distinct and vague regimen names stay unresolved',()=>{
-  for(const [raw,broad]of [['Surgery','surgery'],['Radiotherapy','radiotherapy'],['fecal microbiota transplantation','other']]){const value=resolver.resolve(raw);assert.equal(value.status,'non_drug');assert.equal(value.broad_category,broad);assert.equal(value.canonical_id,null);}
+  for(const [raw,broad]of [['Surgery','surgery'],['Radiotherapy','radiotherapy'],['fecal microbiota transplantation','microbiome-therapies']]){const value=resolver.resolve(raw);assert.equal(value.status,'non_drug');assert.equal(value.broad_category,broad);assert.equal(value.canonical_id,null);}
   for(const raw of ['standard care',"investigator's choice",'MAGE-A3 blocker','bmsca2098fc','bispecifics','systemic therapy']){const value=resolver.resolve(raw);assert.equal(value.status,'unresolved',raw);assert.equal(value.canonical_id,null);}
 });
 

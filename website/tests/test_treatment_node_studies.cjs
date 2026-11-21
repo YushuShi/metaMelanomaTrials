@@ -135,3 +135,19 @@ test('endpoint selection rebuilds consolidated views so table and CSV cannot ret
   assert.match(csv,/OS · HR: 0\.65/);
   assert.doesNotMatch(csv,/PFS|0\.61/);
 });
+
+test('clinical map filtering binds individual arm results and sample-only arms within the same report',()=>{
+ const original={pmid:'10',current_main_eligible:true,quantitative_results:[],sample_size_records:[]};
+ const a={...result('a-only',{arm_id:'a'}),pmid:'10',main_result_eligible:true};
+ const b={...result('b-only',{arm_id:'b'}),pmid:'10',main_result_eligible:true};
+ const sample={...result('not-used',{arm_id:'c'}),result_id:undefined,sample_record_id:'n-c',pmid:'10',main_result_eligible:true};
+ original.quantitative_results=[a,b,{...a,result_id:'hidden',main_result_eligible:false}];original.sample_size_records=[sample];
+ const membership=(arm,results,samples=[],extra={})=>({node_id:arm,pmid:'10',source_bindings:[{...binding,arm_ids:[arm],result_ids:results,sample_ids:samples,...extra}]});
+ const index=browse.filterIndex({study_memberships:[membership('A',['a-only']),membership('B',['b-only']),membership('C',[],['n-c']),
+   membership('mismatched-source',['a-only'],[],{review_binding_sha256:'different'}),membership('hidden',['hidden'])]},
+   {articles:[original]},[{intervention:{node_id:'A'},comparator:{label:'placebo'},analysis:{filter_bindings:[{...binding,result_id:'a-only'}]}}],label=>({id:'control:'+label}));
+ assert.equal(index.base.length,1);assert.deepEqual(index.base[0].results.map(r=>r.result_id).sort(),['a-only','b-only']);
+ assert.deepEqual([...browse.matchingNodes(index,[{results:[b]}])],['B']);
+ assert.deepEqual([...browse.matchingNodes(index,[{browse_samples:[sample]}])],['C']);
+ assert.deepEqual([...browse.matchingNodes(index,[{results:[a]}])].sort(),['A','control:placebo']);
+});

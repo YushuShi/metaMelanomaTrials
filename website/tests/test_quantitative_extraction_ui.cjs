@@ -8,6 +8,37 @@ function fixture(){
   const articles=['1','2'].map(pmid=>({pmid,report_id:rid(pmid),title:'Report '+pmid,current_screening_status:pmid==='1'?'retain':'exclude',current_main_eligible:pmid==='1',quantitative_results:[],sample_size_records:[],comparisons:[],reviews:[]}));
   return {schema_version:1,mode:'pilot',publication_ready:true,scope_pmids:['1','2'],articles:articles.map(a=>({pmid:a.pmid,records:[{stage:'R2',task_id:'T'+a.pmid,record:{...record(a.pmid),decision:{status:a.current_screening_status}},issues:[]}]})),clinical_evidence:{schema_version:1,status:'ready',record_kind:'canonical_clinical_evidence',...flags,evidence_registry:{},articles},about_progress:{schema_version:1,unit:'articles',stage_scope:['R2'],stages:{R2:{unit:'articles',entered:2,screening_finished:2,retained:1,excluded:1,unclear:0,unclear_reports:[]}}}};
 }
+test('a selected main-text arm rate reaches study consumers and preserves the original extraction',()=>{
+  const original=record('34503099');
+  original.binary=[
+    {id:'abstract',percentage:39},
+    {id:'results',percentage:56.1},
+    {id:'other_arm',percentage:59}
+  ];
+  const wrapper={record:original,source_preferences:{binary:{
+    abstract:{status:'superseded_abstract'},
+    results:{status:'main_text',values:{percentage:38.6,numerator:17,denominator:44}}
+  }}};
+  const study={details:{quantitative_extraction:[wrapper]}};
+  const [selected]=compact.records(study);
+  assert.deepEqual(selected.binary,[
+    {id:'results',percentage:38.6,numerator:17,denominator:44},
+    {id:'other_arm',percentage:59}
+  ]);
+  assert.equal(compact.effectiveRecord(wrapper),selected);
+  assert.deepEqual(original.binary.map(row=>row.percentage),[39,56.1,59]);
+});
+test('calculated measures identify the arm data, reconstructed interval and separate published test',()=>{
+  const snapshot=fixture(), wrapper=snapshot.articles[0].records[0];
+  const calculation={method:'from_arm_binary_outcomes',intervention:{numerator:20,denominator:108,percentage:18.5},
+    reference:{numerator:12,denominator:118,percentage:10.2},count_recovery:{},from_reported_percentages:{RR:18.5/10.2},interval_method:'log_wald_reconstructed_counts',reported_comparison_test:{operator:'=',value:.09}};
+  wrapper.calculated_effects=[{...wrapper.record.effects[0],id:'calc-rr',measure:'RR',endpoint:'ORR',estimate:1.821,ci_lower:.935,ci_upper:3.546,analysis_n:226,calculation}];
+  const html=compact.render(compact.merge([],{},snapshot).studies[0]);
+  assert.match(html,/Calculated from arm rates · 20\/108 \(18.5%\) vs 12\/118 \(10.2%\) · 95% CI from reconstructed counts · RR from printed rates 1.814 · reported comparison p=0.09/);
+  const fact=value=>({status:'calculated',value,raw_text:null,derived:true});
+  const value=charts.tableValue({estimate:fact(1.821),ci_lower:fact(.935),ci_upper:fact(3.546),measure:'RR',quantitative_record:{calculation}});
+  assert.match(value,/1.821.*0.935–3.546.*calculated from arm rates/);
+});
 test('published pilot discards all prior results and out-of-scope articles without mutating history',()=>{
   const old=[{pmid:'1',report_id:rid(1),title:'Report 1',default_visible:true,comparisons:[{comparison_id:'OLD'}],single_arm_regimens:[{comparison_id:'OLDARM'}],numeric_completion_v6_treated_context:{value:999},details:{quantitative_results:[{result_id:'OLD',estimate:999}],sample_size_records:[{n:999}],clinical_reviews:[{stage:'R3'}],canonical_result_groups:[]}},{pmid:'3',report_id:rid(3),title:'Outside',default_visible:true,comparisons:[],details:{}}];
   const snapshot=fixture(),before=JSON.stringify([old,snapshot]);const merged=compact.merge(old,{OLD:{supporting_quote:'Historical'}},snapshot);

@@ -1,0 +1,3510 @@
+{
+  "schema_version": 1,
+  "paper_conflicts": [
+    {
+      "pmid": "37738028",
+      "group": "Survival estimates",
+      "field": "Median PFS · PAC-1 + entrectinib, N=6",
+      "source_a": "Abstract · 3.38 months (95% CI 1.6–6.5).",
+      "source_b": "Results and conclusion · 3.48 months (95% CI 1.6–6.5).",
+      "recommendation": "Retain both reported medians. Check for a correction covering these six patients.",
+      "finding_ids": [
+        "f1"
+      ],
+      "source_reference": "abstract, b00044, b00051",
+      "packet_sha256": "5759812a72c5ceaf1efddf305fca1b0ffe0c273d8d4d0a4d4072e8fc3c9fd984",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:surv-pfs-r3-1",
+          "abstract": [
+            "R2:survival1"
+          ],
+          "row_hashes": {
+            "R3:surv-pfs-r3-1": "dd807b5f7466a00ab4b6f4a434cb48d477c029e99ea7314e062559abb427d869",
+            "R2:survival1": "43cc016d96afbae8a95374622186ce2912b5f3a1b040bfce18a6ebed1c81481b"
+          },
+          "blocks": [
+            "b00044",
+            "b00051"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "28592387",
+      "group": "Adverse events",
+      "field": "Serious pyrexia attributed to dabrafenib",
+      "source_a": "Abstract · 8/125 patients (6%).",
+      "source_b": "Results · 8/124 patients (6%).",
+      "recommendation": "Use the count of eight events. Verify the exposed safety population before selecting a denominator.",
+      "finding_ids": [
+        "f24"
+      ],
+      "source_reference": "abstract, b00030",
+      "packet_sha256": "aeb6648f8b039b141cc1a3c8ee665f9e7319845b115135b02f7011edb2a4ac0d",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:bsae_pyr_rel",
+          "abstract": [
+            "R2:s1"
+          ],
+          "row_hashes": {
+            "R3:bsae_pyr_rel": "fd2f2e6d30bafb707cf1664272b216ad6c0dcbf1aa70af819938d4e854fb1e6e",
+            "R2:s1": "47abf5f6e5836565e1ae660be723c3ed72ecfa4cde0b0fb821024a40929ee060"
+          },
+          "blocks": [
+            "b00030"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "28592387",
+      "group": "Adverse events",
+      "field": "Serious ejection-fraction change attributed to trametinib",
+      "source_a": "PubMed abstract · Ejection fraction decreased in five patients (4%).",
+      "source_b": "Results · Ejection fraction increased in 5/125 (4%).",
+      "recommendation": "Verify the event term in the safety appendix. The patients and percentage agree, but the stated directions differ.",
+      "finding_ids": [
+        "f25"
+      ],
+      "source_reference": "abstract, b00030",
+      "packet_sha256": "aeb6648f8b039b141cc1a3c8ee665f9e7319845b115135b02f7011edb2a4ac0d",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:bsae_efinc_rel",
+          "abstract": [
+            "R2:s2"
+          ],
+          "row_hashes": {
+            "R3:bsae_efinc_rel": "0b90206c8e87fb91158c560a82b389466b9fce7e720b114317a51020b8e9cc4a",
+            "R2:s2": "1de39b8302090aee20c0249412617185736fda7dd092956b7873540f2c8d0c65"
+          },
+          "blocks": [
+            "b00030"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "35074903",
+      "group": "Adverse events",
+      "field": "Grade 3–4 adverse events · ipilimumab + nivolumab",
+      "source_a": "Abstract · 50%. Attribution and analysis grouping are unspecified.",
+      "source_b": "Table 3 · Treatment-related events in 4/10 patients (40%), grouped by treatment received.",
+      "recommendation": "Keep the safety figures labelled separately. Confirm attribution and who was counted before comparing the percentages.",
+      "finding_ids": [
+        "F20"
+      ],
+      "source_reference": "abstract, b00046",
+      "packet_sha256": "05fc9ce8045fb657bed2eb2b580b2da932c485b384a32f582d17aa5b850f894b"
+    },
+    {
+      "pmid": "40577656",
+      "group": "Confidence intervals",
+      "field": "Median PFS · ITT, N=42",
+      "source_a": "Abstract · 3.7 months (95% CI 2.2–9.2).",
+      "source_b": "Results · 3.7 months (95% CI 2.6–9.2).",
+      "recommendation": "Use the agreed median. Check the lower bound against a correction or underlying survival output.",
+      "finding_ids": [
+        "f23"
+      ],
+      "source_reference": "abstract, b00045",
+      "packet_sha256": "331a562351b073d3afad025f5bc6133e77111ec64b00f40812610d044405ea0f",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:s4",
+          "abstract": [
+            "R2:s2"
+          ],
+          "row_hashes": {
+            "R3:s4": "1fc8ffcad4eb05b6993eab94c0104cd148a8ff727439781d2767059fb7282d73",
+            "R2:s2": "fbbee0474a45bff2115b88a0857070e6f191b4a1a01eaf8ac534874b8dbf93a6"
+          },
+          "blocks": [
+            "b00045"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "40577656",
+      "group": "Treatment schedule",
+      "field": "Maximum treatment duration · BO-112 + pembrolizumab",
+      "source_a": "Abstract · Up to one year.",
+      "source_b": "Methods · Up to two years.",
+      "recommendation": "Check the protocol version and any amendments before assigning a maximum duration.",
+      "finding_ids": [
+        "f24"
+      ],
+      "source_reference": "abstract, b00019",
+      "packet_sha256": "331a562351b073d3afad025f5bc6133e77111ec64b00f40812610d044405ea0f",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "32376722",
+      "group": "Confidence intervals",
+      "field": "Median PFS · in-transit melanoma, N=54",
+      "source_a": "Abstract · 11.7 months (6.6 to not reached).",
+      "source_b": "Results · 11.7 months (6.3 to not reached).",
+      "recommendation": "Use the agreed median. Verify the lower bound and interval level before using the interval.",
+      "finding_ids": [
+        "f21"
+      ],
+      "source_reference": "abstract, b00016",
+      "packet_sha256": "443a4832a2880c700ad950bf82ddd868f57e3eabeb9535d09d79fe071a01afa6",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:pfs_median_r3",
+          "abstract": [
+            "R2:s_pfs_median"
+          ],
+          "row_hashes": {
+            "R3:pfs_median_r3": "09d06166cb53bd3019b3aaccdc056854358d67760ed68f49d78577bb4ffe221d",
+            "R2:s_pfs_median": "cf4feab20b8889b43e5dbc62dc2206e204a997355c160c4e38b1512f681ce0a9"
+          },
+          "blocks": [
+            "b00016"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "32489255",
+      "group": "Confidence intervals",
+      "field": "Median PFS · nivolumab, N=55",
+      "source_a": "Abstract · 5.1 months (95% CI 3.5–6.8).",
+      "source_b": "Results and Figure 1 caption · 5.1 months (95% CI 3.5–6.1).",
+      "recommendation": "The Results and figure caption agree on 6.1 months. Retain the abstract bound for review.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "abstract, b00045, b00046",
+      "packet_sha256": "892cb075b81d3c5c2a105039e34cbdfd5bc410949407acbbecd7545197196f0e",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:surv_pfs",
+          "abstract": [
+            "R2:surv1"
+          ],
+          "row_hashes": {
+            "R3:surv_pfs": "cb9716c660bedb33f7d0f5a32ea5c6f483abc468b81c88888c9fcce5f7a47fc4",
+            "R2:surv1": "85971644595260db055ca39ade353556fea43dc5d70ebe436d25cb47de0468d2"
+          },
+          "blocks": [
+            "b00045",
+            "b00046"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "32489255",
+      "group": "Cohort and sample size",
+      "field": "BRAF-mutant participants · elderly metastatic melanoma cohort",
+      "source_a": "Methods · 34/55 patients had mutated BRAF.",
+      "source_b": "Discussion · 18% of the elderly cohort had a BRAF mutation.",
+      "recommendation": "Use the directly enumerated baseline count for cohort description and flag the discussion percentage.",
+      "finding_ids": [
+        "f7"
+      ],
+      "source_reference": "b00014, b00054",
+      "packet_sha256": "892cb075b81d3c5c2a105039e34cbdfd5bc410949407acbbecd7545197196f0e"
+    },
+    {
+      "pmid": "28056206",
+      "group": "Confidence intervals",
+      "field": "Median PFS · cutaneous melanoma, nivolumab",
+      "source_a": "Abstract · 6.2 months (95% CI 5.1–7.5).",
+      "source_b": "Results · 6.2 months (95% CI 5.2–7.5).",
+      "recommendation": "Use the agreed median. Confirm the lower bound for this treatment and subtype.",
+      "finding_ids": [
+        "f34"
+      ],
+      "source_reference": "abstract, b00024",
+      "packet_sha256": "1a5e1d4bc762e57c9bc2097307a7fc13b705e023292dd9b9f7d2cafa576aef55",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:s_pfs_nivolumab_cutaneous",
+          "abstract": [
+            "R2:s_pfs_cutaneous_nivolumab"
+          ],
+          "row_hashes": {
+            "R3:s_pfs_nivolumab_cutaneous": "57e18c85730d8c45c7b26153b8691ed61187e8ce2feab5dce468d1f8689be7d2",
+            "R2:s_pfs_cutaneous_nivolumab": "b73ddd58254e5c8010c365366e93a2186210b86790bb4804a758b17e789aa37c"
+          },
+          "blocks": [
+            "b00024"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "28056206",
+      "group": "Confidence intervals",
+      "field": "Median PFS · mucosal melanoma, nivolumab + ipilimumab",
+      "source_a": "Abstract · 5.9 months (95% CI 2.8 to not reached).",
+      "source_b": "Results · 5.9 months (95% CI 2.2 to not reached).",
+      "recommendation": "Use the agreed median. Compare the lower bound with the mucosal combination-arm survival figure.",
+      "finding_ids": [
+        "f33"
+      ],
+      "source_reference": "abstract, b00024",
+      "packet_sha256": "1a5e1d4bc762e57c9bc2097307a7fc13b705e023292dd9b9f7d2cafa576aef55",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:s_pfs_combo_mucosal",
+          "abstract": [
+            "R2:s_pfs_mucosal_combo"
+          ],
+          "row_hashes": {
+            "R3:s_pfs_combo_mucosal": "24b9ea8084f44bcafa0fe9129424c672264e883902ecaf2b3d92ea5e3e689471",
+            "R2:s_pfs_mucosal_combo": "7024526ad4890bb05a0459cf854b05fd09e7ed8e1b4a78edd2072398227e84f8"
+          },
+          "blocks": [
+            "b00024"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "37536936",
+      "group": "Survival estimates",
+      "field": "36-month DFS · four vaccine trial arms",
+      "source_a": "Abstract · Placebo 27.2%, TLPLDC 55.4%, TLPLDC + G-CSF 22.9%, TLPO 60.9%.",
+      "source_b": "Results · Placebo 30.0%, TLPLDC 55.8%, TLPLDC + G-CSF 24.4%, TLPO 64.0%.",
+      "recommendation": "Both passages report median follow-up of 35.8 months. Verify Figure 2 and the analysis cutoff before choosing the arm rates.",
+      "finding_ids": [
+        "f10"
+      ],
+      "source_reference": "abstract, b00043",
+      "packet_sha256": "550bf9bbfe42b18434aa5915473604084798daf54ac4d34ac7d53db3d164e667",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:s_dfs_36_placebo",
+          "abstract": [
+            "R2:s_dfs_placebo"
+          ],
+          "row_hashes": {
+            "R3:s_dfs_36_placebo": "27659b92985688e93cc60094e9b84e46c03d2ea44031ce4f2863f668910f2a89",
+            "R2:s_dfs_placebo": "1964f8f35524e1285cb587b71adc7526f2dc5576c0a56d551944bd37b64ee606"
+          },
+          "blocks": [
+            "b00043"
+          ]
+        },
+        {
+          "section": "survival",
+          "main": "R3:s_dfs_36_no_g",
+          "abstract": [
+            "R2:s_dfs_no_g"
+          ],
+          "row_hashes": {
+            "R3:s_dfs_36_no_g": "dffe3a691d76b3a1c279d032bed09be83b44ebd9ab118499ae793dbe5bd8b41a",
+            "R2:s_dfs_no_g": "99ab904e3267015723f34f7d331426c9af0f9c2f2152d946ed149f586f051ebb"
+          },
+          "blocks": [
+            "b00043"
+          ]
+        },
+        {
+          "section": "survival",
+          "main": "R3:s_dfs_36_g",
+          "abstract": [
+            "R2:s_dfs_g"
+          ],
+          "row_hashes": {
+            "R3:s_dfs_36_g": "e1cffd3fc41a64c8df7b378aafb3033322198c6eb994cdfd7e27559a64070155",
+            "R2:s_dfs_g": "d255eb78357c0c79c9de8f77645e196c6290a310630983e06f999c1af144d460"
+          },
+          "blocks": [
+            "b00043"
+          ]
+        },
+        {
+          "section": "survival",
+          "main": "R3:s_dfs_36_tlpo",
+          "abstract": [
+            "R2:s_dfs_tlpo"
+          ],
+          "row_hashes": {
+            "R3:s_dfs_36_tlpo": "1402e18c70d9ce3ea5827bd54887a1393a5a4bca6f8fccd0cb0db5b6392261a6",
+            "R2:s_dfs_tlpo": "11c5ae3085afabec2529d9b63c5ee5ccadc33b55fec69ae94d901bb2a133107d"
+          },
+          "blocks": [
+            "b00043"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "37536936",
+      "group": "Survival estimates",
+      "field": "36-month OS · four vaccine trial arms",
+      "source_a": "Abstract · Placebo 62.5%, TLPLDC 93.6%, TLPLDC + G-CSF 57.7%, TLPO 94.6% (p=0.002).",
+      "source_b": "Results · Placebo 70.9%, TLPLDC 94.2%, TLPLDC + G-CSF 69.8%, TLPO 94.8% (p=0.011).",
+      "recommendation": "Check the arm rates and four-arm p-value against Figure 2 and any documented analysis update.",
+      "finding_ids": [
+        "f10"
+      ],
+      "source_reference": "abstract, b00043",
+      "packet_sha256": "550bf9bbfe42b18434aa5915473604084798daf54ac4d34ac7d53db3d164e667",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:s_os_36_placebo",
+          "abstract": [
+            "R2:s_os_placebo"
+          ],
+          "row_hashes": {
+            "R3:s_os_36_placebo": "729ea82a2d80baf663c0fbf94e7faaacac1c20c28c861ece3e10713ea7e67a07",
+            "R2:s_os_placebo": "b29883bf90769a6ab88fa6e57adeb61d2b24a31ef8e215c3224a7a9ff41cd80f"
+          },
+          "blocks": [
+            "b00043"
+          ]
+        },
+        {
+          "section": "survival",
+          "main": "R3:s_os_36_no_g",
+          "abstract": [
+            "R2:s_os_no_g"
+          ],
+          "row_hashes": {
+            "R3:s_os_36_no_g": "f51c031a13020a1bde9502022d5c1c0ddcdb8146228851311f426869f2a91921",
+            "R2:s_os_no_g": "e08a2ef022c9a824ea482e91331e5bba92aff578e0a5ce147b5104a47a0815e5"
+          },
+          "blocks": [
+            "b00043"
+          ]
+        },
+        {
+          "section": "survival",
+          "main": "R3:s_os_36_g",
+          "abstract": [
+            "R2:s_os_g"
+          ],
+          "row_hashes": {
+            "R3:s_os_36_g": "45b881f7f0da1f257abdc7ef4a5ceda04dd3d828b24d8df97b2a31d3717e6a38",
+            "R2:s_os_g": "14179b1277e931c67bba2f13ed28487be55c26cd232c25081e377fc818c572e6"
+          },
+          "blocks": [
+            "b00043"
+          ]
+        },
+        {
+          "section": "survival",
+          "main": "R3:s_os_36_tlpo",
+          "abstract": [
+            "R2:s_os_tlpo"
+          ],
+          "row_hashes": {
+            "R3:s_os_36_tlpo": "695817f7162b0d1d15c186e04bebde7f01b84fd7e85932e39f8debba93afdfcb",
+            "R2:s_os_tlpo": "4a75013e4f314dd54b1dc548b16c102955aae4a8d08c2d4daa9e489d7638ba3c"
+          },
+          "blocks": [
+            "b00043"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "34503099",
+      "group": "Response rates",
+      "field": "Local ORR · pembrolizumab alone, cutaneous metastases",
+      "source_a": "Abstract · 39%.",
+      "source_b": "Discussion · 56.1%.",
+      "recommendation": "Check the response counts and whether the denominator was patients or lesions before choosing a percentage.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "abstract, b00051",
+      "packet_sha256": "efc59b827dfb7cde604b640c4cfe7fcb81af68f5f7c0c265ba3534b487411a78",
+      "main_text_side": "source_a",
+      "main_text_value": "Table 3 reports 17 local objective responses (38.6%) among 44 pembrolizumab patients. The 56.1% figure in the next row describes local progression.",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:bin_pembro_orr_abstract",
+          "abstract": [
+            "R2:b2",
+            "R3:bin_pembro_orr_discussion"
+          ],
+          "values": {
+            "percentage": 38.6,
+            "numerator": 17,
+            "denominator": 44
+          },
+          "packet_path": "data/cohort/retrieved_main_packets/report-6381e0ff48a9223f7a80b6b0-8793dfc78c375dfc.json",
+          "row_hashes": {
+            "R3:bin_pembro_orr_abstract": "7add23b032f2c285a436c19ac52408b2427a8f6267453ab31381b1eee3035ecb",
+            "R2:b2": "e0e0bc9463a720f9bb9fc09345fab521b5d69981c1f327d918066f788600715d",
+            "R3:bin_pembro_orr_discussion": "a8870d097e82cb27788bf20b94d08b360ea46a208d94dc9874ef91e1fed90599"
+          },
+          "blocks": [
+            "b00084"
+          ],
+          "packet_file_sha256": "83f54f03be99018f61fe09dcde5e91b614470f0709b65198ce9dcbd19f57b50a"
+        }
+      ]
+    },
+    {
+      "pmid": "29943192",
+      "group": "Response rates",
+      "field": "ORR · pazopanib + paclitaxel",
+      "source_a": "Abstract and Results · 37%, comprising one complete and 20 partial responses.",
+      "source_b": "Table 2 · 21/58 evaluable patients (36%).",
+      "recommendation": "Use the explicit count and denominator when calculating a proportion. Confirm the denominator behind the reported 37%.",
+      "finding_ids": [],
+      "source_reference": "abstract, b00032, b00037",
+      "packet_sha256": "374691bc340f4a3fc881384f648f8e543e8961b66005a66894586b573876a541",
+      "main_text_side": "source_b",
+      "main_text_value": "Table 2 reports 21 responses among 58 evaluable patients (36%), comprising one complete and 20 partial responses.",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b2",
+          "abstract": [
+            "R2:b1",
+            "R3:b1"
+          ],
+          "row_hashes": {
+            "R3:b2": "8378e8b66f0f9c15641dbd46a3615add96ccf80cc0b3e1f913fbea5935edf5d7",
+            "R2:b1": "ddc9017ed8bce6549c24f85d76fb50f3e579fa48478376cebd87dcd903a51127",
+            "R3:b1": "d8cc515992666f2a3b8320e3935b7d0e98f5e3411bdf824da0f411b40612ad1a"
+          },
+          "blocks": [
+            "b00032",
+            "b00037"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "23055778",
+      "group": "Response rates",
+      "field": "Disease control · vaccine-treated, response-evaluable patients",
+      "source_a": "Abstract · 38.46%.",
+      "source_b": "Results · 34.6%, alongside five objective responses and five cases of stable disease among 26 evaluated patients.",
+      "recommendation": "The reported counts give 10/26 (38.46%). Check Table 5 before choosing the published percentage.",
+      "finding_ids": [],
+      "source_reference": "abstract, b00029",
+      "packet_sha256": "53e8c707fdc39ef79deff9c8682315c215f1df6a475f6b6edeee63eba69e70c3"
+    },
+    {
+      "pmid": "23055778",
+      "group": "Survival estimates",
+      "field": "Median OS · overall vaccine cohort",
+      "source_a": "Abstract · 20.20 months.",
+      "source_b": "Results · 20.40 months.",
+      "recommendation": "Check Table 6 and the survival analysis population before choosing a median.",
+      "finding_ids": [
+        "f10",
+        "f19"
+      ],
+      "source_reference": "abstract, b00033",
+      "packet_sha256": "53e8c707fdc39ef79deff9c8682315c215f1df6a475f6b6edeee63eba69e70c3"
+    },
+    {
+      "pmid": "34782430",
+      "group": "Survival estimates",
+      "field": "Median OS · vaccine + immediate dasatinib (week 1, arm B)",
+      "source_a": "Abstract and discussion · 15.45 months.",
+      "source_b": "Results · 19.1 months.",
+      "recommendation": "Check Figure 2B and supplementary Table S2. The same arm comparison carries p=0.0086 in both accounts.",
+      "finding_ids": [
+        "f19"
+      ],
+      "source_reference": "abstract, b00035, b00060",
+      "packet_sha256": "6e66fa934e856b39e630ad8323cb9bfc8efc5cda62ba816f3bda20b4d66203d5"
+    },
+    {
+      "pmid": "34782430",
+      "group": "Survival estimates",
+      "field": "Median OS · vaccine + delayed dasatinib (week 5, arm A)",
+      "source_a": "Abstract and discussion · 3.47 months.",
+      "source_b": "Results · 8.3 months.",
+      "recommendation": "Check Figure 2B and supplementary Table S2. The same arm comparison carries p=0.0086 in both accounts.",
+      "finding_ids": [
+        "f20"
+      ],
+      "source_reference": "abstract, b00035, b00060",
+      "packet_sha256": "6e66fa934e856b39e630ad8323cb9bfc8efc5cda62ba816f3bda20b4d66203d5"
+    },
+    {
+      "pmid": "34782430",
+      "group": "Survival estimates",
+      "field": "Median PFS · vaccine + delayed dasatinib (week 5, arm A)",
+      "source_a": "Abstract and discussion · 1.97 months.",
+      "source_b": "Results · 2.2 months.",
+      "recommendation": "Check Figure 2B and supplementary Table S2 before choosing a median. Both accounts give p=0.063.",
+      "finding_ids": [
+        "f21"
+      ],
+      "source_reference": "abstract, b00035, b00060",
+      "packet_sha256": "6e66fa934e856b39e630ad8323cb9bfc8efc5cda62ba816f3bda20b4d66203d5"
+    },
+    {
+      "pmid": "34774225",
+      "group": "Cohort and sample size",
+      "field": "Patients enrolled · CheckMate 204",
+      "source_a": "Summary · 165 were screened and 119 were enrolled and treated.",
+      "source_b": "Results · 165 were enrolled and 119 were treated (101 asymptomatic and 18 symptomatic).",
+      "recommendation": "Use 119 for the treated population. Check the participant flow diagram and enrollment definition before recording an enrolled N.",
+      "finding_ids": [
+        "f08_enrolled_conflict"
+      ],
+      "source_reference": "abstract, b00025",
+      "packet_sha256": "eebfbc4a2bc25ad4765a0cd2aa818bf2b9dab742400352bc370fff5563a29a28",
+      "main_text_side": "source_b",
+      "main_text_value": "Results report 165 patients enrolled and 119 treated, including 101 asymptomatic and 18 symptomatic patients.",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": null,
+          "abstract": [
+            "R2:ss_total_enrolled",
+            "R3:ss_total_enrolled"
+          ],
+          "row_hashes": {
+            "R2:ss_total_enrolled": "f80d89cc267899017c9355bddc8d5cfee7ebc5bbc56bfab4275b1283e1e795df",
+            "R3:ss_total_enrolled": "62d0783ca0bebcbeefdbe3e40e680e2c50763935e018fe3bed672e89f60e79e3"
+          },
+          "blocks": [
+            "b00025"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "34692475",
+      "group": "Eligibility",
+      "field": "Melanoma enrollment in a mixed-cancer cohort",
+      "source_a": "Article abstract · Melanoma is listed among cancers treated.",
+      "source_b": "Table 1 · The tumor types tabulated for all 26 patients do not include melanoma.",
+      "recommendation": "Keep the melanoma enrollment and eligibility unresolved. The pooled estimates cover multiple cancers.",
+      "finding_ids": [
+        "f01"
+      ],
+      "source_reference": "b00002, b00023, b00022",
+      "packet_sha256": "473c4ee8972227c251d79784f3b94a0597959430226a7e6ab6c9ae3c0263c2cf",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "34692475",
+      "group": "Survival estimates",
+      "field": "Median PFS · all cancers combined",
+      "source_a": "PubMed abstract · 8.37 months (95% CI 6.5–10.0).",
+      "source_b": "Published article abstract and Results · 4.77 months (95% CI 4.10–5.44).",
+      "recommendation": "Check the publication version. Either figure describes the pooled cancer population and requires a separate melanoma result for melanoma-specific use.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "abstract, b00002, b00029",
+      "packet_sha256": "473c4ee8972227c251d79784f3b94a0597959430226a7e6ab6c9ae3c0263c2cf",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:s_pfs_all",
+          "abstract": [
+            "R2:r_pfs"
+          ],
+          "row_hashes": {
+            "R3:s_pfs_all": "c269cc3da0e5b87ea5e6b3cf1478efb95af895bd156769ccbb2e86aef6f5cf50",
+            "R2:r_pfs": "0b81682f6bb64ec0a0ffbfb10eac67d047dcda8adb7e0d1c31c018260409ba04"
+          },
+          "blocks": [
+            "b00029"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "12926212",
+      "group": "Cohort and sample size",
+      "field": "Size of the four-drug chemotherapy subgroup",
+      "source_a": "Abstract · 38 patients comprised the overall melanoma cohort.",
+      "source_b": "Abstract · The subgroup of 16 is labelled 46%. Its share of all 38 would be 42.1%.",
+      "recommendation": "Retain the reported subgroup count of 16. Verify whether 46% uses a different evaluable population before assigning a response denominator.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "abstract",
+      "packet_sha256": "48ede890fd3ff3f46bcd9fd08db67e4bb90882aba7aadb089dc977aaf0cd8f3d"
+    },
+    {
+      "pmid": "22454415",
+      "group": "Treatment schedule",
+      "field": "Vemurafenib dose in two patients",
+      "source_a": "Methods · 360 mg twice daily.",
+      "source_b": "Results · 320 mg twice daily.",
+      "recommendation": "Check the administered dose before counting these patients among those receiving more than 320 mg twice daily.",
+      "finding_ids": [
+        "f18"
+      ],
+      "source_reference": "b00009, b00020, b00027",
+      "packet_sha256": "730eeba9c6a39b16db56275b5ef64db182aeadbb3b7ab46ebb128095b742725c"
+    },
+    {
+      "pmid": "25846669",
+      "group": "Adverse events",
+      "field": "Patients with grade 3 adverse events",
+      "source_a": "Results · Six grade 3 events occurred in five patients.",
+      "source_b": "Discussion · Six patients each experienced one grade 3 event.",
+      "recommendation": "Retain six events. Verify how many distinct patients experienced them.",
+      "finding_ids": [
+        "f22"
+      ],
+      "source_reference": "b00048, b00061",
+      "packet_sha256": "1c24d556a35ced93f94e62f05842d8d5f07a664f6034cb4e580d0763f4fe9e22"
+    },
+    {
+      "pmid": "27528724",
+      "group": "Adverse events",
+      "field": "Grade 3–4 anemia or thrombocytopenia",
+      "source_a": "Abstract · Five patients.",
+      "source_b": "Results · Six patients (18%), described as treatment-related.",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "b00024, abstract",
+      "packet_sha256": "ab6b565ad49f1f4bc0c8712825307b442025be0b80fd7c15c57a38d30d0ee5ca",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b4",
+          "abstract": [
+            "R2:b3"
+          ],
+          "row_hashes": {
+            "R3:b4": "59288ebb7c86460c3767fc14cae13ef1ac371d58e09adfc69237546a84aa2eac",
+            "R2:b3": "6d15ca4d22080c89568df612cfba540a164821f6cac5362ce63053095fbe7bd3"
+          },
+          "blocks": [
+            "b00024"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "29383037",
+      "group": "Survival estimates",
+      "field": "Median OS · melanoma, low IFNG expression",
+      "source_a": "Abstract · 10.2 months.",
+      "source_b": "Results · 3.1 months (95% CI 0.0–11.8).",
+      "recommendation": "Check the melanoma-specific survival analysis. The paper separately reports 10.2 months for an NSCLC group.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "abstract, b00035, b00030",
+      "packet_sha256": "0cd850d4e5e7336ec2f7fb5346089e578e07d46f6522300eda4d5ee1e2ec360f",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:surv_os_ifng_low",
+          "abstract": [
+            "R2:os_ifng_low"
+          ],
+          "row_hashes": {
+            "R3:surv_os_ifng_low": "d5afd185695b60e627220b9b889f962d39338446944147e52890154abae5b14f",
+            "R2:os_ifng_low": "1e9b07b6c9a631b388a5c90db9e4a0e792926a95d58b9d4618d563e8cd9c4c4a"
+          },
+          "blocks": [
+            "b00035",
+            "b00030"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "30539281",
+      "group": "Cohort and sample size",
+      "field": "Vitiligo subgroup · OS analysis",
+      "source_a": "Table 2 · Eight patients (4%).",
+      "source_b": "Discussion · 7% of patients.",
+      "recommendation": "Verify whether the same patients were eligible for the OS analysis before assigning eight to that estimate.",
+      "finding_ids": [
+        "f21"
+      ],
+      "source_reference": "b00022, b00038",
+      "packet_sha256": "9e61c0d477c2dfe09aadefcc84f240e5632d501c4325e884244204d0530a7c7e"
+    },
+    {
+      "pmid": "30864295",
+      "group": "Response rates",
+      "field": "Partial responses · immunotherapy cohort",
+      "source_a": "Abstract · Seven partial responses, labelled 75.0%.",
+      "source_b": "Results · Nine partial responses (75.0%).",
+      "recommendation": "Nine of the 12 patients gives 75%. Use the full-text count provisionally and preserve the abstract discrepancy.",
+      "finding_ids": [
+        "f22"
+      ],
+      "source_reference": "abstract, b00031",
+      "packet_sha256": "e579ca67b611f1a5fb3f78a18d87625d1765724fff44111eb3a89d3e0947532d",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:bin_pr_pd1",
+          "abstract": [
+            "R2:result_IT_PR"
+          ],
+          "row_hashes": {
+            "R3:bin_pr_pd1": "69fdc345ded26ac5b34aa2022bac1ec27944c1a406bb02bb40e541836ffb80b3",
+            "R2:result_IT_PR": "769f94789d7fdee6d335d6ef6c821ead20abee683f0271a483d586db31e70a93"
+          },
+          "blocks": [
+            "b00031"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "34290710",
+      "group": "Cohort and sample size",
+      "field": "NRAS-mutant cutaneous melanoma patients",
+      "source_a": "Abstract · 12 among 92 cutaneous melanoma patients.",
+      "source_b": "Results and baseline table · 21 among 92.",
+      "recommendation": "The reported 2 responders and 9.5% ORR support 21. Keep the abstract count visible for review.",
+      "finding_ids": [
+        "f05"
+      ],
+      "source_reference": "abstract, b00021, b00022, b00023",
+      "packet_sha256": "814a06f13f28fe2926f70eb7d00a6315d5c22ca146877ba5b21442dac3f022f6",
+      "main_text_side": "source_b",
+      "main_text_value": "Table 2 reports 21 of 92 cutaneous and 12 of 114 noncutaneous melanoma patients with an NRAS mutation.",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": "R3:s4",
+          "abstract": [
+            "R2:s4"
+          ],
+          "row_hashes": {
+            "R3:s4": "76dd904082f56dfa3038f008955089193b1ab6df60e074710cacd836255336c5",
+            "R2:s4": "470f835b50ae3d3c97df210637cdb46ca9d4e9609fdc69e8c0f9e18da207bb63"
+          },
+          "blocks": [
+            "b00021",
+            "b00022",
+            "b00023"
+          ]
+        },
+        {
+          "section": "sample_sizes",
+          "main": "R3:s6",
+          "abstract": [
+            "R2:s6"
+          ],
+          "row_hashes": {
+            "R3:s6": "c98edc619225481986fa095cb00e2fe7b27956c8ad4a531023f24332a324abe5",
+            "R2:s6": "dea36aaeaed7376b0619316b3501f757dc541dadd8e51ac2024437b1cf156ef2"
+          },
+          "blocks": [
+            "b00021",
+            "b00022",
+            "b00023"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "34813506",
+      "group": "Cohort and sample size",
+      "field": "Progressive disease in TIL cohort",
+      "source_a": "Methods · Five of 26 participants had progressive disease.",
+      "source_b": "Results for Figure 3A · Six had progressive disease.",
+      "recommendation": "Check whether Figure 3A used a different analysis population.",
+      "finding_ids": [
+        "f10"
+      ],
+      "source_reference": "b00051, b00018",
+      "packet_sha256": "452bb3da58de53bf4967daf1206bca6fa3d1e8b13cc3cc3e1cf05a608aa917a9"
+    },
+    {
+      "pmid": "35688560",
+      "group": "Statistical tests",
+      "field": "CD39+ resident memory T cells · multivariable p-value",
+      "source_a": "Table 2 · p=0.0036.",
+      "source_b": "Results · p=0.0022.",
+      "recommendation": "Check the fitted model or test output before recording a single p-value.",
+      "finding_ids": [
+        "f21"
+      ],
+      "source_reference": "b00027, b00048",
+      "packet_sha256": "41fd8d0ad56647f05dd3710814379254a88b25bf8a73a0c454cdb8c915e098a4"
+    },
+    {
+      "pmid": "35967450",
+      "group": "Confidence intervals",
+      "field": "OS HR · NOTCH4-mutant melanoma in validation cohorts",
+      "source_a": "Abstract · HR 0.21, upper 95% CI bound 0.68.",
+      "source_b": "Results · Upper 95% CI bound 0.66.",
+      "recommendation": "Verify the interval against the survival output or published correction before using its bounds.",
+      "finding_ids": [
+        "f07"
+      ],
+      "source_reference": "b00036, b00002",
+      "packet_sha256": "6876095c37e879f8b6d566b7867b8ad59b8cb9371973c1c1cc03b938a0f9ce4e",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "36404632",
+      "group": "Survival estimates",
+      "field": "3-year OS · melanoma cohort",
+      "source_a": "Results and Table 3 · 53.5%.",
+      "source_b": "Discussion · 54.6%.",
+      "recommendation": "Check the endpoint definition, population and data cutoff before choosing a survival estimate.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "b00074, b00050",
+      "packet_sha256": "3dba62c83aa3a9a18e8dd16c71efb36236cf4e507ec35363384cd66c5822ebb6"
+    },
+    {
+      "pmid": "36672591",
+      "group": "Cohort and sample size",
+      "field": "Patients with liver as the only metastatic site",
+      "source_a": "Results · 23 patients.",
+      "source_b": "Discussion · 24 patients.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00020, b00035",
+      "packet_sha256": "72e48e162b45f7ed85c07a7f34e9e33e3876d499c722f8516678d9c0f30e6159"
+    },
+    {
+      "pmid": "36997799",
+      "group": "Survival estimates",
+      "field": "Median OS · overall cohort",
+      "source_a": "Abstract and Results · 4.9 months.",
+      "source_b": "Discussion · 25 weeks (about 5.7 months).",
+      "recommendation": "Check the endpoint definition, population and data cutoff before choosing a survival estimate.",
+      "finding_ids": [
+        "f17"
+      ],
+      "source_reference": "b00028, b00033",
+      "packet_sha256": "c1d12cff19d2d327b4506d748de17ab6e79af74b10458adc60ea1ba43ac66384"
+    },
+    {
+      "pmid": "39546075",
+      "group": "Response rates",
+      "field": "Stable disease or remission · radiotherapy only",
+      "source_a": "Table 5 · 37 patients (23.4%).",
+      "source_b": "Results narrative · 36 patients (22%).",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f29"
+      ],
+      "source_reference": "b00025, b00026",
+      "packet_sha256": "643f1b1b0983a28207c34bb3663013be453bb98a916fe85c24688bf487703c47"
+    },
+    {
+      "pmid": "39572525",
+      "group": "Adverse events",
+      "field": "Patients with any treatment-related adverse event",
+      "source_a": "Text · All patients experienced such an event.",
+      "source_b": "Table 3 · 28 patients (93.3%).",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f14"
+      ],
+      "source_reference": "b00027",
+      "packet_sha256": "bc7b8073bc64720ed95e00d6cd9aada62d195a5404830216ba8615a4cfb85261"
+    },
+    {
+      "pmid": "42056527",
+      "group": "Survival estimates",
+      "field": "Median OS · intratumoral ipilimumab arm",
+      "source_a": "Results · 50 months.",
+      "source_b": "Figure 2 caption · Median OS was not reached in either arm.",
+      "recommendation": "Check the endpoint definition, population and data cutoff before choosing a survival estimate.",
+      "finding_ids": [
+        "f19"
+      ],
+      "source_reference": "b00019, b00016",
+      "packet_sha256": "809f001feee2c352a8644c3dd32c80c9b37890cee47ad3fd03c35bc6730c12e6"
+    },
+    {
+      "pmid": "42578969",
+      "group": "Confidence intervals",
+      "field": "6-month PFS · 26 analyzable patients",
+      "source_a": "Abstract · 5% (90% CI 0.6%–17.7%).",
+      "source_b": "Results · 5% (90% CI 0.6%–16.3%).",
+      "recommendation": "Verify the interval against the survival output or published correction before using its bounds.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "b00034, abstract",
+      "packet_sha256": "32c1e0f671e8ea00d4a0e6a5c3e2370195230a0897dd2db4e5cf30cdbfc9292d",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:s2",
+          "abstract": [
+            "R2:s2"
+          ],
+          "values": {
+            "ci_upper": 16.3
+          },
+          "row_hashes": {
+            "R3:s2": "c64abd3b09a51978860a21559c2171ed789b06d32472ac7481d780bef02d44db",
+            "R2:s2": "0c349775d35ce6bbd386bc1e5ac9b70b74ff45c2188d77507bea4dba832e41c5"
+          },
+          "blocks": [
+            "b00034"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "23402397",
+      "group": "Statistical tests",
+      "field": "PFS log-rank test · addition of interferon alfa-2b",
+      "source_a": "Abstract · p=0.65.",
+      "source_b": "Results · p=0.28.",
+      "recommendation": "Check the fitted model or test output before recording a single p-value.",
+      "finding_ids": [
+        "f17"
+      ],
+      "source_reference": "b00002, b00036",
+      "packet_sha256": "96dccc9bcb2605336f8b2463f770db74837a1d4917944a7b497c2852caf27834",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "23402397",
+      "group": "Response rates",
+      "field": "ORR · fotemustine-containing arms",
+      "source_a": "Table 2 · 32 responders, labelled 34%.",
+      "source_b": "Results · 24% (95% CI 17%–32%).",
+      "recommendation": "Keep the reported count of 32. Check the evaluable denominator before using a response percentage.",
+      "finding_ids": [
+        "f22"
+      ],
+      "source_reference": "b00032, b00034",
+      "packet_sha256": "96dccc9bcb2605336f8b2463f770db74837a1d4917944a7b497c2852caf27834"
+    },
+    {
+      "pmid": "26027431",
+      "group": "Survival estimates",
+      "field": "Median PFS · nivolumab monotherapy",
+      "source_a": "Abstract · 6.9 months (95% CI 4.3–9.5).",
+      "source_b": "Results · 6.5 months (95% CI 4.3–9.5).",
+      "recommendation": "Check the endpoint definition, population and data cutoff before choosing a survival estimate.",
+      "finding_ids": [
+        "f22"
+      ],
+      "source_reference": "b00029, b00002, abstract",
+      "packet_sha256": "7ec3e5666c0e4103981f847323a98e4c6543f5dc51e10d6cdbd39f5a74b4186d",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:surv-pfs-nivolumab",
+          "abstract": [
+            "R2:s-pfs-nivolumab"
+          ],
+          "row_hashes": {
+            "R3:surv-pfs-nivolumab": "643b9b6e4569d1bf28130ca44af758369be50ff217105b840c54c4edd9cf214e",
+            "R2:s-pfs-nivolumab": "c2fe759de5916cb0475ea55346bc26bc6a3c0dff98a8879177c6b99acd3e723a"
+          },
+          "blocks": [
+            "b00029"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "31513236",
+      "group": "Statistical tests",
+      "field": "OS HR p-value · concurrent antibiotic use",
+      "source_a": "Abstract · HR 0.9 (95% CI 0.5–1.4), p=0.76.",
+      "source_b": "Univariate Results · The same HR and CI, p=0.65.",
+      "recommendation": "Check the fitted model or test output before recording a single p-value.",
+      "finding_ids": [
+        "f16"
+      ],
+      "source_reference": "b00013, abstract",
+      "packet_sha256": "bec4b26218c405526bc5164c8c3d815e858a02df69ea92dbeac3af2ed0cd71f2",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "effects",
+          "main": "R3:effect_all_cATB_hr",
+          "abstract": [
+            "R2:e_concurrent_os"
+          ],
+          "row_hashes": {
+            "R3:effect_all_cATB_hr": "7ac45eb031f8ad6bc777e6974e3a8b7f0604e6119999f85a0f6a6e5b311e6bd9",
+            "R2:e_concurrent_os": "0406c9e200d01eaaf3114854cba4b628049b7c0dfda8273c9db3bb6a03f6e1b6"
+          },
+          "blocks": [
+            "b00013"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "33020646",
+      "group": "Confidence intervals",
+      "field": "Survival after progression · intermittent therapy",
+      "source_a": "Article · HR 0.76.",
+      "source_b": "The accompanying 80% CI is 0.78–1.00, excluding the point estimate.",
+      "recommendation": "Check the extended data figure and contrast direction before using this HR and CI.",
+      "finding_ids": [
+        "f24"
+      ],
+      "source_reference": "b00006, b00031",
+      "packet_sha256": "a49d547ad144de833f7e2c3b720babb822fa53ca0e0e1949ff6b8681f03f78c6"
+    },
+    {
+      "pmid": "34764195",
+      "group": "Adverse events",
+      "field": "Grade 3 or higher treatment-related adverse events",
+      "source_a": "Abstract · Pembrolizumab 19.5%, interferon 71.2%, ipilimumab 49.2%.",
+      "source_b": "Results · Pembrolizumab 17%, interferon 66%, ipilimumab 43%.",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f26"
+      ],
+      "source_reference": "b00002, b00019",
+      "packet_sha256": "5fa82bababfa2c4defd289d0a353ec2f1ed9fdc145369d3be0a6f190979ff0aa",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b7",
+          "abstract": [
+            "R2:b1",
+            "R3:b4"
+          ],
+          "row_hashes": {
+            "R3:b7": "ecccd4aa81c445aa2b64d3fd42cede2c00058a33c921d8a5e26e5d9aa9683eb7",
+            "R2:b1": "ec238c9e2d148df9c79dd6950390e13499d088ccac38c051fc76603a6f80d384",
+            "R3:b4": "59d4aebe471a6336c8d4a1eb6d93cbb19acf5a7d54f524db81cb4dea83219c71"
+          },
+          "blocks": [
+            "b00019"
+          ]
+        },
+        {
+          "section": "binary",
+          "main": "R3:b9",
+          "abstract": [
+            "R2:b2",
+            "R3:b5"
+          ],
+          "row_hashes": {
+            "R3:b9": "481da3c8dae08d6788f83aa8f1cc43f43c21973240ae937a7d4ade64b6b52bf7",
+            "R2:b2": "ac11dcf5241435c01a68d639ba5927d63582096c312047f9096909af0e1fe912",
+            "R3:b5": "ee7463aee3b586b93083f8a8f5bb868e6ded3e2d121636ffd387b82e8c3b5533"
+          },
+          "blocks": [
+            "b00019"
+          ]
+        },
+        {
+          "section": "binary",
+          "main": "R3:b8",
+          "abstract": [
+            "R2:b3",
+            "R3:b6"
+          ],
+          "row_hashes": {
+            "R3:b8": "49d8fa42d4bac0fd83a28584853b971c5b2c885dbef03b510bf33e0e73e589d2",
+            "R2:b3": "602fe0ec494bf5d3b2b99199ec1d6a65820c18e6f7396524c5d0e55176db7551",
+            "R3:b6": "144dde961d23709f54c39215b7bb9720750f7c4e74d59acdda4187d2b1e64fb9"
+          },
+          "blocks": [
+            "b00019"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "35488273",
+      "group": "Cohort and sample size",
+      "field": "Training cohort size",
+      "source_a": "Methods · 618 participants.",
+      "source_b": "Results · 620 participants.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "f07"
+      ],
+      "source_reference": "b00031, b00051",
+      "packet_sha256": "a3d512af3943a39bb44f0f493f57d6abc2b7bbb3555807326bd707a3bcda7db9"
+    },
+    {
+      "pmid": "35998300",
+      "group": "Adverse events",
+      "field": "Grade 3 or higher treatment-related adverse events · T-VEC + pembrolizumab",
+      "source_a": "Abstract · 20.7%.",
+      "source_b": "Results · 70 patients (20.3%).",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f14"
+      ],
+      "source_reference": "abstract, b00045",
+      "packet_sha256": "1b6b1655f4d7b63566d37ee315afd4cca90473f9b5609690e26ea42388849d1e",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b9",
+          "abstract": [
+            "R2:b5"
+          ],
+          "row_hashes": {
+            "R3:b9": "fb710ed562838704c5aae87a4c5b68ae62b6562e68c4d46275fc1d20860bf5dd",
+            "R2:b5": "3f321efaa17b267eb56fa497c22414e267bba841fe58df1e4d7894174ca1496f"
+          },
+          "blocks": [
+            "b00045"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "1739631",
+      "group": "Response rates",
+      "field": "Complete responses · 5-day melanoma treatment, N=23",
+      "source_a": "Summary · Two complete responses.",
+      "source_b": "Results and Table VIII · One complete response. Another patient had a partial response.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f-cr-conflict"
+      ],
+      "source_reference": "b00003",
+      "packet_sha256": "a0dfc5bc3459c299e88fd1085d048ce38edcf37bce0433d8eb3f7eb2a2882ddb",
+      "main_text_side": "source_b",
+      "main_text_value": "Results and Table VIII report one complete response and three partial responses among 23 melanoma patients on the five-day schedule.",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:r3-result-five-day-cr",
+          "abstract": [
+            "R2:result-melanoma-cr"
+          ],
+          "values": {
+            "numerator": 1
+          },
+          "row_hashes": {
+            "R3:r3-result-five-day-cr": "4c2890994e8e3ea80e722a5f98aeed6472e9eb43362379d92c0942ab112f6fa3",
+            "R2:result-melanoma-cr": "46b1d9c729139c582e2bba0e64e619b6af6113175df15489fda6015cce15ac0f"
+          },
+          "blocks": [
+            "b00003"
+          ]
+        },
+        {
+          "section": "binary",
+          "main": "R3:r3-result-five-day-pr",
+          "abstract": [
+            "R2:result-melanoma-pr"
+          ],
+          "values": {
+            "numerator": 3
+          },
+          "row_hashes": {
+            "R3:r3-result-five-day-pr": "67e3df5fcc3634b148f696e18a54ff7b5233ef893a0de87b59abc3f7b5575571",
+            "R2:result-melanoma-pr": "c98c2a0743fa5454d2f6405101f0c50261aae058f2f1fd3133e3288f5dfe7283"
+          },
+          "blocks": [
+            "b00003"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "8156501",
+      "group": "Cohort and sample size",
+      "field": "Treatment courses including cyclophosphamide",
+      "source_a": "Abstract methods · Cyclophosphamide was given in 27 treatment courses.",
+      "source_b": "Abstract results · Tumor localization was assessed in 26 courses with cyclophosphamide.",
+      "recommendation": "Check whether one course was unevaluable for localization. Both numbers count courses and cannot supply a patient denominator.",
+      "finding_ids": [
+        "f7"
+      ],
+      "source_reference": "abstract",
+      "packet_sha256": "34daf4fa9caefc9a8665da79edd4c81063300bdcdfad0214766be7fbc4d45275"
+    },
+    {
+      "pmid": "14583759",
+      "group": "Response rates",
+      "field": "Partial responses · 24 patients",
+      "source_a": "Abstract · Five patients (21%).",
+      "source_b": "Results · Three patients were classified as partial responders.",
+      "recommendation": "Check the treatment of two mixed lesion-level responses before assigning a patient-level category.",
+      "finding_ids": [
+        "f-pr-conflict"
+      ],
+      "source_reference": "b00002, b00024, b00023",
+      "packet_sha256": "a3ef50d5e807b0880a7306059b30861fa2643261220d48f38452e1c9c8fdb742",
+      "main_text_side": "source_b",
+      "main_text_value": "Results explicitly classify three patients as partial responders. Two other patients had complete response in all assessed lesions with one lesion unevaluable.",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:bin-pr",
+          "abstract": [
+            "R2:result-pr"
+          ],
+          "values": {
+            "numerator": 3,
+            "percentage": "NA"
+          },
+          "row_hashes": {
+            "R3:bin-pr": "f9b5c400ed01e89ba28d6c8dff9d01923a91b8dc34d995a2faa382a62fa36ad0",
+            "R2:result-pr": "2e36626e146c47e72d52471234a4c7c73adc78275b90b39ca72633b036860e72"
+          },
+          "blocks": [
+            "b00024"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "14583759",
+      "group": "Response rates",
+      "field": "Overall response rate",
+      "source_a": "Discussion · 83.5%.",
+      "source_b": "Conclusion · 62.5%.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f-orr-conflict"
+      ],
+      "source_reference": "b00035, b00040",
+      "packet_sha256": "a3ef50d5e807b0880a7306059b30861fa2643261220d48f38452e1c9c8fdb742"
+    },
+    {
+      "pmid": "15937544",
+      "group": "Adverse events",
+      "field": "Patients with vitiligo · N=12",
+      "source_a": "Abstract and Results · Two patients.",
+      "source_b": "Discussion · Three patients.",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f8"
+      ],
+      "source_reference": "b00013, abstract, b00042",
+      "packet_sha256": "321d35bab5474341988dca44eff5f14fe9b3a1748f5bdc308d80230ec9d88a6d"
+    },
+    {
+      "pmid": "16756008",
+      "group": "Response rates",
+      "field": "Number of objective responses",
+      "source_a": "Abstract response counts · One complete and two partial responses.",
+      "source_b": "Abstract site breakdown · Three of four responses were in patients with soft-tissue or lymph-node metastases.",
+      "recommendation": "Verify the response total. The four in the site breakdown measures responses and cannot establish the subgroup size.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "abstract",
+      "packet_sha256": "8dc8aac59351253585b46c571fc963061775c3c522239349c3623aed3ce9d997"
+    },
+    {
+      "pmid": "21558401",
+      "group": "Cohort and sample size",
+      "field": "Objective responders with paired tumor biopsies",
+      "source_a": "Abstract · Three responders had paired biopsies among 19 participants.",
+      "source_b": "Results · Four responders are described in the biopsy analysis.",
+      "recommendation": "Check the patient IDs across the biopsy and clinical-response records.",
+      "finding_ids": [
+        "f14"
+      ],
+      "source_reference": "b00002, b00025, b00019",
+      "packet_sha256": "eb196b2529a3b48e9a3f034d4ba090a0d4abcf62cfd7493a206ad2fb503ebc7f",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b1",
+          "abstract": [
+            "R2:b1"
+          ],
+          "row_hashes": {
+            "R3:b1": "26d4f0dc28977201d39051821db2ffeb52ab15d3a53b8d850d4a7956bd0b2838",
+            "R2:b1": "a5b20c93cf4c5dedfca181ee56f836ed41791135af9c57eb084dc9289bf4827b"
+          },
+          "blocks": [
+            "b00025",
+            "b00019"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "40327337",
+      "group": "Confidence intervals",
+      "field": "Disease-control rate · cohort I",
+      "source_a": "Abstract · 11.1% (95% CI −14.5% to 36.7%).",
+      "source_b": "Results · 11.1% (95% CI 14.5% to 36.7%), placing the lower bound above the estimate.",
+      "recommendation": "Use the reported count of one in nine. Check the interval method and sign before using its bounds.",
+      "finding_ids": [
+        "f25"
+      ],
+      "source_reference": "abstract, b00041",
+      "packet_sha256": "e20010ea961d73a5f58130779f8a12885d47934f6f7dbb2eb9925201ee95be48",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:r3_bin_dcr_c1_pp",
+          "abstract": [
+            "R2:dcr1"
+          ],
+          "row_hashes": {
+            "R3:r3_bin_dcr_c1_pp": "ac2b13763fdc2605b1c230d0ca7eb6a69740f32d632eba0c70bbfb05634a8a44",
+            "R2:dcr1": "45959c42087b86393407e12a01e3c3c09815bc7dcd712f8fe8866c28c29fc6ed"
+          },
+          "blocks": [
+            "b00041"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "41694351",
+      "group": "Cohort and sample size",
+      "field": "LDH subgroup sizes for PFS",
+      "source_a": "Article · Baseline LDH was available for all 54 patients.",
+      "source_b": "Kaplan–Meier analysis · 44 normal and eight elevated LDH values, accounting for 52 patients.",
+      "recommendation": "Retain the analysis-specific subgroup counts. Check the two remaining patients before equating this set with the baseline cohort.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "b00034, b00031",
+      "packet_sha256": "17d71852a190e7d3eb0d167c28fd89e4b615256d0894dead6d18edce15a4d8b0"
+    },
+    {
+      "pmid": "41913413",
+      "group": "Cohort and sample size",
+      "field": "Extended validation cohort · OS analysis",
+      "source_a": "Methods and Figure 1 · 286 patients.",
+      "source_b": "Results · 268 patients.",
+      "recommendation": "Distinguish cohort membership from the OS analysis set. Verify exclusions against the participant flow and Figure 7B.",
+      "finding_ids": [
+        "f26"
+      ],
+      "source_reference": "b00012, b00035, b00061",
+      "packet_sha256": "a6af109691b2e06012f0668d86e1508e002108dae86271c11d8c3066f121e338"
+    },
+    {
+      "pmid": "23242374",
+      "group": "Cohort and sample size",
+      "field": "Th3 analysis population",
+      "source_a": "Results · 28 melanoma patients.",
+      "source_b": "Figure 1 caption · 14 DTH-positive and eight DTH-negative patients.",
+      "recommendation": "Check whether the figure shows a subset before linking a total to the Th3 analysis.",
+      "finding_ids": [
+        "f-th3-n-conflict"
+      ],
+      "source_reference": "b00034, b00033",
+      "packet_sha256": "34eb0ac343fbbeb6005a672dc37fc2b80d644f32cd08666a02eb92ccc7e6a540"
+    },
+    {
+      "pmid": "23307859",
+      "group": "Cohort and sample size",
+      "field": "Biopsy donors receiving BRAF inhibition",
+      "source_a": "Abstract · 35 biopsies from 16 patients.",
+      "source_b": "Results · Patient identifiers run from 1–5 and 6–18 across regimens. One participant changed regimens.",
+      "recommendation": "Match participants across regimens in supplementary Table S1 before interpreting the numbering as distinct people.",
+      "finding_ids": [
+        "f3-r3-total-conflict"
+      ],
+      "source_reference": "b00002, b00023, b00029",
+      "packet_sha256": "532d98c22305aa8aab09476c2e54f28af9ad250c3faa815cbaf8b5222f9bdb76",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": "R3:r3-count-overall",
+          "abstract": [
+            "R2:count-1"
+          ],
+          "row_hashes": {
+            "R3:r3-count-overall": "d60bba609358612175bb5b5029a2b69a49b7f54f932f118e990021ab48585af3",
+            "R2:count-1": "d1b5b0d17641ce16748c03902cb1b36cc643be2df36773b02d1114a11df9a605"
+          },
+          "blocks": [
+            "b00023",
+            "b00029"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "23833299",
+      "group": "Cohort and sample size",
+      "field": "Patients with on-treatment or progression samples",
+      "source_a": "Abstract · Nine patients.",
+      "source_b": "Results · Ten patients provided two on-treatment and 11 progression samples.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "f17_unresolved_serial_n"
+      ],
+      "source_reference": "b00002, b00026",
+      "packet_sha256": "4596509cf6d150e897386dcaf468e1e933ab49b2ad165ff0ca0178704f10c620",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": "R3:n_serial_samples",
+          "abstract": [
+            "R2:n_serial_samples"
+          ],
+          "row_hashes": {
+            "R3:n_serial_samples": "a67c0b43ed43d61fabc2cb54177d2218d918ff74b91742240ebcc154b938717a",
+            "R2:n_serial_samples": "1aa79e699507c7ab78a79917c39ba2b757eed1667a74b6f0088d027cb1931772"
+          },
+          "blocks": [
+            "b00026"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "24842548",
+      "group": "Response rates",
+      "field": "Partial responses in melanoma patients",
+      "source_a": "Abstract · Two of the four partial responses arose in melanoma.",
+      "source_b": "Results · One of the four partial responses arose in melanoma.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f7"
+      ],
+      "source_reference": "b00017, abstract",
+      "packet_sha256": "63c67965e0c9cab388a9d0c78fd3e187e5da5bf757e5a7b7a5972357fdf2fcd2",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:r3b2",
+          "abstract": [
+            "R2:b2"
+          ],
+          "row_hashes": {
+            "R3:r3b2": "517404a72981e39b100e086dbf2ac03865a6667a07f4ca29af92b73b128c5470",
+            "R2:b2": "5f471716375d5f53dd2fd9dac47746fa90fe5fecca7f926b2ef49d5c54a3e9c3"
+          },
+          "blocks": [
+            "b00017"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "26534966",
+      "group": "Treatment schedule",
+      "field": "Units of dose in escalation cohorts",
+      "source_a": "Abstract design · Doses given in mg/m².",
+      "source_b": "Abstract toxicity results · Doses given in mg/kg.",
+      "recommendation": "Check the protocol dosing unit before converting or assigning doses to arms.",
+      "finding_ids": [
+        "f04"
+      ],
+      "source_reference": "abstract",
+      "packet_sha256": "bb6dc3d9e1a4441e40392225b90c8c2aaedd1353a05177d86e4f43e29889642e"
+    },
+    {
+      "pmid": "27687304",
+      "group": "Adverse events",
+      "field": "Psoriasis flare denominator",
+      "source_a": "Abstract and Results · Three flares among eight patients labelled as having psoriasis.",
+      "source_b": "Tables 1–2 · Six had psoriasis, with three flares. The broader dermatologic group numbered eight.",
+      "recommendation": "Keep the psoriasis-specific denominator of six separate from the group of eight with any dermatologic disorder.",
+      "finding_ids": [
+        "f26"
+      ],
+      "source_reference": "abstract, b00021, b00022, b00019",
+      "packet_sha256": "c268aea9280fab10132958f1c2329a1f096f5340a25f935293260de9836f0ea2"
+    },
+    {
+      "pmid": "28031816",
+      "group": "Adverse events",
+      "field": "Treatment-attributable grade 3 adverse events",
+      "source_a": "Abstract and narrative · 14/31 (45.2%).",
+      "source_b": "Table 3 · 15/31 (48.4%).",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "b00020",
+      "packet_sha256": "2fee960c660fbdfb43d9f4ef919609131daced0bb321745e92291cee449855e8"
+    },
+    {
+      "pmid": "28123885",
+      "group": "Eligibility",
+      "field": "Melanoma stage of enrolled patients",
+      "source_a": "Eligibility criteria · A confirmed diagnosis of stage IV melanoma was required.",
+      "source_b": "Table 1 · 11 stage II, 21 stage III and 14 stage IV patients.",
+      "recommendation": "Check whether Table 1 records stage at diagnosis and eligibility records stage at treatment. Retain both time points if confirmed.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00041, b00010",
+      "packet_sha256": "ae200690bad5dca384043deab339d5da20509126c78ecbdedd6dc2addbe6e920"
+    },
+    {
+      "pmid": "28183697",
+      "group": "Adverse events",
+      "field": "Discontinuation due to adverse events",
+      "source_a": "Discussion · No patient discontinued because of an adverse event.",
+      "source_b": "Results · One patient with grade 4 eosinophilic myocarditis was discontinued from the study.",
+      "recommendation": "Check discontinuation attribution and treatment disposition before recording a zero.",
+      "finding_ids": [
+        "f33"
+      ],
+      "source_reference": "b00030, b00013",
+      "packet_sha256": "f988e47b35164fccbb8e16a75f4be02c19a1d0859a11141e5e4dbc812622cda7"
+    },
+    {
+      "pmid": "28612140",
+      "group": "Survival estimates",
+      "field": "Median OS · overall population",
+      "source_a": "Results · 24.5 months.",
+      "source_b": "Figure 3 caption · Median OS not reached.",
+      "recommendation": "Check the endpoint definition, population and data cutoff before choosing a survival estimate.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "b00024, b00027",
+      "packet_sha256": "1f6f8232ad424d8ebd2c953fd619d6e856b9434f758d76823940f2db598f95eb"
+    },
+    {
+      "pmid": "28679643",
+      "group": "Cohort and sample size",
+      "field": "Participants enrolled across three arms",
+      "source_a": "Abstract · Nine enrolled, three per arm.",
+      "source_b": "Trial information table · 11 enrolled, nine evaluable for toxicity.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "f-r3-enrolled-unresolved"
+      ],
+      "source_reference": "b00002, b00015",
+      "packet_sha256": "24e28cb6da5f6384028172db650675eada7d7fb587b31edb7d8f8150925efda5",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": "R3:ss-enrolled",
+          "abstract": [
+            "R2:n-overall"
+          ],
+          "values": {
+            "n": 11
+          },
+          "row_hashes": {
+            "R3:ss-enrolled": "8d46b87881be309ae5e90ce0df9190842896c634562b130ec4f1b7a5cb8fbd40",
+            "R2:n-overall": "1cccb5816c0e470b9e44751d9887d85a9e67c704e9f18431bac97aa34efa7285"
+          },
+          "blocks": [
+            "b00015"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "29296525",
+      "group": "Eligibility",
+      "field": "Stage IV substage among enrolled patients",
+      "source_a": "Eligibility description · The stage IV subgroup was limited to M1a melanoma.",
+      "source_b": "Table 1a · Patient 3 is recorded as stage IV M1c.",
+      "recommendation": "Check the participant record and whether this represents an exception to eligibility.",
+      "finding_ids": [
+        "f17"
+      ],
+      "source_reference": "b00036, b00013",
+      "packet_sha256": "b6d8cc45e2328590e8ccce0ed083fc88ffc8facd0d9de98d65a4ff22cd0252ce"
+    },
+    {
+      "pmid": "29656892",
+      "group": "Cohort and sample size",
+      "field": "Progression status at week 13",
+      "source_a": "Methods · 12 without progression and 29 with progression.",
+      "source_b": "Results · 29 without progression and 12 with progression.",
+      "recommendation": "Check which group labels belong to the counts before using the week-13 analysis.",
+      "finding_ids": [
+        "f13",
+        "f14"
+      ],
+      "source_reference": "b00011, b00062",
+      "packet_sha256": "793a2d9fdb78f82e36ca5af912b190e014f87cd6117aded2dca8dbf9c0df95d0"
+    },
+    {
+      "pmid": "29666297",
+      "group": "Response rates",
+      "field": "Treatment responses among the first 20 in cohort 2",
+      "source_a": "Full text · Two of the first 20 patients had treatment responses.",
+      "source_b": "The same passage labels the responses 25% (95% CI 8.6%–49.1%). Two of 20 would be 10%.",
+      "recommendation": "Verify whether the percentage refers to 16-week freedom from failure or to objective response.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "abstract, b00015, b00009",
+      "packet_sha256": "4b203eeeeea8e1c492bc1409ec07780a38708f122e085aa03684b1f7254e79bd"
+    },
+    {
+      "pmid": "29672342",
+      "group": "Statistical tests",
+      "field": "OS comparison · treated versus untreated brain metastases",
+      "source_a": "Results · p=0.47.",
+      "source_b": "Discussion · p=0.11.",
+      "recommendation": "Check the fitted model or test output before recording a single p-value.",
+      "finding_ids": [
+        "f23"
+      ],
+      "source_reference": "b00032, b00038",
+      "packet_sha256": "2c8c73678298349b1b93c065a259d98f82ae82d8a5977f996d110e50f876e3c0"
+    },
+    {
+      "pmid": "30034949",
+      "group": "Response rates",
+      "field": "Partial response in nonirradiated lesions",
+      "source_a": "Abstract · 19%.",
+      "source_b": "Table 2 · 4/25 (16%).",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f21"
+      ],
+      "source_reference": "abstract, b00014",
+      "packet_sha256": "0d2f8d74c9778de74cf568b842efe523e3c6626f07812887936c30ad8bbb4197",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:r3_b5",
+          "abstract": [
+            "R2:b4"
+          ],
+          "row_hashes": {
+            "R3:r3_b5": "866834050c2aa22056258abbbb11cd2fdf65c4bec9c1e8c128713f9c903f03d1",
+            "R2:b4": "2164d1d03a4147f2aa2137fb382b24e135e2ca2818ca4b2c0d9bd106da4f1cab"
+          },
+          "blocks": [
+            "b00014"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "30227886",
+      "group": "Cohort and sample size",
+      "field": "Discovery cohort denominator",
+      "source_a": "Table 1 header · 250 participants.",
+      "source_b": "Narrative · 251 participants enrolled. The table’s response categories also sum to 251.",
+      "recommendation": "Use separate enrollment and analysis counts until the participant flow establishes the denominator for each endpoint.",
+      "finding_ids": [
+        "f17"
+      ],
+      "source_reference": "b00014, b00021",
+      "packet_sha256": "e029c58699d77e677b87de00325c2b7d67fada01f7a11cd6c8378c27ffad0a5a"
+    },
+    {
+      "pmid": "30352626",
+      "group": "Adverse events",
+      "field": "Grade 3 maculopapular rash",
+      "source_a": "Table 2, treatment-related events · Six patients (20%).",
+      "source_b": "Table 3, immune-related events · Seven patients (23%).",
+      "recommendation": "Check attribution and how patients were counted in the two safety tables.",
+      "finding_ids": [
+        "f25"
+      ],
+      "source_reference": "b00030",
+      "packet_sha256": "5beeaab19fd1087909798fb92b58612c2a1ea249245f32a188660c8238c2b81e"
+    },
+    {
+      "pmid": "30352626",
+      "group": "Adverse events",
+      "field": "Grade 3 adrenal insufficiency",
+      "source_a": "Table 2, treatment-related events · Three patients (10%).",
+      "source_b": "Table 3, immune-related events · Two patients (7%).",
+      "recommendation": "Keep the attribution labels. Verify whether the tables cover distinct sets of events before selecting a count.",
+      "finding_ids": [
+        "f26"
+      ],
+      "source_reference": "b00030",
+      "packet_sha256": "5beeaab19fd1087909798fb92b58612c2a1ea249245f32a188660c8238c2b81e"
+    },
+    {
+      "pmid": "30651126",
+      "group": "Confidence intervals",
+      "field": "Duration of response · lower limit",
+      "source_a": "Abstract · The lower limit of 2.6 months is labelled a 95% CI.",
+      "source_b": "Results · The lower limit of 2.6 months is labelled a range.",
+      "recommendation": "Retain the nonestimable median and verify the interval type before using 2.6 as a confidence bound.",
+      "finding_ids": [
+        "f21"
+      ],
+      "source_reference": "b00002, b00025",
+      "packet_sha256": "4a311cbc7e60ec5416436ffe8f0b7b461aeddf8ff0229b5c3dfe36fff620b338",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:sv1",
+          "abstract": [
+            "R2:s1"
+          ],
+          "values": {
+            "ci_lower": "NA",
+            "ci_upper": "NA",
+            "ci_level": "NA"
+          },
+          "row_hashes": {
+            "R3:sv1": "7556c4dc0aa3adf8b1110a0bdcfd0bcaf5fc93adcf220f8b9a388864033d91db",
+            "R2:s1": "bc34d6bd1a04c470d105d6edbff9c136bdc572e5c30630d5403f029d0324410c"
+          },
+          "blocks": [
+            "b00025"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "30678715",
+      "group": "Response rates",
+      "field": "Melanoma ORR · moderate or low RNA-seq score",
+      "source_a": "Table 2 and Results · ORR 46.2%.",
+      "source_b": "Table 2 counts · 24 responders and 41 nonresponders among 65, corresponding to 36.9%.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00022, b00023, b00026",
+      "packet_sha256": "b603d3ced9f5a8dc27c1e5b9fdc5eecb5bae83f9c2dccb8ba479ff6ca5231086"
+    },
+    {
+      "pmid": "30715153",
+      "group": "Adverse events",
+      "field": "Discontinuation for treatment-related adverse events",
+      "source_a": "Abstract · 7.8% discontinued the study.",
+      "source_b": "Results · 65 patients (10%) discontinued because of a treatment-related adverse event.",
+      "recommendation": "Check whether discontinuation of study participation and treatment discontinuation used different definitions.",
+      "finding_ids": [
+        "f25"
+      ],
+      "source_reference": "b00002, b00031",
+      "packet_sha256": "2c1c3e8d09d57aa3982342f1a8a637b5fae206879ec6a456c089443f99d70290",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:trae_discontinuation_results",
+          "abstract": [
+            "R2:trae_discontinuation",
+            "R3:trae_discontinuation_abstract"
+          ],
+          "row_hashes": {
+            "R3:trae_discontinuation_results": "79768dd07fd292891726378d24db9786e72274e3cdd0fbaa7b7574f483eff555",
+            "R2:trae_discontinuation": "eb609fd2228a204a8c53136d23762b1ee78bf133692ef19589e2c6d2a619e717",
+            "R3:trae_discontinuation_abstract": "d5f0446444ad081b88a22547322174b537f595c5b2ac12c7769295386819266c"
+          },
+          "blocks": [
+            "b00031"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "31014399",
+      "group": "Cohort and sample size",
+      "field": "Progression before randomization",
+      "source_a": "Results · 12 patients progressed early, before randomization.",
+      "source_b": "Results · Another passage identifies 13 with progression before randomization.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "f10"
+      ],
+      "source_reference": "b00038, b00011",
+      "packet_sha256": "c485df3b4f6a2bae801dde71212e716c6a2430197b131d472a9adcc07b1b5843"
+    },
+    {
+      "pmid": "31080803",
+      "group": "Response rates",
+      "field": "Objective responders",
+      "source_a": "Three-month results · Three complete and 11 partial responses among 46 (30.4% ORR).",
+      "source_b": "Figure caption · The biomarker analysis groups 16 responders and 30 nonresponders.",
+      "recommendation": "Check response time point and the biomarker group definition before linking its N to the three-month ORR.",
+      "finding_ids": [
+        "f18"
+      ],
+      "source_reference": "b00024, b00028",
+      "packet_sha256": "a9cd48cbf46cdd64b832cd9dfd20222c87b9d3eb71a481ebc3263bad2791e391"
+    },
+    {
+      "pmid": "31415377",
+      "group": "Treatment schedule",
+      "field": "WT1 peptide dose",
+      "source_a": "Abstract · 2 mg administered.",
+      "source_b": "Methods · A 250 µL injection of a 2 mg/mL solution delivered 0.5 mg.",
+      "recommendation": "The administration details support 0.5 mg. Preserve the abstract discrepancy and verify against protocol.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "abstract, b00029",
+      "packet_sha256": "7b35ad3f00dbe8c97b1a08c66f049797cb1aa1fa2d2003c45fcac8184c06955c",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "32228719",
+      "group": "Survival estimates",
+      "field": "Tumor mutational burden and melanoma OS · Figure 6 assignment",
+      "source_a": "Results · Melanoma is assigned to Figure 6b, with no observed survival difference.",
+      "source_b": "Figure 6 caption · Panel a is labelled stage III–IV melanoma and panel b renal-cell carcinoma.",
+      "recommendation": "Verify the identities of the curves before using any melanoma survival association from this figure.",
+      "finding_ids": [
+        "f18"
+      ],
+      "source_reference": "b00029, abstract, b00032",
+      "packet_sha256": "d3b33182e76b9ed02c1379793e40f341717995fee1080ecf5a547275fa32708a"
+    },
+    {
+      "pmid": "32516130",
+      "group": "Response rates",
+      "field": "ORR · patients experiencing at least three immune-related adverse events",
+      "source_a": "Results and table · ORR 42.2%.",
+      "source_b": "The same table counts two complete and ten partial responses among 23, giving 52.2%.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f16"
+      ],
+      "source_reference": "b00016, b00015",
+      "packet_sha256": "bd27fcd0ce686383028ae4d79696b3b79a2e74f099a46bb99ad33e31b9c5f912"
+    },
+    {
+      "pmid": "32516130",
+      "group": "Response rates",
+      "field": "ORR · patients with grade 1–2 immune-related adverse events",
+      "source_a": "Results and table · ORR 40.0%.",
+      "source_b": "The same table counts two complete and 15 partial responses among 46, giving 37.0%.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f19"
+      ],
+      "source_reference": "b00016, b00015",
+      "packet_sha256": "bd27fcd0ce686383028ae4d79696b3b79a2e74f099a46bb99ad33e31b9c5f912"
+    },
+    {
+      "pmid": "32582212",
+      "group": "Models and definitions",
+      "field": "High distant-metastasis-free survival group cutoff",
+      "source_a": "Results · At least 25 months.",
+      "source_b": "Figure 3 caption · More than 25 months.",
+      "recommendation": "Confirm the assignment of patients at exactly 25 months before applying this subgroup definition.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "b00040, b00041",
+      "packet_sha256": "beaaa1e339227f37c329051e502fa23831fe306e7bb69bc6015504c007e87614"
+    },
+    {
+      "pmid": "32725245",
+      "group": "Adverse events",
+      "field": "Severe injection-associated events per investigational injection",
+      "source_a": "Abstract · Three of 327 injections (reported as 2%).",
+      "source_b": "Results · Five of 327 injections (reported as 2%).",
+      "recommendation": "Check the injection-level event log. Neither figure provides a patient-level event count.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "abstract, b00025, b00026",
+      "packet_sha256": "a00489720dec11f8a80c39bc08c0b1f1161a178b1c94ed77de5cf5497801bfbb",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "32819972",
+      "group": "Adverse events",
+      "field": "Grade 3–4 adverse events · N=19",
+      "source_a": "Discussion · Grade 3–4 events in 42%.",
+      "source_b": "Abstract · Grade 3 events alone occurred in nine patients (47% of 19).",
+      "recommendation": "Check supplementary Table S3 and its grading and attribution rules.",
+      "finding_ids": [
+        "f18"
+      ],
+      "source_reference": "b00069, b00002, b00037",
+      "packet_sha256": "4a5d0cd41a56c40ef3483cc0bc5ac79d671240dc0c0c19f7c4d69acee58055b7"
+    },
+    {
+      "pmid": "32823698",
+      "group": "Adverse events",
+      "field": "Grade 3–4 neutropenia",
+      "source_a": "Results · 48%.",
+      "source_b": "Discussion · 56%.",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "b00038, b00043",
+      "packet_sha256": "26aae788bec23914f66879c2155a424a7c73b98966934e26af509ed8579aa21a"
+    },
+    {
+      "pmid": "33288749",
+      "group": "Cohort and sample size",
+      "field": "Cohort C safety population · sequential durvalumab and trametinib",
+      "source_a": "Table 2 header · N=20.",
+      "source_b": "As-treated population · N=22. The table reports 16 participants as 72.7%, consistent with 22.",
+      "recommendation": "Check the table header against the safety population before attaching a denominator.",
+      "finding_ids": [
+        "u01"
+      ],
+      "source_reference": "b00016, b00011",
+      "packet_sha256": "78aa481e5475c3918a6200b68f39d6200c8e7b92b5d9c272ce47119c5e20ebd8"
+    },
+    {
+      "pmid": "33361337",
+      "group": "Treatment schedule",
+      "field": "Pembrolizumab dose every three weeks",
+      "source_a": "Abstract · 200 mg per dose.",
+      "source_b": "Methods · 2 mg/kg per dose.",
+      "recommendation": "Verify the relevant protocol arm and amendment before recording a fixed or weight-based dose.",
+      "finding_ids": [
+        "f19"
+      ],
+      "source_reference": "b00017, b00002",
+      "packet_sha256": "e092be7c3e25cc72e57cea22e257610fa89724dd44a1e929405ed6547d2f759e",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "33945288",
+      "group": "Adverse events",
+      "field": "Treatment-related adverse events · N=70",
+      "source_a": "Text · 62 of 70 patients experienced events.",
+      "source_b": "The same passage labels this 87%. The count and denominator give 88.6%.",
+      "recommendation": "Check Table 4 before choosing between the printed percentage and reported fraction.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "b00032",
+      "packet_sha256": "79ba71dc6290037945e760791652cdf9f69a00270944024d25202fe9f5e0fd3c"
+    },
+    {
+      "pmid": "34088741",
+      "group": "Adverse events",
+      "field": "Any-grade immune-related adverse events · N=17",
+      "source_a": "Abstract · 58.8%.",
+      "source_b": "Results and Table 1 · Nine patients (52.9%).",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f13",
+        "f17"
+      ],
+      "source_reference": "b00024, b00002, b00043",
+      "packet_sha256": "7c97cc1fe88c3ef6c2784fd0a19285005c75f43aa7ae95941f47b7cae5c1dfbf",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:binary_irae_all",
+          "abstract": [
+            "R2:binary1"
+          ],
+          "values": {
+            "percentage": 52.9,
+            "numerator": 9
+          },
+          "row_hashes": {
+            "R3:binary_irae_all": "d792500faef7e4f433d5705be1e0dede05d70f570ad7e968ce5e5650bd70f3ba",
+            "R2:binary1": "d263d223250b6e28f37237d573efe4bdb8456db3e6f2a6d9a45cef496a51f009"
+          },
+          "blocks": [
+            "b00024"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "34453044",
+      "group": "Adverse events",
+      "field": "Grade 3 or higher immune-related adverse events",
+      "source_a": "Results · Eight patients (28%).",
+      "source_b": "Discussion · 34%.",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "b00017, b00028",
+      "packet_sha256": "d7b22bc5e40c030a660a91e96bbafd04fda617187f4fad6a8195da53c5a23fb6"
+    },
+    {
+      "pmid": "34453044",
+      "group": "Cohort and sample size",
+      "field": "Participants with baseline LDH above the upper limit of normal",
+      "source_a": "Figure 1h · 17 above and 12 below the limit.",
+      "source_b": "Table 1 · 14 of 29 (48%) above the limit.",
+      "recommendation": "Keep the figure-specific analysis population separate until the threshold and baseline time point are verified.",
+      "finding_ids": [
+        "f14"
+      ],
+      "source_reference": "b00015, b00013",
+      "packet_sha256": "d7b22bc5e40c030a660a91e96bbafd04fda617187f4fad6a8195da53c5a23fb6"
+    },
+    {
+      "pmid": "35780243",
+      "group": "Cohort and sample size",
+      "field": "Patients treated at the maximum tolerated dose",
+      "source_a": "Abstract · Six patients.",
+      "source_b": "Table 1 and Results · Cohort 3 is identified as the maximum tolerated dose (420 mg/day) and lists three patients.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "f5"
+      ],
+      "source_reference": "abstract, b00013, b00024",
+      "packet_sha256": "7429daf73fb86c4f514197f9353fb7bfcd358c28b2756fa5cd68515448efa7c0",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": "R3:n_c3",
+          "abstract": [
+            "R2:n11"
+          ],
+          "row_hashes": {
+            "R3:n_c3": "6e08a5c354fab6136856a57cd831f22fb3bf924a3dc0164c4481111a25dc81d0",
+            "R2:n11": "e28a745fa025183bb5652a699b059f8ecf6bcf8ae0ede4afef3dfbd814bd3f38"
+          },
+          "blocks": [
+            "b00013",
+            "b00024"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "35917516",
+      "group": "Cohort and sample size",
+      "field": "Response-evaluable population",
+      "source_a": "Discussion · 45 patients overall.",
+      "source_b": "Results · 35 evaluable in dose evaluation and 16 in the melanoma cohort.",
+      "recommendation": "Verify whether and how participants overlap across the reported analysis sets before deriving an overall N.",
+      "finding_ids": [
+        "f10"
+      ],
+      "source_reference": "b00051, b00039, b00041",
+      "packet_sha256": "44e7a33fa943d2d293214c44146bdc4afeac5ffb7c761575498446fc316af329"
+    },
+    {
+      "pmid": "36378549",
+      "group": "Confidence intervals",
+      "field": "Median PFS · primary analysis",
+      "source_a": "Article · Median 20.3 months.",
+      "source_b": "The accompanying 95% CI is 5.2–12.9 months, below the reported median.",
+      "recommendation": "Check Figure 2E and the supplement before using this interval.",
+      "finding_ids": [
+        "f14"
+      ],
+      "source_reference": "b00050",
+      "packet_sha256": "11e1b907649a05b758089a922610db5c41ae356f8fe43576daf31cb36896350b"
+    },
+    {
+      "pmid": "36678538",
+      "group": "Survival estimates",
+      "field": "1-year RFS · PD-1 group",
+      "source_a": "Results · 70.0%.",
+      "source_b": "Discussion · 68.6%.",
+      "recommendation": "Check the endpoint definition, population and data cutoff before choosing a survival estimate.",
+      "finding_ids": [
+        "f-rfs-pd1-1y-conflict"
+      ],
+      "source_reference": "b00012, b00032",
+      "packet_sha256": "97757bf0aaa3fcf3c951d79a9a30e44ff7ac9bfede988379d308989f794d669f"
+    },
+    {
+      "pmid": "36905577",
+      "group": "Cohort and sample size",
+      "field": "Denominator for immune checkpoint inhibitor-related gastritis",
+      "source_a": "Abstract and Methods · 1,712 people treated with immune checkpoint inhibitors.",
+      "source_b": "Results · 25 cases among 1,762 people.",
+      "recommendation": "Verify the incidence population and retain the event count separately.",
+      "finding_ids": [
+        "f05"
+      ],
+      "source_reference": "b00020, b00012",
+      "packet_sha256": "47354c9223bb559f506d63152d0f569616de6bff385969111ed6acf3e9136373"
+    },
+    {
+      "pmid": "37170241",
+      "group": "Cohort and sample size",
+      "field": "First-line nivolumab recipients",
+      "source_a": "Narrative · 54 of 69 patients.",
+      "source_b": "Table 1 · 55 first-line and 14 later-line patients.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "f09"
+      ],
+      "source_reference": "b00018",
+      "packet_sha256": "500888a5d2623346555dba6f5b74bfea523c0cff5f6967b9f82d8a59111a353d"
+    },
+    {
+      "pmid": "37217243",
+      "group": "Cohort and sample size",
+      "field": "Response-evaluable cohort B",
+      "source_a": "Results · Ten patients, with two stable disease and eight progressive disease.",
+      "source_b": "Figure 4A caption · Nine evaluable patients.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "F08"
+      ],
+      "source_reference": "b00057, b00047, b00048",
+      "packet_sha256": "9d5ef5911b2ea696344988f675ceca7cfd110bec96b0d79dc9f16815da0ff469"
+    },
+    {
+      "pmid": "37377890",
+      "group": "Eligibility",
+      "field": "Registration of the systemic-infusion trial",
+      "source_a": "Abstract and introduction · NCT03060356.",
+      "source_b": "Methods · NCT01837602.",
+      "recommendation": "Match populations, interventions and recruiting sites with the registry records before using either identifier for cohort linkage.",
+      "finding_ids": [
+        "f02"
+      ],
+      "source_reference": "b00012, b00002, b00006",
+      "packet_sha256": "603788bd6f4e06d068833d21fa95cc7fcbf948dfa585fbb9162da68ecf07e5d7"
+    },
+    {
+      "pmid": "37535056",
+      "group": "Adverse events",
+      "field": "Any-grade adverse events · 38 safety patients",
+      "source_a": "Abstract · 34 patients (89%) had at least one event.",
+      "source_b": "Full text · 95% had an all-cause adverse event.",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00002, b00026",
+      "packet_sha256": "211ebf4b4afb3ae232364ce486ff0b01803a9497fd775f0cb4d4adf92f120d3f",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b3",
+          "abstract": [
+            "R2:b3"
+          ],
+          "values": {
+            "percentage": 95
+          },
+          "row_hashes": {
+            "R3:b3": "7a353a165096d8136d973adc3cb3699f3bc2a7847cd2172ab42561de7e38bbba",
+            "R2:b3": "0247312fd839886385a3d53eeb4b9b017d6a1a4e114da8b2b410d524a24c62ee"
+          },
+          "blocks": [
+            "b00026"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "37808404",
+      "group": "Response rates",
+      "field": "RECIST responders and nonresponders · N=53",
+      "source_a": "Abstract · 36 responders and 17 nonresponders.",
+      "source_b": "Results and Table 1 · 37 responders and 16 nonresponders.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f07",
+        "f08"
+      ],
+      "source_reference": "b00019, b00016, b00002",
+      "packet_sha256": "e295fe05050effffdbaa0abfe9b9147342171e74238834115e7c0e744d27a383",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b1",
+          "abstract": [
+            "R2:b1"
+          ],
+          "values": {
+            "numerator": 37
+          },
+          "row_hashes": {
+            "R3:b1": "cb2e68dbe71f5551b447e2eab854f3c286c4eaa71ec39b71b487ef698a388972",
+            "R2:b1": "08504d9011c137dba95c0e9a315d577b6aa7b15ff8b38ec2a890a2231120225a"
+          },
+          "blocks": [
+            "b00019"
+          ]
+        },
+        {
+          "section": "sample_sizes",
+          "main": "R3:s5",
+          "abstract": [
+            "R2:s3"
+          ],
+          "values": {
+            "n": 37
+          },
+          "row_hashes": {
+            "R3:s5": "d4be552f3f8d37679535053be2db5f7ff221900a241bc5686c06e81a89d9428b",
+            "R2:s3": "bd2486a81d57b477dcc733db90c35d371ffeb58ac63145b17495302ef5f9b0cf"
+          },
+          "blocks": [
+            "b00019"
+          ]
+        },
+        {
+          "section": "sample_sizes",
+          "main": "R3:s6",
+          "abstract": [
+            "R2:s4"
+          ],
+          "values": {
+            "n": 16
+          },
+          "row_hashes": {
+            "R3:s6": "3e0077f3b0f5b01509b5d8aed6bcbf3a811d43d0461359d8bd123c3bc2e15c66",
+            "R2:s4": "83e4b1dcdccffafad4ecfbb0e89d1e77457fac4ff0cfd39a21f98cf4c42dcae0"
+          },
+          "blocks": [
+            "b00019"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "38126033",
+      "group": "Statistical tests",
+      "field": "High-grade immune-related adverse events · subdistribution HR",
+      "source_a": "Abstract · sHR 2.31 (95% CI 0.95–5.66), p=0.054.",
+      "source_b": "Results · The same sHR and CI, p=0.07.",
+      "recommendation": "Check the fitted model or test output before recording a single p-value.",
+      "finding_ids": [
+        "f17"
+      ],
+      "source_reference": "b00002, b00027",
+      "packet_sha256": "1fdcb610bb0238236e2ac3462ea1b026847fb6c964742ad17f41c3da0ccca99f",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "effects",
+          "main": "R3:e_high_irae_all",
+          "abstract": [
+            "R2:e_irae_high"
+          ],
+          "row_hashes": {
+            "R3:e_high_irae_all": "d53d20e25ba94354b166d9eb9f1402cd09c5312aa30614f173f577a0aeb9432b",
+            "R2:e_irae_high": "54d520bd979621766eecef5ab00765f754413ab76d61da2262e8a9560474ad4e"
+          },
+          "blocks": [
+            "b00027"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "38226313",
+      "group": "Confidence intervals",
+      "field": "5-year PFS · low-score training cohort",
+      "source_a": "Results · 15% PFS.",
+      "source_b": "The reported 95% CI is 19%–28%, above the point estimate.",
+      "recommendation": "Check Figure 2G before using the interval.",
+      "finding_ids": [
+        "f21"
+      ],
+      "source_reference": "b00049",
+      "packet_sha256": "cbbea6603ce3547c19470e82186c2b55f86f2696f610491e10e4683c95132643"
+    },
+    {
+      "pmid": "38226313",
+      "group": "Confidence intervals",
+      "field": "5-year PFS · low-score validation cohort",
+      "source_a": "Results · 5% PFS.",
+      "source_b": "The reported 95% CI is 1%–3%, below the point estimate.",
+      "recommendation": "Check Figure 2H before using the interval.",
+      "finding_ids": [
+        "f22"
+      ],
+      "source_reference": "b00049",
+      "packet_sha256": "cbbea6603ce3547c19470e82186c2b55f86f2696f610491e10e4683c95132643"
+    },
+    {
+      "pmid": "38458639",
+      "group": "Response rates",
+      "field": "Confirmed ORR · PD-1-experienced melanoma, N=20",
+      "source_a": "Table 3 · Two responses (10%) in a table labelled confirmed responses only.",
+      "source_b": "Results · One partial response was confirmed and the second was unconfirmed.",
+      "recommendation": "Check confirmation status and cutoff before assigning a confirmed-response numerator.",
+      "finding_ids": [
+        "f07"
+      ],
+      "source_reference": "b00061, b00048, b00075",
+      "packet_sha256": "2fd78c6773e88cec42943247881615264aadfb3325315ea8cf9079800d58c245"
+    },
+    {
+      "pmid": "38725995",
+      "group": "Adverse events",
+      "field": "Grade 3–4 treatment-related adverse events · phase 2",
+      "source_a": "Table 3 · One patient (33.3%).",
+      "source_b": "Narrative · Three phase 2 patients reported grade 3 treatment-related adverse events.",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f16"
+      ],
+      "source_reference": "b00041, b00040",
+      "packet_sha256": "00f4d6134c1f6620866c46cd8b0ba7310d9d7398aac48a736e399c5e78849b36"
+    },
+    {
+      "pmid": "38922339",
+      "group": "Cohort and sample size",
+      "field": "MEK inhibitor recipients · median time on therapy",
+      "source_a": "Abstract · 14 patients, median eight months (range 1–26).",
+      "source_b": "Results · Nine patients for the same median and range.",
+      "recommendation": "Check the participant flow and subgroup definitions before assigning an analysis denominator.",
+      "finding_ids": [
+        "f08"
+      ],
+      "source_reference": "b00002, b00030, b00029",
+      "packet_sha256": "9e89f83d28c9c0255b2271684db12c063e32a97fc243ab9f6880f72061d95bb1",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": null,
+          "abstract": [
+            "R2:s_mek"
+          ],
+          "row_hashes": {
+            "R2:s_mek": "74ce78e433d9ff1eaebdaa5ce1fd45d60a2b68495831cd00d7219468e8ab3a90"
+          },
+          "blocks": [
+            "b00030",
+            "b00029"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "39207855",
+      "group": "Response rates",
+      "field": "Response to dabrafenib + trametinib",
+      "source_a": "Narrative · 83%.",
+      "source_b": "Table 2 · 38/47 (81%).",
+      "recommendation": "Use the response-evaluable denominator of 47 alongside the table result and check the population behind 83%.",
+      "finding_ids": [
+        "u1"
+      ],
+      "source_reference": "b00028, b00030, b00026",
+      "packet_sha256": "de9b0aefcc60dfca9ac9495091dab4046664a5227abd0df140b539ba8197c4c0"
+    },
+    {
+      "pmid": "39209782",
+      "group": "Adverse events",
+      "field": "Discontinuation due to adverse events · all cancers",
+      "source_a": "Abstract · One patient (3%) stopped treatment because of an adverse event.",
+      "source_b": "Safety section · One melanoma patient and two NSCLC patients discontinued for adverse events.",
+      "recommendation": "Preserve the melanoma-specific count and check the mixed-cancer disposition before assigning a combined total.",
+      "finding_ids": [
+        "f20"
+      ],
+      "source_reference": "abstract, b00042, b00031",
+      "packet_sha256": "65e2350eddef33d45f9613dc574eb60b9220c8813fd9f2db28628af55dd96e9b"
+    },
+    {
+      "pmid": "39422848",
+      "group": "Statistical tests",
+      "field": "Multivariable TERT association · any response and local control",
+      "source_a": "Abstract · p=0.043 for any response and p=0.039 for local control.",
+      "source_b": "Results and Table 2 · p=0.041 for any response and p=0.027 for local control.",
+      "recommendation": "Verify the model, endpoint and p-value against the fitted logistic models.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "abstract, b00026, b00024",
+      "packet_sha256": "1038770797cdea5f7de2b18c4c0880830401034b1d26732246ce07c14a2942de",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "39786430",
+      "group": "Confidence intervals",
+      "field": "Median OS · primary-refractory cutaneous melanoma",
+      "source_a": "Table 2 · Median 10.3 months, upper 95% CI bound 13.73 months.",
+      "source_b": "Results · Upper 95% CI bound 13.57 months.",
+      "recommendation": "Verify the interval against the survival output or published correction before using its bounds.",
+      "finding_ids": [
+        "f24"
+      ],
+      "source_reference": "b00046, b00049",
+      "packet_sha256": "5b3f47cd2c278400ca6d4043e972175ab6156463e9d703c9e9882aeae540b38c"
+    },
+    {
+      "pmid": "40152791",
+      "group": "Adverse events",
+      "field": "Fatigue · monotherapy dose escalation",
+      "source_a": "Abstract · Fatigue in 28.6% is described among grade 3 or higher treatment-related events.",
+      "source_b": "Table 2 · Six patients (28.6%) had any-grade fatigue and none had grade 3 or higher fatigue.",
+      "recommendation": "Retain the grade and attribution labels. Check the abstract grading against the safety table.",
+      "finding_ids": [
+        "f37"
+      ],
+      "source_reference": "abstract, b00052, b00051",
+      "packet_sha256": "27af96ec664e9afb1eb8bf4e2b64d31cd18693408b0dd5d578ddf6ba16750024",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": null,
+          "abstract": [
+            "R2:b1"
+          ],
+          "row_hashes": {
+            "R2:b1": "a77c30a6c14cfea4ce098f04d8a06b97f744312f4dfb0114070efb89302de743"
+          },
+          "blocks": [
+            "b00052",
+            "b00051"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "40541863",
+      "group": "Cohort and sample size",
+      "field": "Baseline quality-of-life analysis",
+      "source_a": "Abstract · 143 of 168 randomized patients had baseline scores (85%).",
+      "source_b": "The reported arm counts of 75 and 73 sum to 148.",
+      "recommendation": "Check the available baseline questionnaires in each arm before assigning the analysis N.",
+      "finding_ids": [
+        "f7"
+      ],
+      "source_reference": "abstract",
+      "packet_sha256": "49137c0953c1aaf00190f3fac7b6f86fb7f31f5542e9954b75dd83f539ef0db3"
+    },
+    {
+      "pmid": "40574966",
+      "group": "Confidence intervals",
+      "field": "Primary-analysis median PFS summarized in follow-up report",
+      "source_a": "Table · Median 20.3 months.",
+      "source_b": "The accompanying 95% CI is 5.2–12.9 months, below the median.",
+      "recommendation": "Check the primary analysis and its figure before using this interval. Cross-reference PMID 36378549.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "b00018",
+      "packet_sha256": "348176cd6af84e820397f1a39b8d425cef6f2950d7fb092c5115930cbc2e6aae"
+    },
+    {
+      "pmid": "40815607",
+      "group": "Adverse events",
+      "field": "Grade 3 febrile neutropenia · arm 1",
+      "source_a": "Abstract · Arm 1 had 71% and arm 2 had 57%.",
+      "source_b": "Results and Table 3 · Each arm had four patients (57%).",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f14",
+        "f26"
+      ],
+      "source_reference": "b00037, b00002",
+      "packet_sha256": "363bec6c7883910d8417cfdc2e922ab6fb58c09a39c94c949d29dab7a1eba404",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:res_fn_high",
+          "abstract": [
+            "R2:b3"
+          ],
+          "values": {
+            "percentage": 57,
+            "numerator": 4
+          },
+          "row_hashes": {
+            "R3:res_fn_high": "62d55a120659b97e6a2117a51e8c4df178ebef1d6a7320d2094e519a2415387a",
+            "R2:b3": "1885fb1908630ad1187e62e16bbc94bbdd0acfee757bdc2e0289aaeee9cc0b86"
+          },
+          "blocks": [
+            "b00037"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "42065248",
+      "group": "Response rates",
+      "field": "Tumor shrinkage in the 30-patient melanoma cohort",
+      "source_a": "Text · 17 had shrinkage and 13 did not.",
+      "source_b": "The percentages are printed as 54.8% and 45.2%. With N=30, the reported counts give 56.7% and 43.3%.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "b00061",
+      "packet_sha256": "8294adedfd53c7c686a54d2f9bcc46a661f588057a9b0731c374746a52413a4f"
+    },
+    {
+      "pmid": "42140948",
+      "group": "Adverse events",
+      "field": "Patients with any treatment-related adverse event · N=26",
+      "source_a": "Safety narrative · All 26 patients.",
+      "source_b": "Table 3 · 24 patients (92.3%).",
+      "recommendation": "Check the safety table, attribution and analysis denominator before selecting an event count or rate.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "b00018",
+      "packet_sha256": "d812128a21665a731c359e2ed58d1a8824c0ad4129c75afe3b2eb9bd45e98da7"
+    },
+    {
+      "pmid": "42168180",
+      "group": "Treatment schedule",
+      "field": "Maintenance nivolumab dose every four weeks",
+      "source_a": "Methods · Fixed dose of 480 mg.",
+      "source_b": "Results · 3 mg/kg.",
+      "recommendation": "Check the arm-specific protocol and amendments before assigning maintenance dose.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "b00010, b00035",
+      "packet_sha256": "cb16b02375bdd63f1e5f7eeb74e81b4e48c11c220b6a313fa08d81565b99c787"
+    },
+    {
+      "pmid": "42358556",
+      "group": "Response rates",
+      "field": "Best responses in a seven-patient cohort",
+      "source_a": "Abstract and narrative · Three complete responses, one partial response and two stable disease.",
+      "source_b": "Table 2 participant rows · Five complete responses, no partial responses, one stable disease and one progressive disease.",
+      "recommendation": "Check the assessment time point, treatment and per-patient records before selecting counts.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00023, b00024",
+      "packet_sha256": "9b696f196fc091e306fa4ee57c677683987932017e7c7718ceee61e54356f373"
+    },
+    {
+      "pmid": "42452684",
+      "group": "Response rates",
+      "field": "ORR · chemotherapy after nivolumab",
+      "source_a": "Abstract · ORR 29.9%, including 3.0% complete response.",
+      "source_b": "Results · ORR 30.8%, including 2.8% complete response.",
+      "recommendation": "Reconcile the response categories and their denominator before selecting a response rate.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "b00051, b00002",
+      "packet_sha256": "b477ab490cddbe71590608b539ea42bbb9a079bd8dcc6e513107bad6e9c0b7ee",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:bin_r3_post_ct_orr",
+          "abstract": [
+            "R2:orr_ct"
+          ],
+          "row_hashes": {
+            "R3:bin_r3_post_ct_orr": "b7bb275acc6ed18a06282fd9e4afe277d7eb894cee86c414944b99fb8c31d165",
+            "R2:orr_ct": "27ce33ec0deb3c7fba44cf18e61ad0d828e9caade02f3ff9efecb33e312896f7"
+          },
+          "blocks": [
+            "b00051"
+          ]
+        },
+        {
+          "section": "binary",
+          "main": "R3:bin_r3_post_ct_cr",
+          "abstract": [
+            "R2:cr_ct"
+          ],
+          "row_hashes": {
+            "R3:bin_r3_post_ct_cr": "3204f70de7ece8cfb8aad2d3a7898f0ce9f156ae40ff4ae44ce6133d4c196fcb",
+            "R2:cr_ct": "a1536f47739efd6ce3ce2c065e29717f54a0985a51a9fb119eee98ef61ac5548"
+          },
+          "blocks": [
+            "b00051"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "42640721",
+      "group": "Cohort and sample size",
+      "field": "Participants enrolled",
+      "source_a": "Methods · Accrual stopped after enrollment of 15 patients.",
+      "source_b": "Sample collection section · 14 patients enrolled.",
+      "recommendation": "Check participant disposition. The report describes seven randomized per arm.",
+      "finding_ids": [
+        "f16"
+      ],
+      "source_reference": "b00020, b00024",
+      "packet_sha256": "d7466b150e21e4ac2be7886cc5617dd9fb1a2573901c888fdf4b37f6a3a3979a"
+    },
+    {
+      "pmid": "36719749",
+      "group": "Treatment schedule",
+      "field": "Doses of relatlimab + nivolumab in the dose comparison",
+      "source_a": "Patient description · 80 + 240 mg and 160 + 480 mg.",
+      "source_b": "Dose-comparison passage · 60 + 240 mg and 120 + 480 mg.",
+      "recommendation": "Verify the combination doses and their cohort assignments against the supplementary dose table.",
+      "finding_ids": [
+        "f26"
+      ],
+      "source_reference": "b00008, b00015",
+      "packet_sha256": "18060e5fc8e021ac07fdea226bd743f0db79adfa354cec76f071f8b041e75c4a"
+    },
+    {
+      "pmid": "37649078",
+      "group": "Statistical tests",
+      "field": "Adjusted OS HR · immune checkpoint inhibitor treatment",
+      "source_a": "Abstract and Table 2 · p=0.008.",
+      "source_b": "Results narrative · p=0.005.",
+      "recommendation": "Check the fitted model or test output before recording a single p-value.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00036, b00002, b00015, b00038",
+      "packet_sha256": "0208d3afb3cc1afcd40739473017291c5b22801bcaa8330bc6dc355b8ba51a35"
+    },
+    {
+      "pmid": "38279601",
+      "group": "Survival estimates",
+      "field": "Median OS among 43 immunotherapy recipients",
+      "source_a": "Table 4 · 24 months (95% CI 17.028–30.972), measured from first-line therapy.",
+      "source_b": "Table 5 · 23 months (95% CI 14.961–31.039), time origin unspecified.",
+      "recommendation": "Verify the survival time origin. If it differs, retain these as separate estimates.",
+      "finding_ids": [
+        "f24"
+      ],
+      "source_reference": "b00036, b00034",
+      "packet_sha256": "fde94876f229410e8cc4d6a23ff35435b068b4a83ff067a4e329e377eaec508c"
+    },
+    {
+      "pmid": "38279601",
+      "group": "Models and definitions",
+      "field": "PFS time origin among immunotherapy recipients",
+      "source_a": "Methods · Time starts at PD-1 treatment initiation.",
+      "source_b": "Table 3 · Time starts at first-line therapy.",
+      "recommendation": "Confirm when treatment lines started for this cohort before combining the analyses.",
+      "finding_ids": [
+        "f25"
+      ],
+      "source_reference": "b00017, b00032, b00036",
+      "packet_sha256": "fde94876f229410e8cc4d6a23ff35435b068b4a83ff067a4e329e377eaec508c"
+    },
+    {
+      "pmid": "42056527",
+      "group": "Response rates",
+      "field": "ORR in uninjected lesions",
+      "source_a": "Abstract · 50% response in uninjected lesions.",
+      "source_b": "Results · Ten complete and eight partial responses among 40 assessments of baseline uninjected target lesions, giving 45%.",
+      "recommendation": "Check whether both calculations used the same lesions, participants and response assessment.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00002, b00017",
+      "packet_sha256": "809f001feee2c352a8644c3dd32c80c9b37890cee47ad3fd03c35bc6730c12e6",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b10",
+          "abstract": [],
+          "values": {
+            "percentage": 45,
+            "numerator": 18,
+            "denominator": 40
+          },
+          "derived_fields": [
+            "percentage",
+            "numerator"
+          ],
+          "derivation": "In baseline uninjected RECIST target lesions, the Results give 10 complete and 8 partial responses among 40. Objective responses = 10 + 8 = 18; objective response rate = 18/40 × 100 = 45%.",
+          "row_hashes": {
+            "R3:b10": "f91abcd6db7f563d2f8f01fa2cd7b943700fff44a348fac2d276ae2d851585ae"
+          },
+          "blocks": [
+            "b00017"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "42056527",
+      "group": "Response rates",
+      "field": "IV arm response rate",
+      "source_a": "Results · 62% best objective response rate.",
+      "source_b": "Discussion · 65% ORR in uninjected RECIST target lesions.",
+      "recommendation": "Verify the lesion set and response definition. If these describe different assessments, retain their distinct labels.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "b00050, b00018",
+      "packet_sha256": "809f001feee2c352a8644c3dd32c80c9b37890cee47ad3fd03c35bc6730c12e6"
+    },
+    {
+      "pmid": "42094820",
+      "group": "Models and definitions",
+      "field": "Adjusted PFS HR · ECOG performance status of 3 or higher",
+      "source_a": "Abstract · HR 5.83 labelled multivariable.",
+      "source_b": "Multivariable Results · HR 5.55 (95% CI 2.37–12.99).",
+      "recommendation": "Match the HR to its regression table before identifying it as adjusted.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00002, b00027",
+      "packet_sha256": "429959f02991f6f24dd61c8ba8f28b2a3f766eb225729ad4ba01e6f7c7b39c2d",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "33796413",
+      "group": "Cohort and sample size",
+      "field": "Numbers receiving chemotherapy, immunotherapy and targeted therapy",
+      "source_a": "Table 1 · 54, 48 and 23 patients, respectively.",
+      "source_b": "Table 2 treatment rows by CD14 status · The corresponding counts sum to 49, 57 and 19.",
+      "recommendation": "Verify group definitions and whether combination regimens were classified the same way in both tables.",
+      "finding_ids": [
+        "f16"
+      ],
+      "source_reference": "b00012, b00035",
+      "packet_sha256": "880f6c5b95f7b4745575f94c96216ee1b65292848b22dc4ac88516ea8d6976cc"
+    },
+    {
+      "pmid": "37887546",
+      "group": "Response rates",
+      "field": "Denominator for complete response",
+      "source_a": "Narrative · 60 complete responders, labelled 15.5%.",
+      "source_b": "The overall cohort contains 497 patients. Using this denominator, 60 gives 12.1%.",
+      "recommendation": "Check whether the reported percentage uses a response-evaluable subset before assigning the overall N.",
+      "finding_ids": [
+        "f29"
+      ],
+      "source_reference": "b00030",
+      "packet_sha256": "742a88ca4844a02c33b3687d1d3e80a624382b61f03772933f3dd51a71e8de27"
+    },
+    {
+      "pmid": "8562349",
+      "group": "Cohort and sample size",
+      "field": "Rhizoxin enrollment and treatment",
+      "source_a": "Summary · 26 enrolled patients are described as receiving 70 treatment courses.",
+      "source_b": "Results · One registered patient progressed before receiving rhizoxin.",
+      "recommendation": "Check whether that patient belongs to the group of 26. Keep enrollment distinct from treatment.",
+      "finding_ids": [
+        "f5"
+      ],
+      "source_reference": "b00003",
+      "packet_sha256": "c0c290c09e9878eabe1460119157aedc2d7083f79e910e8fdbd64c682c0e8fa8",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": null,
+          "abstract": [
+            "R2:count-2",
+            "R3:r3-count-2"
+          ],
+          "row_hashes": {
+            "R2:count-2": "8423bb9bcb112fcceab3a6094a306c9e0c943832deecf2160c55e31244ba6786",
+            "R3:r3-count-2": "fb67690670f12b679527eac081d3020a38f0abfc283b8767a9287bdc43655652"
+          },
+          "blocks": [
+            "b00003"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "12085200",
+      "group": "Cohort and sample size",
+      "field": "Treatment completion and recurrence · 43 patients",
+      "source_a": "Article · 33 patients (73%) completed treatment.",
+      "source_b": "The same passage reports 11 (27%) recurrences on treatment. Together the two counts exceed the cohort of 43.",
+      "recommendation": "Check whether these categories overlap and which denominator underlies each percentage.",
+      "finding_ids": [
+        "f6"
+      ],
+      "source_reference": "b00023",
+      "packet_sha256": "35e81f4fc3885457c605519c254e7c56bc39847b7520a478270ada9ee225bd8b"
+    },
+    {
+      "pmid": "19228745",
+      "group": "Survival estimates",
+      "field": "Median OS in nonresponders",
+      "source_a": "Abstract · 13.4 months, with p=0.046 for the responder comparison.",
+      "source_b": "Results · 10.8 months, with p=0.033 for that comparison.",
+      "recommendation": "Check the clinically analyzable population and the data cutoff before treating these as the same estimate.",
+      "finding_ids": [
+        "f24"
+      ],
+      "source_reference": "b00002, b00035",
+      "packet_sha256": "350b8b4913355a96ffb21644d2df0be0a21cfff4583d9f2df6c65dde35851a4c"
+    },
+    {
+      "pmid": "27896938",
+      "group": "Models and definitions",
+      "field": "Population used in treatment-response simulations",
+      "source_a": "Figure 3 caption · Simulated rates are labelled for PD-L1-positive patients.",
+      "source_b": "Results and supplementary methods · All patients in the observed data set were resampled.",
+      "recommendation": "Verify whether the plotted predictions were conditioned on PD-L1 after sampling.",
+      "finding_ids": [
+        "f29"
+      ],
+      "source_reference": "b00037, b00045, s00069",
+      "packet_sha256": "9635ac1ea3e2f4c1db3c8e2b47685895457284271d9158789ad513662a8dfa2c"
+    },
+    {
+      "pmid": "33335795",
+      "group": "Models and definitions",
+      "field": "Adjustment variables · melanoma whole-exome sequencing model",
+      "source_a": "Text · Sex is included as a covariate.",
+      "source_b": "Figure 2D caption · Grade is listed in its place.",
+      "recommendation": "Verify the fitted model and record the confirmed adjustment variables.",
+      "finding_ids": [
+        "f17"
+      ],
+      "source_reference": "b00013, b00012",
+      "packet_sha256": "5088c0b2a4d127309a56fb226fe5be89b1c072e1edd810063d32f0e6bbe657a0"
+    },
+    {
+      "pmid": "34620702",
+      "group": "Statistical tests",
+      "field": "OS log-rank p-value · week-7 trough level",
+      "source_a": "Narrative · p=0.0019.",
+      "source_b": "Figure 3 caption · p=0.0021.",
+      "recommendation": "Check the fitted model or test output before recording a single p-value.",
+      "finding_ids": [
+        "f06"
+      ],
+      "source_reference": "b00030, b00031",
+      "packet_sha256": "326353164b6ada4e261e444962fe3098d0d96856fae46dd50b794c588332b249"
+    },
+    {
+      "pmid": "34858178",
+      "group": "Adverse events",
+      "field": "Treatment interruption versus permanent discontinuation",
+      "source_a": "Table 2 · 32 (44.4%) had treatment-related adverse events leading to discontinuation.",
+      "source_b": "Overall analysis · 32 had interruptions, of whom four permanently discontinued.",
+      "recommendation": "Preserve separate interruption and permanent discontinuation counts pending confirmation of their definitions.",
+      "finding_ids": [
+        "f16"
+      ],
+      "source_reference": "b00020, b00019, b00024",
+      "packet_sha256": "8b5c647794898eedd3e4204eb1ee3ecdfda9f584b403e03ddba97d0e754da396"
+    },
+    {
+      "pmid": "35577503",
+      "group": "Adverse events",
+      "field": "Grade 3 or higher treatment-related adverse events · N=221",
+      "source_a": "Abstract and discussion · 25 patients (11.3%).",
+      "source_b": "Table 2, related grade 3 or higher column · 111 patients (50.2%).",
+      "recommendation": "Check the event attribution, analysis cutoff and source safety data before selecting a numerator.",
+      "finding_ids": [
+        "f15_r3_ae_ge3_related_unresolved"
+      ],
+      "source_reference": "b00036, abstract, b00066",
+      "packet_sha256": "4726b3d1dd3dff39b18c8999c4fe9453b3ed5f0f7155954971fd5f28789837d8"
+    },
+    {
+      "pmid": "38725995",
+      "group": "Response rates",
+      "field": "Brain metastasis response · safety lead-in",
+      "source_a": "Table 4 · 6/10 (60.0%) in the safety lead-in, versus 2/3 (66.7%) in phase 2.",
+      "source_b": "Discussion · 67% attributed to the safety lead-in.",
+      "recommendation": "Use the cohort-specific result table to check whether the discussion refers to the later phase 2 cohort.",
+      "finding_ids": [
+        "f10"
+      ],
+      "source_reference": "b00045, b00028",
+      "packet_sha256": "00f4d6134c1f6620866c46cd8b0ba7310d9d7398aac48a736e399c5e78849b36"
+    },
+    {
+      "pmid": "38939518",
+      "group": "Cohort and sample size",
+      "field": "Patients evaluable for response classification",
+      "source_a": "Text · 24/29 patients were evaluable for principal component analysis.",
+      "source_b": "Classification results · 13 responders and 13 nonresponders were classified, with 24 of 26 correctly classified.",
+      "recommendation": "Distinguish evaluated and correctly classified patients. Verify which denominator the stated accuracy uses.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "b00044, b00060",
+      "packet_sha256": "cdfc4350bb7a6e6c274f5ae78982e23019f0c32d398731ba3972db1f3582eef1"
+    },
+    {
+      "pmid": "39209453",
+      "group": "Models and definitions",
+      "field": "Adjustment for immune-related adverse event grade",
+      "source_a": "Methods and model table · The listed adjustment variables omit event grade.",
+      "source_b": "Discussion · Immune-related adverse event grade was controlled for.",
+      "recommendation": "Verify the fitted specification before recording grade as an adjustment variable.",
+      "finding_ids": [
+        "f07"
+      ],
+      "source_reference": "b00015, b00041",
+      "packet_sha256": "da0169735c068592aec1ca2963587b13cdcde25919d9cd2266363711e055d6f2"
+    },
+    {
+      "pmid": "39508576",
+      "group": "Treatment schedule",
+      "field": "IL-2 administration after TIL treatment",
+      "source_a": "One protocol description · Intravenous IL-2 for five days after each infusion.",
+      "source_b": "Another description · Subcutaneous IL-2 on days 1–5 and 8–12.",
+      "recommendation": "Check the protocol and assigned schedule for each treatment cohort before choosing a route.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00023, b00030",
+      "packet_sha256": "54fb15274c7d03d0b30dd9878e893940a810f1ef40052a8dd4b5a01e2236ee38"
+    },
+    {
+      "pmid": "39995827",
+      "group": "Cohort and sample size",
+      "field": "Prognostic nutritional index subgroup sizes",
+      "source_a": "Table 1 header · Low-index N=21, high-index N=73.",
+      "source_b": "Table 1 age rows · Counts sum to 22 in the low-index group and 72 in the high-index group.",
+      "recommendation": "Verify the cutoff and individual subgroup assignments before linking subgroup denominators.",
+      "finding_ids": [
+        "f31"
+      ],
+      "source_reference": "b00020",
+      "packet_sha256": "15ebb197c3b9a77769fca86a8f6c7572e421f16c2c4d3aba1437978c8441a4bb"
+    },
+    {
+      "pmid": "41020868",
+      "group": "Cohort and sample size",
+      "field": "Melanoma representation in a mixed-cancer cohort",
+      "source_a": "Abstract · 15 melanoma and 43 NSCLC patients among 58.",
+      "source_b": "Table 1 narrative · 22.4% melanoma and 77.6% lung cancer, implying approximately 13 and 45 of 58.",
+      "recommendation": "Verify patient counts against the baseline source table before assigning the melanoma N.",
+      "finding_ids": [
+        "f03_r3_n_melanoma_inconsistency"
+      ],
+      "source_reference": "b00002, b00039",
+      "packet_sha256": "01699ca025918c12b5b79034f8f5884272f768336609f2866996920da08b9f09"
+    },
+    {
+      "pmid": "36120536",
+      "group": "Participant counts",
+      "field": "Discovery cohort size",
+      "source_a": "Abstract · 312 patients.",
+      "source_b": "Methods and Results · 321 patients, including 18 with BP1 mutations and 303 without.",
+      "recommendation": "Use 321 for the full-text analysis and retain the abstract count in its source record.",
+      "finding_ids": [
+        "f03"
+      ],
+      "source_reference": "abstract, b00022, b00027",
+      "packet_sha256": "c450b4488bfe492c03dcb7f4868d4300ea100f4feb512b6eb0ed560d1f53c797",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": "R3:ss_d",
+          "abstract": [
+            "R2:ss_discovery"
+          ],
+          "row_hashes": {
+            "R3:ss_d": "1fe1ea7cade233350c6e7d7a92d9c7f6955ecbdab56d14b1ad53f3eb6bce4519",
+            "R2:ss_discovery": "7e7308da63c9e49a08a58f00da65a991433df64cba12dfc0f11d65a59dbec7c6"
+          },
+          "blocks": [
+            "b00022",
+            "b00027"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "36120536",
+      "group": "Confidence intervals",
+      "field": "Unadjusted OS HR for the biomarker score",
+      "source_a": "Abstract and results · HR 1.54, upper CI 1.95.",
+      "source_b": "Table 3 · HR 1.54, upper CI 1.91.",
+      "recommendation": "Check the Cox output. Keep this prognostic association separate from treatment comparisons.",
+      "finding_ids": [
+        "f16"
+      ],
+      "source_reference": "b00029, b00030, b00031",
+      "packet_sha256": "c450b4488bfe492c03dcb7f4868d4300ea100f4feb512b6eb0ed560d1f53c797"
+    },
+    {
+      "pmid": "34113648",
+      "group": "Participant counts",
+      "field": "TCGA FSIP2 wild-type survival cohort",
+      "source_a": "Text · 409 wild-type patients.",
+      "source_b": "Figure 1 survival captions · 399 wild-type patients.",
+      "recommendation": "Verify the survival analysis set. The baseline count and number with follow-up may differ.",
+      "finding_ids": [
+        "f07"
+      ],
+      "source_reference": "b00026, b00027",
+      "packet_sha256": "7a39bc97c8770d5de966d918f53219b61feec1b9a9fb2f4f9c4e3b6cb60863a5"
+    },
+    {
+      "pmid": "34641331",
+      "group": "Statistical tests",
+      "field": "Unadjusted PFS test for early steroid use",
+      "source_a": "Abstract · p = 0.077.",
+      "source_b": "Results · p = 0.358.",
+      "recommendation": "Check the contrast against the unadjusted survival figure before selecting a p-value.",
+      "finding_ids": [
+        "f17-early-logrank-conflict"
+      ],
+      "source_reference": "b00022, b00002",
+      "packet_sha256": "4c58b556680354130081c629dd46c0772ad8c1bbc74c600affad3c9afbccf5ff",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "32404734",
+      "group": "Statistical tests",
+      "field": "OS comparison of CIT versus ICI or chemotherapy alone",
+      "source_a": "Abstract · p = 0.002.",
+      "source_b": "Results · p = 0.02.",
+      "recommendation": "Check the comparison label in the survival figure. The paper also reports 0.002 for the ocular comparison.",
+      "finding_ids": [
+        "f16"
+      ],
+      "source_reference": "b00003, b00031",
+      "packet_sha256": "b36f79570c636da5786c8249746da6b0a2e0f7b3d8e0ace90a0ab264c5fc5b2c",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "33880555",
+      "group": "Response and safety",
+      "field": "Complete response among patients on corticosteroids",
+      "source_a": "Abstract · Two of 12 had complete responses.",
+      "source_b": "Table 1 and discussion · Two responded. One had a complete response.",
+      "recommendation": "Distinguish overall response from complete response when using Table 1.",
+      "finding_ids": [
+        "f22"
+      ],
+      "source_reference": "abstract, b00047",
+      "packet_sha256": "727accf2ae419ba87d657b0bfe2a946a4c3f3d7a0a1137a7fc4aba96c269d9fc",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:CR_B_corticosteroids",
+          "abstract": [
+            "R2:CR_B_corticosteroids"
+          ],
+          "row_hashes": {
+            "R3:CR_B_corticosteroids": "b64d5f46cc039e96a5bc9230b082f9166542f9d0504cbeb70004df7b216ca77f",
+            "R2:CR_B_corticosteroids": "a46f4ba32fbea16d538099c04304215c05ddccdd1a81842615e4d3cbb87f9a9b"
+          },
+          "blocks": [
+            "b00047"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "38473329",
+      "group": "Participant counts",
+      "field": "Melanoma patients receiving an ipilimumab combination",
+      "source_a": "Treatment section · One received nivolumab plus ipilimumab.",
+      "source_b": "Safety section · Two patients are described as receiving combination therapy with ipilimumab.",
+      "recommendation": "Confirm that both passages concern the same melanoma cohort before assigning arm N.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "b00012, b00029",
+      "packet_sha256": "4a2a585504a808e961db7eb35a9839c6b040553c70daefcdbfb8394d18e4ea40"
+    },
+    {
+      "pmid": "39531423",
+      "group": "Adverse events",
+      "field": "All-cause deaths",
+      "source_a": "Patient disposition · No patients had died.",
+      "source_b": "Safety results and Table 3 · Three fatal adverse events.",
+      "recommendation": "Check the cutoffs for the two sections and retain treatment-related death as a separate outcome.",
+      "finding_ids": [
+        "f27"
+      ],
+      "source_reference": "b00030, b00031, b00018",
+      "packet_sha256": "f9575e1104c374cdeb4415e78a8a42ea37ede0b3d32ee7648a8ff10d7bdb619d"
+    },
+    {
+      "pmid": "35634306",
+      "group": "Treatment assignment",
+      "field": "Checkpoint inhibitor in cohort GSE120575",
+      "source_a": "Dataset list · Anti-PD-1.",
+      "source_b": "Results · Patients from the two single-cell cohorts received anti-PD-1 or anti-CTLA-4.",
+      "recommendation": "Check the sample annotations in GSE120575 before assigning a drug class to individual patients.",
+      "finding_ids": [
+        "f06_r3_gse120575_regimen_conflict"
+      ],
+      "source_reference": "b00011, b00049",
+      "packet_sha256": "39a4edf488d688582a21864fec198814b0c79ba600a0a5825a35b90ef376125e"
+    },
+    {
+      "pmid": "41375005",
+      "group": "Survival estimates",
+      "field": "Median OS by ctDNA status at the 6-month landmark",
+      "source_a": "Results · Negative group 46.9 months, positive group median unreached.",
+      "source_b": "The narrative describes inferior survival with positivity. Maximum reported follow-up was 40.2 months.",
+      "recommendation": "Check group labels and the time origin against Figure 3C before using either median.",
+      "finding_ids": [
+        "f25"
+      ],
+      "source_reference": "b00029, b00024",
+      "packet_sha256": "423b2bc764d57d86bcdc1cf798b1ade2c8cb9c526fabbd340806ccfa8d325afb"
+    },
+    {
+      "pmid": "34397169",
+      "group": "Adverse events",
+      "field": "Reason for immunomodulatory treatment",
+      "source_a": "Abstract · All 475 recipients are described as treated for immune-related adverse events.",
+      "source_b": "Full text · Recipients also included 16 treated for rheumatic disease flares and six for maintenance.",
+      "recommendation": "Keep the 475 as all immunomodulator recipients. Verify a separate irAE-specific count.",
+      "finding_ids": [
+        "f14"
+      ],
+      "source_reference": "abstract, b00037",
+      "packet_sha256": "3a766f869534ab0b350953c9209a761f7ba9c412797b4decc76447201e4a37e4",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": null,
+          "abstract": [
+            "R2:binary_irae_immunomodulatory_treatment"
+          ],
+          "row_hashes": {
+            "R2:binary_irae_immunomodulatory_treatment": "b1f005c878847fe997b2f9e9b0c48585baf445fe45d2c2c887b098d21ae13a1e"
+          },
+          "blocks": [
+            "b00037"
+          ]
+        },
+        {
+          "section": "sample_sizes",
+          "main": null,
+          "abstract": [
+            "R2:n_immunomodulatory_treatment"
+          ],
+          "row_hashes": {
+            "R2:n_immunomodulatory_treatment": "cf8b77aabb3ddd7dcc1737dfba2e5fd43c774e6f633dcd920951be3ed4617c24"
+          },
+          "blocks": [
+            "b00037"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "26027431",
+      "group": "Confidence intervals",
+      "field": "PFS HR · nivolumab plus ipilimumab versus ipilimumab",
+      "source_a": "Manuscript results · Bounds 0.31–0.57 labelled 95%.",
+      "source_b": "Statistical methods and PubMed abstract · 99.5% interval.",
+      "recommendation": "Check the protocol and version of record before converting the interval for pooling.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "b00022, abstract, b00029",
+      "packet_sha256": "7ec3e5666c0e4103981f847323a98e4c6543f5dc51e10d6cdbd39f5a74b4186d"
+    },
+    {
+      "pmid": "26027431",
+      "group": "Confidence intervals",
+      "field": "PFS HR · nivolumab versus ipilimumab",
+      "source_a": "Manuscript results · Bounds 0.43–0.76 labelled 95%.",
+      "source_b": "Statistical methods and PubMed abstract · 99.5% interval.",
+      "recommendation": "Check the protocol and version of record before converting the interval for pooling.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "b00022, abstract",
+      "packet_sha256": "7ec3e5666c0e4103981f847323a98e4c6543f5dc51e10d6cdbd39f5a74b4186d"
+    },
+    {
+      "pmid": "26027431",
+      "group": "Confidence intervals",
+      "field": "Combination-arm median PFS · upper 95% bound",
+      "source_a": "Manuscript and citation abstracts · 16.7 months.",
+      "source_b": "Manuscript results · 16.5 months.",
+      "recommendation": "Use the agreed median of 11.5 months. Check its upper bound against the survival figure.",
+      "finding_ids": [
+        "f23"
+      ],
+      "source_reference": "b00029, b00002",
+      "packet_sha256": "7ec3e5666c0e4103981f847323a98e4c6543f5dc51e10d6cdbd39f5a74b4186d",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "survival",
+          "main": "R3:surv-pfs-combination",
+          "abstract": [
+            "R2:s-pfs-combination"
+          ],
+          "row_hashes": {
+            "R3:surv-pfs-combination": "cbbeeb4f63b10d4fdb61c2d07687c8120b049372803ef2da5ebde17b106f9798",
+            "R2:s-pfs-combination": "20634065151b8c03f921d64d0b1e974ba2f4311c98b68e2a3d6ed66dfe5b8079"
+          },
+          "blocks": [
+            "b00029"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "42624531",
+      "group": "Response and safety",
+      "field": "Disease control in the low-EGF subgroup",
+      "source_a": "Results · 77.8%, N=9.",
+      "source_b": "Later comparison · 25% is attributed to low EGF in TUNINTIL.",
+      "recommendation": "Check Figure 7F and the supplement for possible EGF/HGF label confusion.",
+      "finding_ids": [
+        "f10"
+      ],
+      "source_reference": "b00044",
+      "packet_sha256": "0d282de4b5cafbcdd9d71bcf875ed907b22174487f26d6a8a034bb587b2dc0d1"
+    },
+    {
+      "pmid": "28086948",
+      "group": "Response and safety",
+      "field": "Clinical response to vemurafenib",
+      "source_a": "Abstract · Prior targeted therapies are described as unsuccessful.",
+      "source_b": "Case narrative · A clinical response to vemurafenib is described.",
+      "recommendation": "Verify the timing and criteria before coding this case as an objective response.",
+      "finding_ids": [
+        "f36"
+      ],
+      "source_reference": "b00012, b00002",
+      "packet_sha256": "9bf2a72a0b779b6eb53d424332c6575493482c351765ad578053e84f788bf60d",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "34926669",
+      "group": "Cohorts and subgroups",
+      "field": "BRAF-mutant patients in analysis",
+      "source_a": "Text · BRAF-mutant patients were excluded from further analysis.",
+      "source_b": "Table 1 · Eight BRAF-mutant patients are distributed across the three reported arms.",
+      "recommendation": "Determine whether the eight patients were in the efficacy analysis or only the baseline table.",
+      "finding_ids": [
+        "f25"
+      ],
+      "source_reference": "b00013, b00014, b00007",
+      "packet_sha256": "be7e8f2a676af7f39eac937f09c5c7da47d046bc1d549f5f3af37a31f9896581"
+    },
+    {
+      "pmid": "20953860",
+      "group": "Treatment and cohort definitions",
+      "field": "Expanded split-dose flavopiridol cohort at the maximum tolerated dose",
+      "source_a": "Dose-escalation results identify cohort 11 as the maximum tolerated dose cohort and say it was expanded.",
+      "source_b": "The p53 analysis calls the expanded maximum tolerated dose cohort cohort 12 and evaluates nine patients.",
+      "recommendation": "Verify the cohort label in the dosing table before linking the nine biomarker assessments to the expanded treatment cohort.",
+      "finding_ids": [
+        "f-unresolved-mtd-cohort"
+      ],
+      "source_reference": "b00038, b00051",
+      "packet_sha256": "24432ec73505f31060a68d5edb3f7098ae2b0e5c8ee609a7203bcdb4ab2279ec"
+    },
+    {
+      "pmid": "21206909",
+      "group": "Participant counts",
+      "field": "Patients who received sorafenib",
+      "source_a": "The abstract says all 36 patients received sorafenib.",
+      "source_b": "The participant accounting states that at least one of the 36 enrolled patients never received sorafenib.",
+      "recommendation": "Keep 36 as the enrollment and intention-to-treat count. Check the disposition records before assigning a treated denominator.",
+      "finding_ids": [
+        "f06",
+        "f07"
+      ],
+      "source_reference": "b00035, b00037, abstract",
+      "packet_sha256": "c2767a08327a6bf90e1630c221339dd3f05b63964695dafad27ba8a83401f892",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "sample_sizes",
+          "main": null,
+          "abstract": [
+            "R2:n-1"
+          ],
+          "row_hashes": {
+            "R2:n-1": "bb666e427b003adb4239ffdfed7d955c2813821768a4158e9b17b6ede7934f24"
+          },
+          "blocks": [
+            "b00035",
+            "b00037"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "30864295",
+      "group": "Comparative estimates",
+      "field": "Univariate association between adjuvant chemotherapy and RFS",
+      "source_a": "The univariate-results paragraph gives p=0.005 and refers to Table 4.",
+      "source_b": "Table 4 gives HR 0.449 (95% CI 0.255–0.792) and p=0.006.",
+      "recommendation": "Use the effect and CI together from Table 4. Check which test produced the p-value in the narrative.",
+      "finding_ids": [
+        "f17"
+      ],
+      "source_reference": "b00038, b00039",
+      "packet_sha256": "e579ca67b611f1a5fb3f78a18d87625d1765724fff44111eb3a89d3e0947532d"
+    },
+    {
+      "pmid": "33922038",
+      "group": "Biomarker definitions",
+      "field": "Training-derived cutoff for the anti-PD-1 risk score",
+      "source_a": "The training analysis identifies 0.39 as its optimal cutoff.",
+      "source_b": "The validation analysis describes −0.321 as the optimal cutoff taken from the training cohort.",
+      "recommendation": "Record the cutoff given for each analysis. Check the score scale and Figure 4 before treating the groups as equivalent.",
+      "finding_ids": [
+        "f11"
+      ],
+      "source_reference": "b00030, b00029",
+      "packet_sha256": "0740cc8deca3c663a8f70c39b2f6f8038f624baf28d4575ddd15856db27e16fb"
+    },
+    {
+      "pmid": "22275984",
+      "group": "Study design",
+      "field": "Phase of the AVAST-M bevacizumab versus observation trial",
+      "source_a": "The abstract describes the trial as phase II.",
+      "source_b": "The methods identify AVAST-M as a phase III multicentre trial.",
+      "recommendation": "Verify the design against the registered protocol before assigning the phase in this report.",
+      "finding_ids": [
+        "f4"
+      ],
+      "source_reference": "b00002, b00010",
+      "packet_sha256": "c5aae375d075045d1fe44504074e58de29f2415a7be617ac1688c755b6cf2964",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "26222619",
+      "group": "Comparative estimates",
+      "field": "PFS by cutaneous adverse-event status within pembrolizumab dosing groups",
+      "source_a": "Abstract · p=0.003 for 10 mg/kg every two weeks and p=0.009 for 2 mg/kg every three weeks.",
+      "source_b": "Results · p=0.04 and p=0.007, respectively, for the same two comparisons.",
+      "recommendation": "Check Figure 3 and the analysis output before selecting a p-value. The comparisons include cancers other than melanoma.",
+      "finding_ids": [
+        "f12"
+      ],
+      "source_reference": "b00002, b00026",
+      "packet_sha256": "2f178f3bc418110a5f21be062ca0056dc2ea4243e6f0ebbf40087eb069e11c09",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "35998300",
+      "group": "Adverse events",
+      "field": "Grade 3 or higher treatment-related adverse events · placebo + pembrolizumab",
+      "source_a": "The abstract reports 19.5%.",
+      "source_b": "The safety results report 54 patients (15.7%).",
+      "recommendation": "Check the safety table and cutoff for the placebo arm before choosing its incidence.",
+      "finding_ids": [
+        "f15"
+      ],
+      "source_reference": "abstract, b00045",
+      "packet_sha256": "1b6b1655f4d7b63566d37ee315afd4cca90473f9b5609690e26ea42388849d1e",
+      "main_text_side": "source_b",
+      "bindings": [
+        {
+          "section": "binary",
+          "main": "R3:b10",
+          "abstract": [
+            "R2:b6"
+          ],
+          "row_hashes": {
+            "R3:b10": "b373a866461558dd8fa540e59b2497d8e3ca3cdc1c18f9b15f7da9d2b6d93064",
+            "R2:b6": "5a34a3268ab76ca5fffdb4adffafb28f3b2599b30bcf486cf1d9486ea0812e96"
+          },
+          "blocks": [
+            "b00045"
+          ]
+        }
+      ]
+    },
+    {
+      "pmid": "39191779",
+      "group": "Adverse events",
+      "field": "Grade of adrenal insufficiency following cryoablation",
+      "source_a": "The Table 2 footnote assigns grade 4 to a flare of pre-existing adrenal insufficiency.",
+      "source_b": "The safety narrative says there were no grade 4 or 5 treatment- or procedure-related adverse events.",
+      "recommendation": "Keep the grade 3–4 category. Verify the individual grade in the safety record.",
+      "finding_ids": [
+        "f13"
+      ],
+      "source_reference": "b00011, b00012",
+      "packet_sha256": "e4a1f647280d9475481779b2579e887a4ddc58b1865227287811f6e8f6188d54"
+    },
+    {
+      "pmid": "40251644",
+      "group": "Adverse events",
+      "field": "Severity of toxicity with dendritic-cell vaccination",
+      "source_a": "The abstract describes only mild reactions and states that no severe adverse events occurred.",
+      "source_b": "The discussion reports several grade 3 local or gastrointestinal reactions and no grade 4 events.",
+      "recommendation": "Use the reported grade 3 toxicity as qualitative evidence. Check Additional file 5 before assigning a patient count.",
+      "finding_ids": [
+        "f36"
+      ],
+      "source_reference": "b00002, b00015, b00039",
+      "packet_sha256": "b270fda5c56bf432504ba8e0bc864d262cb6496d0e1c1a284ce62d8dfb7ef058",
+      "main_text_side": "source_b"
+    },
+    {
+      "pmid": "42013310",
+      "group": "Participant counts",
+      "field": "Baseline prevalence of BRAF mutation",
+      "source_a": "The baseline paragraph reports 11 mutation-positive patients among 30 tested.",
+      "source_b": "The same sentence labels this 34%. Eleven of 30 is 36.7%, while 11 of all 32 enrolled is 34.4%.",
+      "recommendation": "Record the stated counts and check the prevalence denominator in Supplementary Table S1. The 6/10 response result has a separate analysis denominator.",
+      "finding_ids": [
+        "f17"
+      ],
+      "source_reference": "b00010, b00015",
+      "packet_sha256": "d9705b160a5eb9b802b5a16dd26f54da1b2e81931038af66175897e78f63e55d"
+    },
+    {
+      "pmid": "10850352",
+      "group": "Response estimates",
+      "field": "Delayed-type hypersensitivity conversion after vaccination",
+      "source_a": "The abstract reports 13 conversions among 33 patients.",
+      "source_b": "The adjuvant subgroups in the same abstract have 13/20 and 2/13 conversions, which sum to 15/33.",
+      "recommendation": "Verify the subgroup counts before using the adjuvant comparison. Keep both published versions identifiable.",
+      "finding_ids": [
+        "f06"
+      ],
+      "source_reference": "abstract",
+      "packet_sha256": "1978d70e7d21c5582684f4003746763f9e6e5a14f052845e766c6d9fe29705c3"
+    },
+    {
+      "pmid": "33945288",
+      "group": "Response estimates",
+      "field": "Response fraction in the liver or treated CNS metastasis subgroup description",
+      "source_a": "The results describe six responders among 25 patients.",
+      "source_b": "The same passage gives 17%, while 6/25 is 24%.",
+      "recommendation": "Check the liver and CNS metastasis rows in Table 2 to identify the patients associated with each count and percentage.",
+      "finding_ids": [
+        "f10"
+      ],
+      "source_reference": "b00029",
+      "packet_sha256": "79ba71dc6290037945e760791652cdf9f69a00270944024d25202fe9f5e0fd3c"
+    },
+    {
+      "pmid": "31555455",
+      "group": "Treatment and cohort definitions",
+      "field": "Order of stereotactic radiosurgery and immunotherapy",
+      "source_a": "Methods state that 82% of immunotherapy recipients received it after stereotactic radiosurgery.",
+      "source_b": "Results state that the vast majority received immunotherapy before radiosurgery.",
+      "recommendation": "Keep both treatment components. Verify their ordering in Table 1 before classifying patients by treatment sequence.",
+      "finding_ids": [
+        "f14"
+      ],
+      "source_reference": "b00006, b00019",
+      "packet_sha256": "e235f3b763549642e9e9dd831b4ef25a30853178719d195ed763e4427de65a3a"
+    }
+  ]
+}

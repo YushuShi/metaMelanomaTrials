@@ -18,6 +18,19 @@ test('each non-ICI modality has its own selectable top-level root',()=>{
   assert.equal(roots.find(row=>row.class_id==='immune').label,'Immune checkpoint inhibitors (ICI)');
 });
 
+test('FMT aliases share a searchable treatment and class; microbiome assays and placebos are excluded',()=>{
+  const id='agent:fecal-microbiota-transplantation';
+  for(const label of ['FMT','fecal microbiota transplantation','faecal microbiome transplant','stool transplantation']){
+    present(label,id);present(label,'microbiome-therapies');
+  }
+  for(const label of ['stool microbiome sequencing','microbiome modulation','sham FMT','placebo microbiome intervention','previous FMT'])absent(label,id);
+  present('SER-401','microbiome-therapies');present('SER-401','agent:ser_401');absent('SER-401',id);
+  absent('placebo microbiome modulation','agent:ser_401');
+  const tree=groups.optionTree([['combo','FMT plus pembrolizumab']]);
+  assert.ok(tree.some(r=>r.depth===0&&r.class_id==='microbiome-therapies'));
+  assert.ok(tree.some(r=>r.class_id===id&&/\bFMT\b/i.test(r.search_text)));
+});
+
 test('OR evidence browses under every explicit named and class constituent without becoming a combination',()=>{
   for(const [label,ids]of [
     ['Nivolumab or pembrolizumab',['pd1','agent:nivolumab','agent:pembrolizumab']],
@@ -117,4 +130,52 @@ test('source label objects, numerical metadata and entry references remain untou
   const source={text:'Topical imiquimod',evidence_ids:['E1'],raw_numbers:[{value:5,unit:'percent'}]},entries=[{value:'raw-1',label:'Nivolumab or pembrolizumab',source}];
   const before=JSON.stringify({source,entries});groups.describe(source);groups.memberships(source);groups.optionTree(entries);
   assert.equal(JSON.stringify({source,entries}),before);
+});
+
+test('target and pharmacological subgroups bind exact agents, generic evidence and comparator or intervention regimens', () => {
+  const match = (raw, id) => groups.matchesClass(groups.definitionFromLabel(raw), id);
+  for (const raw of ['Bevacizumab', 'lenvatinib plus pembrolizumab', 'VEGFR inhibitor']) assert.ok(match(raw, 'vegf'), raw);
+  for (const raw of ['previous bevacizumab', 'BRAF inhibitor', 'bevacizumab-matched placebo']) assert.equal(match(raw, 'vegf'), false, raw);
+  assert.ok(match('lenvatinib', 'fgfr'));
+  assert.ok(match('tobemstomig', 'lag3'));
+  assert.ok(match('lomvastomig', 'tim3'));
+  assert.equal(match('atezolizumab', 'pd1'), false);
+  assert.equal(match('eftilagimod alpha', 'lag3'), false); // A soluble LAG-3 fusion is not checkpoint blockade.
+  assert.ok(match('dacarbazine or paclitaxel', 'alkylating'));
+  assert.ok(match('dacarbazine or paclitaxel', 'taxane'));
+  assert.equal(match('dacarbazine ± paclitaxel', 'taxane'), false);
+  assert.equal(match('VEGF inhibitor', 'agent:bevacizumab'), false);
+  assert.deepEqual(groups.subgroupsForAgent('agent:nivolumab').map(x => x.id), ['pd1']);
+  assert.equal(groups.subgroupsForAgent('lenvatinib')[0].id, 'vegf');
+  assert.deepEqual(groups.subgroupsForAgent('unspecified chemotherapy'), []);
+});
+
+test('multi-target agents appear under each applicable subgroup using the same selection value', () => {
+  const items = [['L','Lenvatinib'], ['C','Carboplatin plus paclitaxel'], ['N','Nivolumab'], ['P','Placebo']];
+  const tree = groups.optionTree(items);
+  const path = [];
+  const lenvatinibParents = [];
+  for (const row of tree.filter(r => !r.hidden)) {
+    path.length = row.depth;
+    if (row.class_id === 'agent:lenvatinib' && row.value.startsWith('treatment-class:')) {
+      lenvatinibParents.push(path[row.depth-1].class_id);
+      assert.equal(row.color_class, 'targeted');
+    }
+    path.push(row);
+  }
+  assert.ok(lenvatinibParents.includes('vegf'));
+  assert.ok(lenvatinibParents.includes('fgfr'));
+  for (const id of ['platinum','taxane','pd1','vegf']) assert.ok(tree.some(r => r.subgroup && r.value === groups.classValue(id)));
+  assert.ok(tree.some(r => r.value === 'C' && r.class_id === 'agent:paclitaxel'));
+  assert.ok(tree.some(r => r.value === 'C' && r.class_id === 'agent:carboplatin'));
+});
+
+test('an unspecified agent within a specific target keeps its own comparator key', () => {
+  const describe = raw => groups.describeDefinition(groups.definitionFromLabel(raw));
+  const vegf=describe('VEGFR inhibitor'), targeted=describe('Targeted therapy');
+  assert.notEqual(vegf.key,targeted.key);
+  assert.deepEqual(vegf.agent_ids,[]);
+  assert.notEqual(describe('Interleukin-2').key,describe('GM-CSF').key);
+  const choices = new Map([vegf,targeted].map(d => [d.key,{value:d.key,label:d.label,definition:d.definition}]));
+  assert.ok(groups.optionTree([...choices.values()]).some(r => r.class_id === 'vegf'));
 });

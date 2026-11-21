@@ -15,8 +15,8 @@ function record(arms,counts,extra={}){
     study:{identifiers:[{id:'NCT00000001'}],name:'NA',randomized:'yes',study_type:'interventional_trial'},
     arms,sample_sizes:counts,populations:[{id:'overall',label:'Melanoma',scope:'overall',parent_id:'NA',melanoma_only:'yes',evidence:['e']}],effects:[],...extra};
 }
-function graph(records, years={}, evidence={}){
-  const byPmid=new Map();for(const r of records){if(!byPmid.has(r.pmid))byPmid.set(r.pmid,[]);byPmid.get(r.pmid).push({record:r,stage:r.stage});}
+function graph(records, years={}, evidence={}, calculations={}){
+  const byPmid=new Map();for(const r of records){if(!byPmid.has(r.pmid))byPmid.set(r.pmid,[]);byPmid.get(r.pmid).push({record:r,stage:r.stage,calculated_effects:calculations[r.source_sha256]});}
   return build({registry,quantitative:{articles:[...byPmid].map(([pmid,records])=>({pmid,records})),
     clinical_evidence:{articles:[...byPmid].map(([pmid])=>({pmid,current_main_eligible:true,title:'Therapeutic trial',year:years[pmid]||2025})),evidence_registry:evidence}}});
 }
@@ -25,8 +25,27 @@ const total=(g,id)=>node(g,id).count_summary.known_n;
 const comparison=(extra={})=>({id:'hr',intervention_arm_id:'combo',reference_arm_id:'mono',population_id:'overall',origin:'own_report',
   endpoint:'OS',measure:'HR',estimate:0.75,ci_lower:0.60,ci_upper:0.92,ci_level:95,evidence:['e'],...extra});
 
+test('a calculated binary contrast uses its two original arm rows for direction, planning and the shared population',()=>{
+  const lhs={row_id:'x',arm_id:'combo',population_id:'left',numerator:20,denominator:108,percentage:18.5,basis:'reconstructed_counts'};
+  const rhs={row_id:'y',arm_id:'mono',population_id:'right',numerator:12,denominator:118,percentage:10.2,basis:'reconstructed_counts'};
+  const r=record([arm('mono',[A],{population:'right'}),arm('combo',[A,B],{population:'left'})],[]);
+  for(const side of [lhs,rhs])r.populations.push({id:side.population_id,label:side.arm_id,scope:'treatment_arm',parent_id:'overall',melanoma_only:'yes',evidence:['e']});
+  r.binary=[lhs,rhs,{...lhs,row_id:'timepoint',percentage:7.5}].map(side=>({id:side.row_id,arm_id:side.arm_id,population_id:side.population_id,
+    percentage:side.percentage,origin:'own_report',evidence:['e'],endpoint:'ORR'}));
+  const calculation={method:'from_arm_binary_outcomes',intervention:lhs,reference:rhs,outcome_context:{endpoint:'ORR'},interval_method:'log_wald_reconstructed_counts'};
+  const effect=comparison({id:'calculated',endpoint:'ORR',measure:'RR',analysis_n:226,estimate:1.821,ci_lower:.935,ci_upper:3.546,calculation});
+  const g=graph([r],{},{},{source1:[effect]});
+  assert.equal(g.comparisons.length,1);
+  const c=g.comparisons[0];assert.equal(c.analysis.sample_size.n,226);assert.equal(c.calculation,calculation);
+  assert.deepEqual(c.analysis.planning_assumptions.map(rate=>[rate.arm_role,rate.events,rate.n,rate.provenance]),[
+    ['intervention',20,108,'reconstructed_counts'],['comparator',12,118,'reconstructed_counts']]);
+  assert.deepEqual(r.effects,[]);
+  const wrong={...effect,calculation:{...calculation,intervention:{...lhs,row_id:'nonexistent'}}};
+  assert.equal(graph([r],{},{},{source1:[wrong]}).comparisons.length,0);
+});
+
 test('catalogue includes every canonical named product; isolated agents have no invented participant total',()=>{
-  const g=graph([]);assert.equal(g.nodes.length,registry.products.length+1);assert.equal(node(g,'radiosurgery').entity_type,'modality');
+  const g=graph([]);assert.equal(g.nodes.length,registry.products.length+2);assert.equal(node(g,'fecal-microbiota-transplantation').entity_type,'modality');assert.equal(node(g,'radiosurgery').entity_type,'modality');
   for(const p of registry.products){const n=node(g,p.id);assert.ok(n);assert.equal(n.count_summary.known_n,null);assert.equal(n.count_summary.status,'unresolved');assert.equal(n.count_summary.identified_studies,0);assert.equal(n.class_id,p.class_id);}
 });
 
@@ -104,6 +123,20 @@ test('order-independent observed subsets retain all valid parents and only direc
   assert.equal(ab.count_summary.known_n,50);assert.equal(abc.count_summary.known_n,60);assert.equal(total(g,A),40);assert.equal(total(g,B),null);
   assert.deepEqual(g.study_memberships.filter(m=>m.node_id===ab.id).flatMap(m=>m.source_bindings.flatMap(b=>b.arm_ids)),['ab']);
   assert.ok(g.relationships.every(e=>!e.documented_add_on));
+});
+
+test('FMT is searchable as a microbiome modality and only concurrent regimens become combination nodes',()=>{
+  const fmt='fecal-microbiota-transplantation';
+  const evidence=graph([record([
+    arm('combo',['faecal microbiome transplant','pembrolizumab']),
+    arm('seq',['FMT','nivolumab'],{operator:'SEQUENTIAL'}),
+    arm('not-treatment',['stool microbiome sequencing'])
+  ],[count('n-combo','combo',15),count('n-seq','seq',20),count('samples','not-treatment',40)])]);
+  assert.equal(node(evidence,fmt).broad_category,'microbiome-therapies');
+  assert.ok(node(evidence,fmt).aliases.includes('FMT'));
+  assert.equal(evidence.nodes.find(n=>n.id===nodeId([fmt,'pembrolizumab'])).count_summary.known_n,15);
+  assert.equal(evidence.nodes.some(n=>n.id===nodeId([fmt,'nivolumab'])),false);
+  assert.equal(total(evidence,fmt),null);
 });
 
 test('radiosurgery is an exact radiotherapy modality; unexplained SRS abbreviations are not expanded',()=>{

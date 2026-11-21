@@ -41,7 +41,21 @@
   function sourceReady(meta){return !!meta.record&&(meta.row.review_stage!=='R3'||/^[a-f0-9]{64}$/.test(meta.wrapper?.source_proof_ref?.sha256||''));}
   function matchedRules(meta,options){
     const row=meta.row,q=meta.q;
-    return list(sourceRules).filter(rule=>String(rule.pmid)===String(row.pmid||options.study?.pmid)&&rule.source_sha256===row.source_input_sha256&&rule.review_binding_sha256===row.review_binding_sha256&&rule.raw_result_id===q.id&&rule.canonical_result_id===row.result_id&&rule.population_id===q.population_id&&norm(rule.arm_id)===norm(q.arm_id)&&(!Object.hasOwn(rule,'intervention_arm_id')||norm(rule.intervention_arm_id)===norm(q.intervention_arm_id))&&(!Object.hasOwn(rule,'reference_arm_id')||norm(rule.reference_arm_id)===norm(q.reference_arm_id))&&rule.endpoint===q.endpoint);
+    const prior=meta.wrapper?.complementary_review_bindings;
+    const pos=list(meta.record?.[meta.section]).findIndex(result=>result.id===q.id);
+    const rowPath='/'+meta.section+'/'+pos;
+    const unchanged=pos>=0&&prior?.comparison_scope_unchanged&&prior.effective===row.review_binding_sha256&&
+      !list(meta.wrapper.complementary_edits).some(finding=>list(finding.field_paths).some(path=>path===rowPath||path.startsWith(rowPath+'/')));
+    const rules=list(sourceRules).filter(rule=>String(rule.pmid)===String(row.pmid||options.study?.pmid)&&rule.source_sha256===row.source_input_sha256);
+    const current=rules.map(rule=>{
+      if(!unchanged||rule.review_binding_sha256!==prior.original)return rule;
+      const prefix='CE-'+prior.original.slice(0,24)+'-',effective='CE-'+prior.effective.slice(0,24)+'-';
+      // Curated result identity and quote IDs share the exact review namespace.
+      // Existing source, arm, population and literal-quote checks still apply.
+      return JSON.parse(JSON.stringify(rule,(key,value)=>value===prior.original?prior.effective:
+        typeof value==='string'&&value.startsWith(prefix)?effective+value.slice(prefix.length):value));
+    });
+    return current.filter(rule=>rule.review_binding_sha256===row.review_binding_sha256&&rule.raw_result_id===q.id&&rule.canonical_result_id===row.result_id&&rule.population_id===q.population_id&&norm(rule.arm_id)===norm(q.arm_id)&&(!Object.hasOwn(rule,'intervention_arm_id')||norm(rule.intervention_arm_id)===norm(q.intervention_arm_id))&&(!Object.hasOwn(rule,'reference_arm_id')||norm(rule.reference_arm_id)===norm(q.reference_arm_id))&&rule.endpoint===q.endpoint);
   }
   function ruleEvidence(meta,evidence,options){
     if(!sourceReady(meta))return null;

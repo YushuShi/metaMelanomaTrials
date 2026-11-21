@@ -154,3 +154,26 @@ test('shared canonical alias search finds Tobemstomig without exposing duplicate
   }
   key(picker.search,'Enter');assert.equal(select.value,'treatment-class:agent:tobemstomig');
 });
+
+test('Studies opens with only main treatment types and unfolds a single selected branch', () => {
+  const groups=require('../dist/treatment_groups.js');
+  const {select,picker}=fixture();
+  const entries=groups.optionTree([['N','Nivolumab'],['I','Ipilimumab'],['V','Bevacizumab'],['T','Paclitaxel']]);
+  select.textContent='';
+  for(const entry of [{value:'',label:'All comparators'},...entries]){
+    const option=select.appendChild(select.ownerDocument.createElement('option'));
+    option.value=entry.value;option.textContent=entry.label;
+  }
+  picker.refresh(entries,'All comparators');picker.open();
+  assert.deepEqual(picker.nodes.filter(n=>n.displayed),picker.roots);
+  for(const id of ['pd1','ctla4','vegf','taxane']) assert.equal(node(picker,'treatment-class:'+id).displayed,false,id);
+  const vegf=node(picker,'treatment-class:vegf');
+  vegf.parent.toggle.click();
+  assert.equal(vegf.displayed,true);
+  assert.equal(node(picker,'treatment-class:pd1').displayed,false);
+  assert.equal(node(picker,'treatment-class:agent:nivolumab').displayed,false);
+  vegf.choice.click();
+  assert.equal(select.value,'treatment-class:vegf');
+  picker.open();
+  assert.deepEqual(picker.nodes.filter(n=>n.displayed),picker.roots);
+});

@@ -17,9 +17,16 @@ test('Tobemstomig aliases identify one PD-1/LAG-3 bispecific checkpoint inhibito
   }
 });
 
-test('target browsing uses one canonical drug leaf and searchable source aliases',()=>{
+test('target browsing uses the same canonical drug selection under each applicable target',()=>{
   const tree=groups.optionTree([['T','RO7247669']]);
-  assert.equal(tree.filter(x=>x.value==='treatment-class:agent:tobemstomig').length,1);
+  const path=[];
+  const parents=[];
+  for(const row of tree.filter(x=>!x.hidden)){
+    path.length=row.depth;
+    if(row.value==='treatment-class:agent:tobemstomig')parents.push(path[row.depth-1].class_id);
+    path.push(row);
+  }
+  assert.deepEqual(new Set(parents),new Set(['pd1-lag3','pd1','lag3']));
   assert.equal(tree.find(x=>x.class_id==='pd1-lag3').label,'PD-1 / LAG-3 bispecific inhibitors');
   const drug=tree.find(x=>x.value==='treatment-class:agent:tobemstomig');
   assert.match(drug.search_text,/RG6139/);assert.match(drug.search_text,/RO7247669/);

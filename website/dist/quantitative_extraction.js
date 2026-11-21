@@ -116,7 +116,24 @@
     if(pilot)need(result.length===scope.size,'Pilot metadata missing');
     return {studies:result,evidence_registry:merged.evidence_registry};
   }
-  function records(study){return list(study?.details?.quantitative_extraction).map(saved=>saved.record).filter(Boolean);}
+  const effectiveCache=new WeakMap();
+  function effectiveRecord(wrapper){
+    const source=wrapper.record||{}, preferences=wrapper.source_preferences;
+    if(!preferences)return source;
+    const cached=effectiveCache.get(wrapper);
+    if(cached?.preferences===preferences&&cached.source===source)return cached.record;
+    const record={...source};
+    for(const [section,decisions] of Object.entries(preferences)){
+      record[section]=list(source[section]).filter(row=>decisions[row.id]?.status!=='superseded_abstract')
+        .map(row=>decisions[row.id]?.values?{...row,...decisions[row.id].values}:row);
+      for(const [id,choice] of Object.entries(decisions)) if(choice.derived_fields?.length){
+        record.derivations=[...list(record.derivations),...choice.derived_fields.map(field=>({section,id,field,method:choice.derivation}))];
+      }
+    }
+    effectiveCache.set(wrapper,{preferences,source,record});
+    return record;
+  }
+  function records(study){return list(study?.details?.quantitative_extraction).filter(saved=>saved.record).map(effectiveRecord);}
   function trialIdentifiers(study){
     const names=[],ids=[],provenance=[];
     for(const saved of list(study?.details?.quantitative_extraction)){
@@ -201,6 +218,8 @@
   // Four missing safety denominators inherited the randomized fallback because
   // their observation window was stored in cutoff. Keep all saved facts intact.
   function presentationSampleSize(study,row,{registry={},samples=study?.details?.sample_size_records}={}){
+    if(row?.quantitative_record?.complementary_count_scope==='source_reviewed_unavailable')
+      return {n:null,status:'unverified',basis:'source_population_mismatch',count_purpose:'outcome_analysis',count_ids:[],unverified_label:'NA'};
     const r2Identity={pmid:'36162037',report_id:'report-8ab2816667ca355de5fec208',review_stage:'R2',source_input_sha256:'d9edaf893efe7b740487d841b8f670049c452bf8c9d74789fa570c5b4dddfa9d',review_binding_sha256:'44064cc7c2d045a6c3eaa48b98cfb4536eb882227c6a17af560346527dad11e5'};
     if(String(study?.pmid)===r2Identity.pmid&&Object.entries(r2Identity).every(([key,value])=>String(row?.[key])===value)){
       const q=row.quantitative_record,record=sourceRecord(study,row),prefix='CE-'+r2Identity.review_binding_sha256.slice(0,24)+'-';
@@ -436,6 +455,15 @@
     }
     return groups.map(({label,sample_size,members,alias})=>({label,sample_size,count_ids:members.map(count=>count.source.quantitative_record?.id),alias}));
   }
+  function reviewedFieldLabel(fieldPath){
+    const parts=String(fieldPath||'').split('/').filter(Boolean);
+    if(!parts.length)return clean(fieldPath||'Study detail');
+    const sections={binary:'Response or safety',survival:'Time-to-event outcome',effects:'Comparative effect',study:'Study',study_details:'Study characteristics',sample_sizes:'Sample size',populations:'Population',arms:'Treatment'};
+    if(!sections[parts[0]])return clean(fieldPath);
+    const field=parts.at(-1);
+    const labels={p_value:'P value',estimate:'Estimate',analysis_n:'Analysis N',ci_level:'CI level',ci_lower:'Lower CI',ci_upper:'Upper CI',adjustments:'Adjusted model',identifiers:'Study identifier'};
+    return [sections[parts[0]],parts.length>1&&!/^(-|\d+)$/.test(field)?labels[field]||clean(field):''].filter(Boolean).join(' · ');
+  }
   function render(study,{registry={}}={}){
     const all=records(study);if(!all.length)return '';
     return all.map(record=>{
@@ -461,14 +489,52 @@
         out+=fields('Study characteristics',[['Population',record.study_details.population_description],['Design',record.study_details.design_description]]);
         out+=table('Adjusted models',['Result','Model','Covariates'],list(record.study_details.adjustments).map(a=>[a.effect_id,a.model,list(a.covariates).join('; ')||'NA']));
       }
+      const reviewed=list(study.details?.quantitative_extraction).find(saved=>effectiveRecord(saved)===record);
+      out+=table('Results selected from the main text',['Field','Published result'],list(reviewed?.main_text_choices).map(choice=>[choice.field,choice.value]));
+      out+=table('Source-checked additions',['Field','Finding'],list(reviewed?.complementary_notes).map(note=>[[...new Set((note.fields||[note.field]).map(reviewedFieldLabel))].join('; '),note.text]));
       out+=table('Population',['Population','Scope','Melanoma only','Data cutoff'],list(record.populations).filter(p=>p.melanoma_only!=='no').map(p=>[p.label,p.scope,p.melanoma_only,p.cutoff]));
       out+=table('Treatment groups',['Group','Treatment'],list(record.arms).filter(visible).map(a=>[a.arm_id||a.id,treatment(a)]));
       out+=table('Sample sizes',['Population','Treatment','Endpoint','Analysis','N','Status'],list(record.sample_sizes).filter(visible).map(n=>[population(n.population_id),n.arm_id&&n.arm_id!=='NA'?arm(n.arm_id):'Total',n.result_id&&n.result_id!=='NA'?endpoint(outcomes.get(n.result_id)?.endpoint):'All',n.count_purpose,n.n,list(n.field_flags).some(flag=>String(flag.code).startsWith('CONFLICTING'))?'CONFLICTING':clean(n.validation_status||n.status||n.method)]));
-      out+=table('Comparative results',['Endpoint','Intervention','Reference','Population','N','Effect (CI)','Adjusted'],list(record.effects).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.intervention_arm_id||r.experimental_arm_id),arm(r.reference_arm_id||r.comparator_arm_id),resultPopulation(r),displayedN(r),`${text(r.measure)} ${interval(r,r.estimate,{original:true})}`,r.adjusted]));
+      const calculated=list(reviewed?.calculated_effects);
+      const effects=[...list(record.effects),...calculated].filter(visible);
+      const hasCalculation=effects.some(row=>row.calculation);
+      const armInput=side=>{
+        const percent=typeof side?.percentage==='number'?`${formatNumber(side.percentage)}%`:'';
+        return Number.isInteger(side?.numerator)&&Number.isInteger(side?.denominator)
+          ? `${side.numerator}/${side.denominator}${percent?' ('+percent+')':''}` : percent;
+      };
+      const calculationDetail=row=>{
+        const method=row.calculation;
+        if(!method)return 'Reported';
+        const arms=[armInput(method.intervention),armInput(method.reference)];
+        const inputs=arms.every(Boolean)?' · '+arms.join(' vs '):'';
+        const test=method.reported_comparison_test;
+        const basis=method.interval_method==='log_wald_reconstructed_counts'?' · 95% CI from reconstructed counts':
+          method.interval_method==='log_wald_reported_counts'?' · 95% CI from reported counts':method.count_recovery?' · reconstructed counts':'';
+        const printed=method.from_reported_percentages?.[row.measure];
+        const printedBasis=method.count_recovery&&Number.isFinite(printed)&&formatEffectNumber(printed)!==formatEffectNumber(row.estimate)
+          ? ' · '+row.measure+' from printed rates '+formatEffectNumber(printed) : '';
+        return 'Calculated from arm rates'+inputs+basis+printedBasis+(test?' · reported comparison p'+test.operator+test.value:'');
+      };
+      out+=table('Comparative results',['Endpoint','Intervention','Reference','Population','N','Effect (CI)','Adjusted',...(hasCalculation?['Basis']:[])],
+        effects.map(r=>[endpoint(r.endpoint),arm(r.intervention_arm_id||r.experimental_arm_id),arm(r.reference_arm_id||r.comparator_arm_id),resultPopulation(r),displayedN(r),`${text(r.measure)} ${interval(r,r.estimate,{original:true})}`,r.adjusted,...(hasCalculation?[calculationDetail(r)]:[])]));
       out+=table('Time-to-event results',['Endpoint','Treatment','Population','N','Result','Time (months)','Value (CI)','Status'],list(record.survival).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.arm_id),resultPopulation(r),displayedN(r),clean(r.kind||r.result_type),r.time,interval(r,r.estimate,{original:true})+(typeof r.estimate==='number'?(r.unit==='months'?' months':r.unit==='percent'?'%':''):''),clean(r.median_status)]));
-      out+=table('Response and safety',['Endpoint','Treatment','Population','Patients','N','Percentage (CI)','Time (months)','Definition'],list(record.binary).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.arm_id),population(r.population_id),r.numerator,displayedN(r),interval(r,r.percentage,{original:true}),r.assessment_time,[definition(r),r.response_criteria,r.response_criteria_version,r.safety_attribution].filter(x=>x&&x!=='NA').join(' · ')||'NA']));
+      const numerator=row=>list(record.derivations).some(d=>d.section==='binary'&&d.id===row.id&&
+        d.field==='numerator')?`${row.numerator} (derived)`:row.numerator;
+      out+=table('Response and safety',['Endpoint','Treatment','Population','Patients','N','Percentage (CI)','Time (months)','Definition'],list(record.binary).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.arm_id),population(r.population_id),numerator(r),displayedN(r),interval(r,r.percentage,{original:true}),r.assessment_time,[definition(r),r.response_criteria,r.response_criteria_version,r.safety_attribution].filter(x=>x&&x!=='NA').join(' · ')||'NA']));
+      const superseded=[];
+      for(const [section,decisions] of Object.entries(reviewed?.source_preferences||{})){
+        for(const old of list(reviewed.record[section])){
+          const decision=decisions[old.id];
+          if(!decision || !visible(old) || !(decision.status==='superseded_abstract' || decision.status==='main_text'&&decision.values))continue;
+          const original=['n','estimate','percentage','numerator','denominator','ci_lower','ci_upper','p_value'].filter(key=>Number.isFinite(old[key]))
+            .map(key=>({ci_lower:'lower CI',ci_upper:'upper CI',p_value:'p',n:'N'}[key]||key)+' '+formatNumber(old[key])).join(' · ');
+          if(original)superseded.push([endpoint(old.endpoint)||old.count_purpose,population(old.population_id),original]);
+        }
+      }
+      if(superseded.length)out+='<details class="drawer-section"><summary>Earlier extraction values</summary>'+table('Original values',['Field','Population','Value'],superseded)+'</details>';
       return all.length>1?`<details class="drawer-section"${record.stage==='R3'?' open':''}><summary>${record.stage==='R3'?'Full text':'Title and abstract'}</summary>${out}</details>`:out;
     }).join('')+(study.details?.fulltext_assessment&&!['complete','complete_with_issues'].includes(study.details.fulltext_assessment.technical_state)?'<p class="drawer-section">Full-text review pending. The title-and-abstract results remain available.</p>':'');
   }
-  return Object.freeze({checked,merge,records,trialIdentifiers,render,regimen,armLabels,resultDoseLabel,sourceRecord,presentationSampleSize,presentationGroupLabel,timeLabel,cohortLabel,populationContext,resultContext,phasePartitions,treatmentAliases,countLabel,countAlias,countSummary,endpoint,definition,table,fields,text,clean,formatNumber,formatEffectNumber,cleanContext,interval});
+  return Object.freeze({effectiveRecord,checked,merge,records,trialIdentifiers,render,regimen,armLabels,resultDoseLabel,sourceRecord,presentationSampleSize,presentationGroupLabel,timeLabel,cohortLabel,populationContext,resultContext,phasePartitions,treatmentAliases,countLabel,countAlias,countSummary,endpoint,definition,table,fields,text,clean,formatNumber,formatEffectNumber,cleanContext,interval});
 });

@@ -1,0 +1,1896 @@
+{
+  "schema_version": 1,
+  "findings": [
+    {
+      "pmid": "10340886",
+      "attempt_id": "melanoma-opus-complementary-20261114-10340886-a1",
+      "finding_id": "f-orr-cil",
+      "record_id": "R2:qr2-5542d4c871054b29b8ebdf3e48856d84",
+      "baseline_record_sha256": "f5de2f730f6c0cd03b860146d81969cc1c3cb80ab2c368c2338666249fb2a03b",
+      "status": "confirmed",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-4e5daf6500ec679036b0d3ec",
+          "quote": "The response rate was 11% (95% confidence interval, 2-35%)."
+        }
+      ],
+      "reason": "The reported lower limit of the response-rate interval is 2%.",
+      "note": ""
+    },
+    {
+      "pmid": "10505851",
+      "attempt_id": "melanoma-opus-complementary-20261114-10505851-a1",
+      "finding_id": "f6",
+      "record_id": "R2:qr2-520e40465a099ed8b0507b207cf57ec5",
+      "baseline_record_sha256": "a3e2e3d61e87f10d018a1fdbe803cc91d2de0ab64b6fe0bd3c00f48850ba39f1",
+      "status": "confirmed",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-a6fb4a771be9f835e16bf2f1",
+          "quote": "The two patients with the largest tumor burdens failed to respond even at treatment sites. Three patients had mixed responses, with regression of treated and untreated dermal metastases and progression of disease elsewhere. One patient had a partial response, with regression of injected and uninjected regional dermal metastases. Residual melanoma was excised, rendering the patient disease free. One patient with only dermal metastases confined to the scalp achieved a complete remission."
+        }
+      ],
+      "reason": "Seven patients are explicitly described and all seven responses are accounted for.",
+      "note": ""
+    },
+    {
+      "pmid": "10561349",
+      "attempt_id": "melanoma-opus-complementary-20261114-10561349-a1",
+      "finding_id": "f12_orr_pvalue_unresolved",
+      "record_id": "R2:qr2-b19bd0a3d6b17e13cfe5dccd2fc54004",
+      "baseline_record_sha256": "ecdad2968c7e25a2255603a62e7314510351856005cb9cad9cdeee388e70e460",
+      "status": "supplement",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-cc9a227f0f05bd4a2b60d405",
+          "quote": "The response rate to dacarbazine was 10.2% compared with 18.5% for the Dartmouth regimen (P =.09)."
+        }
+      ],
+      "reason": "Response rates were 18.5% for the Dartmouth regimen and 10.2% for dacarbazine (p = 0.09).",
+      "note": "Response rates were 18.5% for the Dartmouth regimen and 10.2% for dacarbazine (p = 0.09)."
+    },
+    {
+      "pmid": "10587357",
+      "attempt_id": "melanoma-opus-complementary-20261114-10587357-a1",
+      "finding_id": "f6",
+      "record_id": "R3:qr3-89c6f787ff3315e65122f0f120a25605",
+      "baseline_record_sha256": "2ba32aa8361890f5e1995ad00339bc0e8b41787ffb057761a78e510939094e1a",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/binary/0/numerator",
+          "before": "NA",
+          "after": 0
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-b2952bc231d154c1acaccddb",
+          "quote": "No major (above grade II) toxicity or severe side effects were observed in any patient, including the two patients who were not fully evaluable."
+        }
+      ],
+      "reason": "The abstract explicitly reports zero major toxicities above grade II.",
+      "note": ""
+    },
+    {
+      "pmid": "10850352",
+      "attempt_id": "melanoma-opus-complementary-20261114-10850352-a1",
+      "finding_id": "f09",
+      "record_id": "R2:qr2-f651f3372a512642259d895d888f0544",
+      "baseline_record_sha256": "036dff03b6fae38fb1c8d9ddb59547cea56ed99bed504094cc2d954c741be597",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/sample_sizes/-",
+          "before": null,
+          "after": {
+            "id": "n_vaccinated",
+            "population_id": "p_vaccinated",
+            "arm_id": "NA",
+            "result_id": "NA",
+            "count_purpose": "treated",
+            "n": 57,
+            "cutoff": "NA",
+            "method": "reported",
+            "component_ids": [],
+            "disjoint": "NA",
+            "complete": "yes",
+            "evidence": [
+              "span-decb9bac7038367b56b74f99"
+            ]
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-decb9bac7038367b56b74f99",
+          "quote": "62 vaccines were used in 57 different patients"
+        }
+      ],
+      "reason": "57 distinct patients received vaccines.",
+      "note": ""
+    },
+    {
+      "pmid": "12926212",
+      "attempt_id": "melanoma-opus-complementary-20261114-12926212-a1",
+      "finding_id": "f15",
+      "record_id": "R2:qr2-e122c5a10c9ef8496124dc5fedd4d64b",
+      "baseline_record_sha256": "813a11890dc6cc3d36cfbffc45cdfadac44bde530945be6ec31deda9b2e8c941",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/sample_sizes/-",
+          "before": null,
+          "after": {
+            "id": "n_opus_treated_p1",
+            "arm_id": "NA",
+            "population_id": "p1",
+            "result_id": "NA",
+            "count_purpose": "treated",
+            "n": 38,
+            "method": "reported",
+            "complete": "yes",
+            "component_ids": [],
+            "cutoff": "NA",
+            "disjoint": "NA",
+            "evidence": [
+              "span-e605c28d70a2f53105270d21"
+            ]
+          }
+        },
+        {
+          "field_path": "/sample_sizes/-",
+          "before": null,
+          "after": {
+            "id": "n_opus_treated_p2",
+            "arm_id": "NA",
+            "population_id": "p2",
+            "result_id": "NA",
+            "count_purpose": "treated",
+            "n": 16,
+            "method": "reported",
+            "complete": "yes",
+            "component_ids": [],
+            "cutoff": "NA",
+            "disjoint": "NA",
+            "evidence": [
+              "span-e605c28d70a2f53105270d21"
+            ]
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-e605c28d70a2f53105270d21",
+          "quote": "Thirty-eight patients with disseminated skin melanoma received chemotherapy in conjunction with laser coagulation or interstitial hyperthermia of intra- or subcutaneous metastases. Use of combination therapy was followed by a rise to 37% in total response and 16%--complete regression, respectively. Most effectiveness was attained when the dacarbazine + cisplatin + BCNU + tamoxifen regime was employed. In this group of 16 patients (46%), total response was 56% and, what is most significant, 31% in complete regression."
+        }
+      ],
+      "reason": "38 received treatment overall. The dacarbazine, cisplatin, BCNU and tamoxifen subgroup comprised 16 patients.",
+      "note": ""
+    },
+    {
+      "pmid": "1490114",
+      "attempt_id": "melanoma-opus-complementary-20261114-1490114-a1",
+      "finding_id": "f5",
+      "record_id": "R2:qr2-bc7700addaf887fb234fd0e83b6458d3",
+      "baseline_record_sha256": "cf50e0d83c4375b9ffce83a11beed92111279b235dff3d498d2955856297ab02",
+      "status": "confirmed",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-cef50cc6acda45d650fa103f",
+          "quote": "In addition, 7-16 x 10(9) LAK cells were administered by systemic infusion the day after together with IL-2 (9-12 x 10(6) IU/m2/day) by c.i. for 5 days."
+        }
+      ],
+      "reason": "The cell dose is already recorded on the LAK-cell component. The adjacent IL-2 component has its own dose.",
+      "note": ""
+    },
+    {
+      "pmid": "15470711",
+      "attempt_id": "melanoma-opus-complementary-20261114-15470711-a1",
+      "finding_id": "f8",
+      "record_id": "R2:qr2-465445d11eb341b376438790230019fc",
+      "baseline_record_sha256": "98b5c2db0666220a070b063b91f9bf0dd86c089aafee0a2237a9528f1fb52466",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/binary/2/numerator",
+          "before": "NA",
+          "after": 0
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-70268c9b4c7855f846135598",
+          "quote": "Forty patients were evaluable for response and toxicity. Major side effects (World Health Organization Grade 3 or 4) were not observed."
+        }
+      ],
+      "reason": "None of 40 evaluable patients had a grade 3 or 4 major side effect.",
+      "note": ""
+    },
+    {
+      "pmid": "15719277",
+      "attempt_id": "melanoma-opus-complementary-20261114-15719277-a1",
+      "finding_id": "f7",
+      "record_id": "R2:qr2-459b00c0156c87d931359f681900ac7c",
+      "baseline_record_sha256": "60280fdce24b3ea3c3d5f1bb148683ef7fd0fd7b14c621c448e74fc3e7b1905d",
+      "status": "supplement",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-27d1bdb62a7befe63299ca66",
+          "quote": "time to progression (TTP)"
+        },
+        {
+          "span_id": "span-733faf74bd77292b4d4fb300",
+          "quote": "median TTP 2.9 months"
+        }
+      ],
+      "reason": "Median time to progression was 2.9 months.",
+      "note": "Median time to progression was 2.9 months."
+    },
+    {
+      "pmid": "18445842",
+      "attempt_id": "melanoma-opus-complementary-20261114-18445842-a1",
+      "finding_id": "f7",
+      "record_id": "R2:qr2-6a98975699cc11739363389d4f708947",
+      "baseline_record_sha256": "59bf0f2fdd6c54598df52ae0f659d89c01812d65825da16d21c04e1bfed2c531",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/populations/0/label",
+          "before": "Unresectable stage III or stage IV melanoma",
+          "after": "Chemotherapy-naive unresectable stage III or stage IV melanoma"
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-9cbef6fe3601bd4ba29c1229",
+          "quote": "enrolled chemotherapy-naive patients with stage III (unresectable) or IV melanoma"
+        }
+      ],
+      "reason": "The study enrolled chemotherapy-naive patients with unresectable stage III or stage IV melanoma.",
+      "note": ""
+    },
+    {
+      "pmid": "18495536",
+      "attempt_id": "melanoma-opus-complementary-20261114-18495536-a1",
+      "finding_id": "f8",
+      "record_id": "R2:qr2-2ec58d538bc23d9ad6d49487d7fd0e2f",
+      "baseline_record_sha256": "9e6fe706381f5d476f47abbafb0f5ebb4e386effc0d9a8737a2534695e488b1a",
+      "status": "confirmed",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-f9b9987fe7c2d08186ceeb32",
+          "quote": "According to Response Evaluation Criteria in Solid Tumors (RECIST), three patients had partial response, six had stable disease, and one had progressive disease."
+        }
+      ],
+      "reason": "Three of ten patients had a partial response by RECIST.",
+      "note": ""
+    },
+    {
+      "pmid": "20350333",
+      "attempt_id": "melanoma-opus-complementary-20261114-20350333-a1",
+      "finding_id": "f08",
+      "record_id": "R3:qr3-9478f32642e474438d8cebbbd7d8e965",
+      "baseline_record_sha256": "a06e0d6582f9aa59e7c50a6f9f955e159199789826f1893fd5a8a0f9a770fe43",
+      "status": "confirmed",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-8dec3a8d35cee4fc5bba130a",
+          "quote": "In each group, 38 patients were treated and evaluable for exposure."
+        },
+        {
+          "span_id": "span-ad7a5db9bffeb7d9602d3707",
+          "quote": "Safety data were analyzed on the all-treated population comprising all randomized patients who received study drug."
+        }
+      ],
+      "reason": "Each group had 38 participants treated and evaluable for exposure.",
+      "note": ""
+    },
+    {
+      "pmid": "20525992",
+      "attempt_id": "melanoma-opus-complementary-20261114-20525992-a1",
+      "finding_id": "f12",
+      "record_id": "R3:qr3-8be6debaea688947f0be676e7d8acd2c",
+      "baseline_record_sha256": "61c1aa8abf2ec2aded43be843f93b9f66307cf2ca2647fff62cd863b829d5089",
+      "status": "supplement",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-aa7233620932b9e5dfc5cc13",
+          "quote": "in the gp100-alone group (hazard ratio for death, 0.68; P<0.001)"
+        }
+      ],
+      "reason": "For overall survival, ipilimumab plus gp100 versus gp100 alone had p < 0.001.",
+      "note": "For overall survival, ipilimumab plus gp100 versus gp100 alone had p < 0.001."
+    },
+    {
+      "pmid": "20818844",
+      "attempt_id": "melanoma-opus-complementary-20261114-20818844-a1",
+      "finding_id": "f11",
+      "record_id": "R3:qr3-5cf2e8e7db64a15592937a4bc6f151e1",
+      "baseline_record_sha256": "3eb15b2ff3095238b36410b084d3d22a2e939386dfac8c5ec6f7732498bd049e",
+      "status": "supplement",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-90c362568624337191e7830d",
+          "quote": "The estimated median progression-free survival among all patients was more than 7 months."
+        }
+      ],
+      "reason": "Estimated median progression-free survival for all patients was greater than 7 months.",
+      "note": "Estimated median progression-free survival for all patients was greater than 7 months."
+    },
+    {
+      "pmid": "22123319",
+      "attempt_id": "melanoma-opus-complementary-20261114-22123319-a1",
+      "finding_id": "f17",
+      "record_id": "R3:qr3-490d104df44631cfde667a62c58d4ba7",
+      "baseline_record_sha256": "13e8ea05747ff9c01a54bf547a42dec0c65c6a08c5ae9507dd2103a9493294e3",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/binary/8/numerator",
+          "before": "NA",
+          "after": 33
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-4fc2ae7b677891a2a5e7e7bc",
+          "quote": "<bold>Drug-related AE</bold>, n (%)</td><td colspan=\"1\" rowspan=\"1\" /><td colspan=\"1\" rowspan=\"1\" /></tr><tr><td align=\"left\" colspan=\"1\" rowspan=\"1\"> Any grade</td><td align=\"center\" colspan=\"1\" rowspan=\"1\">33 (82.5)</td><td align=\"center\" colspan=\"1\" rowspan=\"1\">32 (76.2)</td>"
+        },
+        {
+          "span_id": "span-4fc2ae7b677891a2a5e7e7bc",
+          "quote": "Ipilimumab 3 mg/kg (n = 40)</th><th align=\"center\" colspan=\"1\" rowspan=\"1\">Ipilimumab 10 mg/kg (n = 42)"
+        }
+      ],
+      "reason": "In Table 3, 33 of 40 patients in the ipilimumab 3 mg/kg group had a drug-related adverse event (82.5%).",
+      "note": ""
+    },
+    {
+      "pmid": "25986244",
+      "attempt_id": "melanoma-opus-complementary-20261114-25986244-a1",
+      "finding_id": "f13",
+      "record_id": "R3:qr3-39de8ffeef0035a9a8a0dd56535fe6f4",
+      "baseline_record_sha256": "26434e4d6ef73385f33a1380b1c4c35bf4e7bbb92a9d3241311e5724b2cf42cd",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/sample_sizes/1/n",
+          "before": "NA",
+          "after": 5
+        },
+        {
+          "field_path": "/sample_sizes/1/count_purpose",
+          "before": "NA",
+          "after": "enrolled"
+        },
+        {
+          "field_path": "/sample_sizes/1/complete",
+          "before": "NA",
+          "after": "yes"
+        },
+        {
+          "field_path": "/sample_sizes/1/method",
+          "before": "NA",
+          "after": "reported"
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-36b16b7f1ad33a03f62e806d",
+          "quote": "Five patients were enrolled for sorafenib 400 mg b.i.d. and bortezomib 1.0 mg/m 2 weekly for 3 of every 4 weeks; none had DLTs, and this dose level was defined as the MTD."
+        }
+      ],
+      "reason": "Five patients enrolled at this sorafenib and bortezomib dose.",
+      "note": ""
+    },
+    {
+      "pmid": "26500235",
+      "attempt_id": "melanoma-opus-complementary-20261114-26500235-a1",
+      "finding_id": "f6",
+      "record_id": "R2:qr2-86b9fe8e4ff7b2f06d941ddc8162009a",
+      "baseline_record_sha256": "3b9a628a41f5dbcd7c81dc2d2a5437473a129b0d8be44c6cce5c9517b6eedcd9",
+      "status": "confirmed",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-478f92d4bb19965869f9bc06",
+          "quote": "Up to nine injections were subcutaneously administered in three cycles, each with three vaccinations every 3 weeks, with 6 to 14 weeks interval between cycles."
+        }
+      ],
+      "reason": "The report confirms subcutaneous administration.",
+      "note": ""
+    },
+    {
+      "pmid": "28056206",
+      "attempt_id": "melanoma-opus-complementary-20261114-28056206-a3",
+      "finding_id": "f31",
+      "record_id": "R3:qr3-ac7c5995e90f1f16a3dad1d37e5aaf20",
+      "baseline_record_sha256": "fc6245b6ea2600983fccba5fc7db4e3ccfd0d1cc301aa52bdc9e819296450c70",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/binary/6/percentage",
+          "before": "NA",
+          "after": 8.1
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-d6b147c231b8430c8c93d6c1",
+          "quote": "For mucosal and cutaneous melanoma, respectively, the incidence of grade 3 or 4 treatment-related adverse events was 8.1% and 12.5% for nivolumab monotherapy and 40.0% and 54.9% for combination therapy."
+        },
+        {
+          "span_id": "span-d6b147c231b8430c8c93d6c1",
+          "quote": "the incidence of grade 3 or 4 treatment-related adverse events was 8.1% and 12.5% for nivolumab monotherapy"
+        }
+      ],
+      "reason": "Grade 3 or 4 treatment-related adverse events were reported in 8.1% of the mucosal melanoma group receiving nivolumab alone.",
+      "note": ""
+    },
+    {
+      "pmid": "33028693",
+      "attempt_id": "melanoma-opus-complementary-20261114-33028693-a1",
+      "finding_id": "f5",
+      "record_id": "R3:qr3-5db52d1da538e2e119d916501e41eb56",
+      "baseline_record_sha256": "b1dbead5cf4ecb0b41659a1badf9167f685643d3d19c3b9134902f5162a56a34",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/survival/0/analysis_n",
+          "before": 27,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/1/analysis_n",
+          "before": 27,
+          "after": "NA"
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-a409e433885db19d1240305a",
+          "quote": "In this 27-patient melanoma cohort, a higher APM score was associated with response (responder average z-score 1.16 vs −1.44 in non-responders); however, this difference did not reach statistical significance (p=0.09, figure 5C ) due to one outlier. The AUC in the ROC curve was 0.68 (p=0.11) ( figure 5D ). However, a higher APMS was significantly associated with improved OS ( figure 5E ); the median OS for patients with an APM above the median score was not reached, while the median OS was 14.4 months in the lower APMS group (HR 0.29, 95% CI, 0.09 to 0.89, log-rank=0.044)."
+        }
+      ],
+      "reason": "27 is the entire melanoma cohort. The above-median and lower APM score groups have separate OS estimates, and neither subgroup N is reported.",
+      "note": ""
+    },
+    {
+      "pmid": "37142291",
+      "attempt_id": "melanoma-opus-complementary-20261114-37142291-a1",
+      "finding_id": "f03",
+      "record_id": "R3:qr3-fd1b2ddd986119af916a2244562b5e70",
+      "baseline_record_sha256": "39a603461e868809b74090f3e4d62aa2d5d78e5535dde467bf1c7060d3704814",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/study/identifiers/-",
+          "before": null,
+          "after": {
+            "registry": "EudraCT",
+            "id": "2012-000307-32"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-f780626972d634473a7631c7",
+          "quote": "EudraCT number 2012-000307-32"
+        },
+        {
+          "span_id": "span-3765f8fc3bf669b3c856f2b7",
+          "quote": "EudraCT number 2012-000307-32"
+        }
+      ],
+      "reason": "The protocol lists EudraCT 2012-000307-32 for this trial.",
+      "note": ""
+    },
+    {
+      "pmid": "39296979",
+      "attempt_id": "melanoma-opus-complementary-20261114-39296979-a1",
+      "finding_id": "f22",
+      "record_id": "R3:qr3-593c9d3b0b3811ddc2652125e3debb7d",
+      "baseline_record_sha256": "fa0498c36ef185881e4f681dcf60e2a18d7137b9dd5478df538edd72eb22ad4b",
+      "status": "supplement",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-0b10b1ff8733567d61e815bf",
+          "quote": "Efficacy and safety data of the flat dosing regimen (250 mg Q3W) were compared with previously unpublished data obtained with the weight-based regimen 1 mg/kg Q2W in the confirmatory (phase 3) part of the MIRACULUM study."
+        }
+      ],
+      "reason": "NCT03269565 identifies MIRACULUM, the study supplying the historical controls for FLAT.",
+      "note": "NCT03269565 identifies MIRACULUM, the study supplying the historical controls for FLAT."
+    },
+    {
+      "pmid": "39775043",
+      "attempt_id": "melanoma-opus-complementary-20261114-39775043-a2",
+      "finding_id": "f09",
+      "record_id": "R3:qr3-2bd06c942740b6afe65d0b51200629bb",
+      "baseline_record_sha256": "32c1218201e33a0b5154a57167a7e77df9cf11d853e877a4aa9ab9d2da195094",
+      "status": "confirmed",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-9b9c1a2f29864caff31a2de6",
+          "quote": "The pathologic analysis population consisted of all patients who received at least one dose of treatment"
+        },
+        {
+          "span_id": "span-9b9c1a2f29864caff31a2de6",
+          "quote": "Pathologic complete responses were observed in 10 of 26 patients (38% (95% confidence interval (CI), 20–59)) in the pembrolizumab plus vibostolimab arm"
+        }
+      ],
+      "reason": "Ten of 26 patients had a pathologic complete response in the pembrolizumab plus vibostolimab arm.",
+      "note": ""
+    },
+    {
+      "pmid": "41124198",
+      "attempt_id": "melanoma-opus-complementary-20261114-41124198-a1",
+      "finding_id": "f_study_details_add",
+      "record_id": "R2:qr2-eed8a816670cf4a243dfb14169cd88a2",
+      "baseline_record_sha256": "958f3dd3a97ab482ed97e5180f4ca44f4459f207c00649a4b42ab3b41655ded3",
+      "status": "supplement",
+      "edits": [],
+      "evidence": [
+        {
+          "span_id": "span-c2485c0d02d2c6b0baf61f3c",
+          "quote": "Randomization was stratified according to disease stage and status with respect to programmed cell death ligand 1."
+        },
+        {
+          "span_id": "span-c2485c0d02d2c6b0baf61f3c",
+          "quote": "The primary end point was recurrence-free survival; secondary end points included overall and distant metastasis-free survival and safety."
+        },
+        {
+          "span_id": "span-539622e6edcc82714b217a6f",
+          "quote": "patients with resected stage IIIB-C or stage IV melanoma"
+        }
+      ],
+      "reason": "CheckMate 238 enrolled patients with resected stage IIIB–C or IV melanoma. Randomization was stratified by disease stage and PD-L1 status.",
+      "note": "CheckMate 238 enrolled patients with resected stage IIIB–C or IV melanoma. Randomization was stratified by disease stage and PD-L1 status."
+    },
+    {
+      "pmid": "42526429",
+      "attempt_id": "melanoma-opus-complementary-20261114-42526429-a2",
+      "finding_id": "f15",
+      "record_id": "R3:qr3-a6d89d53f3cf81c96467d0103d4d850a",
+      "baseline_record_sha256": "71cc31c4fe0dd230a307f24d331996b410a117bcb800824f4608bded067c39b9",
+      "status": "amended",
+      "edits": [
+        {
+          "field_path": "/survival/0/estimate",
+          "before": "NA",
+          "after": 9.2
+        },
+        {
+          "field_path": "/survival/0/time",
+          "before": 9.2,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/0/time_unit",
+          "before": "months",
+          "after": "NA"
+        }
+      ],
+      "evidence": [
+        {
+          "span_id": "span-55a3745e5c92f64ddccb50e3",
+          "quote": "In the intention-to-treat analysis including all enrolled 60 patients, the median progression-free survival (PFS) was 9.2 months (95% CI: 7.3–16)"
+        }
+      ],
+      "reason": "Median PFS was 9.2 months (95% CI 7.3–16) among the 60 intention-to-treat participants.",
+      "note": ""
+    },
+    {
+      "pmid": "21690468",
+      "attempt_id": "melanoma-opus-complementary-20261114-21690468-a1",
+      "finding_id": "f08_pr_ci_lower",
+      "record_id": "R2:qr2-115f023c965bbaf6c328aa12ceff2059",
+      "baseline_record_sha256": "7e1421ea6fef2ae000c5e3f963156658152a56cd2325536af904f426996b2be6",
+      "status": "confirmed",
+      "reason": "The PR 95% CI lower bound is reported.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-5c8df9b0280d32d2b06f241c",
+          "quote": "10 patients (23.3%; 95% CI, 10.2% to 36.4%) and 13 patients (30.2%; 95% CI, 16.0% to 44.4%) achieved partial response (PR) and stable disease (SD), respectively."
+        }
+      ],
+      "edits": []
+    },
+    {
+      "pmid": "21690468",
+      "attempt_id": "melanoma-opus-complementary-20261114-21690468-a1",
+      "finding_id": "f14_pfs_subgroup_p",
+      "record_id": "R2:qr2-115f023c965bbaf6c328aa12ceff2059",
+      "baseline_record_sha256": "7e1421ea6fef2ae000c5e3f963156658152a56cd2325536af904f426996b2be6",
+      "status": "supplement",
+      "reason": "Median PFS was 9.0 months with partial response or stable disease and 1.5 months with progression (p < 0.001).",
+      "note": "Median PFS was 9.0 months with partial response or stable disease and 1.5 months with progression (p < 0.001).",
+      "evidence": [
+        {
+          "span_id": "span-5c8df9b0280d32d2b06f241c",
+          "quote": "The median PFS and OS times for patients who had PR or SD versus disease progression were 9.0 months versus 1.5 months (P < .001) and 15.0 months versus 9.0 months (P = .036), respectively."
+        }
+      ],
+      "edits": []
+    },
+    {
+      "pmid": "21690468",
+      "attempt_id": "melanoma-opus-complementary-20261114-21690468-a1",
+      "finding_id": "f15_os_subgroup_p",
+      "record_id": "R2:qr2-115f023c965bbaf6c328aa12ceff2059",
+      "baseline_record_sha256": "7e1421ea6fef2ae000c5e3f963156658152a56cd2325536af904f426996b2be6",
+      "status": "supplement",
+      "reason": "Median OS was 15.0 months with partial response or stable disease and 9.0 months with progression (p = 0.036).",
+      "note": "Median OS was 15.0 months with partial response or stable disease and 9.0 months with progression (p = 0.036).",
+      "evidence": [
+        {
+          "span_id": "span-5c8df9b0280d32d2b06f241c",
+          "quote": "The median PFS and OS times for patients who had PR or SD versus disease progression were 9.0 months versus 1.5 months (P < .001) and 15.0 months versus 9.0 months (P = .036), respectively."
+        }
+      ],
+      "edits": []
+    },
+    {
+      "pmid": "11038032",
+      "attempt_id": "melanoma-opus-complementary-20261114-11038032-a2",
+      "finding_id": "f6",
+      "record_id": "R2:qr2-f4199fc0ae264b6dd0376a2590a9ac49",
+      "baseline_record_sha256": "8ffa77fb74919d8c3f4dc83fd384955ebbca0abbfaa00854b7d4a2a1503530b3",
+      "status": "amended",
+      "reason": "The source states that no clinical responses occurred in patients with macroscopic disease. This is an observed zero, not missing data. The denominator (number with macroscopic disease) is not reported and should stay NA.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-93a5ddd5b6417479ac5c1b58",
+          "quote": "When macroscopic disease was present at start of vaccination treatment, no clinical responses occurred."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/0/numerator",
+          "before": "NA",
+          "after": 0
+        }
+      ]
+    },
+    {
+      "pmid": "41375005",
+      "attempt_id": "melanoma-opus-complementary-20261114-41375005-a1",
+      "finding_id": "f24",
+      "record_id": "R3:qr3-ca96df4962c1382ae5c5ee8b898170d4",
+      "baseline_record_sha256": "a9e3af064f5083d01a9424904c9f72428eb7c63a3d8f60cd24279d5ac3886dd8",
+      "status": "amended",
+      "reason": "The median PFS (not reached) row covers the 6-month ctDNA-negative/cleared group, which is explicitly N=9. The same group gives analysis_n 9 for s5. This does not apply to the OS row s3, because OS was restricted to first-line patients.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-0c9fb3617ced950217f02835",
+          "quote": "All patients with ctDNA-negativity/clearance at 6 months ( N = 9)"
+        },
+        {
+          "span_id": "span-dd916960db7feb410619b1f9",
+          "quote": "The median PFS for the ctDNA-negative group was not reached"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/0/analysis_n",
+          "before": "NA",
+          "after": 9
+        }
+      ]
+    },
+    {
+      "pmid": "41375005",
+      "attempt_id": "melanoma-opus-complementary-20261114-41375005-a1",
+      "finding_id": "f28",
+      "record_id": "R3:qr3-ca96df4962c1382ae5c5ee8b898170d4",
+      "baseline_record_sha256": "a9e3af064f5083d01a9424904c9f72428eb7c63a3d8f60cd24279d5ac3886dd8",
+      "status": "amended",
+      "reason": "The source reports that all 9 patients with ctDNA negativity/clearance at 6 months had CR/PR/SD at the 6-month assessment. That is disease control, 9/9, by RECIST 1.1.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-0c9fb3617ced950217f02835",
+          "quote": "All patients with ctDNA-negativity/clearance at 6 months ( N = 9) achieved radiographic response (CR/PR/SD) at the 6-month assessment"
+        },
+        {
+          "span_id": "span-f8cfeb2122347ea145e0279f",
+          "quote": "Response to therapy was obtained from radiological imaging based on CT/MRI according to Response Evaluation Criteria in Solid Tumors version 1.1 (RECISTv1.1) criteria."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/-",
+          "before": null,
+          "after": {
+            "id": "b2",
+            "population_id": "p6",
+            "endpoint_definition": "Radiographic response (CR/PR/SD) at the 6-month assessment by CT/MRI per RECIST v1.1",
+            "cutoff": "6-month landmark",
+            "origin": "own_report",
+            "evidence": [
+              "span-0c9fb3617ced950217f02835",
+              "span-f8cfeb2122347ea145e0279f"
+            ],
+            "arm_id": "a3",
+            "endpoint": "DCR",
+            "numerator": 9,
+            "denominator": 9,
+            "percentage": "NA",
+            "ci_lower": "NA",
+            "ci_upper": "NA",
+            "ci_level": "NA",
+            "assessment_time": 6,
+            "time_unit": "months",
+            "response_criteria": "RECIST v1.1",
+            "safety_attribution": "NA"
+          }
+        }
+      ]
+    },
+    {
+      "pmid": "25524312",
+      "attempt_id": "melanoma-opus-complementary-20261114-25524312-a1",
+      "finding_id": "f18",
+      "record_id": "R3:qr3-b031fa58f609cccaed74e43741affd68",
+      "baseline_record_sha256": "8e42849be9b608ec031d17fb53bf4fa09ffbbaa35f60b3d1b243291a92ac2806",
+      "status": "amended",
+      "reason": "This subset of patients assessed for PD-L1 is the basis of the PD-L1 relapse and RFS analyses.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "Baseline PD-L1 tumor expression was assessed on archived tumor specimens from 28 of the 33 enrolled patients."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/populations/-",
+          "before": null,
+          "after": {
+            "id": "pop-PDL1-assessed",
+            "scope": "subgroup",
+            "label": "Patients with archived tumor specimens assessed for baseline tumor PD-L1 expression",
+            "parent_id": "pop-overall",
+            "melanoma_only": "yes",
+            "cutoff": "NA",
+            "evidence": [
+              "span-896ef7d8f3102b3a9502856e",
+              "span-98f2b9165d87f825157f4988"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pmid": "25524312",
+      "attempt_id": "melanoma-opus-complementary-20261114-25524312-a1",
+      "finding_id": "f20",
+      "record_id": "R3:qr3-b031fa58f609cccaed74e43741affd68",
+      "baseline_record_sha256": "8e42849be9b608ec031d17fb53bf4fa09ffbbaa35f60b3d1b243291a92ac2806",
+      "status": "amended",
+      "reason": "PD-L1-positive stratum at the 1% threshold, used in the relapse (Fisher) and RFS analyses.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-98f2b9165d87f825157f4988",
+          "quote": "PD-L1 positivity was defined at two thresholds: ≥1% or ≥5% of tumor cells with a minimum of 100 evaluable tumor cells."
+        },
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "Relapse occurred in 5 of 18 (28%) PD-L1–positive patients and 4 of 10 (40%) PD-L1–negative patients (Fisher exact test = 0.677, two-sided)."
+        },
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "Using a 1% PD-L1 cutoff, 18 samples were positive and 10 samples were negative."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/populations/-",
+          "before": null,
+          "after": {
+            "id": "pop-PDL1-pos1",
+            "scope": "subgroup",
+            "label": "Tumor PD-L1 positive at 1% threshold (>=1% of tumor cells)",
+            "parent_id": "pop-PDL1-assessed",
+            "melanoma_only": "yes",
+            "cutoff": "NA",
+            "evidence": [
+              "span-896ef7d8f3102b3a9502856e",
+              "span-98f2b9165d87f825157f4988"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pmid": "25524312",
+      "attempt_id": "melanoma-opus-complementary-20261114-25524312-a1",
+      "finding_id": "f22",
+      "record_id": "R3:qr3-b031fa58f609cccaed74e43741affd68",
+      "baseline_record_sha256": "8e42849be9b608ec031d17fb53bf4fa09ffbbaa35f60b3d1b243291a92ac2806",
+      "status": "amended",
+      "reason": "PD-L1-negative stratum at the 1% threshold.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "Relapse occurred in 5 of 18 (28%) PD-L1–positive patients and 4 of 10 (40%) PD-L1–negative patients (Fisher exact test = 0.677, two-sided)."
+        },
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "Using a 1% PD-L1 cutoff, 18 samples were positive and 10 samples were negative."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/populations/-",
+          "before": null,
+          "after": {
+            "id": "pop-PDL1-neg1",
+            "scope": "subgroup",
+            "label": "Tumor PD-L1 negative at 1% threshold",
+            "parent_id": "pop-PDL1-assessed",
+            "melanoma_only": "yes",
+            "cutoff": "NA",
+            "evidence": [
+              "span-896ef7d8f3102b3a9502856e",
+              "span-98f2b9165d87f825157f4988"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pmid": "25524312",
+      "attempt_id": "melanoma-opus-complementary-20261114-25524312-a1",
+      "finding_id": "f24",
+      "record_id": "R3:qr3-b031fa58f609cccaed74e43741affd68",
+      "baseline_record_sha256": "8e42849be9b608ec031d17fb53bf4fa09ffbbaa35f60b3d1b243291a92ac2806",
+      "status": "amended",
+      "reason": "PD-L1-positive stratum at the 5% threshold.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "Relapse occurred in 3 of 12 (25%) PD-L1–positive patients and 6 of 16 (38%) negative patients (Fisher exact test = 0.687, two-sided)."
+        },
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "At a threshold of 5% PD-L1 staining, 12 samples were positive for PD-L1 and 16 were negative."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/populations/-",
+          "before": null,
+          "after": {
+            "id": "pop-PDL1-pos5",
+            "scope": "subgroup",
+            "label": "Tumor PD-L1 positive at 5% threshold (>=5% of tumor cells)",
+            "parent_id": "pop-PDL1-assessed",
+            "melanoma_only": "yes",
+            "cutoff": "NA",
+            "evidence": [
+              "span-896ef7d8f3102b3a9502856e",
+              "span-98f2b9165d87f825157f4988"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pmid": "25524312",
+      "attempt_id": "melanoma-opus-complementary-20261114-25524312-a1",
+      "finding_id": "f26",
+      "record_id": "R3:qr3-b031fa58f609cccaed74e43741affd68",
+      "baseline_record_sha256": "8e42849be9b608ec031d17fb53bf4fa09ffbbaa35f60b3d1b243291a92ac2806",
+      "status": "amended",
+      "reason": "PD-L1-negative stratum at the 5% threshold.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "Relapse occurred in 3 of 12 (25%) PD-L1–positive patients and 6 of 16 (38%) negative patients (Fisher exact test = 0.687, two-sided)."
+        },
+        {
+          "span_id": "span-896ef7d8f3102b3a9502856e",
+          "quote": "At a threshold of 5% PD-L1 staining, 12 samples were positive for PD-L1 and 16 were negative."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/populations/-",
+          "before": null,
+          "after": {
+            "id": "pop-PDL1-neg5",
+            "scope": "subgroup",
+            "label": "Tumor PD-L1 negative at 5% threshold",
+            "parent_id": "pop-PDL1-assessed",
+            "melanoma_only": "yes",
+            "cutoff": "NA",
+            "evidence": [
+              "span-896ef7d8f3102b3a9502856e",
+              "span-98f2b9165d87f825157f4988"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pmid": "30918950",
+      "attempt_id": "melanoma-opus-complementary-20261114-30918950-a1",
+      "finding_id": "f16",
+      "record_id": "R3:qr3-d890388aa611c12f82cab61d0d5fabb3",
+      "baseline_record_sha256": "7a7484cd72a6445401436f539899b94ef1ee7dc11173e26765ed268d1be6c783",
+      "status": "amended",
+      "reason": "Source reports a melanoma BRAF-mutant subgroup (10 patients) with its own ORR.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-18668de70b1f284e7dd36ce9",
+          "quote": "In melanoma, BRAF mutations were identified in 10 patients (46%)."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/populations/-",
+          "before": null,
+          "after": {
+            "id": "p15",
+            "scope": "subgroup",
+            "label": "BRAF-mutant melanoma (pooled across cohorts)",
+            "parent_id": "p4",
+            "melanoma_only": "yes",
+            "cutoff": "2017-09-04",
+            "evidence": [
+              "span-18668de70b1f284e7dd36ce9"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pmid": "30918950",
+      "attempt_id": "melanoma-opus-complementary-20261114-30918950-a1",
+      "finding_id": "f17",
+      "record_id": "R3:qr3-d890388aa611c12f82cab61d0d5fabb3",
+      "baseline_record_sha256": "7a7484cd72a6445401436f539899b94ef1ee7dc11173e26765ed268d1be6c783",
+      "status": "amended",
+      "reason": "Source reports a melanoma BRAF wild-type subgroup with its own ORR.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-18668de70b1f284e7dd36ce9",
+          "quote": "ORR was 40% (4/10) in those with a BRAF mutation and 50% (5/10) in those with BRAF wild-type disease."
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/populations/-",
+          "before": null,
+          "after": {
+            "id": "p16",
+            "scope": "subgroup",
+            "label": "BRAF wild-type melanoma (pooled across cohorts)",
+            "parent_id": "p4",
+            "melanoma_only": "yes",
+            "cutoff": "2017-09-04",
+            "evidence": [
+              "span-18668de70b1f284e7dd36ce9"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pmid": "30918950",
+      "attempt_id": "melanoma-opus-complementary-20261114-30918950-a1",
+      "finding_id": "f22",
+      "record_id": "R3:qr3-d890388aa611c12f82cab61d0d5fabb3",
+      "baseline_record_sha256": "7a7484cd72a6445401436f539899b94ef1ee7dc11173e26765ed268d1be6c783",
+      "status": "supplement",
+      "reason": "The melanoma expansion cohort required approximately 50% BRAF V600 mutation-positive tumors. Prior anti-CTLA-4, anti-PD-1 or anti-PD-L1 therapy was an exclusion criterion.",
+      "note": "The melanoma expansion cohort required approximately 50% BRAF V600 mutation-positive tumors. Prior anti-CTLA-4, anti-PD-1 or anti-PD-L1 therapy was an exclusion criterion.",
+      "evidence": [
+        {
+          "span_id": "span-b10be1bd538cd6618b97abd4",
+          "quote": "Key inclusion criteria included Eastern Cooperative Oncology Group performance status of 0 or 1, and measurable disease per Response Evaluation Criteria In Solid Tumors (RECIST) v1.1."
+        },
+        {
+          "span_id": "span-b10be1bd538cd6618b97abd4",
+          "quote": "prior therapy with T-cell-modulating agents (e.g. anti-cytotoxic T-lymphocyte associated protein 4, anti-PD-1, anti-PD-L1), or prior intolerance to another MEK inhibitor were excluded"
+        },
+        {
+          "span_id": "span-eb2f0415753d673a66206c06",
+          "quote": "50% of patients in the melanoma cohort were required to have BRAF -V600 mutation-positive tumors"
+        }
+      ],
+      "edits": []
+    },
+    {
+      "pmid": "33661190",
+      "attempt_id": "melanoma-opus-complementary-20261114-33661190-a1",
+      "finding_id": "f3",
+      "record_id": "R3:qr3-812a8998fb553e47a4eee02de0f152ab",
+      "baseline_record_sha256": "8a4afea0b7508926db5fdf06dcb1622514640fef39d348f0b3507725d306a296",
+      "status": "supplement",
+      "reason": "The trial used a modified Simon two-stage design and stopped after the first stage.",
+      "note": "The trial used a modified Simon two-stage design and stopped after the first stage.",
+      "evidence": [
+        {
+          "span_id": "span-ae8e417c103bcfca33b459fa",
+          "quote": "We used modified Simon’s two-stage design to investigate whether ibrutinib had a promising antitumor activity."
+        },
+        {
+          "span_id": "span-ae8e417c103bcfca33b459fa",
+          "quote": "Therefore, in the first stage, we would accrue 18 patients and suspend accrual for interim analysis for both primary and secondary clinical endpoints."
+        },
+        {
+          "span_id": "span-e7e76fcf072ae4091267aff9",
+          "quote": "Based on the prespecified clinical endpoints, the study did not proceed to the second stage."
+        }
+      ],
+      "edits": []
+    },
+    {
+      "pmid": "33661190",
+      "attempt_id": "melanoma-opus-complementary-20261114-33661190-a1",
+      "finding_id": "f7",
+      "record_id": "R3:qr3-812a8998fb553e47a4eee02de0f152ab",
+      "baseline_record_sha256": "8a4afea0b7508926db5fdf06dcb1622514640fef39d348f0b3507725d306a296",
+      "status": "amended",
+      "reason": "The source gives fuller schedule detail: 28-day cycles, continued until progression or unacceptable toxicity.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-a8c885a7c04a56a0be85def3",
+          "quote": "840mg once daily by mouth in 28-day cycles until disease progression or unacceptable toxicity"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/arms/0/nodes/0/schedule",
+          "before": "once daily",
+          "after": "once daily in 28-day cycles until disease progression or unacceptable toxicity"
+        }
+      ]
+    },
+    {
+      "pmid": "32554608",
+      "attempt_id": "melanoma-opus-complementary-20261114-32554608-a1",
+      "finding_id": "f10",
+      "record_id": "R3:qr3-b5b72a67b1da87f6621ff0d5dcc0daba",
+      "baseline_record_sha256": "5957dac911f9ae856d195e8046017842448b358a34e848b6f430fc6f55bd1869",
+      "status": "supplement",
+      "reason": "Of the 30 ipilimumab recipients, 18 received it through expanded access, three after commercialization and nine in trial CA-184-169.",
+      "note": "Of the 30 ipilimumab recipients, 18 received it through expanded access, three after commercialization and nine in trial CA-184-169.",
+      "evidence": [
+        {
+          "span_id": "span-3af4c00e6cb325552222f228",
+          "quote": "Eighteen patients received ipilimumab treatment in the Expanded Access Program, three patients after drug commercialization, and nine patients participated in the CA-184-169 trial."
+        },
+        {
+          "span_id": "span-3af4c00e6cb325552222f228",
+          "quote": "previously used to assess the predictive value of tumor-infiltrating immune cells, have been described in detail elsewhere"
+        },
+        {
+          "span_id": "span-d737396184362897116af3e9",
+          "quote": "Our study has some limitations, mainly because of its retrospective nature."
+        }
+      ],
+      "edits": []
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f15",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Grade ≥3 TEAEs in escalation monotherapy: 9 (42.9%) of 21.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with grade ≥3 TEAEs</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">9 (42.9)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">5 (33.3)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">21 (51.2)</td>"
+        },
+        {
+          "span_id": "span-1d247790b8572aa9d02f1b3d",
+          "quote": "Nine (42.9%) patients experienced grade ≥3 AEs"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/1/numerator",
+          "before": "NA",
+          "after": 9
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f17",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Any TRAE in escalation monotherapy: 13 (61.9%) of 21.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-1d247790b8572aa9d02f1b3d",
+          "quote": "13 (61.9%) patients reported TRAEs, but none were grade ≥3 or considered serious"
+        },
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with any TRAE</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">13 (61.9)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">10 (66.7)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">33 (80.5)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/4/numerator",
+          "before": "NA",
+          "after": 13
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f21",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Any TRAE in escalation combination: 10 (66.7%) of 15.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-9955f30e60f286e529b48d5c",
+          "quote": "Ten (66.7%) patients experienced any-grade TRAEs"
+        },
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with any TRAE</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">13 (61.9)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">10 (66.7)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">33 (80.5)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/10/numerator",
+          "before": "NA",
+          "after": 10
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f24",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Any TRAE in expansion combination: 33 (80.5%) of 41.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-eb0041baa17c15798644ede5",
+          "quote": "Thirty-three (80.5%) patients had any-grade TRAEs, of which six (14.6%) patients had TRAEs of grade ≥3"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/16/numerator",
+          "before": "NA",
+          "after": 33
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f25",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Grade ≥3 TRAEs in expansion combination: 6 (14.6%) of 41.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-eb0041baa17c15798644ede5",
+          "quote": "Thirty-three (80.5%) patients had any-grade TRAEs, of which six (14.6%) patients had TRAEs of grade ≥3"
+        },
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with any TRAE of grade ≥3</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">0</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">1 (6.7)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">6 (14.6)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/17/numerator",
+          "before": "NA",
+          "after": 6
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f09",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Table 1 reports 9 (60.0%) melanoma patients in the escalation combination cohort (N = 15).",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-be7971222960f70bead59534",
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination therapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion cohort A</th>"
+        },
+        {
+          "span_id": "span-be7971222960f70bead59534",
+          "quote": "Melanoma</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">11 (52.4)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">9 (60.0)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">40 (97.6)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination therapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion cohort A</th>",
+          "span_id": "span-be7971222960f70bead59534"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/sample_sizes/4/n",
+          "before": "NA",
+          "after": 9
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f10",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Table 1 reports 11 (52.4%) melanoma patients in the escalation monotherapy cohort (N = 21).",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-be7971222960f70bead59534",
+          "quote": "SAR441000 (<italic toggle=\"yes\">N</italic> = 21)</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">SAR441000 plus cemiplimab (<italic toggle=\"yes\">N</italic> = 15)</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">SAR441000 plus cemiplimab (<italic toggle=\"yes\">N</italic> = 41)</th>"
+        },
+        {
+          "span_id": "span-be7971222960f70bead59534",
+          "quote": "Melanoma</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">11 (52.4)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">9 (60.0)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">40 (97.6)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination therapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion cohort A</th>",
+          "span_id": "span-be7971222960f70bead59534"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/sample_sizes/5/n",
+          "before": "NA",
+          "after": 11
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f11",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Table 1 reports 40 (97.6%) melanoma patients in expansion cohort A (N = 41).",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-be7971222960f70bead59534",
+          "quote": "Melanoma</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">11 (52.4)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">9 (60.0)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">40 (97.6)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination therapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion cohort A</th>",
+          "span_id": "span-be7971222960f70bead59534"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/sample_sizes/6/n",
+          "before": "NA",
+          "after": 40
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f16",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Serious TEAE in escalation monotherapy: 11 (52.4%) of 21 (Table 2A, first column).",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>"
+        },
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with any serious TEAE</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">11 (52.4)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">6 (40.0)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">26 (63.4)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/2/numerator",
+          "before": "NA",
+          "after": 11
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f18",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Grade ≥3 TRAEs in escalation monotherapy explicitly reported as 0 (none); this is a reported zero, not missing data (percentage correspondingly 0).",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with any TRAE of grade ≥3</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">0</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">1 (6.7)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">6 (14.6)</td>"
+        },
+        {
+          "span_id": "span-1d247790b8572aa9d02f1b3d",
+          "quote": "13 (61.9%) patients reported TRAEs, but none were grade ≥3 or considered serious"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/5/numerator",
+          "before": "NA",
+          "after": 0
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f19",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Grade ≥3 TEAEs in escalation combination: 5 (33.3%) of 15 (Table 2A, second column).",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with grade ≥3 TEAEs</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">9 (42.9)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">5 (33.3)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">21 (51.2)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/7/numerator",
+          "before": "NA",
+          "after": 5
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f20",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Serious TEAE in escalation combination: 6 (40.0%) of 15.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with any serious TEAE</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">11 (52.4)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">6 (40.0)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">26 (63.4)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/8/numerator",
+          "before": "NA",
+          "after": 6
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f22",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Serious TEAE in expansion combination: 26 (63.4%) of 41.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with any serious TEAE</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">11 (52.4)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">6 (40.0)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">26 (63.4)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/14/numerator",
+          "before": "NA",
+          "after": 26
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f23",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "TEAE leading to treatment discontinuation in expansion combination: 8 (19.5%) of 41.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-88dd15206cc572e865202292",
+          "quote": "Patients with any TEAE leading to treatment discontinuation<xref rid=\"t2n2\" ref-type=\"table-fn\"><sup>b</sup></xref></td><td align=\"left\" rowspan=\"1\" colspan=\"1\">2 (9.5)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">1 (6.7)</td><td align=\"left\" rowspan=\"1\" colspan=\"1\">8 (19.5)</td>"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/15/numerator",
+          "before": "NA",
+          "after": 8
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f26",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "RECIST 1.1 CR explicitly absent in escalation combination cohort; BOR distribution (1 PR, 3 SD, 11 PD) accounts for all 15 evaluated patients. Reported zero, not missing.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-2d91fbb42f9c1b3becacc4ef",
+          "quote": "In the escalation combination cohort, efficacy response was evaluated in 15 patients. One (6.7%) patient achieved PR, 3 (20.0%) had SD, and 11 (73.3%) had PD as the BOR."
+        },
+        {
+          "span_id": "span-2d91fbb42f9c1b3becacc4ef",
+          "quote": "CR was not reported in any escalation monotherapy or combination therapy patients per RECIST 1.1."
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/21/numerator",
+          "before": "NA",
+          "after": 0
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f27",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "iRECIST ORR 13.3% in escalation combination comprises one iPR and one iCR (mutually exclusive confirmed BOR categories), i.e., 2 responders; consistent with 13.3% of 15. Proposal for validation.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-6ab06fb08ec49c6b31fc98c5",
+          "quote": "patients in the escalation combination cohort achieved an ORR of 13.3%"
+        },
+        {
+          "span_id": "span-6ab06fb08ec49c6b31fc98c5",
+          "quote": "One patient had immune PR (iPR) and one patient had immune CR as the confirmed BOR"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/22/numerator",
+          "before": "NA",
+          "after": 2
+        }
+      ]
+    },
+    {
+      "pmid": "40152791",
+      "attempt_id": "melanoma-opus-complementary-20261114-40152791-a2",
+      "finding_id": "f31",
+      "record_id": "R3:qr3-a9cf3587261f6668e6cd9b273f085b96",
+      "baseline_record_sha256": "06be37572971fafc78fa632c3bed1cbfaaa2270fbbee4e516ec9c911ddcd8e53",
+      "status": "amended",
+      "reason": "Both iRECIST responders (iPR and iCR) in the escalation combination cohort had malignant melanoma; melanoma-subgroup response denominator not explicitly reported.",
+      "note": "",
+      "evidence": [
+        {
+          "span_id": "span-6ab06fb08ec49c6b31fc98c5",
+          "quote": "One patient had immune PR (iPR) and one patient had immune CR as the confirmed BOR (Supplementary Table S7). Both patients had malignant melanoma"
+        },
+        {
+          "quote": "Escalation monotherapy</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Escalation combination</th><th align=\"left\" rowspan=\"1\" colspan=\"1\">Expansion combination</th>",
+          "span_id": "span-88dd15206cc572e865202292"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/binary/25/numerator",
+          "before": "NA",
+          "after": 2
+        }
+      ]
+    },
+    {
+      "pmid": "39465821",
+      "attempt_id": "melanoma-opus-complementary-20261114-39465821-a1",
+      "finding_id": "f-surv-low-remove",
+      "record_id": "R3:qr3-af6bc5a871cbdc850acff65efc7317e3",
+      "baseline_record_sha256": "9d537a9f3cab1dd5b3f904e133b179a2ee1174db41e1b90b918b182b481775af",
+      "status": "amended",
+      "note": "The reported medians of 6.9 and 3.4 months belong to the bladder cancer cohort. The melanoma cohort has a separate OS hazard ratio and no reported median for either CAMKK2 subgroup.",
+      "reason": "The reported medians of 6.9 and 3.4 months belong to the bladder cancer cohort. The melanoma cohort has a separate OS hazard ratio and no reported median for either CAMKK2 subgroup.",
+      "evidence": [
+        {
+          "quote": "In the GSE176307 cohort of BLCA patients, those with low CAMKK2 expression had a median OS of 6.9 months, which was significantly longer than the 3.4 months observed in subjects with high CAMKK2 expression",
+          "span_id": "span-ee16741ec800bc13bf0f7cd9"
+        },
+        {
+          "quote": "In the SKCM GSE78220 cohort, patients with higher CAMKK2 mRNA levels had significantly shorter overall survival compared to patients with lower CAMKK2 mRNA levels (log-rank P = .026; HR = 3.73, 95% CI 1.12–12.36)",
+          "span_id": "span-ee16741ec800bc13bf0f7cd9"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/0/estimate",
+          "before": 6.9,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/0/median_status",
+          "before": "reached",
+          "after": "NA"
+        }
+      ]
+    },
+    {
+      "pmid": "39465821",
+      "attempt_id": "melanoma-opus-complementary-20261114-39465821-a1",
+      "finding_id": "f-surv-high-remove",
+      "record_id": "R3:qr3-af6bc5a871cbdc850acff65efc7317e3",
+      "baseline_record_sha256": "9d537a9f3cab1dd5b3f904e133b179a2ee1174db41e1b90b918b182b481775af",
+      "status": "amended",
+      "note": "The reported medians of 6.9 and 3.4 months belong to the bladder cancer cohort. The melanoma cohort has a separate OS hazard ratio and no reported median for either CAMKK2 subgroup.",
+      "reason": "The reported medians of 6.9 and 3.4 months belong to the bladder cancer cohort. The melanoma cohort has a separate OS hazard ratio and no reported median for either CAMKK2 subgroup.",
+      "evidence": [
+        {
+          "quote": "In the GSE176307 cohort of BLCA patients, those with low CAMKK2 expression had a median OS of 6.9 months, which was significantly longer than the 3.4 months observed in subjects with high CAMKK2 expression",
+          "span_id": "span-ee16741ec800bc13bf0f7cd9"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/1/estimate",
+          "before": 3.4,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/1/median_status",
+          "before": "reached",
+          "after": "NA"
+        }
+      ]
+    },
+    {
+      "pmid": "42526429",
+      "attempt_id": "melanoma-opus-complementary-20261114-42526429-a2",
+      "finding_id": "f16",
+      "record_id": "R3:qr3-a6d89d53f3cf81c96467d0103d4d850a",
+      "baseline_record_sha256": "71cc31c4fe0dd230a307f24d331996b410a117bcb800824f4608bded067c39b9",
+      "status": "amended",
+      "note": "",
+      "reason": "The report gives a median OS of 32 months for this analysis.",
+      "evidence": [
+        {
+          "span_id": "span-55a3745e5c92f64ddccb50e3",
+          "quote": "In the intention-to-treat analysis including all enrolled 60 patients, the median progression-free survival (PFS) was 9.2 months (95% CI: 7.3–16), and the median overall survival (OS) was 32 months (95% CI: 22–not reached)"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/1/estimate",
+          "before": "NA",
+          "after": 32
+        },
+        {
+          "field_path": "/survival/1/time",
+          "before": 32,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/1/time_unit",
+          "before": "months",
+          "after": "NA"
+        }
+      ]
+    },
+    {
+      "pmid": "42526429",
+      "attempt_id": "melanoma-opus-complementary-20261114-42526429-a2",
+      "finding_id": "f17",
+      "record_id": "R3:qr3-a6d89d53f3cf81c96467d0103d4d850a",
+      "baseline_record_sha256": "71cc31c4fe0dd230a307f24d331996b410a117bcb800824f4608bded067c39b9",
+      "status": "amended",
+      "note": "",
+      "reason": "The report gives a median PFS of 10 months for this analysis.",
+      "evidence": [
+        {
+          "quote": "Among patients who received TIL infusion (n=50) the median PFS was 10 months (95% CI: 7.6–43) and median OS was 47 months (95% CI: 26–not reached), calculated from the time of enrollment as the starting point for the analyses",
+          "span_id": "span-55a3745e5c92f64ddccb50e3"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/2/estimate",
+          "before": "NA",
+          "after": 10
+        },
+        {
+          "field_path": "/survival/2/time",
+          "before": 10,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/2/time_unit",
+          "before": "months",
+          "after": "NA"
+        }
+      ]
+    },
+    {
+      "pmid": "42526429",
+      "attempt_id": "melanoma-opus-complementary-20261114-42526429-a2",
+      "finding_id": "f18",
+      "record_id": "R3:qr3-a6d89d53f3cf81c96467d0103d4d850a",
+      "baseline_record_sha256": "71cc31c4fe0dd230a307f24d331996b410a117bcb800824f4608bded067c39b9",
+      "status": "amended",
+      "note": "",
+      "reason": "The report gives a median OS of 47 months for this analysis.",
+      "evidence": [
+        {
+          "span_id": "span-55a3745e5c92f64ddccb50e3",
+          "quote": "In the intention-to-treat analysis including all enrolled 60 patients, the median progression-free survival (PFS) was 9.2 months (95% CI: 7.3–16), and the median overall survival (OS) was 32 months (95% CI: 22–not reached) ( Fig. 1E , F ). Among patients who received TIL infusion (n=50) the median PFS was 10 months (95% CI: 7.6–43) and median OS was 47 months (95% CI: 26–not reached), calculated from the time of enrollment as the starting point for the analyses"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/3/estimate",
+          "before": "NA",
+          "after": 47
+        },
+        {
+          "field_path": "/survival/3/time",
+          "before": 47,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/3/time_unit",
+          "before": "months",
+          "after": "NA"
+        }
+      ]
+    },
+    {
+      "pmid": "42526429",
+      "attempt_id": "melanoma-opus-complementary-20261114-42526429-a2",
+      "finding_id": "f19",
+      "record_id": "R3:qr3-a6d89d53f3cf81c96467d0103d4d850a",
+      "baseline_record_sha256": "71cc31c4fe0dd230a307f24d331996b410a117bcb800824f4608bded067c39b9",
+      "status": "amended",
+      "note": "",
+      "reason": "The report gives a median PFS of 8.4 months for this analysis.",
+      "evidence": [
+        {
+          "quote": "The median PFS was 8.4 months (95% CI: 5.5–41) and median OS was 46 months (95% CI: 22–not reached), calculated from the time of TIL infusion as the starting point for the analyses",
+          "span_id": "span-55a3745e5c92f64ddccb50e3"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/4/estimate",
+          "before": "NA",
+          "after": 8.4
+        },
+        {
+          "field_path": "/survival/4/time",
+          "before": 8.4,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/4/time_unit",
+          "before": "months",
+          "after": "NA"
+        }
+      ]
+    },
+    {
+      "pmid": "42526429",
+      "attempt_id": "melanoma-opus-complementary-20261114-42526429-a2",
+      "finding_id": "f20",
+      "record_id": "R3:qr3-a6d89d53f3cf81c96467d0103d4d850a",
+      "baseline_record_sha256": "71cc31c4fe0dd230a307f24d331996b410a117bcb800824f4608bded067c39b9",
+      "status": "amended",
+      "note": "",
+      "reason": "The report gives a median OS of 46 months for this analysis.",
+      "evidence": [
+        {
+          "span_id": "span-55a3745e5c92f64ddccb50e3",
+          "quote": "In the intention-to-treat analysis including all enrolled 60 patients, the median progression-free survival (PFS) was 9.2 months (95% CI: 7.3–16), and the median overall survival (OS) was 32 months (95% CI: 22–not reached) ( Fig. 1E , F ). Among patients who received TIL infusion (n=50) the median PFS was 10 months (95% CI: 7.6–43) and median OS was 47 months (95% CI: 26–not reached), calculated from the time of enrollment as the starting point for the analyses ( Fig. S1A , B ). The median PFS was 8.4 months (95% CI: 5.5–41) and median OS was 46 months (95% CI: 22–not reached), calculated from the time of TIL infusion as the starting point for the analyses"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/5/estimate",
+          "before": "NA",
+          "after": 46
+        },
+        {
+          "field_path": "/survival/5/time",
+          "before": 46,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/5/time_unit",
+          "before": "months",
+          "after": "NA"
+        }
+      ]
+    },
+    {
+      "pmid": "42526429",
+      "attempt_id": "melanoma-opus-complementary-20261114-42526429-a2",
+      "finding_id": "f23",
+      "record_id": "R3:qr3-a6d89d53f3cf81c96467d0103d4d850a",
+      "baseline_record_sha256": "71cc31c4fe0dd230a307f24d331996b410a117bcb800824f4608bded067c39b9",
+      "status": "amended",
+      "note": "",
+      "reason": "The report gives a median PFS of 41 months for this analysis.",
+      "evidence": [
+        {
+          "quote": "Finally, the absolute number of infused LAG-3 + TIL was significantly associated with improved progression-free survival (median PFS 41 months [95% CI, 9.0–NR] vs. 2.9 months [95% CI, 2.3–9.3]; p=0.002)",
+          "span_id": "span-550295a4b76530d890a0f720"
+        },
+        {
+          "quote": "Patients were initially stratified using a median split of infused CD3 + LAG3 + cell counts, corresponding to a threshold of 22.3 × 10 9 cells.",
+          "span_id": "span-1f09f90a047aa1907c593929"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/8/estimate",
+          "before": "NA",
+          "after": 41
+        },
+        {
+          "field_path": "/survival/8/time",
+          "before": 41,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/8/time_unit",
+          "before": "months",
+          "after": "NA"
+        }
+      ]
+    },
+    {
+      "pmid": "42526429",
+      "attempt_id": "melanoma-opus-complementary-20261114-42526429-a2",
+      "finding_id": "f24",
+      "record_id": "R3:qr3-a6d89d53f3cf81c96467d0103d4d850a",
+      "baseline_record_sha256": "71cc31c4fe0dd230a307f24d331996b410a117bcb800824f4608bded067c39b9",
+      "status": "amended",
+      "note": "",
+      "reason": "The report gives a median PFS of 2.9 months for this analysis.",
+      "evidence": [
+        {
+          "span_id": "span-550295a4b76530d890a0f720",
+          "quote": "Finally, the absolute number of infused LAG-3 + TIL was significantly associated with improved progression-free survival (median PFS 41 months [95% CI, 9.0–NR] vs. 2.9 months [95% CI, 2.3–9.3]; p=0.002)"
+        },
+        {
+          "quote": "Patients were initially stratified using a median split of infused CD3 + LAG3 + cell counts, corresponding to a threshold of 22.3 × 10 9 cells.",
+          "span_id": "span-1f09f90a047aa1907c593929"
+        }
+      ],
+      "edits": [
+        {
+          "field_path": "/survival/9/estimate",
+          "before": "NA",
+          "after": 2.9
+        },
+        {
+          "field_path": "/survival/9/time",
+          "before": 2.9,
+          "after": "NA"
+        },
+        {
+          "field_path": "/survival/9/time_unit",
+          "before": "months",
+          "after": "NA"
+        }
+      ]
+    }
+  ]
+}

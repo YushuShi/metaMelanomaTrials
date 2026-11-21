@@ -1,7 +1,7 @@
 (function(root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory();
-  else root.NewFindings = factory();
-})(globalThis, function() {
+  if (typeof module === 'object' && module.exports) module.exports = factory(() => require('./app.js'));
+  else root.NewFindings = factory(() => root.MetaSampleSizeCharts);
+})(globalThis, function(studies) {
   'use strict';
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function formatDate(value) {
@@ -10,24 +10,46 @@
     const date = new Date(`${parts[0]}-${parts[1]}-${parts[2] || '01'}T00:00:00Z`);
     return date.toLocaleDateString('en-US',{timeZone:'UTC',year:'numeric',month:'short',...(parts[2] ? {day:'numeric'} : {})});
   }
+  const value = text => text && text !== 'NA' ? escape(text) : '—';
+
   function resultHTML(finding) {
-    const context = [finding.regimen, finding.group].filter(Boolean).map(escape).join(' · ');
-    return `<div class="finding-result"><strong>${escape(finding.endpoint)}</strong> ${escape(finding.value)}${context ? `<div><small class="finding-context">${context}</small></div>` : ''}</div>`;
+    const legacyContext = [finding.regimen, finding.group].filter(Boolean).join(' · ');
+    return `<div class="finding-result"><strong>${escape(finding.endpoint)}</strong> ${escape(finding.value)}${legacyContext ? `<small>${escape(legacyContext)}</small>` : ''}</div>`;
   }
+
+  function resultsHTML(effects, note) {
+    if (!effects.length) return value(note);
+    const [first, ...rest] = effects;
+    const more = rest.length ? `<details><summary>${rest.length} more ${rest.length === 1 ? 'result' : 'results'}</summary>${rest.map(resultHTML).join('')}</details>` : '';
+    return resultHTML(first) + more;
+  }
+
+  function sampleCells(samples) {
+    return (samples || []).map(sample => `<div>${sample.label ? `<small>${escape(sample.label)}</small>` : ''}N=${escape(sample.sample_size)}${sample.breakdown ? ` (${escape(sample.breakdown)})` : ''}</div>`).join('') || '—';
+  }
+
   function reportHTML(report) {
     if (!/^\d+$/.test(report.pmid)) throw new Error('Recent report has an invalid PMID');
-    const [first,...rest] = report.findings;
-    const results = first ? resultHTML(first) : escape(report.abstract_note || 'No quantitative outcome available in the study table.');
-    const more = rest.length ? `<details><summary>${rest.length} more ${rest.length===1?'result':'results'}</summary>${rest.map(resultHTML).join('')}</details>` : '';
-    const source = ['Online publication','Print publication'].includes(report.date_basis) ? '' : `<div><small>${escape(report.date_basis)}</small></div>`;
-    return `<tr><td><time datetime="${escape(report.date)}">${escape(formatDate(report.date))}</time>${source}</td><td><a href="https://pubmed.ncbi.nlm.nih.gov/${report.pmid}/" target="_blank" rel="noopener noreferrer">${escape(report.title)}</a><div><small>PMID ${report.pmid}</small></div></td><td>${results}${more}</td></tr>`;
+    const groups = report.groups?.length ? report.groups : [{effects:report.findings || []}];
+    const source = ['Online publication','Print publication'].includes(report.date_basis) ? '' : `<small>${escape(report.date_basis)}</small>`;
+    const mark = report.abstract_only ? '<sup class="abstract-only-mark" title="Results based on abstract only" aria-label="Abstract only">*</sup>' : '';
+    const study = `<a href="https://pubmed.ncbi.nlm.nih.gov/${report.pmid}/" target="_blank" rel="noopener noreferrer">${escape(report.title)}</a>${mark}<small>PMID ${report.pmid}</small>`;
+    const cells = [study,value(report.author),`<time datetime="${escape(report.date)}">${escape(formatDate(report.date))}</time>${source}`,value(report.trial),value(report.nct)];
+    const citation = cells.map(cell => `<td rowspan="${groups.length}">${cell}</td>`).join('');
+    return groups.map((group, index) => `<tr data-pmid="${report.pmid}"${report.nontrial ? ' class="study-nontrial"' : ''}>
+      ${index ? '' : citation}<td>${value(group.group)}</td><td>${studies().savedTreatmentTag(group.comparator,false,group.comparator_n)}</td>
+      <td>${studies().savedTreatmentTag(group.intervention,group.add_on,group.intervention_n)}</td><td>${sampleCells(group.samples)}</td>
+      <td>${resultsHTML(group.effects, index === 0 && report.abstract_note)}</td></tr>`).join('');
   }
+
   function render(host,payload) {
-    if (payload?.schema_version!==1 || !Array.isArray(payload.reports)) throw new Error('New findings could not be read.');
+    if (![1,2].includes(payload?.schema_version) || !Array.isArray(payload.reports)) throw new Error('New findings could not be read.');
     const heading = '<div class="panel-heading"><h2>New findings</h2></div>';
     const count = payload.reports.length;
     const intro = count ? `${count} retained ${count===1?'report':'reports'} published from October 1, 2026.` : 'No retained reports have a qualifying publication date from October 1, 2026.';
-    host.innerHTML = heading + `<p class="evidence-tab-note">${intro}</p>` + (count ? `<div class="table-scroll"><table class="evidence-tab-table"><thead><tr><th scope="col">Published</th><th scope="col">Study</th><th scope="col">Reported findings</th></tr></thead><tbody>${payload.reports.map(reportHTML).join('')}</tbody></table></div>` : '');
+    const headings = ['Study','First author','Published','Trial name','NCT number','Group','Comparator','Intervention','Sample size','Effect size (CI)'];
+    const table = count ? `<div class="table-scroll"><table class="evidence-tab-table study-evidence-grid"><thead><tr>${headings.map(h => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${payload.reports.map(reportHTML).join('')}</tbody></table></div>` : '';
+    host.innerHTML = heading + `<p class="evidence-tab-note">${intro}</p>` + table;
   }
   return {render};
 });
