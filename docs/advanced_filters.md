@@ -9,7 +9,9 @@ Underpowered studies headings. Selecting a subgroup on the map keeps the
 radial and branch layouts intact. A node stays colored when its exact regimen
 has matching evidence. A comparison arrow stays colored when the selected
 endpoint has eligible evidence for that comparison. Underpowered studies applies
-the selection to the population for each effect estimate.
+the selection to the population for each effect estimate. Its required events
+and participant counts use the target power saved in **Settings**, which
+defaults to 80%. The tab keeps separate cutoffs for events and participants.
 
 The controls are treatment setting, disease stage, melanoma type, BRAF mutation
 status, advanced-disease treatment line and baseline LDH. Stage I–IV includes

@@ -23,6 +23,18 @@ test('NIBIT-M2 primary and follow-up OS results agree with the exact maintenance
   const csv=charts.studyTableCSV(sequence,{registry});
   for(const expected of ['34112708','38271746','0.440 (0.220–0.870)','0.430 (0.220–0.860)','(Ipilimumab + Nivolumab) → Nivolumab'])
     assert.ok(csv.includes(expected),expected);
+  const regimen=charts.completeArmKey({kind:'treatment_comparison',intervention_label:'Ipilimumab + Nivolumab followed by Nivolumab'},'intervention');
+  const reversed=charts.filterStudies(projected.studies,{evidence_registry:registry,endpoint:'overall_survival',measure:'HR',
+    comparator:'exact-regimen:'+regimen,intervention:'exact-regimen:agent:fotemustine'});
+  assert.equal(reversed.length,2);
+  const inverseCsv=charts.studyTableCSV(reversed,{registry});
+  for(const value of ['2.326 (1.163–4.545) · inverted','2.273 (1.149–4.545) · inverted'])
+    assert.ok(inverseCsv.includes(value),inverseCsv);
+  for(const study of reversed) {
+    const row=charts.studyTablePresentationRows(study,{registry})[0];
+    assert.match(row.comparator_label,/Ipilimumab.*Nivolumab.*→ Nivolumab/);
+    assert.equal(row.intervention_label,'Fotemustine');
+  }
   const followup=sequence.find(m=>m.study.pmid==='38271746'),result=followup.results[0];
   assert.equal(result.analysis_n.value,50);
   assert.equal(charts.abstractOnly(followup.study),false);
@@ -32,4 +44,31 @@ test('NIBIT-M2 primary and follow-up OS results agree with the exact maintenance
   const repeat=projection.apply(projected.studies,registry,snapshot);
   assert.equal(repeat.studies.find(s=>s.pmid==='38271746').details.quantitative_results.length,followup.study.details.quantitative_results.length);
   assert.equal(JSON.stringify([articles,clinicalArticles]),before);
+});
+
+test('CheckMate 066 shows its comparative HR in either direction without assigning the arm Ns as the outcome denominator',()=>{
+  const snapshot=require('../dist/data/quantitative_extraction.json'), pmid='32997575';
+  const source=snapshot.articles.find(article=>article.pmid===pmid);
+  const evidence=snapshot.clinical_evidence;
+  const {studies,evidence_registry}=clinical.merge([],{}, {...evidence,articles:evidence.articles.filter(a=>a.pmid===pmid)});
+  const prepared=regimens.prepareStudies(studies.map(study=>({...study,quantitative_only:true,
+    details:{...study.details,quantitative_extraction:source.records}})));
+  const projected=projection.apply(prepared,evidence_registry,snapshot),registry=projected.evidence_registry;
+  for(const [comparator,intervention,expected] of [
+    ['dacarbazine','nivolumab','0.500 (0.400–0.630)'],
+    ['nivolumab','dacarbazine','2.000 (1.587–2.500) · inverted'],
+  ]){
+    const [match]=charts.filterStudies(projected.studies,{evidence_registry:registry,endpoint:'overall_survival',measure:'HR',
+      comparator:'exact-regimen:agent:'+comparator,intervention:'exact-regimen:agent:'+intervention});
+    assert.equal(match.results[0].analysis_n.value,null);
+    const csv=charts.studyTableCSV([match],{registry});
+    for(const text of ['Nivolumab (N=206)','Dacarbazine (N=205)',expected])assert.ok(csv.includes(text),csv);
+    const [row]=charts.studyTablePresentationRows(match,{registry});
+    const withoutArmCounts={...row,paired_arm_context:false,intervention_n:null,comparator_n:null};
+    const noCounts=charts.studyTablePresentation({...match,...withoutArmCounts},{registry});
+    assert.equal(noCounts.samples.length,0);
+    assert.ok(noCounts.effects.some(effect=>effect.value===expected));
+    const withoutN=charts.studyTableCSV([{...match,presentation_rows:[withoutArmCounts]}],{registry});
+    assert.ok(withoutN.includes('"NA","OS · HR: '+expected+'"'),withoutN);
+  }
 });

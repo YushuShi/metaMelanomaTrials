@@ -247,7 +247,7 @@ test('indirect node selection preserves a disabled bridge; the dotted comparison
   const {view}=mount(netGraph(), {loadNetworkPublications:()=>{publicationsLoaded++; return Promise.resolve(new Map());}});
   view.setBranch('all'); view.indirect.toggle.click(); await nextFrame();
   const indirect=view.indirect;
-  assert.equal(indirect.toggle.textContent,'Compare two treatments');
+  assert.equal(indirect.toggle.textContent,'Compare two treatments indirectly');
   activate(view.nodeElements.get('agent:a'));
   assert.equal(indirect.first.regimen,'agent:a');
   assert.equal(view.nodeElements.get('agent:b').getAttribute('aria-disabled'),'true');
@@ -263,7 +263,8 @@ test('indirect node selection preserves a disabled bridge; the dotted comparison
   assert.equal(radialPaths.children[0].textContent,'Evidence pathways');
   assert.equal(radialPaths.children[1].children.length,0);
   assert.match(indirect.panel.textContent,/Hazard ratio for Agent A relative to Agent C/);
-  assert.match(indirect.panel.textContent,/Trial 111/); assert.match(indirect.panel.textContent,/Trial 222/);
+  assert.doesNotMatch(indirect.panel.textContent,/Supporting evidence/);
+  assert.equal(withClass(view.world,'tm-network-arrow-label')[0].textContent,'HR 0.778');
   assert.equal(view.nodeElements.get('agent:b').classList.contains('tm-network-bridge'),true);
   view.setBranch('agent:b');
   assert.equal(indirect.first.regimen,'agent:a'); assert.equal(indirect.second.regimen,'agent:c');
@@ -271,6 +272,16 @@ test('indirect node selection preserves a disabled bridge; the dotted comparison
   branchPaths.open=true; branchPaths.dispatchEvent({type:'toggle'});
   assert.equal(withClass(branchPaths,'network-route-table').length,1);
   assert.match(withClass(branchPaths,'network-route-estimate')[0].textContent,/Pathway-specific HR 0.778/);
+  assert.match(branchPaths.textContent,/Trial 111/); assert.match(branchPaths.textContent,/Trial 222/);
+  const include=withClass(branchPaths,'network-route-include')[0];assert.equal(include.checked,true);
+  include.checked=false;include.dispatchEvent({type:'change'});
+  assert.match(indirect.panel.textContent,/Select at least one pathway/);
+  assert.match(withClass(indirect.panel,'tm-network-selection-note')[0].textContent,/0 of 1 pathway included/);
+  assert.equal(withClass(indirect.panel,'tm-network-weighting').length,0);
+  assert.equal(withClass(view.world,'tm-network-overlay').length,0);
+  include.checked=true;include.dispatchEvent({type:'change'});
+  assert.equal(indirect.fit.available,true);
+  assert.equal(withClass(indirect.panel,'tm-network-selection-note').length,0);
   await nextFrame();
   const loadsAfterOpening=publicationsLoaded;
   assert.equal(withClass(view.world,'tm-network-overlay').length,1);
@@ -295,6 +306,34 @@ test('indirect node selection preserves a disabled bridge; the dotted comparison
   indirect.toggle.click();
   assert.equal(view.nodeElements.get('agent:a').getAttribute('aria-disabled'),null);
   view.nodeElements.get('agent:a').click(); assert.equal(view.selectedId,'agent:a');
+});
+
+test('unchecking one of two pathways updates the map estimate, required events, and arrow together',async()=>{
+  const graph=netGraph();
+  graph.comparisons.push(networkTrial('444','agent:a','agent:d',.4),networkTrial('555','agent:c','agent:d',.9));
+  const {view}=mount(graph), indirect=view.indirect;
+  view.setBranch('all'); indirect.toggle.click(); await nextFrame();
+  view.nodeElements.get('agent:a').click(); view.nodeElements.get('agent:c').click(); await nextFrame();
+  const number=()=>withClass(indirect.panel,'tm-network-plan')[0].textContent;
+  const arrow=()=>withClass(view.world,'tm-network-arrow-label')[0].textContent;
+  const initial={number:number(),arrow:arrow()};
+  const details=withClass(indirect.panel,'tm-network-pathways')[0];
+  details.open=true; details.dispatchEvent({type:'toggle'});
+  const choices=withClass(details,'network-route-include');
+  assert.equal(choices.length,2);
+  choices[0].checked=false; choices[0].dispatchEvent({type:'change'});
+  assert.match(withClass(indirect.panel,'tm-network-selection-note')[0].textContent,/1 of 2 pathways included/);
+  assert.equal(withClass(indirect.panel,'tm-network-fit-label')[0].textContent,'Pathway-weighted sensitivity estimate');
+  assert.match(withClass(indirect.panel,'tm-network-weighting')[0].textContent,/Pathway weighting/);
+  assert.match(withClass(indirect.panel,'tm-network-benchmark')[0].textContent,/All pathways, same weighting · HR .+95% CI.+E=/);
+  assert.equal(withClass(indirect.panel,'tm-network-diagnostics')[0].hidden,true);
+  assert.match(withClass(indirect.panel,'tm-network-estimate-value')[0].textContent,/HR 0\.444/);
+  assert.equal(arrow(),'HR 0.444'); assert.notEqual(number(),initial.number);
+  choices[0].checked=true; choices[0].dispatchEvent({type:'change'});
+  assert.deepEqual({number:number(),arrow:arrow()},initial);
+  assert.equal(withClass(indirect.panel,'tm-network-selection-note').length,0);
+  assert.equal(withClass(indirect.panel,'tm-network-weighting').length,0);
+  assert.equal(withClass(indirect.panel,'tm-network-diagnostics')[0].hidden,false);
 });
 
 test('indirect mode clears stale work on clinical changes, rejects old network responses, and surfaces loading failure',async()=>{
@@ -343,6 +382,17 @@ test('ambiguous visual nodes select a complete regimen before computing a compar
   assert.equal(indirect.panel.hidden,true);
 });
 
+test('the sole eligible second course is selected directly for a multi-course node',async()=>{
+  const g=netGraph(),extra=networkTrial('445','agent:c','agent:d',.9);
+  extra.intervention={...extra.intervention,network_regimen_id:'sequence:c_then_control',network_regimen_label:'Agent C → Control'};
+  g.comparisons.push(extra);
+  const {view}=mount(g);view.setBranch('all');const indirect=view.indirect;
+  indirect.toggle.click();await nextFrame();view.nodeElements.get('agent:a').click();
+  view.nodeElements.get('agent:c').click();await nextFrame();
+  assert.equal(indirect.choiceBox,null);assert.equal(indirect.second.regimen,'agent:c');
+  assert.equal(indirect.fit.available,true);
+});
+
 test('saved estimates cannot replace a subsequent filtered target while its classifications are loading',async()=>{
   const graph=netGraph(); graph.content_sha256='network-fixture';
   let resolveFit,retries=0,lookups=[];
@@ -380,7 +430,8 @@ test('an observational head-to-head estimate is displayed in selection order alo
   const details=withClass(indirect.panel,'tm-network-observational')[0];
   assert.ok(details); assert.match(details.textContent,/Observational head-to-head evidence/);
   assert.match(details.textContent,/Agent A versus Agent C/); assert.match(details.textContent,/HR 1.250 \(95% CI 1.042–1.562\)/);
-  assert.match(indirect.panel.textContent,/Supporting evidence · 2 randomized trials/);
+  assert.equal(indirect.selectedPair.trials.length,2);
+  assert.doesNotMatch(indirect.panel.textContent,/Supporting evidence/);
   assert.ok(Math.abs(indirect.fit.estimate-.7/.9)<1e-9);
   withClass(details,'tm-text-button')[0].click(); assert.equal(opened,'555');
 });

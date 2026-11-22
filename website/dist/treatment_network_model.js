@@ -82,7 +82,7 @@
   }
 
   // Whiten each complete sampling block, then pool all trial information simultaneously.
-  function gls(blocks, arms, tau2) {
+  function gls(blocks, arms, tau2, target) {
     const columns = arms.slice(1), p = columns.length, info = matrix(p), xy = zeros(p);
     const residualInputs = [];
     let logVariance = 0;
@@ -96,7 +96,7 @@
         xy[i] += dot(wx[i], wy);
         for (let j = 0; j <= i; j++) info[i][j] += dot(wx[i], wx[j]);
       }
-      residualInputs.push({wy, wx});
+      residualInputs.push({wy, wx, lower});
       logVariance += logDet(lower);
     }
     const lowerInfo = cholesky(info, 'No connected, estimable network spans the selected regimens.');
@@ -109,7 +109,41 @@
         Q += residual * residual;
       }
     }
-    return {coefficients, lowerInfo, Q, deviance: logVariance + logDet(lowerInfo) + Q};
+    const result={coefficients, lowerInfo, Q, deviance: logVariance + logDet(lowerInfo) + Q};
+    if(target) {
+      // With fixed covariance, a target log contrast is a linear combination
+      // of the observed contrasts. These weights also propagate shared trials.
+      const v=forward(lowerInfo,target), direction=backward(lowerInfo,v);
+      result.logEstimate=dot(target,coefficients);
+      result.variance=dot(v,v);
+      result.weights=residualInputs.map(({wy,wx,lower})=>
+        backward(lower,wy.map((_,i)=>direction.reduce((value,c,j)=>value+c*wx[j][i],0))));
+    }
+    return result;
+  }
+
+  function pathwayContrast(trials,first,second,tau2) {
+    try {
+      if(!Number.isFinite(tau2) || tau2<0)throw new Error('A full-network heterogeneity estimate is required.');
+      const blocks=trials.map(trial=>prepare(trial,true));
+      const arms=armsOf(blocks.flatMap(b=>b.contrasts));
+      if(first===second || !arms.includes(first) || !arms.includes(second))
+        throw new Error('No connecting evidence for the selected regimens.');
+      const [target]=design([{treatment:first,comparator:second}],arms.slice(1));
+      const {logEstimate,variance,weights}=gls(blocks,arms,tau2,target);
+      return {available:true,logEstimate,variance,weights};
+    } catch(error) { return {available:false,reason:error.message}; }
+  }
+
+  function influenceVariance(block,weights,tau2) {
+    const sampling=weights.reduce((v,w,i)=>v+w*dot(block.covariance[i],weights),0);
+    if(!tau2)return sampling;
+    const armWeight=new Map();
+    for(const [i,{treatment,comparator}] of block.contrasts.entries()) {
+      armWeight.set(treatment,(armWeight.get(treatment)||0)+weights[i]);
+      armWeight.set(comparator,(armWeight.get(comparator)||0)-weights[i]);
+    }
+    return sampling+tau2/2*[...armWeight.values()].reduce((s,w)=>s+w*w,0);
   }
 
   function reml(blocks, arms, common) {
@@ -151,6 +185,13 @@
     return {available:true, label, Q, df, p:stats.gammaQ(df / 2, Q / 2), reason:null};
   }
 
+  function ratioInterval(logEstimate,se) {
+    const width=stats.normalQuantile(.975)*se;
+    const ratios=[logEstimate,logEstimate-width,logEstimate+width].map(Math.exp);
+    if(ratios.some(value=>!(value>0 && Number.isFinite(value))))return null;
+    return {estimate:ratios[0],ci_lower:ratios[1],ci_upper:ratios[2]};
+  }
+
   function fit(trials, first, second, model = 'common', {pathway=false} = {}) {
     try {
       if (!['common', 'random'].includes(model)) throw new Error('Unknown network model.');
@@ -171,11 +212,9 @@
       const [contrast] = design([{treatment:first, comparator:second}], arms.slice(1));
       const logEstimate = dot(contrast, selected.coefficients);
       const v = forward(selected.lowerInfo, contrast), se = Math.sqrt(dot(v, v));
-      const z = stats.normalQuantile(.975);
-      const ratios = [logEstimate, logEstimate - z * se, logEstimate + z * se].map(Math.exp);
-      if (ratios.some(value => !(value > 0 && Number.isFinite(value))))
-        throw new Error('The estimated ratio or its confidence interval exceeds numerical range.');
-      const result = {available:true, model, estimate:ratios[0], ci_lower:ratios[1], ci_upper:ratios[2],
+      const interval=ratioInterval(logEstimate,se);
+      if(!interval)throw new Error('The estimated ratio or its confidence interval exceeds numerical range.');
+      const result = {available:true, model, ...interval,
         logEstimate, se, tau2, trialCount:blocks.length, treatmentCount:arms.length};
       if (pathway) return result;
       // Decompose the residual into variability within treatment designs and disagreement
@@ -206,14 +245,14 @@
   async function fitPair({graph, network, intervention, comparator, model, advanced={}, lookup}) {
     const pair=network.forPair(intervention,comparator);
     if (!pair.eligible) return {pair};
-    const result=fit(pair.blocks,intervention,comparator,model);
-    if (result.available && lookup && network.endpoint==='OS:HR' && network.target==='overall' && !advanced.active) {
-      try {
-        const prepared=await lookup(graph.content_sha256,pair.blocks,intervention,comparator,model);
-        if (prepared) return {pair,fit:{...result,...prepared}};
-      } catch (_) { /* A missing reference cache leaves the live fit available. */ }
+    let saved;
+    if (lookup && !advanced.active) {
+      try { saved=await lookup(graph.content_sha256,pair.blocks,intervention,comparator,model,network.endpoint,network.target); }
+      catch (_) { /* Fit directly when the released cache is unavailable. */ }
+      if(saved?.available && saved.diagnostics)return {pair,fit:saved};
     }
-    return {pair,fit:result};
+    const result=fit(pair.blocks,intervention,comparator,model);
+    return {pair,fit:saved&&result.available?{...result,...saved}:result};
   }
   // Each trial block stores an independent basis of log contrasts. Express a
   // requested within-trial leg in that basis, retaining the signs of the edges.
@@ -250,5 +289,5 @@
     return {trialId:block.trialId,contrasts,covariance};
   }
 
-  return Object.freeze({fit,fitPair,coefficients,projectTrial});
+  return Object.freeze({fit,fitPair,coefficients,projectTrial,pathwayContrast,influenceVariance,ratioInterval});
 });

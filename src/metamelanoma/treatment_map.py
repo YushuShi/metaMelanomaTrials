@@ -127,6 +127,9 @@ def refresh_defaults(root):
     artifacts = ['treatment_map_default.json', 'treatment_map_version.json']
     if receipt.get('network_reference_sha256'):
         artifacts.append('treatment_network_reference.json')
+    for name in ('study_browse_default', 'study_network_defaults'):
+        if receipt.get(name + '_sha256'):
+            artifacts.append(name + '.json')
     for name in artifacts:
         _archive(root, base + '/' + name, owned(root, 'website/dist/data/' + name).read_bytes())
     for name, expected in receipt['producer_sha256'].items():

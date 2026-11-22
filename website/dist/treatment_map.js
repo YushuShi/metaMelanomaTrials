@@ -486,7 +486,7 @@
       this.selectedEndpoint = 'OS:HR'; this.selectedComparisonByPair = new Map();
       this.studyScope = 'all'; this.analysisCache = new Map();
       this.inclusionOverrides = {}; this.inclusionOrder = []; this.advanced = this.options.advanced || {active:false,matches:{}};
-      this.planningEnabled = false; this.planningSettings = { ...Planning.defaults }; this.analysisTab = 'comparison';
+      this.planningEnabled = false; this.planningSettings = Planning.indirectSettings(this.options.planningSettings); this.analysisTab = 'comparison';
       this.id = 'treatment-map-' + (++serial); this.cleanups = []; this.nodeElements = new Map(); this.camera = { x: 0, y: 0, scale: 1 }; this.pointers = new Map();
       this.branchId = this.model.agents.find((node) => node.components.includes('nivolumab') || /^nivolumab$/i.test(node.label))?.id || this.model.agents[0]?.id || 'all';
       this.selectedId = this.branchId === 'all' ? null : this.branchId;
@@ -568,7 +568,7 @@
       const inclusionKey = this.make('span', '', this.legend); this.make('i', 'tm-solid', inclusionKey); this.make('span', '', inclusionKey, 'Component inclusion · no comparison arrow');
       this.comparisonLegendItem = this.make('div', 'tm-effect-legend', this.legend);
       const indirectKey = this.make('div', 'tm-network-legend', this.legend);
-      this.make('i', 'tm-network-swatch', indirectKey); this.make('span', '', indirectKey, 'Dotted indirect arrow · first treatment relative to its comparator');
+      this.make('i', 'tm-network-swatch', indirectKey); this.make('span', '', indirectKey, 'Dotted indirect arrow · first treatment relative to second treatment');
       for (const direction of ['better', 'worse']) {
         const item = this.make('span', 'tm-effect-key', this.comparisonLegendItem);
         item.style.setProperty('--tm-effect-color', Effects.styles[direction].color);
@@ -700,6 +700,12 @@
       return this.select(this.selectedId,{comparisonPairId:this.selectedComparisonPairId,announce:false,preserveMode:true});
     }
     setNetworkModel(model) { this.indirect?.setModel(model); return this; }
+    setPlanningSettings(values) {
+      this.planningSettings=Planning.indirectSettings(values);
+      this.renderDetails();this.renderComparison();this.updateSelection();
+      if(this.indirect?.active)this.indirect.updateEstimate();
+      return this;
+    }
     setStudyScope(scope) {
       this.studyScope = ['all', 'trials', 'randomized'].includes(scope) ? scope : 'all';
       this.activeComparisonId = null; this.activeComparisonExplicit = false; this.analysisTab = 'comparison';

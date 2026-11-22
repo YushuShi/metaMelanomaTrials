@@ -89,31 +89,29 @@
       <td>${events}</td><td>${sampleSize}${details}</td></tr>`;
   }
   const mounted=new WeakMap();
-  function mount(panel,data,attachAdvanced){
+  function mount(panel,data,attachAdvanced,targetPower=.8){
     if(!panel||data?.schema_version!==2||!Array.isArray(data.rows))throw Error('Required sample size data unavailable.');
     const previous=mounted.get(panel);
     if(previous)previous.destroy();
-    const oldPower=Number(panel.querySelector('input[data-target-power]')?.value)/100;
-    const initial=validPower(oldPower)?oldPower*100:80;
     const previousThreshold=(attribute,fallback)=>{
       const value=Number(panel.querySelector('input['+attribute+']')?.value);
       return validThreshold(value)?value:fallback;
     };
     const initialEvents=previousThreshold('data-event-threshold',defaultEventThreshold);
     const initialParticipants=previousThreshold('data-participant-threshold',defaultParticipantThreshold);
-    panel.innerHTML=`<div class="panel-heading"><div class="evidence-tab-heading" data-power-heading><h2>Underpowered studies</h2></div><label class="evidence-threshold">Target power (%) <input type="number" min="50.01" max="99.99" step="any" required data-target-power value="${initial}"></label><label class="evidence-threshold">Survival event cutoff <input type="number" min="1" step="1" required data-event-threshold value="${initialEvents}"></label><label class="evidence-threshold">Binary participant cutoff <input type="number" min="1" step="1" required data-participant-threshold value="${initialParticipants}"></label></div><div data-power-filter></div>
+    panel.innerHTML=`<div class="panel-heading"><div class="evidence-tab-heading" data-power-heading><h2>Underpowered studies</h2></div><label class="evidence-threshold">Survival event cutoff <input type="number" min="1" step="1" required data-event-threshold value="${initialEvents}"></label><label class="evidence-threshold">Binary participant cutoff <input type="number" min="1" step="1" required data-participant-threshold value="${initialParticipants}"></label></div><div data-power-filter></div>
       <p class="evidence-tab-note">The 95% CI includes 1 and the required events (survival) or participants (binary outcomes) fall below the corresponding cutoff. Two-sided α = 0.05, with equal allocation.</p>
       <div data-power-results></div><details class="evidence-tab-note"><summary>How the targets are calculated</summary>
       <p>For survival outcomes, the reported HR determines the required events using the Schoenfeld formula. For binary outcomes, the two anticipated arm rates determine the required total sample size. Targets are rounded up before applying each cutoff. When several binary assessment times are available, each required sample size must meet the cutoff. <a href="https://pubmed.ncbi.nlm.nih.gov/6354290/" target="_blank" rel="noopener noreferrer">Survival method</a> · <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.proportion.power_proportions_2indep.html" target="_blank" rel="noopener noreferrer">Binary method</a></p></details>`;
-    const input=panel.querySelector('[data-target-power]'),eventInput=panel.querySelector('[data-event-threshold]'),participantInput=panel.querySelector('[data-participant-threshold]'),output=panel.querySelector('[data-power-results]');
+    const eventInput=panel.querySelector('[data-event-threshold]'),participantInput=panel.querySelector('[data-participant-threshold]'),output=panel.querySelector('[data-power-results]');
     let sort={column:'year',direction:'descending'}, selections=Advanced.resetSelections(), options={};
     let assessed=[],qualified=[],power=null,eventThreshold=null,participantThreshold=null,filterUI;
     function compute(){
-      const nextPower=Number(input.value)/100,nextEvents=Number(eventInput.value),nextParticipants=Number(participantInput.value);
-      if(nextPower===power&&nextEvents===eventThreshold&&nextParticipants===participantThreshold)return;
-      if(nextPower!==power){
-        power=nextPower;
-        assessed=validPower(power)?data.rows.filter(coversNull).map(row=>plan(row,power)):[];
+      const nextEvents=Number(eventInput.value),nextParticipants=Number(participantInput.value);
+      if(targetPower===power&&nextEvents===eventThreshold&&nextParticipants===participantThreshold)return;
+      if(targetPower!==power){
+        power=targetPower;
+        assessed=data.rows.filter(coversNull).map(row=>plan(row,power));
       }
       eventThreshold=nextEvents;participantThreshold=nextParticipants;
       qualified=validThreshold(eventThreshold)&&validThreshold(participantThreshold)
@@ -130,7 +128,6 @@
     }
     function render(){
       compute();
-      if(!validPower(power)){output.innerHTML='<p role="status" class="evidence-tab-note">Enter a power above 50% and below 100%.</p>';return;}
       if(!validThreshold(eventThreshold)||!validThreshold(participantThreshold)){output.innerHTML='<p role="status" class="evidence-tab-note">Enter a positive whole number for each cutoff.</p>';return;}
       const matches=row=>Advanced.resultMatches(row.filter_binding,selections,options);
       const rows=sortRows(qualified.filter(matches),sort.column,sort.direction);
@@ -150,11 +147,14 @@
       requestAnimationFrame(()=>{const scroller=output.querySelector('.table-scroll');if(scroller)scroller.scrollLeft=scroll;
         output.querySelector(`button[data-sort-column="${column}"][aria-pressed="true"]`)?.focus({preventScroll:true});});
     });
-    for(const control of [input,eventInput,participantInput])control.addEventListener('input',()=>{render();filterUI?.refresh();});
+    function refresh(){render();filterUI?.refresh();}
+    for(const control of [eventInput,participantInput])control.addEventListener('input',refresh);
     if(attachAdvanced)filterUI=attachAdvanced(panel.querySelector('[data-power-heading]'),panel.querySelector('[data-power-filter]'),getEvidence,
       (chosen,opts)=>{selections=chosen;options=opts;render();});
     render();
-    const controller={destroy:()=>filterUI?.destroy()};
+    const controller={destroy:()=>filterUI?.destroy(),setPower(value){
+      if(validPower(value)&&value!==targetPower){targetPower=value;refresh();}
+    }};
     mounted.set(panel,controller);
     return controller;
   }

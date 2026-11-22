@@ -19,7 +19,10 @@
 .tm-network-result p { margin:6px 0; font-size:13px; }
 .tm-network-result .tm-network-target,.tm-network-result .tm-network-note { color:#55515c; font-size:12px; }
 .network-routes { min-width:0; max-width:100%; }
-.network-route { padding:8px 0; border-top:1px solid #cadbe6; }
+.network-route-row { display:grid; grid-template-columns:auto minmax(0,1fr); align-items:start; gap:8px; padding:8px 0; border-top:1px solid #cadbe6; }
+.network-route-row > details:only-child { grid-column:1/-1; }
+.network-route-include { margin:4px 0 0; accent-color:#194b72; }
+.study-pathway-caption { display:block; font-size:12px; font-weight:400; color:var(--muted); }
 .network-route summary { cursor:pointer; font-weight:600; line-height:1.6; }
 .network-route-regimen { padding:1px 4px; border-radius:3px; background:#ffffffad; }
 .network-route-separator { color:#526779; }
@@ -40,6 +43,11 @@
 .study-indirect-outcome button { cursor:pointer; }
 .study-indirect-evidence > td { max-width:0; }
 .tm-network-estimate { display:block; margin:10px 0 4px; font-size:18px; font-variant-numeric:tabular-nums; }
+.tm-network-fit { display:flex; flex-wrap:wrap; gap:4px 12px; align-items:baseline; }
+.tm-network-fit-label,.tm-network-weighting { flex-basis:100%; font-size:13px; }
+.tm-network-weighting summary { cursor:pointer; }
+.tm-network-plan { font-size:13px; font-variant-numeric:tabular-nums; }
+.tm-network-diagnostics { margin-top:8px; font-size:13px; }
 .tm-network-support,.tm-network-pathways { margin-top:12px; }
 .tm-network-support summary,.tm-network-pathways > summary { cursor:pointer; font-size:13px; font-weight:600; }
 .tm-network-trials { margin:8px 0; padding-left:21px; font-size:12px; }

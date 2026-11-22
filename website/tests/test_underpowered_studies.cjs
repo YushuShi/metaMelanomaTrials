@@ -62,18 +62,20 @@ test('a matching full-text effect binds its own population and control rate to a
   rate.cutoff=null;late.estimate=.97;assert.deepEqual(graphScenarios(early,article,[comparison]),[]);
 });
 test('empty release is supported',()=>assert.deepEqual(build({articles:[]},null).rows,[]));
-test('both cutoffs and target power update the displayed rows and clinical filter choices',()=>{
+test('cutoffs and the power saved in Settings update results and clinical filter choices',()=>{
   const makeInput=value=>({value,addEventListener(t,cb){this[t]=cb;}});
-  const inputs={'[data-target-power]':makeInput('80'),'[data-event-threshold]':makeInput('100'),
+  const inputs={'[data-event-threshold]':makeInput('100'),
     '[data-participant-threshold]':makeInput('100')};
   const output={addEventListener(){},querySelector(){return null;}};
   const panel={querySelector:s=>s==='[data-power-results]'?output:inputs[s]};
   const data={schema_version:2,rows:[row,{...row,pmid:'12345',filter_binding:{pmid:'12345',result_id:'hr'},measure:'HR',estimate:.5,n:null,scenarios:[]}]};
   let evidence, refreshCount=0;
-  mount(panel,data,(_heading,_panel,getEvidence)=>{
+  const controller=mount(panel,data,(_heading,_panel,getEvidence)=>{
     evidence=getEvidence;return {refresh(){refreshCount++;}};
-  });
-  assert.match(panel.innerHTML,/Target power/);assert.match(panel.innerHTML,/Survival event cutoff/);
+  },.9);
+  assert.doesNotMatch(panel.innerHTML,/Target power|data-target-power/);assert.match(panel.innerHTML,/Survival event cutoff/);
+  assert.match(output.innerHTML,/<td>88<\/td><td>—<\/td>/);
+  controller.setPower(.8);
   assert.match(panel.innerHTML,/Binary participant cutoff/);
   assert.match(output.innerHTML,/Required participants/);assert.match(output.innerHTML,/Required events/);
   assert.match(output.innerHTML,/<td>66<\/td><td>—<\/td>/);assert.doesNotMatch(output.innerHTML,/2,252/);
@@ -84,9 +86,10 @@ test('both cutoffs and target power update the displayed rows and clinical filte
   assert.equal(evidence({},false,{}).summary.report_count,2);
   change('[data-event-threshold]','66');assert.doesNotMatch(output.innerHTML,/data-pmid="12345"/);
   assert.equal(evidence({},false,{}).summary.report_count,1);
-  change('[data-target-power]','90');assert.match(output.innerHTML,/0 results/);
+  controller.setPower(.9);assert.match(output.innerHTML,/0 results/);
+  assert.equal(evidence({},false,{}).summary.report_count,0);
   change('[data-participant-threshold]','3013');assert.match(output.innerHTML,/3,012/);
   change('[data-participant-threshold]','1.1');assert.match(output.innerHTML,/positive whole number/);
-  change('[data-target-power]','50');assert.match(output.innerHTML,/above 50%/);
+  controller.setPower(.9);
   assert.equal(refreshCount,6);
 });

@@ -53,7 +53,16 @@ function publish(root){
   producers.push('website/scripts/treatment_network_reference_cache.cjs','website/scripts/treatment_network_reference_cache.R',
     'website/scripts/treatment_network_authors.py','website/dist/treatment_network_authors.js',
     'website/dist/treatment_network_model.js','website/dist/treatment_network_cache.js','website/dist/treatment_network_evidence.js');
-  const version={schema_version:1,graph_content_sha256:graph.content_sha256,
+  const atomic=(name,data)=>{const file=path.join(dir,name),temp=file+'.tmp-'+process.pid;fs.writeFileSync(temp,data);fs.renameSync(temp,file);};
+  const studyHashes={};
+  if(quantitative.mode==='pilot' && quantitative.publication_ready && quantitative.clinical_evidence?.articles) {
+    execFileSync('python3',[path.join(root,'website/scripts/single_arm_denominators.py'),root]);
+    const receipt=JSON.parse(execFileSync(process.execPath,[path.join(root,'website/scripts/study_browse_defaults.cjs'),root],{encoding:'utf8'}));
+    Object.assign(studyHashes,receipt.hashes);
+    for(const producer of receipt.producers)if(!producers.includes(producer))producers.push(producer);
+    producers.push('website/scripts/single_arm_denominators.py','config/single_arm_denominator_reviews.json');
+  }
+  const version={schema_version:1,...studyHashes,graph_content_sha256:graph.content_sha256,
     network_reference_sha256:networkPresent?hash(read(path.join(dir,networkFile))):null,
     ...(networkPresent?{}:{network_reference_note:networkReference.reason}),
     graph_file_sha256:hash(graphBytes),default_snapshot_sha256:hash(bytes),
@@ -68,7 +77,7 @@ function publish(root){
     layout_count:Object.keys(snapshot.default_views.layouts).length,
     analysis_count:Object.keys(snapshot.default_views.analyses.entries).length,
     scientific_source_changed:false,new_model_requests:0};
-  const atomic=(name,data)=>{const file=path.join(dir,name),temp=file+'.tmp-'+process.pid;fs.writeFileSync(temp,data);fs.renameSync(temp,file);};
+
   atomic('treatment_map_default.json',bytes);
   // Publish the small version receipt last, so interrupted builds remain stale.
   atomic('treatment_map_version.json',JSON.stringify(version,null,2)+'\n');

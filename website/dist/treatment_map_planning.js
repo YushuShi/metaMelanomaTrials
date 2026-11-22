@@ -207,5 +207,80 @@
     }
     return rows;
   }
-  return Object.freeze({defaults,settings,events,targetProbability,precisionN,calculate,assumptions,tableRows});
+  function indirectSettings(values={}) {
+    const supplied=Object.fromEntries(Object.keys(defaults).filter(k=>values[k]!==undefined).map(k=>[k,values[k]]));
+    return settings({...supplied,allocation:values.allocation_ratio??supplied.allocation??defaults.allocation});
+  }
+  function defaultIndirectSettings(values={}) {
+    const selected=indirectSettings(values);
+    return ['arms','power','alpha','sidedness','allocation','dropout','manualProbability']
+      .every(k=>selected[k]===defaults[k]);
+  }
+
+  // The network reports the first treatment over the second. Use reported
+  // baseline risks from the second regimen in the retained trial contrasts.
+  function indirect({estimate,measure,first,second,comparisons=[],settings:values={}}) {
+    const s=indirectSettings(values),precision=s.arms===1 && s.mode==='precision';
+    const unit=measure==='HR' && !precision?'events':'participants', prefix=unit==='events'?'E=':'N=';
+    const plan={label:'Unavailable',detail:'',min:null,max:null,unit,scenarios:[]};
+    if(!(finite(estimate) && estimate>0))return {...plan,detail:'Select an estimable comparison.'};
+    const design=s.arms===2?'Two-arm trial ('+s.allocation+':1 allocation)':'Single-arm trial';
+    const numeric=value=>value.toLocaleString('en-US');
+    const description=precision?'fixed-time rate precision, CI half-width '+(100*s.precision)+' percentage points':
+      (100*s.power)+'% power, '+(s.sidedness===2?'two-sided':'one-sided')+' α='+s.alpha;
+    if(unit==='events') {
+      const result=events(estimate,s);
+      if(!result.events)return {...plan,detail:result.reason || 'Required events exceed the numerical range.'};
+      const basis=s.arms===2?'Required endpoint events across both arms':'Required events on the historical-null scale';
+      return {...plan,min:result.events,max:result.events,label:prefix+numeric(result.events),
+        detail:design+' · '+description+'. '+basis+'.'};
+    }
+    if(!['HR','RR','OR'].includes(measure))return {...plan,detail:'Planning is unavailable for this measure.'};
+    const fixedTime=measure==='HR';
+    const horizonOk=!fixedTime || s.manualHorizon>0;
+    let rates=[];
+    if(precision && s.manualExpectedProbability!==null) {
+      if(horizonOk)rates=[{probability:s.manualExpectedProbability,planned:true,timeMonths:fixedTime?s.manualHorizon:null}];
+    } else if(s.manualProbability!==null) {
+      if(horizonOk)rates=[{probability:s.manualProbability,timeMonths:fixedTime?s.manualHorizon:null}];
+    } else {
+      for(const edge of comparisons)for(const rate of edge.planningRates || []) {
+        const planned=precision && rate.regimen===first;
+        if(!planned && rate.regimen!==second)continue;
+        if(fixedTime && (!(rate.timeMonths>0) || (s.manualHorizon!==null && rate.timeMonths!==s.manualHorizon)))continue;
+        rates.push({...rate,planned});
+      }
+      if(precision && rates.some(r=>r.planned && probability(r.probability)))rates=rates.filter(r=>r.planned);
+    }
+    const uniqueRates=new Map(rates.map(r=>[JSON.stringify([r.pmid,r.probability,r.timeMonths,r.planned]),r]));
+    for(const r of uniqueRates.values()) {
+      const a={kind:r.planned?'expected_probability':'reference_probability',probability:r.probability,
+        fixed_time:!fixedTime || r.timeMonths>0,time_months:r.timeMonths};
+      const scenario=calculate(estimate,measure,a,s);
+      if(scenario.n)plan.scenarios.push({n:scenario.n,probability:r.probability,
+        planned:!!r.planned,pmid:r.pmid || null,timeMonths:r.timeMonths ?? null});
+    }
+    if(!plan.scenarios.length) {
+      if(fixedTime && !horizonOk && (s.manualProbability!==null || s.manualExpectedProbability!==null))
+        return {...plan,detail:'Set a time horizon for the survival probability in Settings.'};
+      if(!precision && Math.abs(Math.log(estimate))<1e-12)return {...plan,detail:'No finite sample size for equal rates.'};
+      if(measure==='RR' && rates.length && rates.every(r=>!r.planned && r.probability*estimate>1))
+        return {...plan,detail:'The estimated risk ratio implies a planned-arm probability above 100% at every available reference rate. Enter a different planning rate in Settings.'};
+      return {...plan,detail:rates.length?'The supplied rate and effect do not give a feasible planning scenario.':
+        precision?'A compatible fixed-time event rate is required. Enter a planning rate in Settings.':
+        'No eligible study supplies a baseline risk for the second treatment. Enter a reference event rate in Settings.'};
+    }
+    plan.min=Math.min(...plan.scenarios.map(r=>r.n));plan.max=Math.max(...plan.scenarios.map(r=>r.n));
+    plan.label=prefix+numeric(plan.min)+(plan.min===plan.max?'':'–'+numeric(plan.max));
+    const sources=plan.scenarios.map(r=>{
+      const pct=Number((r.probability*100).toFixed(2))+'%';
+      return (r.planned?'Planned':'Reference')+' rate '+pct+(r.timeMonths?' at '+r.timeMonths+' months':'')+
+        (r.pmid?' (PMID '+r.pmid+')':' (user-specified)')+' → N='+numeric(r.n);
+    });
+    plan.detail=design+' · '+description+'. '+sources.join('. ')+'.';
+    if(plan.scenarios.length<uniqueRates.size)plan.detail+=' The range uses feasible rates only.';
+    return plan;
+  }
+  return Object.freeze({defaults,settings,events,targetProbability,precisionN,calculate,assumptions,tableRows,
+    indirectSettings,defaultIndirectSettings,indirect});
 });

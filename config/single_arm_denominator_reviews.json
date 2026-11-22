@@ -1,0 +1,426 @@
+[
+  {
+    "pmid": "23724846",
+    "result_id": "CE-157377812524c75bc280db3b-F-b6b1036d987c333f",
+    "values": [
+      52,
+      38,
+      66,
+      95,
+      "NA"
+    ],
+    "n": 52,
+    "status": "reported",
+    "source": "Table 3, confirmed RECIST response, 10 mg/kg every two weeks: 27 of 52.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/23724846/"
+  },
+  {
+    "pmid": "23724846",
+    "result_id": "CE-157377812524c75bc280db3b-F-b94ee6ed7e2a2da9",
+    "values": [
+      38,
+      23,
+      55,
+      95,
+      "NA"
+    ],
+    "n": 39,
+    "status": "derived",
+    "source": "Table 3, RECIST-evaluable patients with prior ipilimumab across disjoint dose cohorts: 13 + 26.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/23724846/"
+  },
+  {
+    "pmid": "23724846",
+    "result_id": "CE-157377812524c75bc280db3b-F-5cd10117904d64e2",
+    "values": [
+      37,
+      26,
+      49,
+      95,
+      "NA"
+    ],
+    "n": 78,
+    "status": "derived",
+    "source": "Table 3, RECIST-evaluable patients without prior ipilimumab across disjoint dose cohorts: 39 + 19 + 20.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/23724846/"
+  },
+  {
+    "pmid": "29724167",
+    "result_id": "CE-49687d6bba7f232a9c0daf00-F-d685c648e051847a",
+    "values": [
+      52.2,
+      37,
+      67.1,
+      95,
+      "NA"
+    ],
+    "n": 46,
+    "status": "reported",
+    "source": "Efficacy analysis included all 46 patients. One complete and 23 partial responses.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/29724167/"
+  },
+  {
+    "pmid": "30715153",
+    "result_id": "CE-7a10f74a796328706df319b2-F-6ce1f394bb82e573",
+    "values": [
+      72,
+      64,
+      79,
+      95,
+      "NA"
+    ],
+    "n": 151,
+    "status": "reported",
+    "source": "Table 1, treatment-naive column for confirmed responses.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/30715153/"
+  },
+  {
+    "pmid": "30715153",
+    "result_id": "CE-7a10f74a796328706df319b2-F-f860299f151e69ff",
+    "values": [
+      25,
+      19,
+      33,
+      95,
+      38
+    ],
+    "n": 151,
+    "status": "reported",
+    "source": "Table 1, treatment-naive column for confirmed responses.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/30715153/"
+  },
+  {
+    "pmid": "30715153",
+    "result_id": "CE-7a10f74a796328706df319b2-F-4d72c59c13787266",
+    "values": [
+      27,
+      20,
+      34,
+      95,
+      40
+    ],
+    "n": 151,
+    "status": "reported",
+    "source": "Table 1, treatment-naive column for confirmed responses.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/30715153/"
+  },
+  {
+    "pmid": "33880555",
+    "result_id": "CE-9a7623b7692faacf36a87c1a-F-edc8b0eabddd52d9",
+    "values": [
+      63.6,
+      50.9,
+      75.1,
+      95,
+      "NA"
+    ],
+    "n": 66,
+    "status": "reported",
+    "source": "Cohort A intracranial response analysis by BRAF status. Baseline table and efficacy results identify 66 mutation-positive and 33 wild-type patients.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/33880555/"
+  },
+  {
+    "pmid": "33880555",
+    "result_id": "CE-9a7623b7692faacf36a87c1a-F-edbbc0354f9fb885",
+    "values": [
+      48.5,
+      30.8,
+      66.5,
+      95,
+      "NA"
+    ],
+    "n": 33,
+    "status": "reported",
+    "source": "Cohort A intracranial response analysis by BRAF status. Baseline table and efficacy results identify 66 mutation-positive and 33 wild-type patients.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/33880555/"
+  },
+  {
+    "pmid": "33880555",
+    "result_id": "CE-9a7623b7692faacf36a87c1a-F-7a314d0f6a83b7d4",
+    "values": [
+      60.6,
+      47.8,
+      72.4,
+      95,
+      "NA"
+    ],
+    "n": 66,
+    "status": "reported",
+    "source": "Cohort A intracranial response analysis by BRAF status. Baseline table and efficacy results identify 66 mutation-positive and 33 wild-type patients.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/33880555/"
+  },
+  {
+    "pmid": "33880555",
+    "result_id": "CE-9a7623b7692faacf36a87c1a-F-50fd212d1080926a",
+    "values": [
+      42.4,
+      25.5,
+      60.8,
+      95,
+      "NA"
+    ],
+    "n": 33,
+    "status": "reported",
+    "source": "Cohort A intracranial response analysis by BRAF status. Baseline table and efficacy results identify 66 mutation-positive and 33 wild-type patients.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/33880555/"
+  },
+  {
+    "pmid": "33979178",
+    "result_id": "CE-b92ab44d75fc79ae8485d1a0-F-de988e1cdfc79e24",
+    "values": [
+      41,
+      26,
+      57,
+      95,
+      "NA"
+    ],
+    "n": 42,
+    "status": "reported",
+    "source": "Post hoc primary-refractory subset: 42 patients, with 2 complete and 15 partial responses.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/33979178/"
+  },
+  {
+    "pmid": "33979178",
+    "result_id": "CE-b92ab44d75fc79ae8485d1a0-F-c3621f84327c4573",
+    "values": [
+      81,
+      66,
+      91,
+      95,
+      "NA"
+    ],
+    "n": 42,
+    "status": "reported",
+    "source": "Post hoc primary-refractory subset: 42 patients, with 2 complete and 15 partial responses.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/33979178/"
+  },
+  {
+    "pmid": "36564126",
+    "result_id": "CE-ffa9f2d7cbf72c424a3e5ffb-F-74edb268566dcb64",
+    "values": [
+      47,
+      23,
+      72,
+      95,
+      "NA"
+    ],
+    "n": 17,
+    "status": "reported",
+    "source": "Table 3, all-treated ORR by prior anti-PD-1 status.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/36564126/"
+  },
+  {
+    "pmid": "36564126",
+    "result_id": "CE-ffa9f2d7cbf72c424a3e5ffb-F-106ddb1800062957",
+    "values": [
+      21,
+      9,
+      39,
+      95,
+      "NA"
+    ],
+    "n": 33,
+    "status": "reported",
+    "source": "Table 3, all-treated ORR by prior anti-PD-1 status.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/36564126/"
+  },
+  {
+    "pmid": "38767650",
+    "result_id": "CE-e4ac0de8d1abd326e6925b20-F-b1ff75162c939c9b",
+    "values": [
+      47,
+      35,
+      59,
+      95,
+      "NA"
+    ],
+    "n": 70,
+    "status": "reported",
+    "source": "Week 12 ORR reported as 33/70 for both RECIST and irRECIST.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/38767650/"
+  },
+  {
+    "pmid": "38870745",
+    "result_id": "CE-884859e1c3158c43c0b2fca3-F-10cfb5113c744037",
+    "values": [
+      6.7,
+      0.2,
+      32,
+      95,
+      "NA"
+    ],
+    "n": 15,
+    "status": "reported",
+    "source": "MASTERKEY-115 primary efficacy analysis: 26, 15, 15 and 15 evaluable patients in cohorts 1–4.",
+    "url": "https://doi.org/10.1200/JCO.2022.40.16_suppl.9518"
+  },
+  {
+    "pmid": "38870745",
+    "result_id": "CE-884859e1c3158c43c0b2fca3-F-78eaa4cd1fcf92d2",
+    "values": [
+      40,
+      16.3,
+      67.7,
+      95,
+      "NA"
+    ],
+    "n": 15,
+    "status": "reported",
+    "source": "MASTERKEY-115 primary efficacy analysis: 26, 15, 15 and 15 evaluable patients in cohorts 1–4.",
+    "url": "https://doi.org/10.1200/JCO.2022.40.16_suppl.9518"
+  },
+  {
+    "pmid": "38870745",
+    "result_id": "CE-884859e1c3158c43c0b2fca3-F-379a77810fa316b9",
+    "values": [
+      46.7,
+      21.3,
+      73.4,
+      95,
+      "NA"
+    ],
+    "n": 15,
+    "status": "reported",
+    "source": "MASTERKEY-115 primary efficacy analysis: 26, 15, 15 and 15 evaluable patients in cohorts 1–4.",
+    "url": "https://doi.org/10.1200/JCO.2022.40.16_suppl.9518"
+  },
+  {
+    "pmid": "38870745",
+    "result_id": "CE-884859e1c3158c43c0b2fca3-F-de988e1cdfc79e24",
+    "values": [
+      3.8,
+      0.1,
+      19.6,
+      95,
+      "NA"
+    ],
+    "n": 26,
+    "status": "reported",
+    "source": "MASTERKEY-115 primary efficacy analysis: 26, 15, 15 and 15 evaluable patients in cohorts 1–4.",
+    "url": "https://doi.org/10.1200/JCO.2022.40.16_suppl.9518"
+  },
+  {
+    "pmid": "38870745",
+    "result_id": "CE-884859e1c3158c43c0b2fca3-F-c3621f84327c4573",
+    "values": [
+      6.7,
+      0.2,
+      32,
+      95,
+      "NA"
+    ],
+    "n": 15,
+    "status": "reported",
+    "source": "MASTERKEY-115 primary efficacy analysis: 26, 15, 15 and 15 evaluable patients in cohorts 1–4.",
+    "url": "https://doi.org/10.1200/JCO.2022.40.16_suppl.9518"
+  },
+  {
+    "pmid": "38870745",
+    "result_id": "CE-884859e1c3158c43c0b2fca3-F-50802447c48b1562",
+    "values": [
+      53.3,
+      26.6,
+      78.7,
+      95,
+      "NA"
+    ],
+    "n": 15,
+    "status": "reported",
+    "source": "MASTERKEY-115 primary efficacy analysis: 26, 15, 15 and 15 evaluable patients in cohorts 1–4.",
+    "url": "https://doi.org/10.1200/JCO.2022.40.16_suppl.9518"
+  },
+  {
+    "pmid": "38870745",
+    "result_id": "CE-884859e1c3158c43c0b2fca3-F-d4f2a93a9478de28",
+    "values": [
+      46.7,
+      21.3,
+      73.4,
+      95,
+      "NA"
+    ],
+    "n": 15,
+    "status": "reported",
+    "source": "MASTERKEY-115 primary efficacy analysis: 26, 15, 15 and 15 evaluable patients in cohorts 1–4.",
+    "url": "https://doi.org/10.1200/JCO.2022.40.16_suppl.9518"
+  },
+  {
+    "pmid": "38946469",
+    "result_id": "CE-2becba461d4a74abcc3c35ca-F-b1ff75162c939c9b",
+    "values": [
+      70.8,
+      55.9,
+      83.1,
+      95,
+      "NA"
+    ],
+    "n": 48,
+    "status": "derived",
+    "source": "At two months, 5 complete and 29 partial responses gave 70.8% (34/48). The article names 47 evaluable patients and includes one unevaluated participant in the published rate denominator.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/38946469/"
+  },
+  {
+    "pmid": "36304457",
+    "result_id": "CE-594db81acc5e8b57cf72e8f9-F-1683eae27b47ab35",
+    "values": [
+      "NA",
+      1.7,
+      40.5,
+      95,
+      2
+    ],
+    "n": 15,
+    "percentage": 13.3,
+    "status": "reported",
+    "source": "Efficacy by subgroup, full analysis set. The table gives the patient count, events, percentage and confidence limits for this endpoint.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/36304457/"
+  },
+  {
+    "pmid": "36304457",
+    "result_id": "CE-594db81acc5e8b57cf72e8f9-F-44e7f2c3b8ac2543",
+    "values": [
+      "NA",
+      4.3,
+      48.1,
+      95,
+      3
+    ],
+    "n": 15,
+    "percentage": 20.0,
+    "status": "reported",
+    "source": "Efficacy by subgroup, full analysis set. The table gives the patient count, events, percentage and confidence limits for this endpoint.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/36304457/"
+  },
+  {
+    "pmid": "36304457",
+    "result_id": "CE-594db81acc5e8b57cf72e8f9-F-8dbaca731949e67e",
+    "values": [
+      "NA",
+      0.3,
+      52.7,
+      95,
+      1
+    ],
+    "n": 8,
+    "percentage": 12.5,
+    "status": "reported",
+    "source": "Efficacy by subgroup, full analysis set. The table gives the patient count, events, percentage and confidence limits for this endpoint.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/36304457/"
+  },
+  {
+    "pmid": "36304457",
+    "result_id": "CE-594db81acc5e8b57cf72e8f9-F-ef5fa14159ee6f3b",
+    "values": [
+      "NA",
+      8.5,
+      75.5,
+      95,
+      3
+    ],
+    "n": 8,
+    "percentage": 37.5,
+    "status": "reported",
+    "source": "Efficacy by subgroup, full analysis set. The table gives the patient count, events, percentage and confidence limits for this endpoint.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/36304457/"
+  }
+]

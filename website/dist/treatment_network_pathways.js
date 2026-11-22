@@ -72,30 +72,153 @@
     for(let length=Math.max(2,distance.get(first));length<distance.size;length++)yield* walk(first,length);
   }
 
-  function fitRoute(route,blocks,model='common') {
-    const byTrial=new Map(),basis=new Map(blocks.map(b=>[b.trialId,b]));
-    if(basis.size!==blocks.length)return {available:false,reason:'A trial is assigned to more than one covariance block.'};
-    route.legs.forEach((leg,i)=>{
-      for(const trialId of leg.keys()) {
-        if(!byTrial.has(trialId))byTrial.set(trialId,[]);
-        byTrial.get(trialId).push([route.regimens[i],route.regimens[i+1]]);
-      }
-    });
+  // Keep a spanning forest of the selected contrasts within each trial. A-B,
+  // B-C and A-C from one trial carry only two independent contrasts.
+  function projectEvidence(comparisons,blocks) {
+    const byTrial=new Map();
+    for(const edge of comparisons) {
+      if(!byTrial.has(edge.trialId))byTrial.set(edge.trialId,[]);
+      byTrial.get(edge.trialId).push(edge);
+    }
     const projected=[];
-    for(const [trialId,pairs] of byTrial) {
-      const block=basis.get(trialId);
+    for(const block of blocks) {
+      const edges=byTrial.get(block.trialId);
+      if(!edges)continue;
+      const parents=new Map(),pairs=[];
+      function root(id) {
+        while(parents.has(id))id=parents.get(id);
+        return id;
+      }
+      for(const {treatment,comparator} of edges) {
+        const a=root(treatment),b=root(comparator);
+        if(a===b)continue;
+        parents.set(a,b);
+        pairs.push([treatment,comparator]);
+      }
       const projection=Model.projectTrial(block,pairs);
-      if(!projection)return {available:false,reason:'The trial covariance does not cover every contrast on this pathway.'};
+      if(!projection)return null;
       projected.push(projection);
     }
-    return Model.fit(projected,route.regimens[0],route.regimens.at(-1),model,{pathway:true});
+    return projected.length===byTrial.size?projected:null;
   }
 
-  function mount(host,{pair,network,first,second,measure,model='common',publications,loadPublications}) {
+  function routeInfluence(route,blocks,tau2) {
+    const comparisons=route.legs.flatMap(leg=>[...leg.values()]);
+    const projected=projectEvidence(comparisons,blocks);
+    if(!projected)return {available:false,reason:'Incomplete covariance for the selected trial contrasts.'};
+    const result=Model.pathwayContrast(projected,route.regimens[0],route.regimens.at(-1),tau2);
+    if(!result.available)return result;
+    // Return each route's GLS weights to the original trial basis, so shared
+    // contrasts and distinct correlated arms can be recognized across routes.
+    const original=new Map(blocks.map(block=>[block.trialId,block])),influence=new Map();
+    for(const [i,block] of projected.entries()) {
+      const source=original.get(block.trialId);
+      const weights=source.contrasts.map(()=>0);
+      for(const [j,{treatment,comparator}] of block.contrasts.entries()) {
+        const basis=Model.coefficients(source.contrasts,treatment,comparator);
+        basis.forEach((weight,k)=>{weights[k]+=weight*result.weights[i][j];});
+      }
+      influence.set(block.trialId,weights);
+    }
+    return {available:true,logEstimate:result.logEstimate,variance:result.variance,influence,comparisons};
+  }
+
+  function weightedFit(paths,blocks,model,tau2) {
+    const base={method:'pathway-weighted',model,tau2,available:false};
+    if(!paths.length)return {...base,reason:'Select at least one pathway.'};
+    const invalid=paths.find(path=>!path.available || !(path.variance>0 && Number.isFinite(path.variance)));
+    if(invalid)return {...base,reason:invalid.reason || 'A pathway lacks an estimable variance.'};
+    // Scaling every precision by the same constant preserves normalized weights.
+    const minVariance=paths.reduce((min,path)=>Math.min(min,path.variance),Infinity);
+    const precision=paths.map(path=>minVariance/path.variance),sum=precision.reduce((a,b)=>a+b,0);
+    const influence=new Map(),regimens=new Set();
+    let logEstimate=0;
+    for(const [i,path] of paths.entries()) {
+      const weight=precision[i]/sum;
+      logEstimate+=weight*path.logEstimate;
+      for(const [id,coefficients] of path.influence) {
+        if(!influence.has(id))influence.set(id,coefficients.map(()=>0));
+        const total=influence.get(id);
+        coefficients.forEach((c,j)=>{total[j]+=weight*c;});
+      }
+      for(const edge of path.comparisons){regimens.add(edge.treatment);regimens.add(edge.comparator);}
+    }
+    // Apply the combined coefficient to each original trial covariance once.
+    let variance=0;
+    for(const block of blocks) {
+      const weights=influence.get(block.trialId);
+      if(weights)variance+=Model.influenceVariance(block,weights,tau2);
+    }
+    const se=Math.sqrt(variance),interval=Model.ratioInterval(logEstimate,se);
+    if(!(se>0) || !interval)return {...base,reason:'The pathway estimate or its interval is outside the numerical range.'};
+    return {...base,available:true,...interval,logEstimate,se,trialCount:influence.size,treatmentCount:regimens.size};
+  }
+
+  function fullTau(blocks,first,second,model,fullFit) {
+    if(model==='common')return 0;
+    const fit=fullFit || Model.fit(blocks,first,second,model);
+    return fit.available?fit.tau2:null;
+  }
+
+  function fitRoute(route,blocks,model='common',tau2=fullTau(blocks,route.regimens[0],route.regimens.at(-1),model)) {
+    const path=routeInfluence(route,blocks,tau2);
+    return weightedFit([path],blocks,model,tau2);
+  }
+
+  const routeKey=ids=>JSON.stringify(ids[0]<ids.at(-1)?ids:[...ids].reverse());
+
+  function fitSelection({pair,first,second,model='common',excluded,fullFit},graph) {
+    if(!excluded?.size)return {pair,fit:fullFit || Model.fit(pair.blocks,first,second,model),excluded};
+    const tau2=fullTau(pair.blocks,first,second,model,fullFit);
+    const retained=new Set(),omitted=new Set(),allRoutes=routes(graph || routeGraph(pair),first,second);
+    const allPaths=[],selectedPaths=[];
+    let totalCount=0,selectedCount=0;
+    for(const route of allRoutes) {
+      totalCount++;
+      const include=!excluded.has(routeKey(route.regimens));
+      if(include)selectedCount++;
+      const edges=include?retained:omitted;
+      for(const leg of route.legs)for(const edge of leg.values())edges.add(edge);
+      const path=routeInfluence(route,pair.blocks,tau2);
+      allPaths.push(path);
+      if(include)selectedPaths.push(path);
+    }
+    const comparisons=pair.comparisons.filter(edge=>retained.has(edge));
+    const blocks=projectEvidence(comparisons,pair.blocks);
+    const ids=new Set(comparisons.map(edge=>edge.trialId));
+    const trials=pair.trials.filter(trial=>ids.has(trial.id));
+    const links=new Set(comparisons.map(e=>key(e.treatment,e.comparator)));
+    const selected={...pair,comparisons,blocks:blocks || [],trials,
+      regimens:[...new Set(comparisons.flatMap(e=>[e.treatment,e.comparator]))].sort(),
+      settings:[...new Set(trials.flatMap(t=>t.settings || []))].sort(),
+      sharedComparators:(pair.sharedComparators || []).filter(id=>links.has(key(first,id)) && links.has(key(second,id))),holds:[]};
+    const fit=weightedFit(selectedPaths,pair.blocks,model,tau2);
+    const referenceFit=weightedFit(allPaths,pair.blocks,model,tau2);
+    const referenceComparisons=pair.comparisons.filter(edge=>retained.has(edge) || omitted.has(edge));
+    const allComparisonsRetained=omitted.size>0 && [...omitted].every(edge=>retained.has(edge));
+    return {pair:selected,fit,referenceFit,referenceComparisons,excluded,selectedCount,totalCount,allComparisonsRetained};
+  }
+
+  function weightingNote(fit) {
+    if(fit?.method!=='pathway-weighted')return '';
+    const note='Pathway log estimates are weighted by inverse variance. Confidence intervals account for shared trials and correlations between arms.';
+    return fit.model==='random' && Number.isFinite(fit.tau2)?
+      note+' The between-trial variance (τ² = '+fmt(fit.tau2)+') is held at its full-network REML estimate.':note;
+  }
+
+  function selectionLabel(selection) {
+    if(!selection?.excluded?.size || !Number.isInteger(selection.totalCount))return '';
+    const {selectedCount,totalCount}=selection;
+    const label=selectedCount+' of '+totalCount+' pathway'+(totalCount===1?'':'s')+' included';
+    return selection.allComparisonsRetained?label+' · All contributing trial comparisons are still included.':label;
+  }
+
+  function mount(host,{pair,network,first,second,measure,model='common',publications,loadPublications,
+    fullFit,excluded=new Set(),onSelectionChange}) {
     host.replaceChildren();
     const doc=host.ownerDocument;
     const label=id=>network.labels.get(id) || id;
-    const iterator=routes(routeGraph(pair),first,second,label);
+    const graph=routeGraph(pair),iterator=routes(graph,first,second,label);
     let pending=iterator.next(),stopped=false,publicationLoad=null;
     const authorCells=[];
     function element(parent,tag,value,className) {
@@ -148,7 +271,7 @@
       if(row.ciNote)element(effect,'small',row.ciNote);
     }
     function renderRoute(parent,route) {
-      const result=fitRoute(route,pair.blocks,model);
+      const result=fitRoute(route,pair.blocks,model,fullTau(pair.blocks,first,second,model,fullFit));
       if(result.available) {
         const modelName=model==='common'?'Common-effect':'Random-effects (REML)';
         element(parent,'p','Pathway-specific '+measure+' '+fmt(result.estimate)+' (95% CI '+fmt(result.ci_lower)+'–'+fmt(result.ci_upper)+') · '+modelName+' · '+result.trialCount+' trials','network-route-estimate');
@@ -169,7 +292,20 @@
     }
     const list=element(host,'div',null,'network-routes');
     function appendRoute(route,open) {
-      const item=element(list,'details',null,'network-route'),summary=element(item,'summary');
+      const row=element(list,'div',null,'network-route-row');
+      const id=routeKey(route.regimens);
+      if(onSelectionChange) {
+        const checkbox=element(row,'input',null,'network-route-include'); checkbox.type='checkbox';
+        checkbox.setAttribute('aria-label','Include pathway '+route.regimens.map(label).join(' via '));
+        checkbox.checked=!excluded.has(id);
+        checkbox.addEventListener('change',()=>{
+          if(stopped)return;
+          excluded=new Set(excluded);
+          if(checkbox.checked)excluded.delete(id);else excluded.add(id);
+          onSelectionChange(fitSelection({pair,first,second,model,excluded,fullFit},graph));
+        });
+      }
+      const item=element(row,'details',null,'network-route'),summary=element(item,'summary');
       for(const [i,id] of route.regimens.entries()) {
         if(i)element(summary,'span',' › ','network-route-separator');
         element(summary,'span',label(id),'network-route-regimen');
@@ -195,10 +331,10 @@
     }
     if(pending.done)element(list,'p','No pathway has a distinct randomized trial available for every step.');
     else {
-      element(list,'p','Each pathway compares its first regimen with its last. Study effects compare the intervention with the comparator listed in that row. Pathways can share trials.','muted');
+      element(list,'p','Each pathway compares its first treatment with its last. A shared trial contrast stays in the estimate while any selected pathway uses it.','muted');
       nextPage();
     }
     return {destroy(){stopped=true;iterator.return();}};
   }
-  return Object.freeze({routeGraph,routes,fitRoute,mount});
+  return Object.freeze({routeGraph,routes,routeKey,fitRoute,fitSelection,selectionLabel,weightingNote,mount});
 });

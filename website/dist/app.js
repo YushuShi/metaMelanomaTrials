@@ -692,9 +692,31 @@
     }
     return rows;
   }
-  function studyTablePresentationRows(match,{registry={},labels,include_missing_n=false}={}) {
+  function studyTablePresentationRows(match,options={}) {
+    const rows=sourcePresentationRows(match,options);
+    if(!match.inverted_comparisons?.size)return rows;
+    return rows.map(group=>{
+      const comparison=group.comparisons?.[0];
+      if(!comparison || !group.comparisons.every(c=>match.inverted_comparisons.has(c.comparison_id)))return group;
+      function complete(side) {
+        const rule=regimenSourceRules.lookup(comparison),pool=rule?.source_regimen_pools?.[side==='intervention'?'intervention':'reference'];
+        return rule?.is_add_on && pool?.length===1
+          ?regimenDescription(pool[0].map(id=>treatmentLabel(id,options.labels)).join(' + ')).definition
+          :regimenDefinitions.resolve(comparison,side);
+      }
+      const reference=complete('intervention'),active=complete('comparator');
+      return {...group,display_reversed:true,is_add_on:false,
+        comparator_definition:reference,intervention_definition:active,
+        comparator_label:conciseTreatmentLabel(regimenDescription(reference).label,reference),
+        intervention_label:conciseTreatmentLabel(regimenDescription(active).label,active),
+        comparator_n:group.intervention_n,intervention_n:group.comparator_n,
+        comparator_arm_id:group.intervention_arm_id,intervention_arm_id:group.comparator_arm_id};
+    });
+  }
+  function sourcePresentationRows(match,{registry={},labels,include_missing_n=false}={}) {
     const base=conciseGroups.prepare(match,studyTreatmentRows(match,labels,{registry}),{registry,eligible_samples:match.study.quantitative_only?reportedStudyCounts(match.study,null,registry):[],displayable_results:match.results.filter(compactClinicalResult)});
-    if(!match.study.quantitative_only)return include_missing_n?base:base.filter(group=>{const d=studyTableData({...match,...group},{registry});return [...d.entries,...d.counts,d.treated].some(row=>row&&row.sample_size!=='NA');});
+    const exactRatio=group=>match.exact_comparison_pair && group.results.some(row=>boundComparativeRatio(group.comparisons,row));
+    if(!match.study.quantitative_only)return include_missing_n?base:base.filter(group=>{const d=studyTableData({...match,...group},{registry});return exactRatio(group)||[...d.entries,...d.counts,d.treated].some(row=>row&&row.sample_size!=='NA');});
     const groups=base.flatMap(group=>{
       const cutoffs=[...new Set(group.results.map(row=>row.quantitative_record?.cutoff||'NA'))];
       return !group.keep_shared_cohort&&cutoffs.length>1?cutoffs.map(cutoff=>({...group,results:group.results.filter(row=>(row.quantitative_record?.cutoff||'NA')===cutoff),presentation_cutoff:cutoff==='NA'?'Cutoff not reported':'Cutoff: '+cutoff})): [{...group,presentation_cutoff:group.presentation_cutoff||(cutoffs[0]&&cutoffs[0]!=='NA'?'Cutoff: '+cutoffs[0]:'')}];
@@ -717,7 +739,15 @@
     }
     const visible=groups.filter(group=>!removed.has(group)).map(group=>({...group,comparator_label:conciseTreatmentLabel(group.comparator_label,group.comparator_definition),intervention_label:conciseTreatmentLabel(group.intervention_label,group.intervention_definition)}));
     const views=new Map(visible.map(group=>[group,studyTablePresentation({...match,...group},{registry,phase_partition:group.phase_partition,reconcile_outcomes:false})]));
-    return conciseGroups.consolidatePresentation(visible.filter(group=>include_missing_n||views.get(group).samples.length||hasPairedArmCounts(group)),{viewFor:group=>views.get(group),treatmentText:presentationTreatmentText,study:match.study,registry});
+    return conciseGroups.consolidatePresentation(visible.filter(group=>include_missing_n||views.get(group).samples.length||hasPairedArmCounts(group)||exactRatio(group)),{viewFor:group=>views.get(group),treatmentText:presentationTreatmentText,study:match.study,registry});
+  }
+  function boundComparativeRatio(comparisons,row) {
+    if(!['HR','RR','OR'].includes(displayMeasure(row)))return false;
+    const point=confidenceIntervals.forDisplay(row).estimate;
+    if(!Number.isFinite(point) || point<0)return false;
+    const ids=row.source_extraction_ids || [row.result_id];
+    return comparisons.some(c=>c.kind==='treatment_comparison' &&
+      (c.comparison_id && c.comparison_id===row.comparison_id || ids.some(id=>c.result_ids?.includes(id))));
   }
   function hasPairedArmCounts(group){return group.paired_arm_context===true&&Number.isInteger(group.comparator_n)&&group.comparator_n>=0&&Number.isInteger(group.intervention_n)&&group.intervention_n>=0;}
   // Display labels alone can collapse identical OR branches. The structured
@@ -795,7 +825,11 @@
     for(const member of members)for(const sample of member.view.samples){
       const key=String(sample.sample_size),existing=samples.get(key);
       if(!existing)samples.set(key,{...sample});
-      else if(!existing.breakdown&&sample.breakdown)existing.breakdown=sample.breakdown;
+      else {
+        if(!existing.breakdown&&sample.breakdown)existing.breakdown=sample.breakdown;
+        if(sample.denominator_note && !existing.denominator_note?.includes(sample.denominator_note))
+          existing.denominator_note=[existing.denominator_note,sample.denominator_note].filter(Boolean).join(' ');
+      }
     }
     // Equal N is printed once in the combined row. Distinct endpoints and source
     // records are still separately available above and in the study details.
@@ -952,8 +986,9 @@
     if(match.presentation_members?.length)return combinedStudyPresentation(match);
     const raw=studyTableData(match,{registry});
     const selectedCounts=new Set(conciseGroups.selectCounts(match.study,raw.counts.map(entry=>entry.source),{registry,results:match.results}));
-    const correctedEntries=raw.entries.map(entry=>{const n=presentationSampleSize(match.study,entry.result,{registry,samples:match.study.details?.sample_size_records||[]});return n?{...entry,sample_size:Number.isInteger(n.n)&&n.n>=0?String(n.n):'NA',presentation_n:n}:entry;});
-    const data={...raw,entries:correctedEntries.filter(entry=>match.exact_node_membership||entry.sample_size!=='NA'),counts:raw.counts.filter(entry=>entry.sample_size!=='NA'&&selectedCounts.has(entry.source))},sampleGroups=new Map(),effectGroups=new Map();
+    const correctedEntries=raw.entries.map(entry=>{const n=presentationSampleSize(match.study,entry.result,{registry,samples:match.study.details?.sample_size_records||[]});return n?{...entry,sample_size:n.display||(Number.isInteger(n.n)&&n.n>=0?String(n.n):'NA'),presentation_n:n}:entry;});
+    const sourceRatioInPairedArms=entry=>(hasPairedArmCounts(match) || match.exact_comparison_pair) && boundComparativeRatio(match.comparisons,entry.result);
+    const data={...raw,entries:correctedEntries.filter(entry=>match.exact_node_membership||entry.sample_size!=='NA'||sourceRatioInPairedArms(entry)),counts:raw.counts.filter(entry=>entry.sample_size!=='NA'&&selectedCounts.has(entry.source))},sampleGroups=new Map(),effectGroups=new Map();
     const contextLabel=()=>{
       const labels=[...new Set(data.entries.map(entry=>compactExtraction.resultContext(match.study,entry.result)?.label).filter(Boolean))];
       if(labels.length===1)return labels[0];
@@ -1054,7 +1089,7 @@
       if(Number.isInteger(match.total_n)&&match.total_n>=0&&!displayedGroups.some(group=>group.sample_size===String(match.total_n)))displayedGroups.unshift({label:'Total',sample_size:String(match.total_n)});
     }
     // Missing-N outcomes remain in details; explicit arm counts still qualify a row.
-    return {group:(compactExtraction.presentationGroupLabel(match.study,match,{registry})??conciseGroups.groupLabel(match.study,match,{registry,eligible_samples:raw.counts.map(entry=>entry.source)})).replace(/^NA$/,'').replace(/\s+([,;:])/g,'$1'),context:match.paired_count_only?'':context,samples:displayedGroups.map(({label,sample_size,breakdown})=>({label:compactExtraction.cleanContext(label).replace(/^NA$/,''),sample_size,...(breakdown?{breakdown}:{})})),effects:[...effectGroups.values()].map(group=>{const effect={label:group.label,value:group.values.sort((a,b)=>a.time===null||b.time===null?0:a.time-b.time).map(x=>x.value).join('; ')};presentationEffectSources.set(effect,group.source_rows);return effect;})};
+    return {group:(compactExtraction.presentationGroupLabel(match.study,match,{registry})??conciseGroups.groupLabel(match.study,match,{registry,eligible_samples:raw.counts.map(entry=>entry.source)})).replace(/^NA$/,'').replace(/\s+([,;:])/g,'$1'),context:match.paired_count_only?'':context,samples:displayedGroups.map(({label,sample_size,breakdown,source_n})=>({label:compactExtraction.cleanContext(label).replace(/^NA$/,''),sample_size,...(breakdown?{breakdown}:{}),...(source_n?.note?{denominator_note:source_n.note}:{})})),effects:[...effectGroups.values()].map(group=>{const effect={label:group.label,value:group.values.sort((a,b)=>a.time===null||b.time===null?0:a.time-b.time).map(x=>x.value).join('; ')};presentationEffectSources.set(effect,group.source_rows);return effect;})};
   }
   function reportedStudyCounts(study, comparisons = null, registry = {}) {
     if(study.current_main_eligible===false)return [];
@@ -1154,6 +1189,21 @@
     return waldInterval.derive(row,{nDisplay:n,evidenceRegistry});
   }
   function tableValue(row,{interval}={}) {
+    const recovered=compactExtraction.recoveredDenominator(row);
+    if(Number.isFinite(recovered?.reported_percentage)){
+      const q=row.quantitative_record;
+      return q.numerator+'/'+recovered.n+' · '+recovered.reported_percentage+'% ('+q.ci_level+'% CI '+q.ci_lower+'–'+q.ci_upper+'%)';
+    }
+    if(row.display_reversed) {
+      const reported=confidenceIntervals.forDisplay(row),estimate=reported.estimate,fmt=confidenceIntervals.formatEffectNumber;
+      const derived=interval?.status==='derived'?interval.interval:null;
+      const lo=reported.ci_lower??derived?.lower,hi=reported.ci_upper??derived?.upper;
+      const flags=['inverted',reported.ci_converted?'converted to 95% CI':null,
+        derived || row.quantitative_record?.derived_ci?.method==='derived_two_sided_Wald'?'derived 95% Wald CI':null,
+        row.quantitative_record?.calculation?'calculated from arm rates':null].filter(Boolean);
+      const ci=lo>0 && hi>lo && lo<=estimate && estimate<=hi && Number.isFinite(1/lo) ? fmt(1/hi)+'–'+fmt(1/lo) : '95% CI unavailable';
+      return fmt(1/estimate)+' ('+ci+') · '+flags.join(' · ');
+    }
     const estimate=reportedNumber(row.estimate,true),numbers=(row.reported_numbers||[]).filter(n=>['reported','unclear'].includes(n.status));
     let value=estimate!=='NA'?estimate:numbers.filter(n=>!['confidence_level','ci_lower','ci_upper'].includes(n.role)).map(n=>`${String(n.role||'Value').replace(/_/g,' ')}: ${reportedNumber(n)}`).join('; ')||'NA';
     const display=confidenceIntervals.forDisplay(row);
@@ -1206,11 +1256,12 @@
         const data=studyTablePresentation({...match,...contrast},{registry,phase_partition:contrast.phase_partition});
         const setting=advancedArmSettings(match,contrast);
         const prefix=[study.title,study.author_display||(study.first_author_surname?`${study.first_author_surname} et al.`:''),study.year??'',study.pmid??'',trial.trial_label,trial.nct_label,data.group||'',contrast.comparator_label+(Number.isInteger(contrast.comparator_n)?` (N=${contrast.comparator_n})`:'')+(setting.comparator?` [${setting.comparator}]`:''),`${contrast.is_add_on?'+ ':''}${contrast.intervention_label}${Number.isInteger(contrast.intervention_n)?` (N=${contrast.intervention_n})`:''}${setting.intervention?` [${setting.intervention}]`:''}`];
-        if(!data.samples.length&&!hasPairedArmCounts(contrast)&&!include_missing_n)continue;
-        const samples=data.samples.map(row=>`${row.label?row.label+': ':''}${row.sample_size}${row.breakdown?' ('+row.breakdown+')':''}`).join('; ')||(hasPairedArmCounts(contrast)?`Comparator: ${contrast.comparator_n}; Intervention: ${contrast.intervention_n}`:include_missing_n?'Unavailable':'');
+        const exactRatio=match.exact_comparison_pair && contrast.results.some(row=>boundComparativeRatio(contrast.comparisons,row));
+        if(!data.samples.length&&!hasPairedArmCounts(contrast)&&!include_missing_n&&!exactRatio)continue;
+        const samples=data.samples.map(row=>`${row.label?row.label+': ':''}${row.sample_size}${row.breakdown?' ('+row.breakdown+')':''}${row.denominator_note?' ['+row.denominator_note+']':''}`).join('; ')||(hasPairedArmCounts(contrast)?`Comparator: ${contrast.comparator_n}; Intervention: ${contrast.intervention_n}`:include_missing_n?'Unavailable':'');
         const result=data.effects.map(row=>row.label).filter(Boolean).join(' · ');
         const effects=data.effects.map(row=>`${row.label?row.label+': ':''}${row.value}`).join('; ')||'Details';
-        rows.push([...prefix,result,samples,effects]);
+        rows.push([...prefix,result,samples || (exactRatio?'NA':''),effects]);
       }
     }
     const cell=value=>{
@@ -1264,13 +1315,41 @@
       for(const [id,matches]of refined){if(matches)selected.add(id);else selected.delete(id);}
       comparisons=candidates.filter(comparison=>selected.has(comparison.comparison_id));
     }
+    // Only exact complete regimens define a reversible treatment contrast.
+    // Broad categories and add-on-agent browsing keep their usual source roles.
+    const reverse=new Map(),invertedResults=new Set();
+    const exactPair=selection.comparator?.startsWith('exact-regimen:') && selection.intervention?.startsWith('exact-regimen:') && selection.comparator!==selection.intervention;
+    if(exactPair) {
+      for(const c of candidates) {
+        if(c.kind!=='treatment_comparison'||!comparatorSelectionMatches(c,selection.intervention,selection.treatment_labels)||
+           !interventionSelectionMatches(c,selection.comparator,selection.treatment_labels))continue;
+        const own=new Set(c.result_ids || []);
+        for(const row of results) {
+          if(row.comparison_id!==c.comparison_id && !(row.source_extraction_ids || [row.result_id]).some(id=>own.has(id)))continue;
+          if(!['HR','RR','OR'].includes(displayMeasure(row)))continue;
+          const q=row.quantitative_record;
+          const armId=id=>String(id || '').replace(/^CE-[a-f\d]+-/i,'');
+          const bound=q?.intervention_arm_id && q?.reference_arm_id && q.intervention_arm_id!==q.reference_arm_id &&
+            [q.intervention_arm_id,q.reference_arm_id].every(id=>id!=='NA') &&
+            (!c.intervention_arm_id || armId(c.intervention_arm_id)===armId(q.intervention_arm_id)) &&
+            (!c.comparator_arm_id || armId(c.comparator_arm_id)===armId(q.reference_arm_id));
+          if(!bound && !regimenSourceRules.directionFor(c,row) && !(row.analysis?.contrast_type==='treatment_comparison' &&
+            row.direction==='intervention versus comparator'))continue;
+          const point=confidenceIntervals.forDisplay(row).estimate;
+          if(!(point>0 && Number.isFinite(1/point)))continue;
+          reverse.set(c.comparison_id,c);invertedResults.add(row);
+        }
+      }
+      comparisons.push(...reverse.values());
+    }
     if (selection.endpoint || selection.measure) comparisons = comparisons.filter((comparison) => (comparison.result_ids || []).some((id) => resultIds.has(id)) || resultComparisonIds.has(comparison.comparison_id));
     if ((selection.comparator || selection.intervention) && !comparisons.length) return null;
-    const matchedIds = new Set(comparisons.flatMap((comparison) => comparison.result_ids || []));
-    const comparisonIds = new Set(comparisons.map((comparison) => comparison.comparison_id));
-    const selectedResults = restricted ? results.filter((row) => (row.source_extraction_ids||[row.result_id]).some((id)=>matchedIds.has(id)) || (row.comparison_id && comparisonIds.has(row.comparison_id))) : results;
+    const forward=comparisons.filter(c=>!reverse.has(c.comparison_id));
+    const matchedIds = new Set(forward.flatMap((comparison) => comparison.result_ids || []));
+    const comparisonIds = new Set(forward.map((comparison) => comparison.comparison_id));
+    const selectedResults = restricted ? results.flatMap((row) => (row.source_extraction_ids||[row.result_id]).some((id)=>matchedIds.has(id)) || (row.comparison_id && comparisonIds.has(row.comparison_id))?[row]:invertedResults.has(row)?[{...row,display_reversed:true}]:[]) : results;
     if ((selection.endpoint || selection.measure) && !selectedResults.length) return null;
-    return { study, comparisons, results: orderedStudyResults(selectedResults) };
+    return { study, comparisons, results: orderedStudyResults(selectedResults),...(exactPair?{exact_comparison_pair:true}:{}),...(reverse.size?{inverted_comparisons:new Set(reverse.keys())}:{}) };
   }
   function filterStudies(studies, selection = {}) {
     const matches=(Array.isArray(studies) ? studies : []).filter(study=>!selection.trials_only||studyDesign.designInfo(study).is_trial).filter((study) => selection.include_history===true||(study.default_visible===true&&study.current_main_eligible!==false)).map((study) => matchingStudy(study, selection)).filter(Boolean);
@@ -1294,7 +1373,7 @@
       if(!cache||cache.registry!==registry||cache.labels!==labels||cache.token!==token){
         cache={registry,labels,token,rows:new Map()};advancedBrowseProjections.set(source,cache);
       }
-      const key=JSON.stringify([!!match.advanced_filter_scope,match.results.map(row=>row.result_id),match.comparisons.map(row=>row.comparison_id),match.advanced_filter_scope?.sample_keys||[]]);
+      const key=JSON.stringify([!!match.advanced_filter_scope,!!match.exact_comparison_pair,match.results.map(row=>row.result_id),match.comparisons.map(row=>row.comparison_id),[...(match.inverted_comparisons || [])],match.advanced_filter_scope?.sample_keys||[]]);
       let rows=cache.rows.get(key);
       if(!rows){
         rows=studyTablePresentationRows(scoped,{registry,labels});cache.rows.set(key,rows);
@@ -1324,7 +1403,8 @@
         if(arm?.status==='supported')for(const category of arm.categories)if(labels.has(category))out[role].add(labels.get(category));
       }
     }
-    return Object.fromEntries(Object.entries(out).map(([role,values])=>[role,[...values].join(' / ')]));
+    const tags=Object.fromEntries(Object.entries(out).map(([role,values])=>[role,[...values].join(' / ')]));
+    return contrast.display_reversed?{comparator:tags.intervention,intervention:tags.comparator}:tags;
   }
   function presentationSampleSize(study,row,options={}){
     return study.advanced_filter_scope?advancedScopedSampleSize(study,row,options):compactExtraction.presentationSampleSize(study,row,options);
@@ -1334,6 +1414,7 @@
     const value=corrected??row.scoped_sample_size??q.display_n;
     const held=()=>({...value,n:null,status:'unverified'});
     if(!value||value.status==='CONFLICTING')return held();
+    if(corrected?.basis==='single_arm_endpoint_denominator')return corrected;
     const flags=q.field_flags||[];
     if(flags.some(flag=>flag.field==='display_n'||flag.field==='analysis_n'&&typeof q.analysis_n==='number'||flag.field==='denominator'&&typeof q.denominator==='number'))return held();
     if(typeof q.analysis_n==='number'&&q.analysis_n===value.n)return value;
@@ -1420,7 +1501,21 @@
     if(study.current_main_eligible===false)return study.current_screening_status==='exclude'?'Historical · currently excluded':study.current_screening_status==='uncertain'?'Historical · current triage uncertain':'Historical · current admission held';
     return '';
   }
-  const api = Object.freeze({ exactBrowsePair, completeArmKey, treatmentBadge, treatmentRegimen, savedTreatmentTag, studyDesignInfo:study=>studyDesign.designInfo(study), abstractOnly:study=>studyDesign.abstractOnly(study), specialOutcomeDetails:(study,options)=>studyDesign.specialOutcomeDetails(study,options), survivalEndpointLabels, responseEndpointLabels, endpointLabel, endpointOptionLabel, reportedHazardRatio, reportedSurvivalEndpoint, derivedInterval, studyTrialIdentifiers, studyTableData, studyTablePresentation, studyTablePresentationRows, studyOutcomeChoices, hasPairedArmCounts, visibleStudyMatches, conciseTreatmentLabel, studyTableCSV, tableEndpoint, tableValue, studyTreatmentRows, interventionPresentation, interventionGroupLabels, regimenDescription, advancedPopulationMatch, advancedArmSettings, advancedBrowseOptions, advancedAnalysisOptions, treatmentClass, additionalPresentation, additionalGroupLabels, defaultEffectMeasure, isORRResult, treatmentSelectionMatches, resultMatches, semanticExtractionStatus, articleStatusLabel, scopedStudies, studyResults, mainResultEligible, displayEndpointFamily, orderedStudyResults, compactClinicalResult, compactContrast, reportedStudyCounts, reportedCountLabel, displayMeasure, comparatorKey, comparatorPresentation, comparatorDisplayLabel, comparatorGroupLabels, additionalDrugIds, additionalInterestIds, comparisonBrowseEligible, studyComparisons, filterStudies, constrainStudyChoices, sortStudyRows, colors, dotRadius, independentCount, savedPoolingMetadata, direction, matrixEligible, validEstimate, endpointKind, relevantMeasures, ancestorClosure, diseaseMatches, joinR2Articles, filterR2Articles, joinProvisionalStudies, filterProvisionalStudies, joinQuantitativeResults, joinQuantitativeSamples, quantitativeText, reportedNumber, confidence95, quantitativeMeasure, populationCountIsContext, filterQuantitativeResults, quantitativeBrowseEvidence, studyArticles, evidenceIndex, availableCombination, reconcileEvidenceSelection, forestSvg, funnelSvg, sampleSizeSvg });
+  function armTag(label, addOn = false, definition = null) {
+    if(!label||label==='—')return '—';
+    const description=regimenDescription(definition||label);
+    const render=(part)=>{
+      if(!part.components?.length)return {html:treatmentBadge(part.label,part.class_ids||[]),compound:false};
+      const separator={alternative:'or',sequential:'→',optional:'±',combination:'+'}[part.kind]||'+';
+      let children=part.components.map(child=>{const shown=render(child);return shown.compound?`(${shown.html})`:shown.html;});
+      if(part.kind==='alternative')children=[...new Set(children)];
+      return {html:children.join(` <span class="treatment-join">${separator}</span> `),compound:children.length>1};
+    };
+    const content=render({...description,label:description.label||label}).html;
+    const placebo=description.components?.length>1&&description.placebo?' <span class="treatment-placebo">(+placebo)</span>':'';
+    return treatmentRegimen(content+placebo,addOn);
+  }
+  const api = Object.freeze({ armTag, exactBrowsePair, completeArmKey, treatmentBadge, treatmentRegimen, savedTreatmentTag, studyDesignInfo:study=>studyDesign.designInfo(study), abstractOnly:study=>studyDesign.abstractOnly(study), specialOutcomeDetails:(study,options)=>studyDesign.specialOutcomeDetails(study,options), survivalEndpointLabels, responseEndpointLabels, endpointLabel, endpointOptionLabel, reportedHazardRatio, reportedSurvivalEndpoint, derivedInterval, studyTrialIdentifiers, studyTableData, studyTablePresentation, studyTablePresentationRows, studyOutcomeChoices, hasPairedArmCounts, visibleStudyMatches, conciseTreatmentLabel, studyTableCSV, tableEndpoint, tableValue, studyTreatmentRows, interventionPresentation, interventionGroupLabels, regimenDescription, advancedPopulationMatch, advancedArmSettings, advancedBrowseOptions, advancedAnalysisOptions, treatmentClass, additionalPresentation, additionalGroupLabels, defaultEffectMeasure, isORRResult, treatmentSelectionMatches, resultMatches, semanticExtractionStatus, articleStatusLabel, scopedStudies, studyResults, mainResultEligible, displayEndpointFamily, orderedStudyResults, compactClinicalResult, compactContrast, reportedStudyCounts, reportedCountLabel, displayMeasure, comparatorKey, comparatorPresentation, comparatorDisplayLabel, comparatorGroupLabels, additionalDrugIds, additionalInterestIds, comparisonBrowseEligible, studyComparisons, filterStudies, constrainStudyChoices, sortStudyRows, colors, dotRadius, independentCount, savedPoolingMetadata, direction, matrixEligible, validEstimate, endpointKind, relevantMeasures, ancestorClosure, diseaseMatches, joinR2Articles, filterR2Articles, joinProvisionalStudies, filterProvisionalStudies, joinQuantitativeResults, joinQuantitativeSamples, quantitativeText, reportedNumber, confidence95, quantitativeMeasure, populationCountIsContext, filterQuantitativeResults, quantitativeBrowseEvidence, studyArticles, evidenceIndex, availableCombination, reconcileEvidenceSelection, forestSvg, funnelSvg, sampleSizeSvg });
   if (typeof window !== 'undefined') window.MetaSampleSizeCharts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })();
@@ -1479,9 +1574,12 @@ if (typeof document !== 'undefined') (() => {
   let toastTimer;
   function toast(message) { text('toast', message); $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').hidden = true; }, 3200); }
 
+  let underpoweredController;
   const evidenceTabs = {
-    'underpowered-studies': { path: './data/underpowered_studies.json', render: (panel, data) => globalThis.UnderpoweredStudies.mount(panel, data,
-      (heading,body,evidence,change)=>mountTabAdvanced(heading,body,'underpowered-advanced',evidence,change)) },
+    'underpowered-studies': { path: './data/underpowered_studies.json', render: (panel, data) => {
+      underpoweredController=globalThis.UnderpoweredStudies.mount(panel, data,
+        (heading,body,evidence,change)=>mountTabAdvanced(heading,body,'underpowered-advanced',evidence,change),state.settings.power);
+    } },
     'new-findings': { path: './data/new_findings.json', render: (panel, data) => globalThis.NewFindings.render(panel, data) }
   };
   const tabLoads = new Map();
@@ -1566,32 +1664,65 @@ if (typeof document !== 'undefined') (() => {
       // uses current retained reports, including on devices with older settings.
       if (['latest', 'all'].includes(value.record_policy)) fallback.record_policy = value.record_policy;
       if (value.network_model === 'random') fallback.network_model = 'random';
+      if (value.arms===1) fallback.arms=1;
+      if (value.mode==='precision') fallback.mode='precision';
+      if (Number.isFinite(value.precision) && value.precision>0 && value.precision<.5) fallback.precision=value.precision;
+      for(const key of ['manualProbability','manualExpectedProbability'])
+        if(Number.isFinite(value[key]) && value[key]>0 && value[key]<1)fallback[key]=value[key];
+      if(Number.isFinite(value.manualHorizon) && value.manualHorizon>0)fallback.manualHorizon=value.manualHorizon;
       if (typeof value.allocation_ratio === 'number' && Number.isFinite(value.allocation_ratio) && value.allocation_ratio > 0) fallback.allocation_ratio = value.allocation_ratio;
       if ([1, 2].includes(value.sidedness)) fallback.sidedness = value.sidedness;
-      for (const key of ['power', 'alpha']) if (typeof value[key] === 'number' && value[key] > 0 && value[key] < 1) fallback[key] = value[key];
+      if(Number.isFinite(value.power) && value.power>.5 && value.power<1)fallback.power=value.power;
+      if(Number.isFinite(value.alpha) && value.alpha>0 && value.alpha<1)fallback.alpha=value.alpha;
     } catch { /* Use the documented defaults when browser storage is unavailable. */ }
     return fallback;
   }
   function defaultSettings() {
-    return { include_history:false, record_policy:'latest', network_model:'common', allocation_ratio:1, sidedness:2, power:0.8, alpha:0.05 };
+    return { include_history:false,record_policy:'latest',network_model:'common',arms:2,allocation_ratio:1,sidedness:2,power:.8,alpha:.05,
+      mode:'benchmark',precision:.05,manualProbability:null,manualExpectedProbability:null,manualHorizon:null };
   }
   function displaySettings() {
-    const bindings = { 'analysis-record-policy': 'record_policy', 'network-model': 'network_model', 'planning-allocation': 'allocation_ratio', 'planning-sidedness': 'sidedness', 'planning-power': 'power', 'planning-alpha': 'alpha' };
+    const bindings = { 'analysis-record-policy': 'record_policy', 'network-model': 'network_model','planning-arms':'arms','planning-mode':'mode', 'planning-allocation': 'allocation_ratio', 'planning-sidedness': 'sidedness', 'planning-power': 'power', 'planning-alpha': 'alpha' };
     for (const [id, key] of Object.entries(bindings)) $(id).value = String(state.settings[key]);
+    for(const [id,key] of [['precision','precision'],['reference-rate','manualProbability'],['expected-rate','manualExpectedProbability']])
+      $('planning-'+id).value=state.settings[key]===null?'':String(Number((100*state.settings[key]).toFixed(9)));
+    $('planning-horizon').value=state.settings.manualHorizon??'';
+    displayPlanningFields();
+  }
+  function displayPlanningFields() {
+    const single=$('planning-arms').value==='1',precision=single && $('planning-mode').value==='precision';
+    for(const [id,visible] of [['allocation',!single],['mode',single],['sidedness',!precision],['power',!precision],
+      ['precision',precision],['expected-rate',precision]]){
+      const input=$('planning-'+id);
+      input.disabled=!visible;
+      input.closest('label').hidden=!visible;
+    }
   }
   function saveSettings(reset = false) {
     if (!reset && !$('settings-form').reportValidity()) return;
+    const numberSetting=(id,key,divisor=1)=>{
+      const input=$('planning-'+id);
+      if(input.disabled)return state.settings[key];
+      return input.value===''?null:Number(input.value)/divisor;
+    };
     state.settings = reset ? { ...settingsDefaults } : {
       include_history:false, record_policy: $('analysis-record-policy').value,
       network_model: $('network-model').value === 'random' ? 'random' : 'common',
-      allocation_ratio: Number($('planning-allocation').value), sidedness: Number($('planning-sidedness').value),
-      power: Number($('planning-power').value), alpha: Number($('planning-alpha').value)
+      arms:Number($('planning-arms').value),mode:$('planning-mode').value,precision:numberSetting('precision','precision',100),
+      manualProbability:numberSetting('reference-rate','manualProbability',100),
+      manualExpectedProbability:numberSetting('expected-rate','manualExpectedProbability',100),
+      manualHorizon:numberSetting('horizon','manualHorizon'),
+      allocation_ratio:numberSetting('allocation','allocation_ratio'),sidedness:numberSetting('sidedness','sidedness'),
+      power:numberSetting('power','power'),alpha:numberSetting('alpha','alpha')
     };
     try { localStorage.setItem('metaCutaneousMelanomaTrial.settings.v1', JSON.stringify(state.settings)); text('settings-status', 'Saved on this device.'); }
     catch { text('settings-status', 'Applied for this session. Browser storage is unavailable.'); }
     treatmentMapController?.setNetworkModel(state.settings.network_model);
+    treatmentMapController?.setPlanningSettings(state.settings);
+    underpoweredController?.setPower(state.settings.power);
     displaySettings(); $('analysis-comparison').value = '';
-    refreshStudyChoices();renderStudies();renderAnalysis(); renderSummary(); renderMatrix(); renderPlanning();
+    if(!state.studyPreview?.active)refreshStudyChoices();
+    renderAnalysis();renderSummary();renderMatrix();renderPlanning();
   }
   function emptyChart(title = 'Results pending review.', message = '') {
     return `<div class="chart-empty">${icon('chart')}<h3>${escape(title)}</h3>${message ? `<p>${escape(message)}</p>` : ''}</div>`;
@@ -1603,8 +1734,12 @@ if (typeof document !== 'undefined') (() => {
     else if (chooseSingle && entries.length === 1) element.value = String(entries[0][0]);
   }
   function groupedOptions(id, entries, placeholder, role) {
-    const element = $(id), old = element.value;
+    const element = $(id);
     const tree=role&&studyNetwork.catalog ? globalThis.StudyIndirect.pickerTree(entries,studyNetwork.catalog,globalThis.TreatmentGroups,role) : globalThis.TreatmentGroups.optionTree(entries);
+    setTreatmentOptions(element,tree,placeholder);
+  }
+  function setTreatmentOptions(element,tree,placeholder) {
+    const old=element.value;
     element.innerHTML = `<option value="">${escape(placeholder)}</option>` + tree.map((row)=>
       `<option value="${escape(row.value)}" data-treatment-class="${escape(row.class_id||'')}" data-depth="${row.depth}"${row.disabled?' disabled':''}>${'\u00a0\u00a0'.repeat(row.depth)}${row.depth?'↳ ':''}${escape(row.label)}${row.value.startsWith('treatment-class:')&&!row.value.startsWith('treatment-class:agent:')?' — all':''}</option>`).join('');
     if(tree.some((row)=>row.value===old))element.value=old;
@@ -1864,45 +1999,97 @@ if (typeof document !== 'undefined') (() => {
       const ci=row.ci_lower>0&&row.ci_upper>0?` (95% CI ${format(row.ci_lower)}–${format(row.ci_upper)})`:' (95% CI unavailable)';
       return `<li>${escape(row.label)} · ${escape(row.measure)} ${format(row.estimate)}${ci} ${studyNetworkSources([row.pmid])}</li>`;
     });
+    const observationalDetails=observational.length?`<details><summary>Direct observational evidence</summary><ul>${observational.join('')}</ul></details>`:'';
+    if(fit?.method==='pathway-weighted')return observationalDetails;
     return `<details><summary>Network diagnostics</summary>${settings}
       <p>The analysis assumes comparable distributions of treatment-effect modifiers across trials.</p>
       ${diagnostics}${fit?.model==='random'&&Number.isFinite(fit.tau2)?'<p>Between-trial variance (τ²) · '+format(fit.tau2)+'</p>':''}
       ${pair.holds.map(reason=>'<p>'+escape(reason)+'</p>').join('')}</details>
-      ${observational.length?`<details><summary>Direct observational evidence</summary><ul>${observational.join('')}</ul></details>`:''}`;
+      ${observationalDetails}`;
   }
   function studyNetworkOutcomeLabel(endpoint,network) {
     const parts=endpoint.label.split(' · ').filter(label=>label!==endpoint.measure);
     if(network.target!=='overall')parts.push(...network.targetLabel.split(' · '));
     return [...new Set(parts)].join(' · ');
   }
-  function showStudyPathways(host,result,first,second,model) {
-    globalThis.TreatmentNetworkPathways.mount(host,{network:result.network,pair:result.pair,first,second,
-      measure:result.endpoint.measure,model,publications:studyNetworkPublications()});
+  const pathwayChoices=new Map();
+  function studyPathwaySelection(result,first,second,model) {
+    const key=JSON.stringify([treatmentMapContent,[first,second].sort(),result.endpoint.key,result.network.target,state.advanced]);
+    const options={network:result.network,pair:result.pair,first,second,measure:result.endpoint.measure,model,
+      fullFit:result.fit,excluded:pathwayChoices.get(key)||new Set()};
+    return {
+      current:globalThis.TreatmentNetworkPathways.fitSelection(options),
+      mount(host,update){
+        globalThis.TreatmentNetworkPathways.mount(host,{...options,publications:studyNetworkPublications(),onSelectionChange(chosen){
+          if(chosen.excluded.size)pathwayChoices.set(key,chosen.excluded);else pathwayChoices.delete(key);
+          update(chosen);
+        }});
+      }
+    };
+  }
+  function studyPlanText(fit,pair,first,second,measure) {
+    if(!fit?.available)return '—';
+    const api=globalThis.TreatmentMapPlanning;
+    const plan=fit.defaultPlan && api.defaultIndirectSettings(state.settings)?fit.defaultPlan:
+      api.indirect({estimate:fit.estimate,measure,first,second,comparisons:pair.comparisons,settings:state.settings});
+    return '<span class="indirect-plan" title="'+escape(plan.detail)+'">'+escape(plan.label)+'</span>';
+  }
+  function studyEstimateText(fit) {
+    return fit?.available?studyNetworkInterval(fit):escape(fit?.reason||'Estimate unavailable');
+  }
+  function showStudyPathwayMethod(host,selection,first,second,measure) {
+    const {fit,referenceFit}=selection;
+    if(fit?.method!=='pathway-weighted' || !fit.available){host.replaceChildren();return;}
+    const open=host.querySelector('details')?.open;
+    const reference=referenceFit?.available
+      ? '<p>All pathways, same weighting · '+escape(measure)+' '+studyNetworkInterval(referenceFit)+' · '+
+        studyPlanText(referenceFit,{comparisons:selection.referenceComparisons},first,second,measure)+'</p>' : '';
+    host.innerHTML='<details'+(open?' open':'')+'><summary>Pathway weighting</summary><p>'+escape(globalThis.TreatmentNetworkPathways.weightingNote(fit))+'</p>'+reference+'</details>';
+  }
+  function studyPathwayCaption(selection) {
+    const label=globalThis.TreatmentNetworkPathways.selectionLabel(selection);
+    return label?'<small class="study-pathway-caption">'+escape(label)+'</small>':'';
+  }
+  function studyOutcomeEstimate(selection) {
+    const name=selection.fit?.method==='pathway-weighted' && selection.fit.available
+      ? '<small class="study-pathway-caption">Pathway-weighted sensitivity estimate</small>' : '';
+    return name+studyEstimateText(selection.fit)+studyPathwayCaption(selection);
   }
   async function studyNetworkOverview(panel,heading,scope,endpoints,first,second,model,current) {
     const modelLabel=model==='random'?'Random-effects (REML)':'Common-effect';
-    panel.innerHTML=heading+`<p>${modelLabel} network meta-analysis</p><p data-study-progress>Checking available outcomes…</p>
+    panel.innerHTML=heading+`<p>Full network model · ${modelLabel}</p><p data-study-progress>Checking available outcomes…</p>
       <div class="table-scroll" hidden><table class="study-indirect-outcomes compact-extraction-table"><thead><tr>
       <th scope="col">Outcome</th><th scope="col">Measure</th><th scope="col">Indirect estimate (95% CI)</th>
-      <th scope="col">Randomized trials in network</th><th scope="col">Evidence</th></tr></thead><tbody></tbody></table></div>`;
+      <th scope="col">Required events (E) or participants (N)</th><th scope="col">Randomized trials in network</th><th scope="col">Evidence</th></tr></thead><tbody></tbody></table></div>`;
     const body=panel.querySelector('tbody'),progress=panel.querySelector('[data-study-progress]');
     let count=0;
     for await(const result of globalThis.StudyIndirect.estimableOutcomes(scope,endpoints,first,second,model,lookupNetworkFit,current)) {
       if(!current())return;
       const label=studyNetworkOutcomeLabel(result.endpoint,result.network);
       const id='study-indirect-evidence-'+(++count);
+      const choice=studyPathwaySelection(result,first,second,model),selected=choice.current;
       body.insertAdjacentHTML('beforeend',`<tr class="study-indirect-outcome"><th scope="row">${escape(label)}</th>
-        <td>${escape(result.endpoint.measure)}</td><td>${studyNetworkInterval(result.fit)}</td><td>${result.pair.trials.length}</td>
+        <td>${escape(result.endpoint.measure)}</td><td aria-live="polite">${studyOutcomeEstimate(selected)}</td><td>${studyPlanText(selected.fit,selected.pair,first,second,result.endpoint.measure)}</td><td>${selected.pair.trials.length}</td>
         <td><button type="button" class="text-button" aria-expanded="false" aria-controls="${id}">Pathways</button></td></tr>
-        <tr class="study-indirect-evidence" id="${id}" hidden><td colspan="5"></td></tr>`);
+        <tr class="study-indirect-evidence" id="${id}" hidden><td colspan="6"></td></tr>`);
       const detail=body.lastElementChild,button=detail.previousElementSibling.querySelector('button');
       button.setAttribute('aria-label','Pathways for '+label+' ('+result.endpoint.measure+')');
       button.addEventListener('click',()=>{
         detail.hidden=!detail.hidden;
         button.setAttribute('aria-expanded',String(!detail.hidden));
         if(!detail.hidden && !detail.cells[0].firstChild){
-          detail.cells[0].innerHTML='<div data-study-pathways></div>'+studyNetworkDiagnostics(result.pair,result.fit);
-          showStudyPathways(detail.querySelector('[data-study-pathways]'),result,first,second,model);
+          detail.cells[0].innerHTML='<div data-weighting></div><div data-study-pathways></div><div data-diagnostics></div>';
+          const update=selection=>{
+            const {fit,pair}=selection;
+            const cells=detail.previousElementSibling.cells;
+            cells[2].innerHTML=studyOutcomeEstimate(selection);
+            cells[3].innerHTML=studyPlanText(fit,pair,first,second,result.endpoint.measure);
+            cells[4].textContent=pair.trials.length;
+            showStudyPathwayMethod(detail.querySelector('[data-weighting]'),selection,first,second,result.endpoint.measure);
+            detail.querySelector('[data-diagnostics]').innerHTML=studyNetworkDiagnostics(pair,fit);
+          };
+          update(selected);
+          choice.mount(detail.querySelector('[data-study-pathways]'),update);
         }
       });
       body.closest('.table-scroll').hidden=false;
@@ -1917,28 +2104,30 @@ if (typeof document !== 'undefined') (() => {
     if(!panel || !api)return;
     const family=$('analysis-endpoint').value;
     const open=!$('analysis-form').hidden && state.currentView==='analysis';
+    const preview=state.studyPreview?.hydrating && state.studyPreview.exactPair && !globalThis.AdvancedFilters.activeCount(state.advanced)
+      ? state.studyPreview.data : null;
     const signature=JSON.stringify([open,family,studyNetwork.pair,studyNetwork.endpoint,studyNetwork.target,
-      state.advancedEpoch,state.trialsOnly,state.settings.network_model,treatmentMapEpoch,treatmentMapContent,state.loading]);
+      state.advancedEpoch,state.trialsOnly,state.settings,treatmentMapEpoch,treatmentMapContent,state.loading]);
     if(signature===studyNetwork.signature)return;
     studyNetwork.signature=signature;
     const revision=++studyNetwork.revision;
     panel.hidden=!open || !studyNetwork.pair;
     panel.replaceChildren();
     delete panel.dataset.estimate;
-    if(!open || state.loading)return;
+    if(!open || state.loading && !preview)return;
     if(!panel.hidden)panel.textContent='Loading randomized comparisons…';
     try {
       if(!treatmentMapGraph)await loadTreatmentMap();
       if(revision!==studyNetwork.revision)return;
-      if(!treatmentMapGraph || !mapMatchesTreatments(treatmentMapGraph,state.treatmentNormalizations))
+      const samePreview=preview && treatmentMapGraph?.content_sha256===preview.graph && treatmentMapGraph?.metadata?.source_file_sha256===preview.source;
+      if(!treatmentMapGraph || !(samePreview || mapMatchesTreatments(treatmentMapGraph,state.treatmentNormalizations)))
         throw new Error('The network and study data could not be loaded from the same saved update.');
       const graph=Array.isArray(treatmentMapGraph.network_direct_evidence)?treatmentMapGraph:await fullTreatmentMap(treatmentMapGraph.content_sha256);
       if(revision!==studyNetwork.revision)return;
       if(studyNetwork.graph!==graph) {
         studyNetwork.catalog=api.catalogue(graph,charts.regimenDescription);
         studyNetwork.graph=graph;
-        refreshStudyChoices();
-        studyNetwork.signature=null;renderStudies(false);return;
+        if(!samePreview){refreshStudyChoices();studyNetwork.signature=null;renderStudies(false);return;}
       }
       if(!studyNetwork.pair)return;
       const catalog=studyNetwork.catalog,[comparator,intervention]=studyNetwork.pair;
@@ -1981,9 +2170,20 @@ if (typeof document !== 'undefined') (() => {
       } else {
         const modelLabel=model==='random'?'Random-effects (REML)':'Common-effect';
         panel.dataset.estimate='indirect';
-        panel.innerHTML=heading+`<strong class="study-indirect-effect">Indirect estimate · ${escape(endpoint.measure)} ${studyNetworkInterval(fit)}</strong>
-          <p>${modelLabel} network meta-analysis · ${pair.trials.length} randomized trials</p><div data-study-pathways></div>`+studyNetworkDiagnostics(pair,fit);
-        showStudyPathways(panel.querySelector('[data-study-pathways]'),{network,pair,endpoint},intervention,comparator,model);
+        const choice=studyPathwaySelection({network,pair,fit,endpoint},intervention,comparator,model);
+        panel.innerHTML=heading+'<strong class="study-indirect-effect" aria-live="polite"></strong><p data-model></p><div data-weighting></div><div data-study-pathways></div><div data-diagnostics></div>';
+        const update=selection=>{
+          const {fit,pair}=selection;
+          const weighted=fit.method==='pathway-weighted';
+          const label=weighted?'Pathway-weighted sensitivity estimate':'Indirect estimate';
+          panel.querySelector('.study-indirect-effect').innerHTML=(fit.available?label+' · '+escape(endpoint.measure)+' ':'')+studyEstimateText(fit)+
+            (fit.available?' · '+studyPlanText(fit,pair,intervention,comparator,endpoint.measure):'')+studyPathwayCaption(selection);
+          panel.querySelector('[data-model]').textContent=(fit.available && !weighted?modelLabel+' network meta-analysis · ':'')+pair.trials.length+' randomized trials';
+          showStudyPathwayMethod(panel.querySelector('[data-weighting]'),selection,intervention,comparator,endpoint.measure);
+          panel.querySelector('[data-diagnostics]').innerHTML=studyNetworkDiagnostics(pair,fit);
+        };
+        update(choice.current);
+        choice.mount(panel.querySelector('[data-study-pathways]'),update);
       }
       bindStudyNetworkControls();
     } catch(error) {
@@ -2003,11 +2203,11 @@ if (typeof document !== 'undefined') (() => {
   function resultValue(row) { return escape(charts.tableValue(row)); }
   function studyTableCells(match) {
     if(match.study.quantitative_only||match.exact_membership_fallback){
-      const data=charts.studyTablePresentation(match,{registry:state.scopedPayload?.evidence_registry||{},phase_partition:match.phase_partition,presentation_cutoff:match.presentation_cutoff});
-      const line=(label,value)=>`<div class="scoped-result compact-result">${label?`<span title="${escape(label)}">${escape(label)}</span>`:''}<div>${escape(value)}</div></div>`;
+      const data=match.prepared_view||charts.studyTablePresentation(match,{registry:state.scopedPayload?.evidence_registry||{},phase_partition:match.phase_partition,presentation_cutoff:match.presentation_cutoff});
+      const line=(label,value,note)=>`<div class="scoped-result compact-result">${label?`<span title="${escape(label)}">${escape(label)}</span>`:''}<div${note?` tabindex="0" title="${escape(note)}" aria-label="${escape(value+'. '+note)}"`:''}>${escape(value)}</div></div>`;
       const details=match.study.report_id?`<button class="text-button outcome-details-link" data-open="${escape(match.study.report_id)}" data-detail-section="other-outcomes">Details</button>`:external(pubmedLink(match.study.pmid),'Source');
       const effect=data.effects.slice(0,3).map(row=>row.value==='NA'?details:row.review_needed?line(row.label,row.value)+`<button class="text-button outcome-details-link" data-open="${escape(match.study.report_id)}" data-detail-section="outcome-choices">Review alternatives</button>`:line(row.label,row.value)).join('')||details,remaining=data.effects.length-3;
-      return {sample_size:data.samples.map(row=>line(row.label,`N=${row.sample_size}${row.breakdown?' ('+row.breakdown+')':''}`)).join('')||'—',effect:effect+(remaining>0?`<button class="text-button scoped-more" data-open="${escape(match.study.report_id)}">+${number.format(remaining)} results · details</button>`:''),context:data.context,group:data.group};
+      return {sample_size:data.samples.map(row=>line(row.label,`N=${row.sample_size}${row.breakdown?' ('+row.breakdown+')':''}`,row.denominator_note)).join('')||'—',effect:effect+(remaining>0?`<button class="text-button scoped-more" data-open="${escape(match.study.report_id)}">+${number.format(remaining)} results · details</button>`:''),context:data.context,group:data.group};
     }
     const data=charts.studyTableData(match,{registry:state.scopedPayload?.evidence_registry||{},limit:3});
     const line=(label,value)=>`<div class="scoped-result"><span title="${escape(label)}">${escape(label)}</span><div>${escape(value)}</div></div>`;
@@ -2019,50 +2219,37 @@ if (typeof document !== 'undefined') (() => {
     const more=(n,label)=>n>0?`<button class="text-button scoped-more" data-open="${escape(match.study.report_id)}">+${number.format(n)} ${label}</button>`:'';
     return {sample_size:(samples||'NA')+more(data.more_counts,'count records'),effect:(effect||details)+more(data.hidden_results,'results · details')};
   }
-  function treatmentTag(label, addOn = false, definition = null) {
-    if(!label||label==='—')return '—';
-    const description=charts.regimenDescription(definition||label);
-    const render=(part)=>{
-      if(!part.components?.length)return {html:charts.treatmentBadge(part.label,part.class_ids||[]),compound:false};
-      const separator={alternative:'or',sequential:'→',optional:'±',combination:'+'}[part.kind]||'+';
-      let children=part.components.map(child=>{const shown=render(child);return shown.compound?`(${shown.html})`:shown.html;});
-      if(part.kind==='alternative')children=[...new Set(children)];
-      return {html:children.join(` <span class="treatment-join">${separator}</span> `),compound:children.length>1};
-    };
-    const content=render({...description,label:description.label||label}).html;
-    const placebo=description.components?.length>1&&description.placebo?' <span class="treatment-placebo">(+placebo)</span>':'';
-    return charts.treatmentRegimen(content+placebo,addOn);
-  }
-  function armTreatmentTag(label,addOn,definition,n){return treatmentTag(label,addOn,definition)+(Number.isInteger(n)&&n>=0?` <span class="treatment-arm-n">(N=${number.format(n)})</span>`:'');}
+  function treatmentTag(label,addOn=false,definition=null){return charts.armTag(label,addOn,definition);}
+  function armTreatmentTag(label,addOn,definition,n,prepared){return (prepared??treatmentTag(label,addOn,definition))+(Number.isInteger(n)&&n>=0?` <span class="treatment-arm-n">(N=${number.format(n)})</span>`:'');}
   function studyRowsHTML(rows,{include_missing_n=false,show_pmid=false,node_table=false}={}){
     return rows.map(match=>{
-      const study=match.study,design=charts.studyDesignInfo(study),abstractOnly=charts.abstractOnly(study),contrasts=match.presentation_rows||charts.studyTablePresentationRows(match,{registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels,include_missing_n}),trial=charts.studyTrialIdentifiers(study,{registry:state.scopedPayload?.evidence_registry||{}});
+      const study=match.study,nonTrial=match.prepared_design??charts.studyDesignInfo(study).is_non_trial,abstractOnly=match.prepared_abstract??charts.abstractOnly(study),contrasts=match.presentation_rows||charts.studyTablePresentationRows(match,{registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels,include_missing_n}),trial=match.prepared_trial||charts.studyTrialIdentifiers(study,{registry:state.scopedPayload?.evidence_registry||{}});
       return contrasts.map((contrast,index)=>{
         const cells=studyTableCells({...match,...contrast}),settings=charts.advancedArmSettings(match,contrast),settingNote=label=>label?`<span class="treatment-setting-note">${escape(label)}</span>`:'';
         const title=study.report_id?`<button class="study-title" data-open="${escape(study.report_id)}">${escape(study.title)}${abstractOnly?'<sup class="abstract-only-mark" title="Results based on abstract only" aria-label="Abstract only">*</sup>':''}</button>`:external(pubmedLink(study.pmid),study.title);
         const related=node_table&&match.related_report_count>1?`<small class="tm-related-report">${match.related_report_count} reports for this study</small>`:'';
         const n=include_missing_n&&['NA','—',''].includes(cells.sample_size)?'Unavailable':cells.sample_size;
-        return `<tr class="${index?'study-treatment-row':'study-start'}${design.is_non_trial?' study-nontrial':''}" data-pmid="${escape(study.pmid||'')}">${index?'':`<td rowspan="${contrasts.length}">${title}${related}${charts.articleStatusLabel(study)?`<small> ${escape(charts.articleStatusLabel(study))}</small>`:''}</td><td rowspan="${contrasts.length}">${escape(study.author_display||(study.first_author_surname?`${study.first_author_surname} et al.`:'—'))}</td><td rowspan="${contrasts.length}">${escape(study.year??'—')}</td>${show_pmid?`<td rowspan="${contrasts.length}">${study.pmid?external(pubmedLink(study.pmid),study.pmid):'—'}</td>`:''}<td rowspan="${contrasts.length}">${escape(trial.trial_label)}</td><td rowspan="${contrasts.length}" class="study-nct-cell">${escape(trial.nct_label)}</td>`}<td class="study-group-cell">${escape(cells.group||'—')}</td><td>${armTreatmentTag(contrast.comparator_label,false,contrast.comparator_definition,contrast.comparator_n)}${settingNote(settings.comparator)}</td><td>${armTreatmentTag(contrast.intervention_label,contrast.is_add_on,contrast.intervention_definition,contrast.intervention_n)}${settingNote(settings.intervention)}</td><td>${n}</td><td class="study-effect-cell">${cells.effect}</td></tr>`;
+        return `<tr class="${index?'study-treatment-row':'study-start'}${nonTrial?' study-nontrial':''}" data-pmid="${escape(study.pmid||'')}">${index?'':`<td rowspan="${contrasts.length}">${title}${related}${(match.prepared_status??charts.articleStatusLabel(study))?`<small> ${escape(match.prepared_status??charts.articleStatusLabel(study))}</small>`:''}</td><td rowspan="${contrasts.length}">${escape(study.author_display||(study.first_author_surname?`${study.first_author_surname} et al.`:'—'))}</td><td rowspan="${contrasts.length}">${escape(study.year??'—')}</td>${show_pmid?`<td rowspan="${contrasts.length}">${study.pmid?external(pubmedLink(study.pmid),study.pmid):'—'}</td>`:''}<td rowspan="${contrasts.length}">${escape(trial.trial_label)}</td><td rowspan="${contrasts.length}" class="study-nct-cell">${escape(trial.nct_label)}</td>`}<td class="study-group-cell">${escape(cells.group||'—')}</td><td>${armTreatmentTag(contrast.comparator_label,false,contrast.comparator_definition,contrast.comparator_n,contrast.prepared_arms?.[0])}${settingNote(settings.comparator)}</td><td>${armTreatmentTag(contrast.intervention_label,contrast.is_add_on,contrast.intervention_definition,contrast.intervention_n,contrast.prepared_arms?.[1])}${settingNote(settings.intervention)}</td><td>${n}</td><td class="study-effect-cell">${cells.effect}</td></tr>`;
       }).join('');
     }).join('');
   }
   function renderStudies(resetPage = true) {
     if (!$('scoped-studies-rows')) return;
-    renderStudyIndirect();
-    renderAdvancedFilters();
-    const current=advancedEvidence();
-    const rows = charts.sortStudyRows(current.visibleMatches||charts.visibleStudyMatches(current.matches,{registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels}), state.scopedSort || 'year', state.scopedOrder || 'desc');
+    const prepared=state.studyPreview?.active && !state.studyPreview.hydrating ? state.studyPreview.data : null;
+    if(!prepared){renderStudyIndirect();renderAdvancedFilters();}
+    const current=prepared?null:advancedEvidence(),loading=state.loading&&!prepared;
+    const rows = prepared?charts.sortStudyRows(prepared.rows,state.scopedSort||'year',state.scopedOrder||'desc'): charts.sortStudyRows(current.visibleMatches||charts.visibleStudyMatches(current.matches,{registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels}), state.scopedSort || 'year', state.scopedOrder || 'desc');
     const size = 10, pages = Math.max(1, Math.ceil(rows.length / size));
     state.scopedPage = resetPage ? 1 : Math.max(1, Math.min(state.scopedPage || 1, pages));
     const start = (state.scopedPage - 1) * size;
-    $('download-study-table').disabled=state.loading||!rows.length;
-    if($('trial-only-toggle')){$('trial-only-toggle').disabled=state.loading;$('trial-only-toggle').setAttribute('aria-pressed',String(state.trialsOnly===true));}
-    text('scoped-studies-count', state.loading ? '' : `${number.format(rows.length)} ${rows.length===1?'report':'reports'}`);
-    $('scoped-studies-rows').innerHTML = state.loading ? '<tr><td colspan="10">Loading studies…</td></tr>' : studyRowsHTML(rows.slice(start,start+size)) || '<tr><td colspan="10">No studies match these selections.</td></tr>';
+    $('download-study-table').disabled=loading||!rows.length;
+    if($('trial-only-toggle')){$('trial-only-toggle').disabled=loading;$('trial-only-toggle').setAttribute('aria-pressed',String(state.trialsOnly===true));}
+    text('scoped-studies-count', loading ? '' : `${number.format(rows.length)} ${rows.length===1?'report':'reports'}`);
+    $('scoped-studies-rows').innerHTML = loading ? '<tr><td colspan="10">Loading studies…</td></tr>' : studyRowsHTML(rows.slice(start,start+size)) || '<tr><td colspan="10">No studies match these selections.</td></tr>';
     text('scoped-studies-range', rows.length ? `${number.format(start+1)}–${number.format(Math.min(start+size,rows.length))} of ${number.format(rows.length)}` : '0 reports');
     text('scoped-studies-page', `Page ${state.scopedPage} of ${number.format(pages)}`);
-    $('scoped-studies-previous').disabled = state.loading || state.scopedPage <= 1;
-    $('scoped-studies-next').disabled = state.loading || state.scopedPage >= pages;
+    $('scoped-studies-previous').disabled = loading || state.scopedPage <= 1;
+    $('scoped-studies-next').disabled = loading || state.scopedPage >= pages;
     for (const key of ['author','year']) {
       const selected = state.scopedSort === key, order = state.scopedOrder || 'desc';
       $(`scoped-${key}-heading`).setAttribute('aria-sort', selected ? (order === 'asc' ? 'ascending' : 'descending') : 'none');
@@ -2192,7 +2379,7 @@ if (typeof document !== 'undefined') (() => {
     }
     if(name==='treatment-map')loadTreatmentMap();
     else if (Object.hasOwn(evidenceTabs, name)) loadEvidenceTab(name);
-    else ensureStudyData().then(renderStudyIndirect).catch(()=>{});
+    else openStudiesTab();
     const hash = name === 'articles' ? '#analysis' : '#' + name;
     if (location.hash !== hash) history.replaceState(null, '', hash);
   }
@@ -2267,7 +2454,7 @@ if (typeof document !== 'undefined') (() => {
     }).join('');
     const otherOutcomes=charts.specialOutcomeDetails(study,{registry:state.scopedPayload?.evidence_registry||{}});
     const otherOutcomeSection=otherOutcomes.length?`<section class="drawer-section" id="other-outcomes" tabindex="-1"><h3>Other outcomes</h3>${otherOutcomes.map(item=>`<blockquote><p>${escape(item.quote)}</p><footer>${escape(typeof item.locator==='string'?item.locator:JSON.stringify(item.locator))}</footer></blockquote>`).join('')}</section>`:'';
-    const trial=charts.studyTrialIdentifiers(study,{registry:state.scopedPayload?.evidence_registry||{}});
+    const trial=match.prepared_trial||charts.studyTrialIdentifiers(study,{registry:state.scopedPayload?.evidence_registry||{}});
     const trialDetails=`<section class="drawer-section"><dl class="compact-extraction-fields"><dt>Trial name</dt><dd>${escape(trial.trial_label)}</dd><dt>NCT number</dt><dd>${escape(trial.nct_label)}</dd></dl></section>${outcomeChoiceDetails(study)}`;
     const status=study.current_screening_status||details.current_screening?.triage_status||'NA';
     const screening=`<section class="drawer-section"><h3>Screening</h3><p>${escape(human(status))}${['unclear','uncertain','exclude'].includes(status)&&details.current_decision_reason?` · ${escape(details.current_decision_reason)}`:''}</p></section>`;
@@ -2306,6 +2493,69 @@ if (typeof document !== 'undefined') (() => {
     if(!studyDataPending)studyDataPending=loadData().then(()=>{if(state.datasetError)throw new Error('Study details could not be loaded.');}).finally(()=>{studyDataPending=null;});
     return studyDataPending;
   }
+  async function openStudiesTab() {
+    if(state.baselineScopedStudies || studyDataPending || globalThis.AdvancedFilters.activeCount(state.advanced) || state.trialsOnly) {
+      await ensureStudyData().then(renderStudyIndirect).catch(()=>{});return;
+    }
+    try {
+      const version=await savedMapVersion(),hash=version.study_browse_default_sha256;
+      if(!hash)throw new Error('Prepared Studies table unavailable.');
+      let preview=state.studyPreview;
+      if(preview?.hash!==hash) {
+        preview={hash,pending:fetchJson('./data/study_browse_default.json',hash)};
+        state.studyPreview=preview;
+      }
+      const data=await preview.pending;
+      if(state.studyPreview!==preview || state.baselineScopedStudies || studyDataPending || $('analysis-form').hidden || state.currentView!=='analysis')return;
+      if(data.source!==version.source_file_sha256 || data.graph!==version.graph_content_sha256)throw new Error('The prepared Studies table is stale.');
+      if(preview.active && preview.data===data)return;
+      preview.data=data;preview.active=true;
+      studyNetwork.catalog={labels:new Map(data.catalog.labels),keys:new Map(data.catalog.keys),ids:new Map(data.catalog.ids),choices:data.catalog.choices};
+      for(const role of ['comparator','intervention'])setTreatmentOptions($('analysis-'+role),data.selectors[role],'All '+(role==='comparator'?'comparators':'interventions'));
+      for(const role of ['comparator','intervention'])$('analysis-'+role).disabled=false;
+      options('analysis-endpoint',data.endpoints.map(row=>[row.id,row.label]),'All endpoints');
+      const disabled=new Set(data.endpoints.filter(row=>!row.enabled).map(row=>row.id));
+      for(const option of $('analysis-endpoint').options)option.disabled=disabled.has(option.value);
+      advancedPanel?.update({active:0,expanded:false,facets:[],summary:data.summary,loading:false,unavailable:false});
+      $('data-notice').hidden=true;
+      renderStudies(false);
+    } catch(_) {
+      state.studyPreview=null;
+      await ensureStudyData().then(renderStudyIndirect).catch(()=>{});
+    }
+  }
+  // Filters and original report details hydrate the evidence once. Preserve
+  // selections made while the detailed source and its controls are loading.
+  async function withStudyDetails(action,changed='') {
+    const preview=state.studyPreview;
+    if(!preview?.active && !preview?.hydrating){action();return;}
+    const values=['endpoint','comparator','intervention'].map(role=>$('analysis-'+role).value);
+    const ticket=preview.ticket=(preview.ticket||0)+1;
+    preview.active=false;preview.hydrating=true;
+    if(changed) {
+      // The prepared selector IDs and graph are bound to the same release.
+      // Network analysis can start while the separate clinical rows download.
+      const pair=values.slice(1);
+      preview.exactPair=pair.every(id=>studyNetwork.catalog?.labels.has(id));
+      studyNetwork.pair=preview.exactPair?pair:null;
+      if(changed==='endpoint'){studyNetwork.endpoint='';studyNetwork.target='';}
+      renderStudyIndirect();
+    }
+    try {
+      await ensureStudyData();
+      if(preview.ticket!==ticket)return;
+      const [endpoint,comparator,intervention]=values;
+      $('analysis-endpoint').value=endpoint;
+      refreshStudyChoices();
+      $('analysis-comparator').value=comparator;$('analysis-intervention').value=intervention;
+      action();
+    } catch (_) {
+      if(preview.ticket===ticket){
+        preview.active=true;
+        $('data-notice').hidden=false;$('data-notice').textContent='Study details could not be loaded. Select the filter or study again to retry.';
+      }
+    } finally {if(preview.ticket===ticket){preview.hydrating=false;preview.exactPair=false;}}
+  }
   function mapMatchesTreatments(graph,treatments){
     const meta=graph?.metadata||{};return !!treatments&&meta.registry_sha256===treatments.registry_sha256&&meta.normalization_content_sha256===treatments.content_sha256&&meta.source_file_sha256===treatments.source_file_sha256&&meta.clinical_content_sha256===treatments.clinical_content_sha256;
   }
@@ -2337,7 +2587,23 @@ if (typeof document !== 'undefined') (() => {
     openDrawer(study.report_id);
   }
   let networkFitCache;
-  async function lookupNetworkFit(graphHash, blocks, first, second, model) {
+  let defaultIndirectCache;
+  async function lookupNetworkFit(graphHash, blocks, first, second, model,endpoint='OS:HR',target='overall') {
+    const version=treatmentMapVersion;
+    if(model==='common' && version?.graph_content_sha256===graphHash && version.study_network_defaults_sha256) {
+      const hash=version.study_network_defaults_sha256;
+      if(defaultIndirectCache?.hash!==hash) {
+        defaultIndirectCache={hash,data:fetchJson('./data/study_network_defaults.json',hash).catch(()=>{
+          if(defaultIndirectCache?.hash===hash)defaultIndirectCache=null;
+          return null;
+        })};
+      }
+      const table=await defaultIndirectCache.data;
+      const saved=table?.results?.[JSON.stringify([endpoint,target,first,second])];
+      if(table?.graph===graphHash && saved && await globalThis.TreatmentNetworkCache.digest(blocks)===saved.blockDigest)
+        return {...saved.fit,defaultPlan:saved.plan};
+    }
+    if(endpoint!=='OS:HR'||target!=='overall')return null;
     const digest = treatmentMapVersion?.network_reference_sha256;
     if (!globalThis.TreatmentNetworkCache || !digest || treatmentMapVersion.graph_content_sha256 !== graphHash) return null;
     if (networkFitCache?.hash !== digest) {
@@ -2473,7 +2739,7 @@ if (typeof document !== 'undefined') (() => {
           treatmentMapController?.destroy();
           const advanced=globalThis.AdvancedFilters.activeCount(state.advanced)>0?{active:true,matches:{},label:'Loading selected filters…'}:{active:false,matches:{}};
           treatmentMapController=globalThis.TreatmentMap.mount(target,graph,{
-            advanced, networkModel:state.settings?.network_model || 'common',
+            advanced, networkModel:state.settings?.network_model || 'common',planningSettings:state.settings,
             loadNetworkGraph:()=>Array.isArray(graph.network_direct_evidence) ? graph : fullTreatmentMap(graph.content_sha256),
             loadNetworkPublications:async()=>{
               await ensureStudyData();
@@ -2579,7 +2845,7 @@ if (typeof document !== 'undefined') (() => {
         state.summary={...defaults,counts:{}};state.analysis={validated:false,analyses:[],matrix:[],sample_size:[]};
         $('data-notice').hidden=false;$('data-notice').className='data-notice error';$('data-notice').textContent='The published study snapshot could not be read. Reload to try again.';
       }
-      state.loading=false;$('refresh').disabled=false;setupAnalysisControls();scheduleClinicalRefresh();return;
+      state.loading=false;if(state.studyPreview&&!state.datasetError)state.studyPreview.active=false;$('refresh').disabled=false;setupAnalysisControls();scheduleClinicalRefresh();return;
     }
     const [summaryResult,analysisResult,studiesResult,clinicalResult]=await Promise.allSettled([fetchJson('./data/summary.json'),fetchJson('./data/analysis.json'),fetchJson('./data/studies.json'),fetchJson('./data/clinical_evidence.json')]);
     const errors=[];
@@ -2607,14 +2873,14 @@ if (typeof document !== 'undefined') (() => {
     const nav = event.target.closest('[data-view]'), target = event.target.closest('[data-go]'), open = event.target.closest('[data-open]'), save = event.target.closest('[data-save]'), tab = event.target.closest('[data-analysis-tab]'), matrix = event.target.closest('[data-matrix-group]');
     if (nav) go(nav.dataset.view);
     if (target) go(target.dataset.go);
-    if (open) openDrawer(open.dataset.open,open.dataset.detailSection||'');
+    if (open) withStudyDetails(()=>openDrawer(open.dataset.open,open.dataset.detailSection||''));
     if (save) toggleSave(save.dataset.save);
     if (tab) selectAnalysisTab(tab.dataset.analysisTab);
     if (matrix) showMatrixDetails(matrix.dataset.matrixGroup.split(',').map(Number));
   });
   window.addEventListener('hashchange', () => showView(location.hash.slice(1), true));
-  $('download-study-table').addEventListener('click',downloadStudyTable);
-  $('trial-only-toggle')?.addEventListener('click',()=>{state.trialsOnly=!state.trialsOnly;refreshStudyChoices();renderAnalysis();renderSummary();renderMatrix();renderPlanning();});
+  $('download-study-table').addEventListener('click',()=>withStudyDetails(downloadStudyTable));
+  $('trial-only-toggle')?.addEventListener('click',()=>withStudyDetails(()=>{state.trialsOnly=!state.trialsOnly;refreshStudyChoices();renderAnalysis();renderSummary();renderMatrix();renderPlanning();}));
   $('scoped-studies-previous').addEventListener('click',()=>{state.scopedPage--;renderStudies(false);});
   $('scoped-studies-next').addEventListener('click',()=>{state.scopedPage++;renderStudies(false);});
   for(const key of ['author','year'])$(`scoped-sort-${key}`).addEventListener('click',()=>{state.scopedOrder=state.scopedSort===key&&state.scopedOrder==='asc'?'desc':'asc';state.scopedSort=key;renderStudies();});
@@ -2622,8 +2888,8 @@ if (typeof document !== 'undefined') (() => {
   $('study-dialog').addEventListener('click', (event) => { if (event.target === $('study-dialog')) { const rect = $('study-dialog').getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right) $('study-dialog').close(); } });
   $('study-dialog').addEventListener('close', () => { state.activeReport = null; });
   $('analysis-form').addEventListener('submit', (event) => { event.preventDefault(); updateAvailability('analysis'); renderAnalysis('always'); renderMainArticles(true); });
-  for(const id of ['analysis-comparator','analysis-intervention'])$(id).addEventListener('change',()=>{refreshStudyChoices(id==='analysis-comparator'?'comparator':'intervention');renderAnalysis('if-empty');});
-  $('analysis-endpoint').addEventListener('change',()=>{studyNetwork.endpoint='';studyNetwork.target='';refreshStudyChoices();renderAnalysis('if-empty');});
+  for(const role of ['comparator','intervention'])$('analysis-'+role).addEventListener('change',()=>withStudyDetails(()=>{refreshStudyChoices(role);renderAnalysis('if-empty');},role));
+  $('analysis-endpoint').addEventListener('change',()=>withStudyDetails(()=>{studyNetwork.endpoint='';studyNetwork.target='';refreshStudyChoices();renderAnalysis('if-empty');},'endpoint'));
   $('analysis-comparison').addEventListener('change', renderAnalysis);
   document.querySelector('.analysis-tabs').addEventListener('keydown', (event) => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
@@ -2637,9 +2903,10 @@ if (typeof document !== 'undefined') (() => {
   }
   $('planning-form').addEventListener('submit', (event) => { event.preventDefault(); updateAvailability('planning'); renderPlanning(); });
   $('settings-form').addEventListener('submit', (event) => { event.preventDefault(); saveSettings(); });
+  for(const id of ['planning-arms','planning-mode'])$(id).addEventListener('change',displayPlanningFields);
   $('reset-settings').addEventListener('click', () => saveSettings(true));
   state.advancedExpanded=globalThis.AdvancedFilters.activeCount(state.advanced)>0;
-  advancedPanel=globalThis.AdvancedFilterPanel.create({toggle:$('advanced-filter-toggle'),panel:$('advanced-filter-panel'),fields:$('advanced-filter-fields'),reset:$('reset-advanced-filters'),status:$('advanced-filter-status'),evidence:$('advanced-evidence-count'),onToggle:()=>{state.advancedExpanded=!state.advancedExpanded;renderAdvancedFilters();},onChange:advancedChanged,onReset:()=>advancedChanged()});
+  advancedPanel=globalThis.AdvancedFilterPanel.create({toggle:$('advanced-filter-toggle'),panel:$('advanced-filter-panel'),fields:$('advanced-filter-fields'),reset:$('reset-advanced-filters'),status:$('advanced-filter-status'),evidence:$('advanced-evidence-count'),onToggle:()=>withStudyDetails(()=>{state.advancedExpanded=!state.advancedExpanded;renderAdvancedFilters();}),onChange:advancedChanged,onReset:()=>advancedChanged()});
   displaySettings(); showView(location.hash.slice(1));
   renderAnalysis(); renderMainArticles(); renderSummary(); renderMatrix(); renderPlanning(); renderPrisma(); refreshEvidenceFreshness();
   if (state.currentView !== 'analysis' && state.currentView !== 'about' && state.currentView !== 'settings') ensureStudyData().catch(()=>{});

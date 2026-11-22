@@ -1,8 +1,8 @@
 /* Compact, source-checked extraction display. Raw requests and audit code stay off the UI. */
 (function(root,factory){
-  if(typeof module==='object'&&module.exports)module.exports=factory(require('./clinical_evidence.js'),require('./confidence_intervals.js'),require('./trial_identifiers.js'));
-  else root.QuantitativeExtraction=factory(root.ClinicalEvidence,root.ConfidenceIntervals,root.TrialIdentifiers);
-})(typeof globalThis==='undefined'?this:globalThis,function(clinical,confidenceIntervals,trialIdentity){
+  if(typeof module==='object'&&module.exports)module.exports=factory(require('./clinical_evidence.js'),require('./confidence_intervals.js'),require('./trial_identifiers.js'),require('./single_arm_denominators.js'));
+  else root.QuantitativeExtraction=factory(root.ClinicalEvidence,root.ConfidenceIntervals,root.TrialIdentifiers,root.SingleArmDenominators);
+})(typeof globalThis==='undefined'?this:globalThis,function(clinical,confidenceIntervals,trialIdentity,denominators){
   'use strict';
   const list=value=>Array.isArray(value)?value:[];
   const need=(value,message)=>{if(!value)throw new Error(message);};
@@ -213,6 +213,19 @@
     const source=row?.source_input_sha256||row?.scope?.source_input_sha256;
     return records(study).find(record=>record.source_sha256===source)||null;
   }
+  function recoveredDenominator(row){
+    const saved=denominators?.[row?.result_id],q=row?.quantitative_record;
+    if(!saved||!q||row.scoped_sample_size?.status!=='missing'||row.extraction_conflict||q.display_n?.status==='CONFLICTING'||q.complementary_count_scope==='source_reviewed_unavailable')return null;
+    const scope=[String(row.pmid),row.source_input_sha256,q.endpoint,q.population_id,q.arm_id];
+    if(!scope.every((value,i)=>value===saved.scope[i]))return null;
+    if(!['percentage','ci_lower','ci_upper','ci_level','numerator'].every((k,i)=>q[k]===saved.input[i]))return null;
+    const approximate=saved.status==='approximate',methods=saved.methods.join(', ');
+    const range=saved.range[0]===saved.range[1]?String(saved.n):saved.range.join('–');
+    const note=approximate?'Compatible N '+range+'. '+(saved.method_source?'Reported interval method: ':'Compatible interval methods: ')+methods+'.':saved.method_source||('Unique denominator from '+methods+'.');
+    const display=approximate?saved.n+' (approx.)':saved.status==='derived'?saved.n+' (derived)':String(saved.n);
+    return {n:approximate?null:saved.n,status:saved.status,basis:'single_arm_endpoint_denominator',display, note,
+      count_purpose:'outcome_analysis',count_ids:[],range:saved.range,reported_percentage:saved.reported_percentage};
+  }
   // A reviewed presentation correction, not a new extracted denominator. In
   // CheckMate 915 the source explicitly defines safety as the treated population.
   // Four missing safety denominators inherited the randomized fallback because
@@ -220,6 +233,8 @@
   function presentationSampleSize(study,row,{registry={},samples=study?.details?.sample_size_records}={}){
     if(row?.quantitative_record?.complementary_count_scope==='source_reviewed_unavailable')
       return {n:null,status:'unverified',basis:'source_population_mismatch',count_purpose:'outcome_analysis',count_ids:[],unverified_label:'NA'};
+    const recovered=recoveredDenominator(row);
+    if(recovered)return recovered;
     const r2Identity={pmid:'36162037',report_id:'report-8ab2816667ca355de5fec208',review_stage:'R2',source_input_sha256:'d9edaf893efe7b740487d841b8f670049c452bf8c9d74789fa570c5b4dddfa9d',review_binding_sha256:'44064cc7c2d045a6c3eaa48b98cfb4536eb882227c6a17af560346527dad11e5'};
     if(String(study?.pmid)===r2Identity.pmid&&Object.entries(r2Identity).every(([key,value])=>String(row?.[key])===value)){
       const q=row.quantitative_record,record=sourceRecord(study,row),prefix='CE-'+r2Identity.review_binding_sha256.slice(0,24)+'-';
@@ -493,7 +508,12 @@
         }
         return resolutions.get(row.id);
       };
-      const displayedN=row=>{const n=resolution(row);return n?n.status==='unverified'?n.unverified_label||'NA':n.n:row.display_n?.status==='CONFLICTING'?'NA · CONFLICTING':row.display_n?.n??row.analysis_n??row.denominator??'NA';};
+      const displayedN=row=>{
+        const n=resolution(row);
+        if(n?.basis==='single_arm_endpoint_denominator')return n.display+' · '+n.note;
+        if(n)return n.status==='unverified'?n.unverified_label||'NA':n.n;
+        return row.display_n?.status==='CONFLICTING'?'NA · CONFLICTING':row.display_n?.n??row.analysis_n??row.denominator??'NA';
+      };
       const resultPopulation=row=>resolution(row)?.population_label||population(row.population_id);
       const outcomes=new Map([...list(record.effects),...list(record.survival),...list(record.binary)].map(r=>[r.id,r]));
       let out=fields('Study',[['Study type',s.study_type],['Randomized',s.randomized],['Comparison',s.comparison_structure],['Setting',s.setting],['Subtype',s.melanoma_subtype],['BRAF',s.braf],['Previous systemic treatment',s.previous_systemic],...list(s.identifiers).filter(id=>!/^NCT\d{8}$/i.test(id.id||'')).map(id=>[id.registry||'Study identifier',id.id])]);
@@ -532,7 +552,7 @@
       out+=table('Time-to-event results',['Endpoint','Treatment','Population','N','Result','Time (months)','Value (CI)','Status'],list(record.survival).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.arm_id),resultPopulation(r),displayedN(r),clean(r.kind||r.result_type),r.time,interval(r,r.estimate,{original:true})+(typeof r.estimate==='number'?(r.unit==='months'?' months':r.unit==='percent'?'%':''):''),clean(r.median_status)]));
       const numerator=row=>list(record.derivations).some(d=>d.section==='binary'&&d.id===row.id&&
         d.field==='numerator')?`${row.numerator} (derived)`:row.numerator;
-      out+=table('Response and safety',['Endpoint','Treatment','Population','Patients','N','Percentage (CI)','Time (months)','Definition'],list(record.binary).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.arm_id),population(r.population_id),numerator(r),displayedN(r),interval(r,r.percentage,{original:true}),r.assessment_time,[definition(r),r.response_criteria,r.response_criteria_version,r.safety_attribution].filter(x=>x&&x!=='NA').join(' · ')||'NA']));
+      out+=table('Response and safety',['Endpoint','Treatment','Population','Patients','N','Percentage (CI)','Time (months)','Definition'],list(record.binary).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.arm_id),population(r.population_id),numerator(r),displayedN(r),interval(r,resolution(r)?.reported_percentage??r.percentage,{original:true}),r.assessment_time,[definition(r),r.response_criteria,r.response_criteria_version,r.safety_attribution].filter(x=>x&&x!=='NA').join(' · ')||'NA']));
       const superseded=[];
       for(const [section,decisions] of Object.entries(reviewed?.source_preferences||{})){
         for(const old of list(reviewed.record[section])){
@@ -549,5 +569,5 @@
       return all.length>1?`<details class="drawer-section"${fullText?' open':''}><summary>${fullText?'Full text':'Title and abstract'}</summary>${out}</details>`:out;
     }).join('')+(study.details?.fulltext_assessment&&!['complete','complete_with_issues'].includes(study.details.fulltext_assessment.technical_state)?'<p class="drawer-section">Full-text review pending. The title-and-abstract results remain available.</p>':'');
   }
-  return Object.freeze({effectiveRecord,checked,merge,records,trialIdentifiers,render,regimen,armLabels,resultDoseLabel,sourceRecord,presentationSampleSize,presentationGroupLabel,timeLabel,cohortLabel,populationContext,resultContext,phasePartitions,treatmentAliases,countLabel,countAlias,countSummary,endpoint,definition,table,fields,text,clean,formatNumber,formatEffectNumber,cleanContext,interval});
+  return Object.freeze({effectiveRecord,checked,merge,records,trialIdentifiers,render,regimen,armLabels,resultDoseLabel,sourceRecord,recoveredDenominator,presentationSampleSize,presentationGroupLabel,timeLabel,cohortLabel,populationContext,resultContext,phasePartitions,treatmentAliases,countLabel,countAlias,countSummary,endpoint,definition,table,fields,text,clean,formatNumber,formatEffectNumber,cleanContext,interval});
 });

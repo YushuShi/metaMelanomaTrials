@@ -175,6 +175,33 @@
     }
     return publications;
   }
+  function planningRates(row) {
+    const {record,armData,treatment,comparator} = row, rates=[];
+    const binary=['RR','OR'].includes(record.measure);
+    for(const [i,role] of ['intervention','comparator'].entries()) {
+      const regimen=i===0?treatment:comparator;
+      if(binary && armData[i]) {
+        rates.push({regimen,probability:armData[i].p,pmid:record.pmid});
+        continue;
+      }
+      for(const a of record.analysis?.planning_assumptions || []) {
+        if(a.arm_role!==role || a.outcome!==record.outcome || !Number.isFinite(a.probability))continue;
+        if(binary) {
+          if(a.kind!=='binary_probability')continue;
+          // A published contrast can share a broad endpoint code with unrelated
+          // toxicity types, response criteria or assessment times in the same report.
+          const rateRecord={measure:record.measure,outcome:record.outcome,outcome_definition:a.label,
+            assessment_time:a.time,time_unit:a.time_unit,calculation:{outcome_context:{
+              response_criteria:a.response_criteria,safety_attribution:a.safety_attribution}}};
+          if(targetVariant(rateRecord)!==targetVariant(record))continue;
+          if(/^AE/.test(record.outcome) && detail(a.label).toLowerCase()!==detail(record.outcome_definition).toLowerCase())continue;
+        } else if(a.kind!=='survival_probability' || !(a.time_months>0))continue;
+        rates.push({regimen,probability:binary?a.probability:1-a.probability,
+          timeMonths:a.time_months ?? null,pmid:a.source_refs?.[0]?.pmid || record.pmid});
+      }
+    }
+    return rates;
+  }
   function sourceStudy(row, publications) {
     const {record,original,treatment,comparator,sourceCohort} = row;
     const pmid = detail(record.pmid), pub = publications.get(pmid) || {};
@@ -229,7 +256,8 @@
     return block.contrasts.flatMap(({treatment,comparator},i)=>weights?.[i] ? [available.get(pair(treatment,comparator))] : []).filter(Boolean);
   }
   function withinTrialEvidence(block,rows,publications,catalog) {
-    const edges=rows.map(row=>({treatment:row.treatment,comparator:row.comparator,trialId:block.trialId,studyRow:sourceStudy(row,publications)}));
+    const edges=rows.map(row=>({treatment:row.treatment,comparator:row.comparator,trialId:block.trialId,
+      planningRates:planningRates(row),studyRow:sourceStudy(row,publications)}));
     if(rows.length<2)return edges;
     const ids=distinct(rows.flatMap(row=>[row.treatment,row.comparator])).sort();
     const present=new Set(edges.map(e=>pair(e.treatment,e.comparator)));
@@ -237,12 +265,13 @@
     const binary=['RR','OR'].includes(rows[0].record.measure) && consistentArms(rows);
     const joint=jointModel(rows[0]);
     if(!(binary || joint && rows.every(row=>jointModel(row)===joint)))return edges;
-    const studies=new Map(edges.map(edge=>[edge.studyRow.recordId,edge.studyRow]));
+    const originalEdges=new Map(edges.map(edge=>[edge.studyRow.recordId,edge]));
     for(const [i,a] of ids.entries())for(const b of ids.slice(i+1)){
       if(present.has(pair(a,b)))continue;
       const effect=withinTrialContrast(block,a,b);
       if(!effect)continue;
-      const sources=supportingRows(rows,block,a,b,binary).map(row=>studies.get(row.record.id));
+      const support=supportingRows(rows,block,a,b,binary).map(row=>originalEdges.get(row.record.id));
+      const sources=support.map(edge=>edge.studyRow);
       if(!sources.length)continue;
       const sourcePmids=distinct(sources.flatMap(s=>s.sourcePmids)).sort();
       const sourceRecordIds=distinct(sources.flatMap(s=>s.sourceRecordIds)).sort();
@@ -253,7 +282,8 @@
           const {title,author,year}=sources.find(s=>s.pmid===pmid);
           return {pmid,title,author,year};
         })};
-      edges.push({treatment:a,comparator:b,trialId:block.trialId,studyRow:{...source,...publication,...effect,
+      const rates=support.flatMap(edge=>edge.planningRates).filter(rate=>rate.regimen===a || rate.regimen===b);
+      edges.push({treatment:a,comparator:b,trialId:block.trialId,planningRates:rates,studyRow:{...source,...publication,...effect,
         recordId:null,sourcePmids,sourceRecordIds,intervention:catalog.labels.get(a),comparator:catalog.labels.get(b),
         sampleSize,reconstructed:true,ciNote:binary?'Calculated from randomized arm risks and their sampling covariance.':'Calculated from the trial’s joint model and sampling covariance.'}});
     }
