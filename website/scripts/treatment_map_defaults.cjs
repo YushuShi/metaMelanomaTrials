@@ -4,6 +4,7 @@ const fs=require('node:fs');
 const crypto=require('node:crypto');
 const path=require('node:path');
 const zlib=require('node:zlib');
+const {execFileSync}=require('node:child_process');
 const MapView=require('../dist/treatment_map.js');
 const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const read=file=>fs.existsSync(file)?fs.readFileSync(file):zlib.gunzipSync(fs.readFileSync(file+'.gz'));
@@ -27,7 +28,7 @@ function build(graph){
     schema_version:graph.schema_version,record_kind:graph.record_kind,content_sha256:graph.content_sha256,
     metadata:graph.metadata,view_snapshot:true,
     nodes:graph.nodes.map(({inclusive_count_summary,inclusive_contribution_ids,contribution_ids,...node})=>node),
-    relationships:graph.relationships,comparisons:graph.comparisons,
+    relationships:graph.relationships,comparisons:graph.comparisons,network_direct_evidence:graph.network_direct_evidence||[],
     // Full source-bound membership and audit records stay in treatment_map.json
     // and are fetched only for the study table. Counts here are already final.
     study_memberships:graph.study_memberships.map(({id,node_id})=>({id,node_id})),
@@ -36,13 +37,25 @@ function build(graph){
 }
 function publish(root){
   const dir=path.join(root,'website/dist/data'),graphBytes=read(path.join(dir,'treatment_map.json'));
+  // Public checkouts already contain the bylines. Refresh them when the local
+  // citation database is present so newly admitted reports are included.
+  if(fs.existsSync(path.join(root,'data/current/articles.sqlite3')))
+    execFileSync('python3',[path.join(root,'website/scripts/treatment_network_authors.py'),root]);
   const graph=JSON.parse(graphBytes),snapshot=build(graph),bytes=JSON.stringify(snapshot)+'\n';
   const classes=JSON.parse(read(path.join(dir,'clinical_classifications.json')));
   const source=read(path.join(root,graph.metadata.source_path));
   if(hash(source)!==graph.metadata.source_file_sha256)throw new Error('Default map source has changed; rebuild the treatment map first.');
   const quantitative=JSON.parse(source);
+  const networkReference=require('./treatment_network_reference_cache.cjs').publish(root);
+  const networkFile='treatment_network_reference.json';
+  const networkPresent=['current','published'].includes(networkReference.status);
   const producers=['website/scripts/treatment_map_defaults.cjs','website/dist/treatment_map.js','website/dist/treatment_map_analysis.js','website/dist/treatment_map_effects.js','website/dist/statistical_math.js','website/dist/confidence_intervals.js'];
+  producers.push('website/scripts/treatment_network_reference_cache.cjs','website/scripts/treatment_network_reference_cache.R',
+    'website/scripts/treatment_network_authors.py','website/dist/treatment_network_authors.js',
+    'website/dist/treatment_network_model.js','website/dist/treatment_network_cache.js','website/dist/treatment_network_evidence.js');
   const version={schema_version:1,graph_content_sha256:graph.content_sha256,
+    network_reference_sha256:networkPresent?hash(read(path.join(dir,networkFile))):null,
+    ...(networkPresent?{}:{network_reference_note:networkReference.reason}),
     graph_file_sha256:hash(graphBytes),default_snapshot_sha256:hash(bytes),
     clinical_content_sha256:graph.metadata.clinical_content_sha256,
     quantitative_content_sha256:quantitative.content_sha256||graph.metadata.source_file_sha256,

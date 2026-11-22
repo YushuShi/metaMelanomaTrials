@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 from metamelanoma import quantitative as q, schema
 from metamelanoma.fulltext_export import project_fulltext, publication_inputs, publish, _check_publication_predecessor
+from test_treatment_normalization import RESOURCES
 from metamelanoma.io import atomic_json, reference
 from metamelanoma.quantitative_export import project_pilot
 from metamelanoma.screening import build_source, catalog_for
@@ -295,9 +296,7 @@ if(merged.studies[0].details.quantitative_results.filter(r=>r.main_result_eligib
         repo = Path(__file__).resolve().parents[2]
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()
-            for rel in ['config/treatment_registry.json', 'config/sample_size_link_reviews.json', 'config/comparison_result_reviews.json', 'website/scripts/treatment_map_defaults.cjs', 'website/scripts/regimen_projection.cjs', 'website/scripts/treatment_normalization.cjs', 'website/scripts/build_drug_type_review.cjs', 'website/scripts/treatment_map.cjs', 'website/scripts/treatment_map_model.cjs', 'website/scripts/treatment_map_cohorts.cjs', 'website/scripts/treatment_map_membership.cjs', 'website/scripts/treatment_map_evidence.cjs', 'src/metamelanoma/treatment_map.py', *[
-                'website/dist/' + name + '.js' for name in ('regimen_definitions', 'treatment_groups',
-                    'treatment_registry', 'treatment_resolver', 'regimen_source_rules', 'clinical_evidence', 'statistical_math', 'confidence_intervals', 'quantitative_extraction', 'trial_identifiers', 'trial_registry', 'treatment_map', 'treatment_map_analysis', 'treatment_map_effects', 'treatment_map_charts', 'treatment_map_planning')]]:
+            for rel in RESOURCES:
                 destination = root / rel; destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(repo / rel, destination)
             public = root / 'website/dist/data/quantitative_extraction.json'

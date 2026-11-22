@@ -37,6 +37,17 @@ test('All returns exact existing matches including unknown classifications and n
   assert.equal(filters.filterMatches(f.matches,filters.resetSelections(),{}),f.matches);
   assert.equal(filters.savedAnalysisMatches({validated:false},f.matches,{},{}),true);
 });
+test('a verified follow-up comparison requires both original arms to satisfy the same advanced filters',()=>{
+  const f=fixture(['a','b'].map(arm_id=>({pmid:'1234',population:'trial population',stage:'iv',q:{arm_id}})));
+  const sources=f.matches.map(m=>({...m.results[0],review_stage:'R2'}));
+  const row={...sources[0],review_stage:'Full-text review',source_filter_bindings:sources.map(source=>[source])};
+  const matches=record=>filters.resultMatches(record,{stage:'iv'},f.options);
+  assert.equal(matches(row),true);
+  for(const overrides of [{pmid:'1235'},{report_id:'wrong report'},{quantitative_record:{...sources[1].quantitative_record,arm_id:'a'}}])
+    assert.equal(matches({...row,source_filter_bindings:[[sources[0]],[{...sources[1],...overrides}]]}),false);
+  f.artifact.results[sources[1].result_id].fields.stage.categories=['iii'];
+  assert.equal(matches(row),false);
+});
 test('mixed melanoma subtype stays visible by default and under unrelated supported filters',()=>{
   const f=fixture([{stage:'iii',subtype:{status:'mixed',categories:['cutaneous','mucosal']}},
     {stage:'iii',subtype:'cutaneous'},{stage:'iii',subtype:'mucosal'}]);

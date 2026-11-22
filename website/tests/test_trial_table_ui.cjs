@@ -8,6 +8,7 @@ const find=id=>studies.find(s=>s.pmid===id),match=id=>charts.filterStudies([find
 function renderer(){
  const elements=new Map(),get=id=>{if(!elements.has(id))elements.set(id,{textContent:'',innerHTML:'',disabled:false,attrs:{},setAttribute(k,v){this.attrs[k]=v;}});return elements.get(id);};
  const context={charts,state:{scopedStudies:studies,scopedPayload:{evidence_registry:registry},scopedSort:'year',scopedOrder:'desc',drugLabels:new Map(),trialsOnly:false},$:get,text:(id,value)=>get(id).textContent=value,escape:v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),number:new Intl.NumberFormat('en-US')};
+ context.renderStudyIndirect=()=>{};
  context.mainSelection=()=>({trials_only:context.state.trialsOnly,evidence_registry:registry});context.renderAdvancedFilters=()=>{};context.advancedEvidence=()=>({matches:charts.filterStudies(studies,context.mainSelection())});vm.createContext(context);
  const source=fs.readFileSync(require.resolve('../dist/app.js'),'utf8');for(const name of ['studyTableCells','treatmentTag','armTreatmentTag','studyRowsHTML','renderStudies']){const start=source.indexOf('  function '+name+'('),end=source.indexOf('\n  function ',start+5);vm.runInContext(source.slice(start,end),context);}
  return {context,get,render:()=>context.renderStudies()};

@@ -1,6 +1,17 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const Trials=require('../dist/trial_identifiers.js');
+test('the FDA report and the EORTC 18071 follow-up resolve to their original randomized trials',()=>{
+  const reports=[
+    ['28073844','10.1158/1078-0432.ccr-16-0714','FDA Approval of Nivolumab for the First-Line Treatment of Patients with BRAFV600 Wild-Type Unresectable or Metastatic Melanoma.','CheckMate 066','NCT01721772'],
+    ['31400634','10.1016/j.ejca.2019.07.001','Adjuvant ipilimumab: long-term follow-up results of the European Organisation for Research and Treatment of Cancer 18071 double-blind phase 3 randomised trial.','EORTC 18071','NCT00636168']
+  ];
+  for(const [pmid,doi,title,name,nct] of reports){
+    assert.deepEqual(Trials.get({pmid,doi,title}).nct_ids,[nct]);
+    assert.equal(Trials.get({pmid,doi,title}).trial_label,name);
+    assert.deepEqual(Trials.get({pmid,doi:'unrelated',title}).nct_ids,[]);
+  }
+});
 const Clinical=require('../dist/clinical_evidence.js');
 const root=path.resolve(__dirname,'../..');
 const load=(dir,prefix)=>JSON.parse(fs.readFileSync(path.join(root,dir,fs.readdirSync(path.join(root,dir)).find(f=>f.startsWith(prefix)))));

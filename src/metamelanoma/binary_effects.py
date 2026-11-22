@@ -340,7 +340,7 @@ def control_arm(arms,spans):
     return next(iter(tagged)) if len(tagged)==1 else None
 
 
-def calculate(wrapper,clinical_rows,spans,title="",shared_design=""):
+def calculate(wrapper,clinical_rows,spans,title="",shared_design="", *, network_boundaries=False):
 
     record=wrapper['record']
     if record['decision']['status']!='retain' or record['study']['comparison_structure']!='comparative':
@@ -425,10 +425,23 @@ def calculate(wrapper,clinical_rows,spans,title="",shared_design=""):
 
             rates={k:data[k][1] for k in direction}
             rows={k:data[k][0] for k in direction}
-            for effect in _make_effects(record,rates,rows,direction,orientation,pop,dict(attributes),independent,spans):
-                scope=_scope(record,effect)
-                if not any(_same_context(scope,existing_scope,effect,existing) for existing_scope,existing in reported):
-                    out.append(effect)
+            if network_boundaries:
+                # A zero RR or OR is a direct target estimate even though its log is not
+                # finite. Reversing the *same* eligible comparison can recover it where
+                # the existing analytical direction has a zero denominator. Both arms
+                # at the same boundary yield no defined ratio in either orientation.
+                if not any(rate['rate'] in (0,1) for rate in rates.values()):
+                    continue
+                orientations=[(direction,orientation),(direction[::-1],'reversed_boundary_contrast')]
+            else:
+                orientations=[(direction,orientation)]
+            for ordered,order_label in orientations:
+                for effect in _make_effects(record,rates,rows,ordered,order_label,pop,dict(attributes),independent,spans):
+                    if network_boundaries and effect['estimate'] != 0:
+                        continue
+                    scope=_scope(record,effect)
+                    if not any(_same_context(scope,existing_scope,effect,existing) for existing_scope,existing in reported):
+                        out.append(effect)
     return out
 
 
@@ -570,6 +583,63 @@ def _clinical_projection(article,record,effect,by_id,comparisons):
     article['quantitative_results'].append(row)
 
 
+def _binary_sources(article):
+    by_stage=defaultdict(dict)
+    for row in article['quantitative_results']:
+        r=row.get('quantitative_record',{})
+        if 'percentage' in r and row.get('arm'):
+            by_stage[row['review_stage']][r['id']]=row
+    return by_stage
+
+
+def _source_spans(record,src,registry):
+    prefix='CE-'+next(iter(src.values()))['review_binding_sha256'][:24]+'-'
+    # Include every cited raw-row and denominator span, without scanning
+    # the global registry once for every article.
+    ids={sid for rows in (record['binary'],record['sample_sizes'])
+         for row in rows for sid in row['evidence']}
+    ids.update(record.get('study',{}).get('evidence',[]))
+    ids.update((record.get('study_details') or {}).get('evidence',[]))
+    ids.update(sid for arm in record['arms'] for sid in arm.get('evidence',[]))
+    spans={sid:registry[prefix+sid]['supporting_quote'] for sid in ids
+           if prefix+sid in registry}
+    return spans
+
+
+def network_boundary_effects(payload):
+    """Return map-only finite zeros from verified source arm rows, without mutating the publication."""
+    from .source_preference import effective_record
+    clinical=payload['clinical_evidence']
+    by_pmid={a['pmid']:a for a in clinical['articles']}
+    additions={}
+    for compact in payload['articles']:
+        article=by_pmid.get(compact['pmid'],{})
+        if not article.get('current_main_eligible'):
+            continue
+        by_stage=_binary_sources(article)
+        shared_design=' '.join((w['record'].get('study_details') or {}).get('design_description','')
+                               for w in compact['records'])
+        for wrapper in compact['records']:
+            record=effective_record(wrapper)
+            src=by_stage.get(wrapper['stage'])
+            if not src or record['study'].get('comparison_structure')!='comparative':
+                continue
+            boundaries=any((r.get('percentage') in (0,100) or r.get('numerator')==0 or
+                            numeric(r.get('numerator')) and r['numerator']==r.get('denominator'))
+                           for r in record['binary'])
+            if not boundaries:
+                continue
+            spans=_source_spans(record,src,clinical['evidence_registry'])
+            derived=calculate({**wrapper,'record':record},src,spans,article.get('title',''),shared_design,
+                              network_boundaries=True)
+            existing={r['id'] for r in wrapper.get('calculated_effects',[])}
+            extra=[r for r in derived if r['id'] not in existing]
+            if extra:
+                key='|'.join([str(compact['pmid']),wrapper['stage'],record['source_sha256']])
+                additions[key]=extra
+    return additions
+
+
 def apply(payload):
     """Rebuild derived comparisons on this public projection, never on the archived GPT record."""
     clinical=payload['clinical_evidence']
@@ -584,11 +654,7 @@ def apply(payload):
         if not article.get('current_main_eligible'):
             continue
         comparisons={c['comparison_id']:c for c in article['comparisons']}
-        by_stage=defaultdict(dict)
-        for row in article['quantitative_results']:
-            r=row.get('quantitative_record',{})
-            if 'percentage' in r and row.get('arm'):
-                by_stage[row['review_stage']][r['id']]=row
+        by_stage=_binary_sources(article)
         candidates=[]
         reported=[]
         from .source_preference import effective_record
@@ -599,16 +665,7 @@ def apply(payload):
             src=by_stage[wrapper['stage']]
             if not src or not record['binary'] or record['study']['comparison_structure']!='comparative':
                 continue
-            prefix='CE-'+next(iter(src.values()))['review_binding_sha256'][:24]+'-'
-            # Include every cited raw-row and denominator span, without scanning
-            # the global registry once for every article.
-            ids={sid for rows in (record['binary'],record['sample_sizes'])
-                 for row in rows for sid in row['evidence']}
-            ids.update(record.get('study',{}).get('evidence',[]))
-            ids.update((record.get('study_details') or {}).get('evidence',[]))
-            ids.update(sid for arm in record['arms'] for sid in arm.get('evidence',[]))
-            spans={sid:clinical['evidence_registry'][prefix+sid]['supporting_quote'] for sid in ids
-                   if prefix+sid in clinical['evidence_registry']}
+            spans=_source_spans(record,src,clinical['evidence_registry'])
             shared_design=' '.join((w['record'].get('study_details') or {}).get('design_description','')
                                    for w in compact['records'])
             for effect in calculate({**wrapper,'record':record},src,spans,article.get('title',''),shared_design):

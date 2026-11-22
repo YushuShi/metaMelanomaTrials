@@ -468,6 +468,18 @@
     const all=records(study);if(!all.length)return '';
     return all.map(record=>{
       const s=record.study||{},arms=armLabels(record);
+      const reviewed=list(study.details?.quantitative_extraction).find(saved=>effectiveRecord(saved)===record);
+      const sources=new Map(),publication=reviewed?.reviewed_full_text;
+      if(publication?.pmid===study.pmid&&publication.source_sha256===record.source_sha256&&/^https:\/\//.test(publication.source_url))
+        sources.set(publication.source_url,publication.locator);
+      for(const comparison of list(study.comparisons)){
+        if(comparison.scope?.source_input_sha256!==record.source_sha256)continue;
+        for(const [side,course] of Object.entries(comparison.reviewed_courses||{})){
+          if(!course?.label||!/^https:\/\//.test(course.source?.url))continue;
+          arms.set(comparison[side+'_arm_id'],course.label);
+          sources.set(course.source.url,course.source.location);
+        }
+      }
       const treatment=arm=>arms.get(arm.id||arm.arm_id)||regimen(arm);
       const arm=id=>id==='NA'||id===null||id===undefined?'NA':arms.get(id)||'NA';
       const pops=new Map(list(record.populations).map(p=>[p.population_id||p.id,p]));
@@ -489,7 +501,6 @@
         out+=fields('Study characteristics',[['Population',record.study_details.population_description],['Design',record.study_details.design_description]]);
         out+=table('Adjusted models',['Result','Model','Covariates'],list(record.study_details.adjustments).map(a=>[a.effect_id,a.model,list(a.covariates).join('; ')||'NA']));
       }
-      const reviewed=list(study.details?.quantitative_extraction).find(saved=>effectiveRecord(saved)===record);
       out+=table('Results selected from the main text',['Field','Published result'],list(reviewed?.main_text_choices).map(choice=>[choice.field,choice.value]));
       out+=table('Source-checked additions',['Field','Finding'],list(reviewed?.complementary_notes).map(note=>[[...new Set((note.fields||[note.field]).map(reviewedFieldLabel))].join('; '),note.text]));
       out+=table('Population',['Population','Scope','Melanoma only','Data cutoff'],list(record.populations).filter(p=>p.melanoma_only!=='no').map(p=>[p.label,p.scope,p.melanoma_only,p.cutoff]));
@@ -533,7 +544,9 @@
         }
       }
       if(superseded.length)out+='<details class="drawer-section"><summary>Earlier extraction values</summary>'+table('Original values',['Field','Population','Value'],superseded)+'</details>';
-      return all.length>1?`<details class="drawer-section"${record.stage==='R3'?' open':''}><summary>${record.stage==='R3'?'Full text':'Title and abstract'}</summary>${out}</details>`:out;
+      for(const [url,locator] of sources)out+=`<p class="drawer-section"><a href="${escape(url)}" target="_blank" rel="noopener noreferrer">Full-text source</a> · ${escape(locator)}</p>`;
+      const fullText=record.stage==='R3'||sources.has(publication?.source_url);
+      return all.length>1?`<details class="drawer-section"${fullText?' open':''}><summary>${fullText?'Full text':'Title and abstract'}</summary>${out}</details>`:out;
     }).join('')+(study.details?.fulltext_assessment&&!['complete','complete_with_issues'].includes(study.details.fulltext_assessment.technical_state)?'<p class="drawer-section">Full-text review pending. The title-and-abstract results remain available.</p>':'');
   }
   return Object.freeze({effectiveRecord,checked,merge,records,trialIdentifiers,render,regimen,armLabels,resultDoseLabel,sourceRecord,presentationSampleSize,presentationGroupLabel,timeLabel,cohortLabel,populationContext,resultContext,phasePartitions,treatmentAliases,countLabel,countAlias,countSummary,endpoint,definition,table,fields,text,clean,formatNumber,formatEffectNumber,cleanContext,interval});

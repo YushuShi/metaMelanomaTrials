@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 
+from .binary_effects import network_boundary_effects
 from .io import atomic_bytes, canonical, digest, owned
 
 PUBLIC = 'website/dist/data/treatment_map.json'
@@ -18,7 +19,8 @@ CODE_PATHS = [RUNNER, 'website/scripts/treatment_map_model.cjs', 'config/sample_
     'website/scripts/treatment_normalization.cjs',
     *['website/dist/' + name + '.js' for name in (
         'treatment_resolver', 'treatment_groups', 'regimen_definitions',
-        'regimen_source_rules', 'trial_registry', 'trial_identifiers', 'quantitative_extraction')],
+        'regimen_source_rules', 'trial_registry', 'trial_identifiers', 'quantitative_extraction', 'treatment_source_reviews')],
+    'src/metamelanoma/binary_effects.py', 'src/metamelanoma/binary_count_recovery.py',
     'src/metamelanoma/treatment_map.py']
 
 
@@ -32,7 +34,8 @@ def build(root, payload, *, normalizations, registry, source_bytes, source_path)
         raise ValueError('Treatment map source and prepared treatments disagree')
     code = {relative: owned(root, relative).read_bytes() for relative in CODE_PATHS}
     request = {'registry': registry, 'quantitative': payload, 'normalizations': normalizations,
-        'source_path': source_path, 'source_file_sha256': source_hash}
+        'source_path': source_path, 'source_file_sha256': source_hash,
+        'network_boundary_effects': network_boundary_effects(payload)}
     # Stream the large retained source to a private temporary input instead of
     # building a second in-memory serialized copy. It is never a served artifact.
     with tempfile.TemporaryDirectory(prefix='melanoma-treatment-map-') as directory:
@@ -121,7 +124,10 @@ def refresh_defaults(root):
     receipt = json.loads(process.stdout)
     version_bytes = owned(root, 'website/dist/data/treatment_map_version.json').read_bytes()
     base = 'data/current/treatment_map/default_views/' + digest(version_bytes)
-    for name in ('treatment_map_default.json', 'treatment_map_version.json'):
+    artifacts = ['treatment_map_default.json', 'treatment_map_version.json']
+    if receipt.get('network_reference_sha256'):
+        artifacts.append('treatment_network_reference.json')
+    for name in artifacts:
         _archive(root, base + '/' + name, owned(root, 'website/dist/data/' + name).read_bytes())
     for name, expected in receipt['producer_sha256'].items():
         content = owned(root, name).read_bytes()

@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="./advanced_filters.css">
   <link rel="stylesheet" href="./treatment_map.css">
   <link rel="stylesheet" href="./treatment_map_analysis.css">
+  <link rel="stylesheet" href="./treatment_network_ui.css">
   <script src="./semantic_numeric_display.js" defer></script>
   <script src="./evidence_display.js" defer></script>
   <script src="./numeric_evidence_release.js" defer></script>
@@ -30,6 +31,8 @@
   <script src="./confidence_intervals.js" defer></script>
   <script src="./wald_interval.js" defer></script>
   <script src="./quantitative_extraction.js" defer></script>
+  <script src="./treatment_source_reviews.js" defer></script>
+  <script src="./study_source_projection.js" defer></script>
   <script src="./cohort_alias_rules.js" defer></script>
   <script src="./concise_study_groups.js" defer></script>
   <script src="./outcome_source_rules.js" defer></script>
@@ -42,9 +45,16 @@
   <script src="./treatment_map_planning.js" defer></script>
   <script src="./treatment_map_charts.js" defer></script>
   <script src="./treatment_node_studies.js" defer></script>
+  <script src="./treatment_network_model.js" defer></script>
+  <script src="./treatment_network_cache.js" defer></script>
+  <script src="./treatment_network_authors.js" defer></script>
+  <script src="./treatment_network_evidence.js" defer></script>
+  <script src="./treatment_network_pathways.js" defer></script>
+  <script src="./treatment_network_ui.js" defer></script>
   <script src="./treatment_map.js" defer></script>
   <script src="./underpowered_studies.js" defer></script>
   <script src="./new_findings.js" defer></script>
+  <script src="./study_indirect.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./published_outcome_review.js" defer></script>
   <script src="./complementary_review.js" defer></script>
@@ -81,22 +91,6 @@
       <div id="data-notice" class="data-notice" role="status" aria-live="polite" hidden></div>
 
       <section class="view" id="view-analysis" aria-label="Treatment evidence">
-        <form class="panel analysis-controls" id="analysis-form" hidden>
-          <div class="analysis-control-grid">
-            
-            <div class="treatment-filter-field"><label for="analysis-comparator" id="analysis-comparator-label" title="Matches named components of this arm, including conditioning drugs and adjuvants. Their treatment roles remain separate.">Comparator</label><select id="analysis-comparator"><option value="">All comparators</option></select><button type="button" class="advanced-filter-toggle" id="advanced-filter-toggle" aria-expanded="false" aria-controls="advanced-filter-panel"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg><span class="advanced-filter-text">Advanced filter</span></button></div>
-            <div class="treatment-filter-field"><label for="analysis-intervention" id="analysis-intervention-label" title="Matches named components of this arm, including conditioning drugs and adjuvants. Their treatment roles remain separate.">Intervention</label><select id="analysis-intervention"><option value="">All interventions</option></select></div>
-            <label><span>Endpoint</span><select id="analysis-endpoint"><option value="">Select an endpoint</option></select></label>
-            <button class="primary-button" type="submit">View analysis</button>
-          </div>
-          <section class="advanced-filters" id="advanced-filter-panel" aria-label="Advanced filter" hidden>
-            <div class="advanced-filter-fields" id="advanced-filter-fields"></div>
-            <p class="advanced-filter-status" id="advanced-filter-status" role="status" aria-live="polite"></p>
-            <div class="advanced-filter-footer"><button type="button" class="secondary-button" id="reset-advanced-filters">Reset advanced filters</button></div>
-          </section>
-          <p class="advanced-evidence-count" id="advanced-evidence-count" aria-live="polite" hidden></p>
-          <div class="comparison-control" id="analysis-comparison-field" hidden><label><span>Comparison</span><select id="analysis-comparison" disabled><option value="">No comparisons available</option></select></label></div>
-        </form>
         <div class="analysis-tabs" role="tablist" aria-label="Evidence analysis">
           <button role="tab" aria-selected="true" aria-controls="analysis-treatment-map" id="tab-treatment-map" data-analysis-tab="treatment-map">Treatment map</button>
           <button role="tab" aria-selected="false" aria-controls="analysis-articles" id="tab-articles" data-analysis-tab="articles" tabindex="-1">Studies</button>
@@ -105,13 +99,34 @@
         </div>
         <section class="panel analysis-panel evidence-tab" id="analysis-underpowered-studies" role="tabpanel" aria-labelledby="tab-underpowered-studies" hidden></section>
         <section class="panel analysis-panel evidence-tab" id="analysis-new-findings" role="tabpanel" aria-labelledby="tab-new-findings" hidden></section>
-        <section class="panel analysis-panel" id="analysis-articles" role="tabpanel" aria-labelledby="tab-articles" hidden>
-          <div class="panel-heading study-table-heading">
-            <div class="study-table-title"><h2>Studies <span class="articles-count" id="scoped-studies-count"></span></h2><p class="study-table-key" id="study-table-key"><span title="Results based on abstract-only extraction">* Abstract only</span><span>Gray rows: non-trial studies</span></p></div>
-            <div class="study-table-actions"><button type="button" class="secondary-button" id="trial-only-toggle" aria-pressed="false" aria-controls="scoped-studies-rows" title="Show trials only">Trial Only</button><button type="button" class="secondary-button" id="download-study-table" title="Download all filtered studies and results across all pages" disabled><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download CSV</button></div>
+        <section id="analysis-articles" role="tabpanel" aria-labelledby="tab-articles" hidden>
+          <form class="panel analysis-controls" id="analysis-form" hidden>
+            <div class="analysis-control-grid">
+              <div class="treatment-filter-field"><label for="analysis-comparator" id="analysis-comparator-label" title="Choose a complete comparator regimen, a treatment class or all regimens containing an agent.">Comparator</label><select id="analysis-comparator"><option value="">All comparators</option></select></div>
+              <div class="treatment-filter-field"><label for="analysis-intervention" id="analysis-intervention-label" title="Choose a complete intervention regimen, a treatment class or all regimens containing an agent.">Intervention</label><select id="analysis-intervention"><option value="">All interventions</option></select></div>
+              <label><span>Endpoint</span><select id="analysis-endpoint"><option value="">Select an endpoint</option></select></label>
+              <button class="primary-button" type="submit">View analysis</button>
+            </div>
+            <div class="study-filter-options">
+              <button type="button" class="advanced-filter-toggle" id="advanced-filter-toggle" aria-expanded="false" aria-controls="advanced-filter-panel"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg><span class="advanced-filter-text">Advanced filter</span></button>
+            </div>
+            <section class="advanced-filters" id="advanced-filter-panel" aria-label="Advanced filter" hidden>
+              <div class="advanced-filter-fields" id="advanced-filter-fields"></div>
+              <p class="advanced-filter-status" id="advanced-filter-status" role="status" aria-live="polite"></p>
+              <div class="advanced-filter-footer"><button type="button" class="secondary-button" id="reset-advanced-filters">Reset advanced filters</button></div>
+            </section>
+            <p class="advanced-evidence-count" id="advanced-evidence-count" aria-live="polite" hidden></p>
+            <div class="comparison-control" id="analysis-comparison-field" hidden><label><span>Comparison</span><select id="analysis-comparison" disabled><option value="">No comparisons available</option></select></label></div>
+          </form>
+          <section class="panel study-indirect-result" id="study-indirect-result" aria-label="Indirect comparison" aria-live="polite" hidden></section>
+          <div class="panel analysis-panel">
+            <div class="panel-heading study-table-heading">
+              <div class="study-table-title"><h2>Studies <span class="articles-count" id="scoped-studies-count"></span></h2><p class="study-table-key" id="study-table-key"><span title="Results based on abstract-only extraction">* Abstract only</span><span>Gray rows: non-trial studies</span></p></div>
+              <div class="study-table-actions"><button type="button" class="secondary-button" id="trial-only-toggle" aria-pressed="false" aria-controls="scoped-studies-rows" title="Show trials only">Trial Only</button><button type="button" class="secondary-button" id="download-study-table" title="Download all filtered studies and results across all pages" disabled><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download CSV</button></div>
+            </div>
+            <div class="table-scroll"><table class="scoped-studies-table"><thead><tr><th scope="col">Study</th><th scope="col" id="scoped-author-heading" aria-sort="none"><button type="button" id="scoped-sort-author">First author <span aria-hidden="true">↕</span></button></th><th scope="col" id="scoped-year-heading" aria-sort="descending"><button type="button" id="scoped-sort-year">Year <span aria-hidden="true">↓</span></button></th><th scope="col">Trial name</th><th scope="col">NCT number</th><th scope="col">Group</th><th scope="col">Comparator</th><th scope="col">Intervention</th><th scope="col">Sample size</th><th scope="col">Effect size (CI)</th></tr></thead><tbody id="scoped-studies-rows"></tbody></table></div>
+            <div class="main-articles-footer"><span id="scoped-studies-range" role="status" aria-live="polite"></span><nav class="main-articles-pagination" aria-label="Study pages"><button type="button" class="secondary-button" id="scoped-studies-previous">Previous</button><span id="scoped-studies-page"></span><button type="button" class="secondary-button" id="scoped-studies-next">Next</button></nav></div>
           </div>
-          <div class="table-scroll"><table class="scoped-studies-table"><thead><tr><th scope="col">Study</th><th scope="col" id="scoped-author-heading" aria-sort="none"><button type="button" id="scoped-sort-author">First author <span aria-hidden="true">↕</span></button></th><th scope="col" id="scoped-year-heading" aria-sort="descending"><button type="button" id="scoped-sort-year">Year <span aria-hidden="true">↓</span></button></th><th scope="col">Trial name</th><th scope="col">NCT number</th><th scope="col">Group</th><th scope="col">Comparator</th><th scope="col">Intervention</th><th scope="col">Sample size</th><th scope="col">Effect size (CI)</th></tr></thead><tbody id="scoped-studies-rows"></tbody></table></div>
-          <div class="main-articles-footer"><span id="scoped-studies-range" role="status" aria-live="polite"></span><nav class="main-articles-pagination" aria-label="Study pages"><button type="button" class="secondary-button" id="scoped-studies-previous">Previous</button><span id="scoped-studies-page"></span><button type="button" class="secondary-button" id="scoped-studies-next">Next</button></nav></div>
         </section>
         <section class="panel analysis-panel" id="analysis-treatment-map" role="tabpanel" aria-labelledby="tab-treatment-map"><div id="treatment-map-root"><p>Loading the saved treatment map…</p></div></section>
         <section class="panel analysis-panel" id="analysis-forest" role="tabpanel" aria-label="Forest plot" hidden><div class="panel-heading"><h2>Forest plot</h2></div><div class="chart-stage" id="forest-canvas"></div></section>
@@ -164,6 +179,9 @@
           <fieldset><legend>Meta-analysis</legend><div class="settings-grid">
             <label><span>Results per cohort</span><select id="analysis-record-policy"><option value="latest">Latest poolable result</option><option value="all">All eligible results</option></select></label>
           </div><p class="settings-note">Earlier results remain available.</p></fieldset>
+          <fieldset><legend>Indirect comparison</legend><div class="settings-grid">
+            <label><span>Network meta-analysis model</span><select id="network-model"><option value="common">Common-effect</option><option value="random">Random-effects (REML)</option></select></label>
+          </div></fieldset>
           <fieldset><legend>Sample size planning</legend><div class="settings-grid">
             <label><span>Allocation ratio</span><input id="planning-allocation" type="number" min="0.01" step="any" value="1" required></label>
             <label><span>Sidedness</span><select id="planning-sidedness"><option value="2">Two-sided</option><option value="1">One-sided</option></select></label>

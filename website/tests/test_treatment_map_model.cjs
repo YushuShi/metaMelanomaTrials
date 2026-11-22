@@ -25,6 +25,74 @@ const total=(g,id)=>node(g,id).count_summary.known_n;
 const comparison=(extra={})=>({id:'hr',intervention_arm_id:'combo',reference_arm_id:'mono',population_id:'overall',origin:'own_report',
   endpoint:'OS',measure:'HR',estimate:0.75,ci_lower:0.60,ci_upper:0.92,ci_level:95,evidence:['e'],...extra});
 
+test('verified NIBIT full-text review supplies the updated exact arm, treated Ns and independent source provenance',()=>{
+  const {supplement,course,hasReview}=require('../dist/treatment_source_reviews.js');
+  const f='fotemustine',pmid='38271746',pop='pop_overall',doi='10.1016/j.ejca.2024.113531';
+  const rec=record([arm('arm_a',[f],{population:pop}),arm('arm_b',[B,f],{population:pop}),arm('arm_c',[B,A],{population:pop})],[],{
+    pmid,report_id:'report-27f182843fafb20f9d999fa1',source_sha256:'a13a4f1d8ca52cac28d677dc73bf806672e665d166eb4f2567a352bfcc3a92ab',
+    study:{name:'NIBIT-M2',study_type:'interventional_trial',identifiers:[],evidence:['e']},
+    populations:[{id:pop,label:'Melanoma with brain metastases',scope:'overall',melanoma_only:'yes',evidence:['e']}]});
+  const citation={pmid,report_id:rec.report_id,doi,title:'7-year outcomes from the NIBIT-M2 trial',current_main_eligible:true};
+  const q={articles:[{pmid,records:[{record:rec}]}],clinical_evidence:{articles:[citation],evidence_registry:{}}};
+  const saved=JSON.stringify(q),g=build({registry,quantitative:q});
+  assert.equal(JSON.stringify(q),saved);
+  const treated=g.comparisons.find(x=>x.estimate===.43);
+  assert.equal(treated.analysis.independent_id,'nct:NCT02460068');
+  assert.equal(treated.analysis.design,'randomized_trial');
+  assert.equal(treated.analysis.sample_size.n,50);
+  assert.equal(treated.intervention.network_regimen_label,'Ipilimumab + Nivolumab → Nivolumab');
+  assert.equal(treated.intervention.network_regimen_source.pmid,'34112708');
+  assert.equal(treated.source_refs[0].stage,'Full-text review');
+  assert.match(treated.source_refs[0].supporting_evidence[0].locator,/Figure 1/);
+  assert.equal(g.comparisons.find(x=>x.estimate===1.07).analysis.sample_size.n,49);
+  const augmented=supplement(q);
+  assert.equal(supplement(augmented),augmented);
+  const args={pmid,doi,ncts:['NCT02460068'],armId:'arm_c',agentIds:['nivolumab','ipilimumab'],sourceSha256:rec.source_sha256};
+  assert.equal(hasReview(Number(pmid)),true);
+  assert.equal(hasReview('1'),false);
+  assert.deepEqual(course(args).phases,[['ipilimumab','nivolumab'],['nivolumab']]);
+  assert.equal(course({...args,sourceSha256:'unreviewed'}),null);
+  assert.equal(course({...args,armId:'arm_b'}),null);
+  citation.quantitative_results=[{review_stage:'R3',quantitative_record:{origin:'own_report',endpoint:'OS',measure:'HR',estimate:.43}}];
+  assert.equal(supplement(q),q);
+  citation.quantitative_results=[];citation.doi='different';
+  assert.equal(supplement(q),q);
+});
+
+test('an incomplete CI preserves the randomized point as a network veto with its original direction',()=>{
+  const controls=arm('combo',['placebo']),active=arm('mono',[A]);
+  const g=graph([record([controls,active],[],{effects:[comparison({ci_lower:null})]})]);
+  assert.equal(g.comparisons.length,0);
+  const [point]=g.network_direct_evidence;
+  assert.equal(point.estimate,0.75);
+  assert.equal(point.ci_lower,null);
+  assert.equal(point.intervention.label.toLowerCase(),'placebo');
+  assert.equal(point.comparator.node_id,'agent:'+A);
+  assert.equal(point.analysis.design,'randomized_trial');
+  const invalid=graph([record([controls,active],[],{effects:[comparison({ci_lower:null,estimate:-1})]})]);
+  assert.equal(invalid.network_direct_evidence.length,0);
+});
+
+test('ordered regimens have distinct network identities and carry the source arm labels',()=>{
+  const first=arm('combo',[A,B],{operator:'SEQUENTIAL'}),second=arm('mono',[B,A],{operator:'SEQUENTIAL'});
+  const g=graph([record([first,second],[],{effects:[comparison()]})]);
+  assert.equal(g.comparisons.length,0);
+  const [point]=g.network_direct_evidence;
+  assert.notEqual(point.intervention.network_regimen_id,point.comparator.network_regimen_id);
+  assert.equal(point.intervention.network_regimen_label,'Nivolumab → Ipilimumab');
+  assert.equal(point.comparator.network_regimen_label,'Ipilimumab → Nivolumab');
+});
+
+test('two administrations in each repeating cycle identify one complete combination',()=>{
+  const combination=arm('combo',[A,B],{operator:'SEQUENTIAL'}), control=arm('mono',[A]);
+  combination.label=A+' + '+B;
+  combination.nodes[1].schedule='day 1, every 28 days';
+  combination.nodes[2].schedule='day 8, every 28 days';
+  const [point]=graph([record([combination,control],[],{effects:[comparison()]})]).network_direct_evidence;
+  assert.equal(point.intervention.network_regimen_id,nodeId([A,B]));
+  assert.equal(point.intervention.network_regimen_label,'Ipilimumab + Nivolumab');
+});
+
 test('a calculated binary contrast uses its two original arm rows for direction, planning and the shared population',()=>{
   const lhs={row_id:'x',arm_id:'combo',population_id:'left',numerator:20,denominator:108,percentage:18.5,basis:'reconstructed_counts'};
   const rhs={row_id:'y',arm_id:'mono',population_id:'right',numerator:12,denominator:118,percentage:10.2,basis:'reconstructed_counts'};
@@ -313,4 +381,16 @@ test('PRADO and original OpACIN-neo remain distinct, while a named PRADO follow-
   const resolver=create([a,b,c],{quote:()=> 'The PRADO extension cohort of the OpACIN-neo trial; two independent cohorts.',anchored:()=>true,refs:(_,ids)=>ids}),identity={study_id:'nct:NCT02977052'};
   const ca=resolver.describe(a,a.record.populations[0],identity),cb=resolver.describe(b,b.record.populations[0],identity),cc=resolver.describe(c,c.record.populations[0],identity);
   assert.notEqual(ca.root_id,cb.root_id);assert.equal(ca.root_id,cc.root_id);assert.ok(ca.independently_recruited&&cb.independently_recruited);
+});
+
+test('zero RR or OR remains a network-only direct estimate with missing log uncertainty',()=>{
+  const arms=[arm('mono',[A]),arm('combo',[B])];
+  for(const measure of ['RR','OR']){
+    const direct=comparison({measure,endpoint:'ORR',estimate:0,ci_lower:null,ci_upper:null});
+    const g=graph([record(arms,[],{effects:[direct]})]);
+    assert.equal(g.comparisons.length,0);
+    assert.equal(g.network_direct_evidence[0].estimate,0);
+    assert.equal(g.network_direct_evidence[0].ci_lower,null);
+  }
+  assert.equal(graph([record(arms,[],{effects:[comparison({estimate:0,ci_lower:null,ci_upper:null})]})]).network_direct_evidence.length,0);
 });

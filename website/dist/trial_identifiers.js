@@ -144,6 +144,8 @@
     return uniq(out);
   }
   const reviewed = Object.freeze([
+    {pmid:'28073844', report:'report-0a636ec421780b99fddedfd0', doi:'10.1158/1078-0432.ccr-16-0714', name:null, nct:'NCT01721772', url:'https://clinicaltrials.gov/study/NCT01721772', title:/^FDA Approval of Nivolumab for the First-Line Treatment of Patients with BRAFV600 Wild-Type Unresectable or Metastatic Melanoma\.?$/i},
+    {pmid:'31400634', report:'report-443727bfb5749060715dd3fc', doi:'10.1016/j.ejca.2019.07.001', name:null, nct:'NCT00636168', url:'https://www.eortc.org/research_field/clinical-detail/18071/', title:/long-term follow-up results of the European Organisation for Research and Treatment of Cancer 18071/i},
     {pmid:'16170182', report:'report-810650fbf4cc06b9e404ee73', doi:'10.1200/jco.2005.03.202', name:'EORTC 18951', nct:'NCT00002669', url:'https://www.eortc.org/research_field/clinical-detail/18951/', title:/\btrial\s*\(18951\)/i},
     {pmid:'31880964', report:'report-bff903cad8b9e2a35cced0ab', doi:'10.1200/jco.19.01381', name:'E1609', nct:'NCT01274338', url:'https://cdn.clinicaltrials.gov/large-docs/38/NCT01274338/Prot_SAP_000.pdf', title:/\bE1609\b/},
     {pmid:'27269740', report:'report-eb4e1504cd454b6a073ef0af', doi:'10.1016/s1470-2045(16)30126-7', name:'CheckMate 064', nct:'NCT01783938', url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5474305/', title:/\bCheckMate\s+064\b/i},

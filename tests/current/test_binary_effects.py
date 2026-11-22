@@ -19,6 +19,25 @@ def fixture():
 
 
 class BinaryComparisonTests(unittest.TestCase):
+    def test_map_only_zero_boundary_in_either_orientation(self):
+        w,rows,spans=fixture()
+        lhs,rhs=w['record']['binary']
+        rhs.update(numerator=0,percentage=0)
+        self.assertEqual(calculate(w,rows,spans),[])
+        derived=calculate(w,rows,spans,network_boundaries=True)
+        self.assertEqual({e['measure'] for e in derived},{'RR','OR'})
+        for e in derived:
+            self.assertEqual((e['intervention_arm_id'],e['reference_arm_id']),('b','a'))
+            self.assertEqual((e['estimate'],e['ci_lower'],e['ci_upper']),(0,'NA','NA'))
+        lhs.update(numerator=0,percentage=0)
+        self.assertEqual(calculate(w,rows,spans,network_boundaries=True),[])
+        lhs.update(numerator=50,percentage=100)
+        rhs.update(numerator=50,percentage=100)
+        self.assertEqual(calculate(w,rows,spans,network_boundaries=True),[])
+        rhs.update(numerator=20,percentage=40)
+        finite=calculate(w,rows,spans,network_boundaries=True)
+        self.assertEqual([(e['measure'],e['estimate']) for e in finite],[('OR',0)])
+
     def test_arm_specific_counts_and_original_test(self):
         inputs=fixture()
         results={r['measure']:r for r in calculate(*inputs)}

@@ -94,6 +94,15 @@
   function resultMatches(row,selections,options={}){
     const selected=normalizeSelections(selections);
     if(!activeCount(selected))return true;
+    // A source-checked follow-up contrast may be linked to the classifications
+    // of its two original arms, as in the treatment network. Both must qualify.
+    if(row.review_stage==='Full-text review' && Array.isArray(row.source_filter_bindings)){
+      const q=row.quantitative_record,arms=[q?.intervention_arm_id,q?.reference_arm_id];
+      if(!arms.every(Boolean)||arms[0]===arms[1]||row.source_filter_bindings.length!==2)return false;
+      return row.source_filter_bindings.every((group,i)=>group.some(source=>source.review_stage==='R2'&&
+        source.pmid===row.pmid&&source.report_id===row.report_id&&source.quantitative_record?.population_id===q.population_id&&
+        source.quantitative_record.arm_id===arms[i]&&source.quantitative_record.endpoint===q.endpoint&&resultMatches(source,selected,options)));
+    }
     const entry=resultClassification(row,options);
     return DEFINITIONS.every(({key})=>selected[key]==='all'||supportedField(entry,key,options)?.categories.includes(selected[key]));
   }

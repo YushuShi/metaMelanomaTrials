@@ -53,9 +53,9 @@ class Element {
 const descendants = element => element.children.flatMap(child => [child, ...descendants(child)]);
 const withClass = (element, name) => descendants(element).filter(child => child.classList.contains(name));
 const data = (element, name) => element.getAttribute('data-' + name.replace(/[A-Z]/g, letter => '-' + letter.toLowerCase())) ?? element.dataset[name];
-function mount(source = graph) {
+function mount(source = graph, options) {
   const doc = { defaultView: { setTimeout }, createElement(tag) { return new Element(tag, this); }, createElementNS(namespace, tag) { return this.createElement(tag); } };
-  const root = new Element('div', doc), view = map.mount(root, source);
+  const root = new Element('div', doc), view = map.mount(root, source, options);
   view.setBranch('agent:a');
   return { root, view };
 }
@@ -225,4 +225,162 @@ test('two external opponents cannot introduce a nested comparison unrelated to t
   }
   assert.ok(view.model.comparisons.some(item => item.id === 'bc-b-outside'), 'source evidence remains retained for its own branch');
   assert.equal(JSON.stringify(source), before);
+});
+
+function networkTrial(id, treatment, reference, estimate, outcome='OS') {
+  const row=comparison(id,treatment,reference,outcome,'HR',estimate);
+  row.study_name='Trial '+id; row.pmid=id; row.direction='intervention versus comparator';
+  row.analysis={design:'randomized_trial',setting:'advanced',independence_verified:true,independent_id:'trial:'+id,
+    publication_year:2025,source_completeness:2,cohort:{id:'cohort:'+id,root_id:'cohort:'+id,independent_group_id:'trial:'+id,scope:'overall',label:'Overall population'},
+    compatibility:{eligible:true,design:'randomized_trial',model_family:'cox',label:'advanced',key:'advanced'}};
+  return row;
+}
+const netGraph=()=>({...graph,comparisons:[
+  networkTrial('111','agent:a','agent:b',.70), networkTrial('222','agent:c','agent:b',.90),
+  networkTrial('333','agent:a','agent:c',.88,'PFS'),
+]});
+const nextFrame=()=>new Promise(resolve=>setTimeout(resolve,10));
+function activate(element) { element.dispatchEvent({type:'keydown',key:'Enter',preventDefault(){},stopPropagation(){}}); }
+
+test('indirect node selection preserves a disabled bridge; the dotted comparison, source trials and direction match both views',async()=>{
+  let publicationsLoaded=0;
+  const {view}=mount(netGraph(), {loadNetworkPublications:()=>{publicationsLoaded++; return Promise.resolve(new Map());}});
+  view.setBranch('all'); view.indirect.toggle.click(); await nextFrame();
+  const indirect=view.indirect;
+  assert.equal(indirect.toggle.textContent,'Compare two treatments');
+  activate(view.nodeElements.get('agent:a'));
+  assert.equal(indirect.first.regimen,'agent:a');
+  assert.equal(view.nodeElements.get('agent:b').getAttribute('aria-disabled'),'true');
+  assert.match(view.nodeElements.get('agent:b').getAttribute('aria-label'),/Direct comparison available/);
+  view.nodeElements.get('agent:b').click(); assert.equal(indirect.second,null);
+  view.nodeElements.get('agent:c').click(); await nextFrame();
+  assert.equal(indirect.fit.available,true);
+  assert.ok(Math.abs(indirect.fit.estimate-.7/.9)<1e-9);
+  assert.equal(withClass(view.world,'tm-network-overlay').length,1);
+  assert.match(indirect.panel.textContent,/HR 0.778 \(95% CI/);
+  assert.equal(withClass(indirect.panel,'tm-network-estimate-value').length,1);
+  const radialPaths=withClass(indirect.panel,'tm-network-pathways')[0];
+  assert.equal(radialPaths.children[0].textContent,'Evidence pathways');
+  assert.equal(radialPaths.children[1].children.length,0);
+  assert.match(indirect.panel.textContent,/Hazard ratio for Agent A relative to Agent C/);
+  assert.match(indirect.panel.textContent,/Trial 111/); assert.match(indirect.panel.textContent,/Trial 222/);
+  assert.equal(view.nodeElements.get('agent:b').classList.contains('tm-network-bridge'),true);
+  view.setBranch('agent:b');
+  assert.equal(indirect.first.regimen,'agent:a'); assert.equal(indirect.second.regimen,'agent:c');
+  const branchPaths=withClass(indirect.panel,'tm-network-pathways')[0];
+  branchPaths.open=true; branchPaths.dispatchEvent({type:'toggle'});
+  assert.equal(withClass(branchPaths,'network-route-table').length,1);
+  assert.match(withClass(branchPaths,'network-route-estimate')[0].textContent,/Pathway-specific HR 0.778/);
+  await nextFrame();
+  const loadsAfterOpening=publicationsLoaded;
+  assert.equal(withClass(view.world,'tm-network-overlay').length,1);
+  assert.equal(withClass(view.world,'tm-network-support-edge').length,2);
+  const original=withClass(view.world,'tm-network-arrow')[0].getAttribute('d');
+  view.zoom(1.7);
+  assert.notEqual(withClass(view.world,'tm-network-arrow')[0].getAttribute('d'),original);
+  withClass(indirect.controls,'tm-text-button').find(b=>b.textContent==='Reverse comparison').click(); await nextFrame();
+  assert.ok(Math.abs(indirect.fit.estimate-.9/.7)<1e-9);
+  view.nodeElements.get('agent:b').click();
+  assert.equal(indirect.second,null);
+  assert.equal(indirect.panel.hidden,true);
+  radialPaths.open=true; radialPaths.dispatchEvent({type:'toggle'});
+  assert.equal(radialPaths.children[1].children.length,0);
+  assert.equal(publicationsLoaded,loadsAfterOpening);
+  assert.match(indirect.controls.textContent,/Direct comparison available/);
+  assert.match(indirect.controls.textContent,/PMID 222/);
+  assert.equal(withClass(view.world,'tm-network-overlay').length,0);
+  view.setEndpoint('PFS:HR'); await nextFrame();
+  assert.equal(indirect.first,null); assert.equal(indirect.panel.hidden,true);
+  assert.equal(withClass(view.world,'tm-network-overlay').length,0);
+  indirect.toggle.click();
+  assert.equal(view.nodeElements.get('agent:a').getAttribute('aria-disabled'),null);
+  view.nodeElements.get('agent:a').click(); assert.equal(view.selectedId,'agent:a');
+});
+
+test('indirect mode clears stale work on clinical changes, rejects old network responses, and surfaces loading failure',async()=>{
+  let resolveOld, loads=0; const graph=netGraph(), {view}=mount(graph,{loadNetworkGraph:()=>{
+    loads++;
+    if (loads===1) return new Promise(resolve=>{resolveOld=resolve;});
+    if (loads===2) throw new Error('Map version changed.');
+    return graph;
+  }});
+  view.setBranch('all'); const indirect=view.indirect; indirect.toggle.click();
+  assert.match(indirect.panel.textContent,/Loading randomized/);
+  view.setEndpoint('PFS:HR'); await nextFrame(); resolveOld(graph); await nextFrame();
+  assert.match(indirect.panel.textContent,/Map version changed/);
+  withClass(indirect.panel,'tm-button')[0].click(); await nextFrame();
+  assert.equal(indirect.network.endpoint,'PFS:HR');
+  view.setEndpoint('OS:HR'); await nextFrame();
+  view.nodeElements.get('agent:a').click();view.nodeElements.get('agent:c').click();
+  view.setAdvancedFilters({active:true,matches:{},signature:'no matches',label:'Stage III'}); await nextFrame();
+  assert.equal(indirect.first,null); assert.equal(indirect.fit,null);
+  assert.equal(withClass(view.world,'tm-network-overlay').length,0);
+  assert.equal(view.nodeElements.get('agent:a').getAttribute('aria-disabled'),'true');
+  view.destroy();
+});
+
+test('ambiguous visual nodes select a complete regimen before computing a comparison',async()=>{
+  const graph=netGraph();
+  const extra=networkTrial('444','agent:a','agent:b',.85);
+  extra.intervention={...extra.intervention,network_regimen_id:'sequence:a_then_a',network_regimen_label:'A then maintenance A'};
+  graph.comparisons.push(extra);
+  const {view}=mount(graph); view.setBranch('all'); const indirect=view.indirect; indirect.toggle.click(); await nextFrame();
+  view.nodeElements.get('agent:a').click();
+  assert.equal(indirect.first,null);
+  assert.match(indirect.choiceBox.textContent,/A then maintenance A/);
+  withClass(indirect.choiceBox,'tm-button').find(b=>b.textContent==='A then maintenance A').click();
+  assert.equal(indirect.first.regimen,'sequence:a_then_a');
+  view.nodeElements.get('agent:c').click(); await nextFrame();
+  assert.ok(Math.abs(indirect.fit.estimate-.85/.9)<1e-9);
+  assert.match(indirect.panel.textContent,/A then maintenance A versus Agent C/);
+  view.setNetworkModel('random'); await nextFrame();
+  assert.match(view.details.textContent,/Random-effects network meta-analysis/);
+  assert.match(indirect.panel.textContent,/Indirect estimate unavailable/);
+  assert.equal(withClass(indirect.panel,'tm-network-estimate-value').length,0);
+  assert.equal(withClass(indirect.panel,'tm-network-pathways').length,0);
+  assert.doesNotMatch(indirect.panel.textContent,/HR 0.944/);
+  view.setBranch('agent:d'); assert.equal(indirect.first,null);
+  assert.equal(indirect.panel.hidden,true);
+});
+
+test('saved estimates cannot replace a subsequent filtered target while its classifications are loading',async()=>{
+  const graph=netGraph(); graph.content_sha256='network-fixture';
+  let resolveFit,retries=0,lookups=[];
+  const {view}=mount(graph,{
+    lookupNetworkFit:(hash,blocks,a,c,model)=>{
+      lookups.push([hash,blocks.length,a,c,model]);
+      return new Promise(resolve=>{resolveFit=resolve;});
+    },
+    retryNetworkFilters:()=>retries++,
+  });
+  view.setBranch('all'); const indirect=view.indirect; indirect.toggle.click(); await nextFrame();
+  view.nodeElements.get('agent:a').click(); view.nodeElements.get('agent:c').click(); await nextFrame();
+  assert.deepEqual(lookups,[['network-fixture',2,'agent:a','agent:c','common']]);
+  view.setAdvancedFilters({active:true,pending:true,label:'Loading selected filters…',matches:{}});
+  assert.match(indirect.panel.textContent,/Loading selected filters/);
+  resolveFit({estimate:10,ci_lower:9,ci_upper:11}); await nextFrame();
+  assert.equal(indirect.fit,null); assert.equal(indirect.first,null);
+  view.setAdvancedFilters({active:true,error:'Study classifications unavailable.',matches:{}});
+  assert.match(indirect.panel.textContent,/Study classifications unavailable/);
+  withClass(indirect.panel,'tm-button')[0].click(); assert.equal(retries,1);
+  view.setAdvancedFilters({active:false,matches:{}}); await nextFrame();
+  view.nodeElements.get('agent:a').click(); view.nodeElements.get('agent:c').click(); await nextFrame();
+  resolveFit({estimate:.7775,ci_lower:.56,ci_upper:1.02}); await nextFrame();
+  assert.match(indirect.panel.textContent,/HR 0.777 \(95% CI 0.560–1.020\)/);
+});
+
+test('an observational head-to-head estimate is displayed in selection order alongside the randomized indirect result',async()=>{
+  const graph=netGraph(), observational=networkTrial('555','agent:c','agent:a',.8);
+  observational.title='A retrospective cohort study'; observational.analysis.design='observational';
+  graph.comparisons.push(observational);
+  let opened=null;
+  const {view}=mount(graph,{openNetworkStudy:async pmid=>{opened=pmid;}});
+  view.setBranch('all'); const indirect=view.indirect; indirect.toggle.click(); await nextFrame();
+  view.nodeElements.get('agent:a').click(); view.nodeElements.get('agent:c').click(); await nextFrame();
+  const details=withClass(indirect.panel,'tm-network-observational')[0];
+  assert.ok(details); assert.match(details.textContent,/Observational head-to-head evidence/);
+  assert.match(details.textContent,/Agent A versus Agent C/); assert.match(details.textContent,/HR 1.250 \(95% CI 1.042–1.562\)/);
+  assert.match(indirect.panel.textContent,/Supporting evidence · 2 randomized trials/);
+  assert.ok(Math.abs(indirect.fit.estimate-.7/.9)<1e-9);
+  withClass(details,'tm-text-button')[0].click(); assert.equal(opened,'555');
 });

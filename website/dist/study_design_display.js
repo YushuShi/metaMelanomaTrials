@@ -27,7 +27,11 @@
     return {is_trial:false,is_non_trial:false,kind:'unknown',label:'Study design not established',reason:'No accepted explicit study-design classification',source_stage:null,source_sha256:null};
   }
   function sourceInfo(study){
-    const records=acceptedRecords(study),hasFulltext=records.some(saved=>saved.stage==='R3'),hasAbstract=records.some(saved=>saved.stage==='R2');
+    const records=acceptedRecords(study), reviewedFullText=list(study?.details?.quantitative_extraction).some(wrapper=>
+      wrapper.reviewed_full_text?.pmid===study.pmid && wrapper.record?.pmid===study.pmid &&
+      hash(wrapper.record.source_sha256) && wrapper.reviewed_full_text.source_sha256===wrapper.record.source_sha256 &&
+      wrapper.record.stage==='Full-text review' && wrapper.record.effects?.length);
+    const hasFulltext=reviewedFullText||records.some(saved=>saved.stage==='R3'),hasAbstract=records.some(saved=>saved.stage==='R2');
     return {abstract_only:hasAbstract&&!hasFulltext,has_fulltext:hasFulltext,label:hasFulltext?'Includes source-checked full text':hasAbstract?'Results based on abstract only':'Evidence source not established'};
   }
   function abstractOnly(study){return sourceInfo(study).abstract_only;}

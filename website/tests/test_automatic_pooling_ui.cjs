@@ -30,4 +30,8 @@ test('Settings removes the manual model and ignores older stored model choices w
   const result=vm.runInNewContext(code+'\nreadSettings()', {localStorage:{getItem:()=>JSON.stringify({model,record_policy:'all',power:.9,alpha:.01,sidedness:1,allocation_ratio:2})}});
   assert.equal(Object.hasOwn(result,'model'),false);assert.equal(result.record_policy,'all');assert.equal(result.power,.9);assert.equal(result.alpha,.01);assert.equal(result.allocation_ratio,2);
  }
+ for(const [stored,expected] of [[{},'common'],[{model:'random'},'common'],[{network_model:'random'},'random'],[{network_model:'DL'},'common']]){
+  const settings=vm.runInNewContext(code+'\nreadSettings()', {localStorage:{getItem:()=>JSON.stringify(stored)}});
+  assert.equal(settings.network_model,expected);
+ }
 });

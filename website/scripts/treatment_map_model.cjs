@@ -8,6 +8,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const analysisEvidence=require('./treatment_map_evidence.cjs');
 const cohortPolicy=require('./treatment_map_cohorts.cjs');
 const exactMembership=require('./treatment_map_membership.cjs');
+const sourceReviews=require('../dist/treatment_source_reviews.js');
 const list=x=>Array.isArray(x)?x:[], uniq=x=>[...new Set(x.filter(x=>x!==null&&x!==undefined&&x!==''))].sort();
 const text=x=>typeof x==='string'&&x.trim()&&!/^(?:NA|N\/A|null|unknown)$/i.test(x.trim())?x.trim():'';
 const stable=x=>Array.isArray(x)?x.map(stable):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,stable(x[k])])):x;
@@ -85,7 +86,7 @@ function analyzeDefinition(definition){
 }
 
 function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
-  const {registry}=input,quantitative=input.quantitative||{},clinical=quantitative.clinical_evidence||{},normalizations=input.normalizations||null;
+  const {registry}=input,quantitative=sourceReviews.supplement(input.quantitative||{}),clinical=quantitative.clinical_evidence||{},normalizations=input.normalizations||null;
   const {groups}=require('./treatment_normalization.cjs').load(registry,dist);
   const identifiers=require(path.join(dist,'trial_identifiers.js'));
   if(normalizations&&normalizations.registry_version!==registry.version)throw new Error('Treatment-map registry and normalization versions differ');
@@ -93,7 +94,7 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
   const registryHash=hash(registry);
   if(normalizations?.registry_sha256&&normalizations.registry_sha256!==registryHash)throw new Error('Treatment-map normalization registry hash is stale');
   const evidence=clinical.evidence_registry||{},articles=new Map(list(clinical.articles).map(a=>[String(a.pmid),a]));
-  const sources=[],review=[],nodes=new Map(),observations=[],comparisons=[],sourceBindings=new Map(),preparedArms=new Map(),canonicalSamples=new Set(),canonicalResults=new Set(),canonicalArmScopes=new Map();
+  const sources=[],review=[],nodes=new Map(),observations=[],comparisons=[],networkDirectEvidence=[],sourceBindings=new Map(),preparedArms=new Map(),canonicalSamples=new Set(),canonicalResults=new Set(),canonicalArmScopes=new Map();
   const requireEvidence=!!normalizations&&Object.keys(evidence).length>0;
   const sourceKey=(pmid,stage,sha)=>[String(pmid),stage,sha].join('|');
   const rememberArmScope=(key,armId,populationId)=>{
@@ -137,6 +138,38 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       class_id:'combinations',broad_category:null,aliases:[],contribution_ids:[],comparison_ids:[],parent_ids:[],overview_parent_id:null});
     return id;
   };
+  // The ordinary map can display induction with maintenance under its induction
+  // node. Network contrasts need the full ordered regimen, including maintenance.
+  function sequenceIdentity(definition,arm,source,semantics) {
+    const root=definition.root;
+    const reviewed=sourceReviews.course({pmid:source.pmid,doi:source.article.doi,ncts:source.ncts,
+      armId:arm.id,agentIds:semantics.exact,sourceSha256:source.record.source_sha256});
+    if(reviewed)return {...phaseIdentity(reviewed.phases),network_regimen_source:reviewed.source};
+    const hasSequence=node=>node?.type==='sequential'||list(node?.children).some(hasSequence);
+    if(!hasSequence(root))return {};
+    if(root.type!=='sequential')return {network_regimen_unresolved:true};
+    let phases=root.children.map(child=>analyzeDefinition({root:child}).exact);
+    if(phases.some(ids=>!ids||ids.some(id=>!nodes.has('agent:'+id))))return {network_regimen_unresolved:true};
+    // Some records encode infusion order or different days in each repeating
+    // cycle as SEQUENTIAL. Both components belong to the same treatment course.
+    const schedules=list(arm.nodes).filter(node=>!list(node.children).length).map(node=>normalized(node.schedule));
+    const cycleLength=s=>{
+      const m=s.match(/\bevery (\d+) (days?|weeks?)\b/)||s.match(/\b(\d+)[- ](day|week) cycle\b/);
+      return m?Number(m[1])*(m[2].startsWith('week')?7:1):null;
+    };
+    const periods=schedules.map(cycleLength),samePeriod=periods.length>1&&periods[0]>0&&periods.every(n=>n===periods[0]);
+    const phased=schedules.some(s=>/\b(?:induction|maintenance|until|through|during|thereafter|first|last|only|up to|for (?:\d+|one|two|three|four))\b/.test(s));
+    const explicitCombination=/\+|\b(?:plus|combination|combined)\b/i.test(arm.label)&&!/→|->|\b(?:then|followed by)\b/i.test(arm.label);
+    if(samePeriod&&!phased&&(explicitCombination||schedules.every(s=>/\bdays? \d+/.test(s))))phases=[uniq(phases.flat())];
+    // Repeated dosing of the same set does not introduce a second regimen.
+    phases=phases.filter((ids,i)=>!i||JSON.stringify(ids)!==JSON.stringify(phases[i-1]));
+    return phaseIdentity(phases);
+  }
+  function phaseIdentity(phases){
+    const labels=phases.map(ids=>ids.length?ids.map(id=>nodes.get('agent:'+id).label).join(' + '):'Control');
+    if(phases.length===1&&phases[0].length)return {network_regimen_id:nodeId(phases[0]),network_regimen_label:labels[0]};
+    return {network_regimen_id:'sequence:'+hash(phases).slice(0,24),network_regimen_label:labels.join(' → ')};
+  }
   const refs=(source,ids)=>uniq(ids).map(id=>{
     const prefixed=source.binding?'CE-'+source.binding.slice(0,24)+'-'+id:id;
     return evidence[prefixed]?prefixed:id;
@@ -175,6 +208,7 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       const trialIdentity=identifiers.harmonize({names:reportedNames,nct_ids:reportedNcts,pmid});
       const ncts=trialIdentity.nct_ids,names=trialIdentity.names;
       const source={pmid,article,record,binding,calculated_effects:list(wrapper.calculated_effects),source_preferences:wrapper.source_preferences,review_bindings:wrapper.complementary_review_bindings,ncts,names,trial_identity:trialIdentity,task_id:wrapper.task_id||null,raw_record_sha256:hash(rawRecord),source_url:'https://pubmed.ncbi.nlm.nih.gov/'+pmid+'/',key:sourceKey(pmid,record.stage,record.source_sha256)};
+      if(wrapper.reviewed_full_text)source.reviewedFullText=wrapper.reviewed_full_text;
       const design=record.study_details&&anchored(source,record.study_details.evidence)?text(record.study_details.design_description):'';
       source.non_direct_design=nonDirectDesign([study.study_type,article.title,study.name,design].join(' '));
       // The quoted methods can identify secondary pooling even when the compact
@@ -346,7 +380,7 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       const state=populationState(source,pop),cohort=cohortResolver.describe(source,pop,id);
       if(cohort.independently_recruited&&!cohort.is_subgroup){state.key='cohort:'+cohort.root_id;state.disjoint=true;state.subgroup=false;}
       const exact_node_id=semantics.endpoint?.length?nodeId(semantics.endpoint):null;
-      const observation={source,arm,definition,semantics,exact_node_id,...id,population:pop,population_state:state,cohort,
+      const observation={source,arm,definition,semantics,networkIdentity:sequenceIdentity(definition,arm,source,semantics),exact_node_id,...id,population:pop,population_state:state,cohort,
         certain_nodes:certainNodes,possible_nodes:possibleNodes,dose_signature:doseSignature(definition),candidates:[],excluded_samples:[]};
       observation.partition_signature=observation.dose_signature||semantics.sequential?JSON.stringify([observation.dose_signature,semantics.signature]):'';
       arms.set(arm.id,observation);
@@ -380,7 +414,9 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
       arm.candidates.push({sample,n:rawN,rank,allocation,population:pop,population_state:state,
         partial:state.subgroup||rank>=3||sample.complete==='no',disjoint:sample.disjoint==='yes'||sample.count_purpose==='randomized'||state.disjoint});
     }
-    for(const effect of [...list(record.effects), ...source.calculated_effects]){
+    const boundaryExtras=list(input.network_boundary_effects?.[source.key]);
+    for(const effect of [...list(record.effects), ...source.calculated_effects, ...boundaryExtras]){
+      const networkBoundary=boundaryExtras.includes(effect);
       const left=arms.get(effect.intervention_arm_id),right=arms.get(effect.reference_arm_id),pop=populations.get(effect.population_id);
       const state=populationState(source,pop),estimate=numeric(effect.estimate),lo=numeric(effect.ci_lower),hi=numeric(effect.ci_upper);
       // Rates in separate treatment-only child populations may support a
@@ -393,44 +429,68 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
             row.endpoint===effect.endpoint&&row.origin==='own_report'&&anchored(source,row.evidence)&&(!requireEvidence||canonicalResults.has(source.key+'|'+row.id)));
       };
       let reason=null;
+      const partialInterval=(lo===null)!==(hi===null);
+      const binaryZero=estimate===0 && ['RR','OR'].includes(effect.measure);
+      // A projection-only boundary ratio qualifies exclusively through both original,
+      // accepted arm-specific binary results. It cannot supply an invented log interval.
+      const boundaryBindings=networkBoundary && binaryZero && effect.calculation?.method==='from_arm_binary_outcomes'
+        ? [effect.calculation.intervention,effect.calculation.reference].map(arm=>list(source.article.quantitative_results)
+          .filter(row=>row.quantitative_record?.id===arm?.row_id && row.quantitative_record.arm_id===arm?.arm_id &&
+            row.quantitative_record.population_id===arm?.population_id && row.quantitative_record.endpoint===effect.endpoint &&
+            !row.extraction_conflict && row.source_input_sha256===record.source_sha256 && row.review_stage===record.stage)
+          .map(row=>Object.fromEntries(['pmid','result_id','source_input_sha256','review_binding_sha256','population_id','report_id','review_stage','quantitative_record'].map(key=>[key,row[key]]))))
+        : null;
+      const validBoundary=boundaryBindings?.every(group=>group.length>0) &&
+        effect.calculation.intervention.arm_id===effect.intervention_arm_id && effect.calculation.reference.arm_id===effect.reference_arm_id;
+      if(networkBoundary&&!validBoundary)continue;
+      const networkArm=arm=>arm&&(arm.semantics.endpoint||arm.semantics.control||arm.networkIdentity.network_regimen_id);
       if(source.pooled)reason='pooled_or_indirect_report';
       else if(!state.eligible)reason='subgroup_or_unresolved_effect_population';
       else if(conditionalEffect(effect))reason='conditional_subgroup_effect';
       else if(effect.origin!=='own_report')reason='not_own_report_effect';
-      else if(requireEvidence&&!canonicalResults.has(source.key+'|'+effect.id))reason='effect_outside_accepted_clinical_records';
+      else if(requireEvidence&&!validBoundary&&!canonicalResults.has(source.key+'|'+effect.id))reason='effect_outside_accepted_clinical_records';
       else if(!anchored(source,effect.evidence))reason='effect_source_evidence_unavailable';
       else if(!left||!right)reason='unresolved_comparison_direction';
-      else if(!left.semantics.endpoint||!right.semantics.endpoint&&!right.semantics.control)reason='incomplete_comparison_endpoints';
+      else if(!networkArm(left)||!networkArm(right))reason='incomplete_comparison_endpoints';
       else if(!coversArm(left.arm,'intervention')||!coversArm(right.arm,'reference'))reason='comparison_population_mismatch';
       else if(estimate===null||!text(effect.endpoint)||!text(effect.measure))reason='nonnumeric_or_unspecified_effect';
-      else if((lo===null)!==(hi===null)||lo!==null&&(lo>estimate||hi<estimate||lo>hi))reason='invalid_confidence_interval';
-      else if(['HR','OR','RR'].includes(effect.measure)&&(estimate<=0||lo!==null&&lo<=0))reason='invalid_ratio_effect';
+      else if(lo!==null&&lo>estimate||hi!==null&&hi<estimate)reason='invalid_confidence_interval';
+      else if(['HR','OR','RR'].includes(effect.measure)&&(estimate<0||estimate===0&&!binaryZero||lo!==null&&(lo<0||lo===0&&!binaryZero)||hi!==null&&hi<=0))reason='invalid_ratio_effect';
       else if(list(effect.field_flags).some(f=>/direction|compar|arm|estimate|confidence|ci_/i.test(JSON.stringify(f))))reason='effect_validation_requires_review';
       if(reason){issue(source,reason,{effect_id:effect.id,intervention_arm_id:effect.intervention_arm_id,reference_arm_id:effect.reference_arm_id,...(source.non_direct_design?{design_flag:source.non_direct_design}:{})});continue;}
-      const interventionId=nodeId(left.semantics.endpoint),comparatorId=right.semantics.endpoint?nodeId(right.semantics.endpoint):null;
-      if(interventionId===comparatorId){issue(source,'comparison_collapses_to_self_loop',{effect_id:effect.id,arm_labels:[left.arm.label,right.arm.label]});continue;}
-      if(!nodes.has(interventionId)||comparatorId&&!nodes.has(comparatorId)){issue(source,'comparison_endpoint_unavailable',{effect_id:effect.id});continue;}
+      const interventionId=left.exact_node_id,comparatorId=right.exact_node_id;
+      const networkIntervention=left.networkIdentity.network_regimen_id||interventionId;
+      const networkComparator=right.networkIdentity.network_regimen_id||comparatorId;
+      if(networkIntervention===networkComparator){issue(source,'comparison_collapses_to_self_loop',{effect_id:effect.id,arm_labels:[left.arm.label,right.arm.label]});continue;}
+      if(interventionId&&!nodes.has(interventionId)||comparatorId&&!nodes.has(comparatorId)){issue(source,'comparison_endpoint_unavailable',{effect_id:effect.id});continue;}
       const ident=identity(source,pop);
       if(source.ncts.length>1&&!ident.study_id){issue(source,'multiple_trial_effect_unallocated',{effect_id:effect.id});continue;}
       const sourceRef={pmid:source.pmid,report_id:record.report_id,stage:record.stage,source_sha256:record.source_sha256,
         review_binding_sha256:source.binding,effect_id:effect.id,evidence_ids:refs(source,list(effect.evidence))};
+      if(source.reviewedFullText)Object.assign(sourceRef,source.reviewedFullText);
+      const networkBindings=validBoundary?boundaryBindings:sourceReviews.filterBindings(source,effect);
+      if(source.reviewedFullText)sourceRef.supporting_evidence=sourceRef.evidence_ids.map(id=>evidence[id]);
       const effectId='effect:'+hash([source.key,effect.id]).slice(0,24);
-      if(comparisons.some(c=>c.id===effectId))continue;
-      comparisons.push({id:effectId,
+      const networkOnly=binaryZero||partialInterval||!interventionId||!comparatorId&&!right.semantics.control||interventionId===comparatorId;
+      const destination=networkOnly?networkDirectEvidence:comparisons;
+      if(destination.some(c=>c.id===effectId))continue;
+      if(partialInterval)issue(source,'invalid_confidence_interval',{effect_id:effect.id});
+      const mapArm=(arm,node_id)=>({node_id,label:nodes.get(node_id)?.label||arm.definition.raw_label||arm.arm.label,
+        arm_id:arm.arm.id,source_arm_label:arm.arm.label,...arm.networkIdentity});
+      destination.push({id:effectId,
         ...(effect.calculation ? {calculation:effect.calculation} : {}),
-        intervention:{node_id:interventionId,label:nodes.get(interventionId).label,arm_id:left.arm.id,source_arm_label:left.arm.label},
-        comparator:{node_id:comparatorId,label:comparatorId?nodes.get(comparatorId).label:right.definition.raw_label||right.arm.label,arm_id:right.arm.id,source_arm_label:right.arm.label},
+        intervention:mapArm(left,interventionId),comparator:mapArm(right,comparatorId),
         outcome:effect.endpoint,outcome_definition:text(effect.endpoint_definition)||null,measure:effect.measure,estimate,ci_lower:lo,ci_upper:hi,ci_level:numeric(effect.ci_level),
         ...ident,pmid:source.pmid,source_url:source.source_url,title:source.article.title||null,year:source.article.year||null,population:pop.label,
         direction:'intervention versus comparator',cutoff:text(effect.cutoff)||null,model:text(effect.model)||null,adjusted:text(effect.adjusted)||null,source_refs:[sourceRef],
         source_conflict:source.source_preferences?.effects?.[effect.id]?.status!=='main_text'&&list(record.r2_links).some(l=>l.section==='effects'&&l.r3_id===effect.id&&l.relation==='conflict'),
-        analysis:analysisEvidence.enrich({source,effect,population:pop,left,right,identity:analysisIdentity(source,pop),cohort:cohortResolver.describe(source,pop,analysisIdentity(source,pop)),sources,refs,anchored,quote,
+        analysis:{...analysisEvidence.enrich({source,effect,population:pop,left,right,identity:analysisIdentity(source,pop),cohort:cohortResolver.describe(source,pop,analysisIdentity(source,pop)),sources,refs,anchored,quote,
           accepted:(s,row)=>!requireEvidence||canonicalResults.has(s.key+'|'+row.id),identify:analysisIdentity,
           armEquivalent:(sa,a,sb,b)=>{
             try{const x=analyzeDefinition(nativeDefinition(sa,a)),y=analyzeDefinition(nativeDefinition(sb,b));
               return x.control&&y.control||!!x.endpoint&&!!y.endpoint&&JSON.stringify(x.endpoint)===JSON.stringify(y.endpoint);
             }catch(_){return false;}
-          }}),
+          }}), ...(networkBindings?{network_arm_filter_bindings:networkBindings}:{})},
         // Prefer an overall randomized-trial estimate, then the newer report
         // and full-text source. Effect magnitude never influences the default.
         default_rank:(source.record.study?.randomized==='yes'?0:20000)+(9999-(Number(source.article.year)||0))+(record.stage==='R3'?0:0.1)});
@@ -574,7 +634,7 @@ function build(input,{dist=path.resolve(__dirname,'../dist')}={}){
     denominator_note:'Exact complete regimen only. Overall assigned/randomized or enrolled arms first; labelled subgroup/analysis counts are partial fallbacks. Unresolved alternatives and supersets do not supply node counts. Historical inclusive component coverage is retained separately.',
     overlap_note:'Repeated reports share a study/arm bucket. Additional same-treatment dose arms require a source disjointness witness. Unresolved overlap is withheld.'},
     nodes:[...nodes.values()].sort((a,b)=>a.label.localeCompare(b.label)||a.id.localeCompare(b.id)),relationships:relationships.sort((a,b)=>a.id.localeCompare(b.id)),
-    comparisons:comparisons.sort((a,b)=>a.default_rank-b.default_rank||a.pmid.localeCompare(b.pmid)||a.id.localeCompare(b.id)),contributions:contributions.sort((a,b)=>a.id.localeCompare(b.id)),study_memberships:studyMemberships,
+    comparisons:comparisons.sort((a,b)=>a.default_rank-b.default_rank||a.pmid.localeCompare(b.pmid)||a.id.localeCompare(b.id)),network_direct_evidence:networkDirectEvidence,contributions:contributions.sort((a,b)=>a.id.localeCompare(b.id)),study_memberships:studyMemberships,
     linkage:{trial_aliases:aliasRows},review:{summary:{items:review.length,unlinked_publications:uniq(contributions.filter(c=>!c.study_id).flatMap(c=>c.publication_ids)).length,
       unresolved_contributions:contributions.filter(c=>c.n===null).length},items:review}};
   output.content_sha256=hash(output);return output;

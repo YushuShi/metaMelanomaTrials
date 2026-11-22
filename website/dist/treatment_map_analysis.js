@@ -626,5 +626,10 @@
     }
     return result;
   }
-  return Object.freeze({ analyze, consolidate, matchesScope, semanticKey, cohortInfo, populationKey, poolingKey, supportedSampleSize, normalizeRow, modelForK, remlTau2, poolRows, diagnostics, normalCDF, normalQuantile, studentTPvalue, confidenceLevel });
+  // Network selection uses the same cohort, latest-report and filter rules.
+  // Inverse-variance network estimation needs log precision but no participant N.
+  function selectNetworkEvidence(comparisons, options) {
+    return selectEvidence(comparisons, options, false);
+  }
+  return Object.freeze({ analyze, selectNetworkEvidence, incompatibleEffectQuantity, filterMatch, consolidate, matchesScope, semanticKey, cohortInfo, populationKey, poolingKey, supportedSampleSize, normalizeRow, modelForK, remlTau2, poolRows, diagnostics, normalCDF, normalQuantile, studentTPvalue, confidenceLevel });
 });

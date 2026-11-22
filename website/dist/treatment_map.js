@@ -1,8 +1,8 @@
 /* Prepared evidence only: layout and interaction never parse or aggregate trial reports. */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./treatment_map_effects.js'), require('./treatment_map_analysis.js'), require('./treatment_map_planning.js'), require('./treatment_map_charts.js'), require('./confidence_intervals.js'), String(factory));
-  else root.TreatmentMap = factory(root.TreatmentMapEffects, root.TreatmentMapAnalysis, root.TreatmentMapPlanning, root.TreatmentMapCharts, root.ConfidenceIntervals, String(factory));
-})(typeof globalThis === 'undefined' ? this : globalThis, function (Effects, Analysis, Planning, Charts, ConfidenceIntervals, sourceCode) {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./treatment_map_effects.js'), require('./treatment_map_analysis.js'), require('./treatment_map_planning.js'), require('./treatment_map_charts.js'), require('./confidence_intervals.js'), require('./treatment_network_ui.js'), String(factory));
+  else root.TreatmentMap = factory(root.TreatmentMapEffects, root.TreatmentMapAnalysis, root.TreatmentMapPlanning, root.TreatmentMapCharts, root.ConfidenceIntervals, root.TreatmentNetworkUI, String(factory));
+})(typeof globalThis === 'undefined' ? this : globalThis, function (Effects, Analysis, Planning, Charts, ConfidenceIntervals, NetworkUI, sourceCode) {
   'use strict';
   const NS = 'http://www.w3.org/2000/svg';
   const number = (value) => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value).toLocaleString('en-US', { maximumFractionDigits: 2 }) : '—';
@@ -551,6 +551,7 @@
       this.zoomLabel = this.make('output', '', controls, '100%'); this.zoomLabel.setAttribute('aria-label', 'Zoom level');
       this.button(controls, '+', () => this.zoom(1.3)).setAttribute('aria-label', 'Zoom in');
       this.button(controls, 'Fit', () => this.fit(true)).setAttribute('aria-label', 'Fit all nodes in the current view');
+      const indirectControls = this.make('div', 'tm-network-controls', visual); indirectControls.hidden = true;
       this.stage = this.make('div', 'tm-stage', visual); this.stage.tabIndex = 0; this.stage.setAttribute('aria-label', 'Interactive treatment map. Arrow keys pan. Plus and minus zoom. Home fits the map. Tab to select treatment nodes.');
       this.svg = this.svgElement('svg', { class: 'tm-svg', role: 'group', 'aria-label': 'Treatment branches' }, this.stage);
       const defs = this.svgElement('defs', {}, this.svg); this.comparisonMarkers = [];
@@ -560,10 +561,14 @@
       }
       this.world = this.svgElement('g', { class: 'tm-world' }, this.svg);
       this.stageHint = this.make('p', 'tm-stage-hint', this.stage, 'Drag to pan · scroll or pinch to zoom');
+      const indirectResult = this.make('section', 'tm-network-result', visual); indirectResult.hidden = true;
+      if (NetworkUI) this.indirect = NetworkUI.mount(this, toolbar, indirectControls, indirectResult, defs);
       this.categoryLegend = this.make('section', 'tm-category-legend', visual); this.categoryLegend.setAttribute('aria-label', 'Treatment category colors');
       this.legend = this.make('div', 'tm-legend', visual);
       const inclusionKey = this.make('span', '', this.legend); this.make('i', 'tm-solid', inclusionKey); this.make('span', '', inclusionKey, 'Component inclusion · no comparison arrow');
       this.comparisonLegendItem = this.make('div', 'tm-effect-legend', this.legend);
+      const indirectKey = this.make('div', 'tm-network-legend', this.legend);
+      this.make('i', 'tm-network-swatch', indirectKey); this.make('span', '', indirectKey, 'Dotted indirect arrow · first treatment relative to its comparator');
       for (const direction of ['better', 'worse']) {
         const item = this.make('span', 'tm-effect-key', this.comparisonLegendItem);
         item.style.setProperty('--tm-effect-color', Effects.styles[direction].color);
@@ -614,7 +619,7 @@
       const combinations = this.tree.nodes.filter((node) => node.type === 'combination').length;
       this.branchCount.textContent = this.tree.overview ? `${number(this.model.agents.length)} agents · ${number(combinations)} combinations · isolated agents included` : `${number(this.tree.nodes.length)} branch nodes · ${number(combinations)} complete combinations` + (this.tree.parallelNodes.length ? ` · ${number(this.tree.parallelNodes.length)} parallel arms` : '');
       this.stageHint.textContent = this.tree.overview ? 'Drag to pan · scroll or pinch to zoom' : 'Drag to pan · scroll or pinch to zoom · Fit shows the whole branch';
-      this.renderCategoryLegend(); this.renderGraph(); this.select(this.selectedId, { announce: false }); this.fit(false);
+      this.renderCategoryLegend(); this.renderGraph(); this.indirect?.setBranch(); this.select(this.selectedId, { announce: false }); this.fit(false);
       return this;
     }
     endpointDefinition(key=this.selectedEndpoint) {
@@ -623,9 +628,11 @@
     setEndpoint(key) {
       this.analysisTab = 'comparison';
       if (!this.endpointDefinition(key)) return this;
+      if (key !== this.selectedEndpoint) this.indirect?.clearTarget();
       this.selectedEndpoint = key; this.endpointBadge.textContent = this.endpointDefinition().label;
       this.activeComparisonId = null; this.activeComparisonExplicit = false;
       this.select(this.selectedId, { comparisonPairId: this.selectedComparisonPairId, announce: false, preserveMode:true });
+      if (this.indirect?.active) this.indirect.reload();
       this.live.textContent = 'Comparison endpoint: ' + this.endpointDefinition().label;
       return this;
     }
@@ -668,10 +675,11 @@
       return { result, group: result.groups[0] || null };
     }
     setAdvancedFilters(context) {
-      const next=context||{active:false,matches:{}},signature=JSON.stringify([next.signature,next.active,next.matches]);
+      const next=context||{active:false,matches:{}},signature=JSON.stringify([next.signature,next.active,next.pending,next.error,next.matches]);
       if(signature===this.advancedSignature)return this;
       this.advancedSignature=signature;this.advanced=next;this.analysisCache.clear();this.analysisTab='comparison';
       this.renderAdvancedNote();
+      if (this.indirect?.active) this.indirect.reload();
       return this.select(this.selectedId,{comparisonPairId:this.selectedComparisonPairId,announce:false,preserveMode:true});
     }
     renderAdvancedNote() {
@@ -691,6 +699,7 @@
       this.inclusionOrder=this.inclusionOrder.filter(id=>!reset.has(id));this.analysisCache.clear();this.analysisTab='comparison';
       return this.select(this.selectedId,{comparisonPairId:this.selectedComparisonPairId,announce:false,preserveMode:true});
     }
+    setNetworkModel(model) { this.indirect?.setModel(model); return this; }
     setStudyScope(scope) {
       this.studyScope = ['all', 'trials', 'randomized'].includes(scope) ? scope : 'all';
       this.activeComparisonId = null; this.activeComparisonExplicit = false; this.analysisTab = 'comparison';
@@ -918,9 +927,9 @@
           const right = Math.cos(point.angle) >= 0;
           this.overviewLabels.set(node.id, this.svgDrugNames(group,node,{ x: right ? 14 : -14, y: 4, 'text-anchor': right ? 'start' : 'end', class: 'tm-overview-label' },{maxChars:28})[0]);
         } else this.drawCard(group, node, point);
-        group.addEventListener('click', (event) => { if (this.suppressClick) { event.preventDefault(); return; } this.select(node.id); });
+        group.addEventListener('click', (event) => { if (this.suppressClick) { event.preventDefault(); return; } this.activateNode(node.id); });
         group.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); this.select(node.id); }
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); this.activateNode(node.id); }
           if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { const nextId = event.key === 'ArrowRight' ? point.parallel ? point.anchor_id : this.tree.children.get(node.id)?.[0]?.id : this.tree.parents.get(node.id) || (node.id === this.branchId ? this.tree.parallelNodes.find((peer) => this.tree.positions.get(peer.id).anchor_id === this.branchId)?.id : null); if (nextId) { event.preventDefault(); event.stopPropagation(); this.nodeElements.get(nextId)?.focus(); this.reveal(nextId); } }
         });
         group.addEventListener('focus', () => this.reveal(node.id));
@@ -943,7 +952,9 @@
         this.parallelLinks.set(edge.id, link);
       }
     }
+    activateNode(id) { return this.indirect?.active ? this.indirect.choose(id) : this.select(id); }
     selectParallel(id) {
+      if (this.indirect?.active) return this;
       const edge = this.tree.comparisonEdges.find((item) => item.id === id); if (!edge) return this;
       this.analysisTab = 'comparison';
       this.select(edge.root_id, { comparisonPairId: edge.id });
@@ -1004,7 +1015,7 @@
       return this;
     }
     renderNodeStudies() {
-      if(!this.exactNodeBrowse){this.nodeStudies.hidden=true;return;}
+      if(this.indirect?.active||!this.exactNodeBrowse){this.nodeStudies.hidden=true;return;}
       const selected=this.nodeFor(this.selectedId),node=this.model.byId.get(selected?.id);
       this.nodeStudies.hidden=this.selectionMode!=='node'||!node;
       if(this.nodeStudies.hidden)return;
@@ -1063,9 +1074,15 @@
       this.updateParallelEstimate();
       this.updatePlanningLabels();
       if (this.tree.overview) this.updateOverviewLabels();
+      if (this.indirect?.active) this.indirect.decorate();
     }
     renderDetails() {
       this.details.replaceChildren();
+      if (this.indirect?.active) {
+        this.renderEndpointChoice();
+        this.indirect.renderTargetChoice(this.details);
+        return;
+      }
       const node = this.nodeFor(this.selectedId);
       if (!node) { this.make('h3', '', this.details, 'Select a treatment'); return; }
       this.make('p', 'tm-eyebrow', this.details, node.type === 'control' ? 'CONTROL ARM' : node.type === 'drug' ? 'SELECTED AGENT' : 'COMPLETE COMBINATION');
@@ -1101,7 +1118,9 @@
       endpointLabel.htmlFor = this.id + '-endpoint'; this.endpointSelector = this.make('select', '', endpointField); this.endpointSelector.id = endpointLabel.htmlFor;
       const coreIds = new Set(this.tree.nodes.map((item) => item.id)), pairIds = new Set(this.tree.comparisonEdges.flatMap((edge) => edge.comparison_ids));
       const sources = this.model.comparisons.filter((item) => this.tree.overview ? pairIds.has(item.id) : coreIds.has(item.intervention.node_id) || coreIds.has(item.comparator.node_id) || pairIds.has(item.id));
-      const endpoints = Effects.availableEndpointOptions(sources);
+      const networkGraph=this.indirect?.graph || this.model.graph;
+      const endpoints = Effects.availableEndpointOptions(this.indirect?.active
+        ? [...list(networkGraph.comparisons), ...list(networkGraph.network_direct_evidence)] : sources);
       if (!endpoints.some((item) => item.key === this.selectedEndpoint)) endpoints.push({ ...this.endpointDefinition(), count: 0, disabled: false });
       this.availableEndpoints=endpoints;
       for (const endpoint of endpoints) { const option = this.make('option', '', this.endpointSelector, endpoint.label + (endpoint.count ? '' : ' — no estimates')); option.value = endpoint.key; option.disabled = endpoint.disabled && endpoint.key !== this.selectedEndpoint; }
@@ -1167,7 +1186,7 @@
     renderComparison() {
       this.comparisonBand.replaceChildren();
       if(this.methods)this.methods.hidden=false;
-      if (this.exactNodeBrowse?this.selectionMode!=='comparison':this.tree.overview) { this.comparisonBand.hidden = true; return; }
+      if (this.indirect?.active || (this.exactNodeBrowse?this.selectionMode!=='comparison':this.tree.overview)) { this.comparisonBand.hidden = true; return; }
       let comparison = this.model.comparisons.find((item) => item.id === this.activeComparisonId);
       if (!comparison) { this.comparisonBand.hidden = true; return; }
       this.comparisonBand.hidden = false;
@@ -1241,6 +1260,7 @@
         this.updateOverviewLabels();
       }
       else { this.updateParallelEstimate(); this.updatePlanningLabels(); }
+      if (this.indirect?.active) this.indirect.drawArrow();
     }
     updateOverviewLabels() {
       const width = this.stage.clientWidth || 800, height = this.stage.clientHeight || 600, scale = this.camera.scale;
@@ -1277,7 +1297,7 @@
       this.listen(this.stage, 'pointerup', stop); this.listen(this.stage, 'pointercancel', stop);
       this.listen(this.stage, 'keydown', (event) => { if (event.key === '+' || event.key === '=') { event.preventDefault(); this.zoom(1.3); } else if (event.key === '-') { event.preventDefault(); this.zoom(1 / 1.3); } else if (event.key === 'Home') { event.preventDefault(); this.fit(true); } else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) { event.preventDefault(); this.camera.x += event.key === 'ArrowLeft' ? 55 : event.key === 'ArrowRight' ? -55 : 0; this.camera.y += event.key === 'ArrowUp' ? 55 : event.key === 'ArrowDown' ? -55 : 0; this.applyCamera(); } });
     }
-    destroy() { this.filterPanel?.destroy(); this.nodeStudiesController?.destroy(); this.cleanups.forEach((cleanup) => cleanup()); this.resizeObserver?.disconnect(); this.picker?.destroy(); this.root.replaceChildren(); this.root.classList.remove('treatment-map'); }
+    destroy() { this.indirect?.destroy(); this.filterPanel?.destroy(); this.nodeStudiesController?.destroy(); this.cleanups.forEach((cleanup) => cleanup()); this.resizeObserver?.disconnect(); this.picker?.destroy(); this.root.replaceChildren(); this.root.classList.remove('treatment-map'); }
   }
   return Object.freeze({ mount: (root, graph, options) => new MapView(root, graph, options), prepare, branchNodes, displayParents, layout, parallelArms, branchComparisons, branchNodeLabel, parallelLinkGeometry, radialComparisonGeometry, directParallelNodeIds, neutralControl, effectLabel, countLabel, countedContributions, categoryInfo, annularSectorPath, studyLabel, recordCoverage, engineSignature, preparedDefaults, buildDefaultViews, preparedLayout, serializeLayout, savedAnalysis, analysisKey, comparisonDirection });
 });

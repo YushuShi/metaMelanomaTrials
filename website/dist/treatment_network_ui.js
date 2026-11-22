@@ -1,0 +1,364 @@
+/* The map owns the camera and node positions. Both views use the same selection
+   controller and the same complete-regimen network, including off-screen trials. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory(() => require('./treatment_network_evidence.js'), () => require('./treatment_network_model.js'), require('./confidence_intervals.js'), () => require('./treatment_network_pathways.js'));
+  } else root.TreatmentNetworkUI = factory(() => root.TreatmentNetworkEvidence, () => root.TreatmentNetworkModel, root.ConfidenceIntervals, () => root.TreatmentNetworkPathways);
+})(globalThis, function (evidence, solver, intervals, pathways) {
+  'use strict';
+
+  const fmt = n => intervals.formatEffectNumber(n,'NA');
+  const measureName = {HR:'Hazard ratio', RR:'Risk ratio', OR:'Odds ratio'};
+  const modelName = model => model === 'random' ? 'Random-effects network meta-analysis (REML)' : 'Common-effect network meta-analysis';
+  const edgeKey = (a, b) => JSON.stringify([a,b].sort());
+
+  function arrowGeometry(tree, first, second, scale, enlarged) {
+    const a = tree.positions.get(first), b = tree.positions.get(second);
+    if (!a || !b) return null;
+    const center = p => ({ x:p.x + (tree.overview ? 0 : p.width / 2), y:p.y });
+    const from = center(a), to = center(b);
+    const gap = 4 / scale;
+    if (first === second) {
+      const width = tree.overview ? (enlarged.has(first) ? 13 : 7) : a.width/2;
+      const height = tree.overview ? width : a.height/2;
+      const y = from.y - height - gap, span = Math.max(36/scale, width * .75);
+      return {path:`M${from.x-width},${y} C${from.x-width-span},${y-span} ${from.x+width+span},${y-span} ${from.x+width},${y}`,
+        x:from.x, y:y-.75*span};
+    }
+    const dx = to.x - from.x, dy = to.y - from.y, length = Math.hypot(dx,dy) || 1;
+    const bend = Math.min(length * .33, Math.max(36 / scale, length * .18));
+    const q = {x:(from.x+to.x)/2 - dy/length*bend, y:(from.y+to.y)/2 + dx/length*bend};
+    function boundary(p, box, id) {
+      const vx=q.x-p.x, vy=q.y-p.y, d=Math.hypot(vx,vy)||1;
+      const ux=vx/d, uy=vy/d;
+      const radius=tree.overview ? (enlarged.has(id)?13:7)
+        : Math.min(Math.abs(ux) ? box.width/2/Math.abs(ux) : Infinity, Math.abs(uy) ? box.height/2/Math.abs(uy) : Infinity);
+      return {x:p.x+ux*(radius+gap), y:p.y+uy*(radius+gap)};
+    }
+    const start=boundary(from,a,first), end=boundary(to,b,second);
+    return {path:`M${start.x},${start.y} Q${q.x},${q.y} ${end.x},${end.y}`,
+      x:(start.x+2*q.x+end.x)/4, y:(start.y+2*q.y+end.y)/4};
+  }
+
+  class IndirectComparison {
+    constructor(view, toolbar, controls, result, defs) {
+      this.view=view; this.controls=controls; this.panel=result;
+      this.active=false; this.model=view.options.networkModel === 'random' ? 'random' : 'common';
+      this.revision=0; this.fitRevision=0; this.originalLabels=new WeakMap(); this.statusCache=new Map();
+      this.toggle=view.button(toolbar, 'Compare two treatments', () => this.setActive(!this.active), 'tm-button tm-network-toggle');
+      this.toggle.setAttribute('aria-pressed','false'); this.toggle.setAttribute('aria-controls',view.id+'-network-controls');
+      controls.id=view.id+'-network-controls'; result.setAttribute('aria-label','Indirect comparison result');
+      this.marker=view.svgElement('marker',{id:view.id+'-indirect-arrow',viewBox:'0 0 10 10',refX:9,refY:5,
+        markerWidth:10,markerHeight:10,markerUnits:'userSpaceOnUse',orient:'auto'},defs);
+      view.svgElement('path',{d:'M1 1 L9 5 L1 9 Z',fill:'#363441'},this.marker);
+      this.clearPair();
+    }
+    clearPair() {
+      this.pathwayView?.destroy(); this.pathwayView=null;
+      this.first=null; this.second=null; this.pair=null; this.fit=null; this.fitPending=false;
+      this.fitRevision++; this.statusCache.clear(); this.prompt=null; this.feedback='';
+    }
+    clearTarget() { this.target=null; }
+    label(id) { return this.network?.labels.get(id) || this.view.nodeFor(id)?.label || id; }
+    regimens(id) { return this.network?.regimensForNode(id) || []; }
+    status(id) {
+      if (!this.statusCache.has(id)) this.statusCache.set(id,this.network.status(id,this.first?.regimen));
+      return this.statusCache.get(id);
+    }
+    nodeStatus(id) {
+      if (!this.network) return {eligible:false, reason:this.error || (this.view.advanced.pending ? 'Loading selected filters…' : 'Loading randomized comparisons…')};
+      const regimens=this.regimens(id);
+      if (!regimens.length) return {eligible:false, reason:`No usable randomized ${this.view.endpointDefinition().shortLabel} comparison involving this regimen.`};
+      const statuses=regimens.map(regimen=>this.status(regimen));
+      return statuses.find(status=>status.eligible) || statuses[0];
+    }
+    setActive(active) {
+      this.active=active; this.view.root.classList.toggle('tm-indirect-active',active);
+      this.toggle.setAttribute('aria-pressed',String(active)); this.controls.hidden=!active;
+      if (active) { this.target=null; this.reload(); }
+      else {
+        this.revision++; this.clearPair(); this.network=null; this.panel.hidden=true;
+        this.controls.replaceChildren(); this.panel.replaceChildren(); this.decorate(); this.drawArrow();
+      }
+      this.view.renderDetails(); this.view.renderComparison(); this.view.renderNodeStudies(); this.view.updateSelection();
+    }
+    async reload() {
+      if (!this.active) return;
+      const revision=++this.revision;
+      this.clearPair(); this.network=null; this.error=this.view.advanced.error || ''; this.refresh();
+      if (this.view.advanced.pending || this.error) return;
+      try {
+        const graph=await (this.view.options.loadNetworkGraph ? this.view.options.loadNetworkGraph() : this.view.model.graph);
+        if (!this.active || revision!==this.revision) return;
+        this.graph=graph;
+        this.network=evidence().build(graph,{endpoint:this.view.selectedEndpoint,advanced:this.view.advanced,target:this.target});
+        this.target=this.network.target;
+      } catch (err) {
+        if (revision!==this.revision || !this.active) return;
+        this.error=err.message || 'The randomized comparison network could not be loaded.';
+      }
+      this.view.renderDetails(); this.refresh();
+    }
+    setModel(value) {
+      const next=value==='random'?'random':'common';
+      if (next===this.model) return;
+      this.model=next;
+      if (this.active) this.view.renderDetails();
+      if (this.active && this.second) this.calculate();
+      else if (this.active) this.refresh();
+    }
+    setBranch() {
+      if (!this.active) return;
+      this.prompt=null;
+      if ([this.first,this.second].some(item=>item&&!this.view.tree.positions.has(item.node))) this.clearPair();
+      this.refresh();
+    }
+    choose(node, regimen) {
+      const status=regimen ? this.status(regimen) : this.nodeStatus(node);
+      this.prompt=null;
+      if (!status.eligible) {
+        this.fitRevision++; this.second=null; this.pair=null; this.fit=null; this.fitPending=false;
+        this.feedback=status; this.refresh(); this.view.live.textContent=status.reason; return;
+      }
+      const choices=this.regimens(node);
+      if (!regimen && choices.length>1) {
+        this.prompt=node; this.feedback='';
+        if (this.second) { this.fitRevision++; this.second=null; this.pair=null; this.fit=null; this.fitPending=false; }
+        this.refresh(); this.choiceBox?.querySelector?.('button:not(:disabled)')?.focus(); return;
+      }
+      const selected={node,regimen:regimen||choices[0]};
+      this.feedback='';
+      if (!this.first) {
+        this.first=selected; this.statusCache.clear(); this.refresh();
+        this.view.live.textContent=this.label(selected.regimen)+' selected first. Select its comparator.';
+        return;
+      }
+      this.second=selected; this.calculate();
+    }
+    async calculate() {
+      const revision=++this.fitRevision;
+      this.fit=null; this.pair=null; this.fitPending=true; this.refresh();
+      try {
+        // Let the loading state paint. An endpoint, filter, or selection change
+        // invalidates this work before it can replace the current result.
+        await new Promise(resolve=>this.view.win.setTimeout(resolve,0));
+        if (!this.active || revision!==this.fitRevision) return;
+        const {pair,fit}=await solver().fitPair({graph:this.graph,network:this.network,intervention:this.first.regimen,
+          comparator:this.second.regimen,model:this.model,advanced:this.view.advanced,lookup:this.view.options.lookupNetworkFit});
+        if (!this.active || revision!==this.fitRevision) return;
+        this.pair=pair;
+        this.fit=fit || {available:false,reason:pair.reason};
+      } catch (err) {
+        if (!this.active || revision!==this.fitRevision) return;
+        this.fit={available:false,reason:err.message || 'The network model could not be fitted.'};
+      }
+      if (!this.active || revision!==this.fitRevision) return;
+      this.fitPending=false; this.refresh();
+      this.view.live.textContent=this.fit.available ? this.resultLabel() : 'Indirect estimate unavailable. '+this.fit.reason;
+    }
+    resultLabel() {
+      const f=this.fit;
+      return `${this.view.endpointDefinition().measure} ${fmt(f.estimate)} (95% CI ${fmt(f.ci_lower)}–${fmt(f.ci_upper)})`;
+    }
+    clear() { this.clearPair(); this.refresh(); this.view.live.textContent='Indirect comparison selection cleared.'; }
+    refresh() { this.renderControls(); this.renderPanel(); this.decorate(); this.drawArrow(); }
+    renderTargetChoice(parent) {
+      const targets=this.network?.targets || [];
+      if (targets.length>1) {
+        const field=this.view.make('section','tm-endpoint-field',parent);
+        const label=this.view.make('label','',field,'Outcome definition / time point');
+        const select=this.view.make('select','',field); label.htmlFor=select.id=this.view.id+'-network-target';
+        for (const target of targets) { const opt=this.view.make('option','',select,target.label); opt.value=target.id; }
+        select.value=this.target;
+        select.addEventListener('change',()=>{this.target=select.value; this.reload();});
+      }
+      this.view.make('p','tm-count-note',parent,'Randomized trials · '+modelName(this.model));
+    }
+    renderControls() {
+      if (!this.active) return;
+      const v=this.view, parent=this.controls; parent.replaceChildren(); this.choiceBox=null;
+      v.make('p','tm-network-instruction',parent,'Select the first treatment, then its comparator.');
+      if (this.first) v.make('span','tm-network-selection',parent,'First treatment · '+this.label(this.first.regimen));
+      if (this.first && this.second) {
+        const reverse=v.make('button','tm-text-button',parent,'Reverse comparison');
+        reverse.type='button';
+        reverse.addEventListener('click',()=>{
+          [this.first,this.second]=[this.second,this.first];
+          this.statusCache.clear(); this.prompt=null; this.feedback='';
+          this.calculate();
+        });
+      }
+      if (this.first || this.prompt) {
+        const clear=v.make('button','tm-text-button',parent,'Clear selection'); clear.type='button'; clear.addEventListener('click',()=>this.clear());
+      }
+      if (this.prompt) {
+        const box=this.choiceBox=v.make('div','tm-regimen-choices',parent);
+        box.setAttribute('role','group'); box.setAttribute('aria-label','Choose complete regimen');
+        v.make('strong','',box,'Choose complete regimen');
+        for (const id of this.regimens(this.prompt)) {
+          const status=this.status(id), button=v.make('button','tm-button',box,this.label(id));
+          button.type='button'; button.disabled=!status.eligible; button.title=status.reason || this.label(id);
+          button.addEventListener('click',()=>this.choose(this.prompt,id));
+        }
+        const node=this.prompt, close=()=>{this.prompt=null; this.renderControls(); v.nodeElements.get(node)?.focus();};
+        const cancel=v.make('button','tm-text-button',box,'Cancel'); cancel.type='button'; cancel.addEventListener('click',close);
+        box.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close();}});
+      }
+      if (this.feedback) {
+        const message=v.make('div','tm-network-feedback',parent,this.feedback.reason);
+        if (this.feedback.sourcePmids?.length) {
+          const sources=v.make('div','',message);
+          for (const pmid of this.feedback.sourcePmids) this.studyLink(sources,pmid);
+        }
+      }
+      else if (this.network && !this.second && ![...v.nodeElements.keys()].some(id=>this.nodeStatus(id).eligible)) {
+        v.make('p','tm-network-feedback',parent,this.first ? 'No eligible comparator in this view. Choose another branch or open All treatments.' : 'No eligible indirect pair in this view for the selected target.');
+      }
+    }
+    renderPanel() {
+      this.pathwayView?.destroy(); this.pathwayView=null;
+      const v=this.view, p=this.panel; p.replaceChildren();
+      p.hidden=!this.active || (!!this.network && !this.second);
+      if (p.hidden) return;
+      p.setAttribute('aria-busy',String(!this.error && (!this.network || this.fitPending)));
+      if (this.error) {
+        v.make('strong','',p,'Indirect estimate unavailable'); v.make('p','',p,this.error);
+        const retry=v.advanced.error ? v.options.retryNetworkFilters : ()=>this.reload();
+        if (retry) { const btn=v.make('button','tm-button',p,'Retry'); btn.type='button'; btn.addEventListener('click',retry); }
+        return;
+      }
+      if (!this.network) { v.make('p','',p,v.advanced.pending ? 'Loading selected filters…' : 'Loading randomized comparisons…'); return; }
+      const name=id=>this.label(id), a=name(this.first.regimen), c=name(this.second.regimen), endpoint=v.endpointDefinition();
+      v.make('h3','',p,`Indirect comparison · ${a} versus ${c}`);
+      const scope=v.advanced.active && v.advanced.label ? v.advanced.label : 'All clinical settings';
+      const target=this.network.targetLabel;
+      v.make('p','tm-network-target',p,[endpoint.label,target && target!=='Overall endpoint'?target:'',scope].filter(Boolean).join(' · '));
+      if (this.fitPending) { v.make('p','',p,'Calculating indirect estimate…'); return; }
+      if (!this.fit) return;
+      if (this.fit.available) v.make('strong','tm-network-estimate tm-network-estimate-value',p,this.resultLabel());
+      else { v.make('strong','tm-network-estimate',p,'Indirect estimate unavailable'); v.make('p','',p,this.fit.reason); }
+      v.make('p','',p,`${measureName[endpoint.measure]||endpoint.measure} for ${a} relative to ${c}.`);
+      if (this.pair?.eligible) v.make('p','tm-network-note',p,'No eligible direct estimate for this target was available in the current dataset and analysis scope.');
+      v.make('p','tm-network-note',p,modelName(this.model)+'. The comparison assumes comparable distributions of treatment-effect modifiers across the randomized comparisons.'+
+        (this.model==='random'?' The model estimates a shared between-trial variance.':' The model assumes one underlying effect for each treatment contrast.'));
+      if (this.fit.available) this.renderPathways(p);
+      if (this.pair?.trials?.length) this.renderSupport(p);
+      if (this.pair?.observational?.length) this.renderObservational(p);
+    }
+    renderPathways(parent) {
+      const v=this.view, details=v.make('details','tm-network-pathways',parent);
+      v.make('summary','',details,'Evidence pathways');
+      const host=v.make('div','',details);
+      const context={pair:this.pair,network:this.network,first:this.first.regimen,second:this.second.regimen,
+        measure:v.endpointDefinition().measure,model:this.model,loadPublications:v.options.loadNetworkPublications};
+      let mounted=false;
+      details.addEventListener('toggle',()=>{
+        if (!details.open || mounted || !this.active || !details.parentNode || this.pair!==context.pair) return;
+        mounted=true;
+        this.pathwayView=pathways().mount(host,context);
+      });
+    }
+    studyLink(parent, pmid) {
+      const v=this.view;
+      if (!/^\d+$/.test(String(pmid))) return;
+      if (!v.options.openNetworkStudy) { v.sourceLink(parent,{pmid}); return; }
+      const button=v.make('button','tm-text-button',parent,'PMID '+pmid); button.type='button';
+      button.addEventListener('click',async()=>{
+        try { await v.options.openNetworkStudy(pmid); }
+        catch (err) {
+          button.disabled=true;
+          v.make('span','tm-network-note',parent,err.message||'Local study details unavailable.');
+          v.sourceLink(parent,{pmid});
+        }
+      });
+    }
+    renderObservational(parent) {
+      const v=this.view, details=v.make('details','tm-network-support tm-network-observational',parent);
+      v.make('summary','',details,'Observational head-to-head evidence');
+      v.make('p','tm-network-note',details,this.label(this.first.regimen)+' versus '+this.label(this.second.regimen)+'. The network estimate above uses randomized trials.');
+      const ul=v.make('ul','tm-network-trials',details);
+      for (const row of this.pair.observational) {
+        const li=v.make('li','',ul);
+        v.make('strong','',li,[row.label,row.year].filter(Boolean).join(' · '));
+        const interval=Number.isFinite(row.ci_lower)&&Number.isFinite(row.ci_upper)
+          ? '95% CI '+fmt(row.ci_lower)+'–'+fmt(row.ci_upper) : '95% CI unavailable';
+        v.make('span','',li,row.measure+' '+fmt(row.estimate)+' ('+interval+')');
+        this.studyLink(li,row.pmid);
+      }
+    }
+    renderSupport(parent) {
+      const v=this.view, pair=this.pair, diagnostics=this.fit.diagnostics;
+      const details=v.make('details','tm-network-support',parent);
+      v.make('summary','',details,`Supporting evidence · ${pair.trials.length} randomized trial${pair.trials.length===1?'':'s'}`);
+      if (pair.settings?.length) v.make('p','',details,'Clinical settings · '+pair.settings.join(', '));
+      if (pair.sharedComparators.length) v.make('p','',details,'Shared comparators · '+pair.sharedComparators.map(id=>this.label(id)).join(', '));
+      else v.make('p','',details,'The network connects the selected treatments through multiple comparators.');
+      const trialEdges=new Map();
+      for (const edge of pair.comparisons) {
+        if (!trialEdges.has(edge.trialId)) trialEdges.set(edge.trialId,new Set());
+        trialEdges.get(edge.trialId).add(this.label(edge.treatment)+' versus '+this.label(edge.comparator));
+      }
+      const ul=v.make('ul','tm-network-trials',details);
+      for (const trial of pair.trials) {
+        const row=v.make('li','',ul); v.make('strong','',row,trial.label || trial.id);
+        v.make('span','',row,[...(trialEdges.get(trial.id)||[])].join(' · '));
+        for (const pmid of trial.pmids) this.studyLink(row,pmid);
+        if (trial.selectionNote) v.make('p','tm-network-note',row,trial.selectionNote);
+      }
+      if (diagnostics) for (const d of [diagnostics.heterogeneity, diagnostics.inconsistency].filter(Boolean)) {
+        v.make('p','tm-network-note',details,d.label+' · '+(d.available ? `Q = ${fmt(d.Q)}, df = ${d.df}, p ${d.p<.001?'< 0.001':'= '+fmt(d.p)}` : d.reason||'Not estimable.'));
+      }
+      if (this.model==='random' && Number.isFinite(this.fit.tau2)) v.make('p','tm-network-note',details,'Between-trial variance (τ²) · '+fmt(this.fit.tau2));
+      if (pair.holds?.length) v.make('p','tm-network-note',details,pair.holds.join(' '));
+    }
+    decorate() {
+      const v=this.view, bridges=new Set(this.pair?.sharedComparators||[]);
+      for (const [id,el] of v.nodeElements) {
+        const title=el.children[0];
+        if (!this.originalLabels.has(el)) this.originalLabels.set(el,{aria:el.getAttribute('aria-label'),title:title.textContent});
+        const orig=this.originalLabels.get(el), first=this.active && this.first?.node===id, second=this.active && this.second?.node===id;
+        const status=this.active ? this.nodeStatus(id) : null;
+        const bridge=this.active && this.regimens(id).some(regimen=>bridges.has(regimen));
+        el.classList.toggle('tm-network-disabled',!!status&&!status.eligible);
+        el.classList.toggle('tm-network-first',first); el.classList.toggle('tm-network-second',second); el.classList.toggle('tm-network-bridge',bridge);
+        if (!this.active) {
+          el.removeAttribute('aria-disabled'); el.setAttribute('aria-label',orig.aria); title.textContent=orig.title; continue;
+        }
+        el.classList.remove('tm-selected','tm-comparison-endpoint');
+        el.setAttribute('aria-disabled',String(!status.eligible));
+        el.setAttribute('aria-pressed',String(first||second));
+        const label=this.view.nodeFor(id)?.label || id;
+        const hint=[first?'First treatment · '+this.label(this.first.regimen):'',second?'Comparator · '+this.label(this.second.regimen):'',
+          bridge?'Shared comparator':'',status.eligible?'Select '+(this.first?'as comparator':'as first treatment'):status.reason].filter(Boolean).join('. ');
+        title.textContent=label+'. '+hint; el.setAttribute('aria-label',title.textContent);
+      }
+      const support=new Set((this.pair?.comparisons||[]).map(e=>edgeKey(e.treatment,e.comparator)));
+      for (const edge of v.tree?.comparisonEdges||[]) {
+        const element=v.parallelLinks.get(edge.id); if (!element) continue;
+        const a=this.regimens(edge.root_id), b=this.regimens(edge.opponent_id);
+        element.classList.toggle('tm-network-support-edge',this.active&&a.some(x=>b.some(y=>support.has(edgeKey(x,y)))));
+        element.setAttribute('tabindex',this.active?'-1':'0');
+      }
+    }
+    drawArrow() {
+      if (this.overlay) { this.overlay.parentNode?.removeChild(this.overlay); this.overlay=null; }
+      if (!this.active || !this.first || !this.second) return;
+      const v=this.view, scale=v.camera.scale;
+      const g=arrowGeometry(v.tree,this.first.node,this.second.node,scale,v.directParallelIds);
+      if (!g) return;
+      const overlay=this.overlay=v.svgElement('g',{class:'tm-network-overlay','pointer-events':'none',role:'img'},v.world);
+      const a=this.label(this.first.regimen), c=this.label(this.second.regimen), title='Indirect: '+a+' versus '+c;
+      overlay.setAttribute('aria-label',title);
+      v.svgElement('title',{},overlay,title+(this.fit?.available?' · '+this.resultLabel():''));
+      this.marker.setAttribute('markerWidth',9/scale); this.marker.setAttribute('markerHeight',9/scale);
+      v.svgElement('path',{d:g.path,class:'tm-network-arrow','marker-end':`url(#${v.id}-indirect-arrow)`},overlay);
+      const compact=this.fit?.available?v.endpointDefinition().measure+' '+fmt(this.fit.estimate):'';
+      const width=v.stage.clientWidth||800;
+      const visible=title.length*5.7>width*.57?'Indirect':title;
+      v.svgElement('text',{x:g.x,y:g.y-6/scale,'text-anchor':'middle',class:'tm-network-arrow-label'},overlay,visible+(compact?' · '+compact:''));
+    }
+    destroy() { this.active=false; this.revision++; this.clearPair(); this.view.root.classList.remove('tm-indirect-active'); }
+  }
+
+  return {mount:(...args)=>new IndirectComparison(...args),arrowGeometry};
+});

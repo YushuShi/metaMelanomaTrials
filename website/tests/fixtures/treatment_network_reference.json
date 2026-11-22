@@ -1,0 +1,324 @@
+{
+  "source": "Hasselblad 1998 smoking cessation, trials directly comparing the target arms omitted",
+  "metafor": "5.2.1",
+  "first": "grp_counseling",
+  "second": "no_contact",
+  "common": {
+    "logEstimate": 0.9233005093286436,
+    "se": 0.21588917101736393,
+    "tau2": 0,
+    "ratio": 2.5175860086294031,
+    "lower": 1.6489941722875441,
+    "upper": 3.8437002491366576,
+    "withinQ": 187.39853419208535,
+    "withinDF": 16,
+    "betweenQ": 4.5114731278829652,
+    "betweenDF": 4
+  },
+  "random": {
+    "logEstimate": 0.99673565413589971,
+    "se": 0.43400453678981255,
+    "tau2": 0.42849022249892982,
+    "ratio": 2.7094228836115501,
+    "lower": 1.1573146827917831,
+    "upper": 6.3431082931820626,
+    "withinQ": 187.39853419208535,
+    "withinDF": 16,
+    "betweenQ": 0.91602656775259916,
+    "betweenDF": 4
+  },
+  "blocks": [
+    {
+      "trialId": "1",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 2.2022892862067636
+        }
+      ],
+      "covariance": [
+        [0.020461547362877738]
+      ]
+    },
+    {
+      "trialId": "3",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 0.87035363668712939
+        }
+      ],
+      "covariance": [
+        [0.62582853654282222]
+      ]
+    },
+    {
+      "trialId": "4",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 0.41564852188627888
+        }
+      ],
+      "covariance": [
+        [0.024252735479909103]
+      ]
+    },
+    {
+      "trialId": "5",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 2.7796837460903845
+        }
+      ],
+      "covariance": [
+        [2.1604303598595962]
+      ]
+    },
+    {
+      "trialId": "6",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "self_help",
+          "logEffect": -0.15168458733206491
+        }
+      ],
+      "covariance": [
+        [0.18401979565772669]
+      ]
+    },
+    {
+      "trialId": "7",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 2.7053932749294534
+        }
+      ],
+      "covariance": [
+        [0.3908260493343062]
+      ]
+    },
+    {
+      "trialId": "8",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 2.4251874150863779
+        }
+      ],
+      "covariance": [
+        [1.0862876254180602]
+      ]
+    },
+    {
+      "trialId": "9",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "self_help",
+          "logEffect": 0.0012445552322046805
+        },
+        {
+          "treatment": "grp_counseling",
+          "comparator": "self_help",
+          "logEffect": 0.22533328620090121
+        }
+      ],
+      "covariance": [
+        [0.2028664275137389, 0.10583446404341927],
+        [0.10583446404341927, 0.14740942124566919]
+      ]
+    },
+    {
+      "trialId": "10",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 0.44361687407254058
+        }
+      ],
+      "covariance": [
+        [0.27245989304812834]
+      ]
+    },
+    {
+      "trialId": "11",
+      "contrasts": [
+        {
+          "treatment": "self_help",
+          "comparator": "no_contact",
+          "logEffect": -0.015964935731272334
+        }
+      ],
+      "covariance": [
+        [0.028871122814661122]
+      ]
+    },
+    {
+      "trialId": "12",
+      "contrasts": [
+        {
+          "treatment": "self_help",
+          "comparator": "no_contact",
+          "logEffect": 0.3935045436485245
+        }
+      ],
+      "covariance": [
+        [0.10665152203457898]
+      ]
+    },
+    {
+      "trialId": "13",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 0.39041226831741316
+        }
+      ],
+      "covariance": [
+        [0.028229950186519321]
+      ]
+    },
+    {
+      "trialId": "14",
+      "contrasts": [
+        {
+          "treatment": "grp_counseling",
+          "comparator": "ind_counseling",
+          "logEffect": 0.68072466056138814
+        }
+      ],
+      "covariance": [
+        [0.16747685185185185]
+      ]
+    },
+    {
+      "trialId": "15",
+      "contrasts": [
+        {
+          "treatment": "grp_counseling",
+          "comparator": "ind_counseling",
+          "logEffect": -0.40546510810816461
+        }
+      ],
+      "covariance": [
+        [0.50966183574879231]
+      ]
+    },
+    {
+      "trialId": "16",
+      "contrasts": [
+        {
+          "treatment": "grp_counseling",
+          "comparator": "self_help",
+          "logEffect": 1.043486306049592
+        }
+      ],
+      "covariance": [
+        [0.20158261118898943]
+      ]
+    },
+    {
+      "trialId": "17",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 0.10633564981603261
+        }
+      ],
+      "covariance": [
+        [0.35473898160034234]
+      ]
+    },
+    {
+      "trialId": "18",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 0.58339828704223429
+        }
+      ],
+      "covariance": [
+        [0.089010770276528275]
+      ]
+    },
+    {
+      "trialId": "20",
+      "contrasts": [
+        {
+          "treatment": "self_help",
+          "comparator": "no_contact",
+          "logEffect": 0.67959421415524179
+        }
+      ],
+      "covariance": [
+        [0.19458314589893536]
+      ]
+    },
+    {
+      "trialId": "21",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 0.53967984551460702
+        }
+      ],
+      "covariance": [
+        [0.019633591201096923]
+      ]
+    },
+    {
+      "trialId": "22",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": -0.12550508175029362
+        }
+      ],
+      "covariance": [
+        [0.10239515006956867]
+      ]
+    },
+    {
+      "trialId": "23",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": -0.23997016156255602
+        }
+      ],
+      "covariance": [
+        [0.03015655711058567]
+      ]
+    },
+    {
+      "trialId": "24",
+      "contrasts": [
+        {
+          "treatment": "ind_counseling",
+          "comparator": "no_contact",
+          "logEffect": 0.038956006915497277
+        }
+      ],
+      "covariance": [
+        [0.035112839984905289]
+      ]
+    }
+  ]
+}

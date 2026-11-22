@@ -18,10 +18,13 @@ REPO = Path(__file__).resolve().parents[2]
 RESOURCES = ['pipeline.py', REGISTRY, GENERATED_REGISTRY,
     'config/sample_size_link_reviews.json', 'config/comparison_result_reviews.json',
     'website/scripts/treatment_map_defaults.cjs', 'website/scripts/underpowered_studies.cjs',
+    'website/scripts/treatment_network_reference_cache.cjs','website/scripts/treatment_network_reference_cache.R',
+    'website/scripts/treatment_network_authors.py',
     'website/scripts/build_new_findings.cjs', 'website/scripts/new_findings_dates.py',
     'website/scripts/treatment_normalization.cjs', 'website/scripts/build_drug_type_review.cjs', 'website/scripts/regimen_projection.cjs', 'website/scripts/treatment_map.cjs', 'website/scripts/treatment_map_model.cjs', 'website/scripts/treatment_map_evidence.cjs', 'website/scripts/treatment_map_cohorts.cjs', 'website/scripts/treatment_map_membership.cjs',
     *[str(path.relative_to(REPO)) for path in (REPO/'website/dist').glob('*.js') if path != REPO/GENERATED_REGISTRY],
-    *['src/metamelanoma/'+name+'.py' for name in ('__init__','cli','io','treatment_normalization','treatment_map')]]
+    *['src/metamelanoma/'+name+'.py' for name in ('__init__','cli','io','treatment_normalization','treatment_map',
+        'binary_effects','binary_count_recovery','source_preference','quantitative_export','screening','schema')]]
 
 
 def payload_for(names, arm_labels=None):

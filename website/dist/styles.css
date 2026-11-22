@@ -26,6 +26,17 @@ main{width:100%;max-width:none;min-height:calc(100vh - 78px);padding:28px 28px 1
 .app-identity h1{font-size:27px;line-height:1.25;letter-spacing:-.6px;margin:0;font-weight:650}
 .app-identity>p{margin:7px 0 0;font-size:13px}
 .analysis-controls,.planning-controls{padding:20px;margin-bottom:20px}
+.study-filter-options{display:flex;align-items:center;flex-wrap:wrap;gap:4px 20px;margin-top:8px}
+.study-filter-options .advanced-filter-toggle{min-height:32px;padding:4px 0}
+.study-indirect-result{margin:0 0 20px;padding:16px clamp(14px,2vw,22px);overflow-wrap:anywhere}
+.study-indirect-result[data-estimate="indirect"]{background:var(--indirect-result-bg,#eaf4ff);border-color:var(--indirect-result-border,#bad7ef)}
+.study-indirect-result .study-indirect-heading{margin:0;font-size:17px}
+.study-indirect-result p{margin:6px 0;font-size:13px}
+.study-indirect-result label{display:block;margin:10px 0 4px;font-size:12px;font-weight:600}
+.study-indirect-result select{display:block;max-width:100%;min-height:36px;margin-bottom:8px;padding:4px 8px;border:1px solid #ccc;border-radius:6px;background:white;color:inherit;font:inherit}
+.study-indirect-result .study-indirect-effect{display:block;margin-top:10px;font-size:18px;font-variant-numeric:tabular-nums}
+.study-indirect-result details{margin-top:8px;font-size:13px}
+.study-indirect-result summary{cursor:pointer;font-weight:600}
 .analysis-control-grid{grid-template-columns:1.15fr 1.25fr 1.1fr .7fr auto;gap:16px;align-items:end}
 .analysis-control-grid .primary-button{min-width:130px;min-height:44px}
 .analysis-controls label>span,.planning-controls label>span,.summary-controls label>span,.matrix-controls label>span,.settings-panel label>span{display:block;font-size:12px;font-weight:600;color:#475569;margin:0 0 8px}
