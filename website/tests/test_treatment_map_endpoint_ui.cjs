@@ -259,6 +259,82 @@ const netGraph=()=>({...graph,comparisons:[
 const nextFrame=()=>new Promise(resolve=>setTimeout(resolve,10));
 function activate(element) { element.dispatchEvent({type:'keydown',key:'Enter',preventDefault(){},stopPropagation(){}}); }
 
+test('radial branch binds the left regimen and offers only eligible network comparators, even outside the branch',async()=>{
+  const g=netGraph(), {view}=mount(g), indirect=view.indirect;
+  // D is off the A branch; its randomized comparison against B connects it to A.
+  g.comparisons.push(networkTrial('444','agent:d','agent:b',.5));
+  const course=networkTrial('555','agent:c','agent:b',.65);
+  course.intervention={...course.intervention,network_regimen_id:'sequence:c_then_c',network_regimen_label:'C then maintenance C'};
+  g.comparisons.push(course);
+  view.radialLeftId='agent:a'; view.isRadialBranch=()=>true;
+  const snapshots=[]; view.refreshRadialComparators=()=>snapshots.push(indirect.fit?.estimate||null);
+  indirect.toggle.click(); await nextFrame();
+  assert.equal(indirect.first.regimen,'agent:a'); assert.equal(indirect.controls.hidden,true);
+  assert.deepEqual(indirect.radialComparators().map(op=>op.id),['agent:c','agent:d','sequence:c_then_c']);
+  assert.ok(!view.tree.positions.has('agent:d'));
+  indirect.chooseRadialComparator('agent:d'); await nextFrame();
+  assert.ok(Math.abs(indirect.fit.estimate-.5/.7)<1e-10);
+  assert.equal(snapshots.at(-1),indirect.fit.estimate);
+  assert.match(indirect.panel.textContent,/Agent D versus Agent A/);
+  assert.equal(withClass(view.world,'tm-network-overlay').length,0);
+  // Clearing for a new scope must immediately retire the previous sign and result.
+  view.setAdvancedFilters({active:true,pending:true,signature:'loading',matches:{}});
+  assert.equal(indirect.fit,null); assert.deepEqual(indirect.radialComparators(),[]);
+  const matches=Object.fromEntries(g.comparisons.map(row=>[row.id,{matched:true}]));
+  view.setAdvancedFilters({active:true,signature:'available',matches}); await nextFrame();
+  assert.equal(indirect.second.regimen,'agent:d'); assert.ok(indirect.fit.available);
+  view.setEndpoint('PFS:HR'); await nextFrame();
+  assert.deepEqual(indirect.radialComparators(),[]); assert.equal(indirect.second,null); assert.equal(indirect.fit,null);
+});
+
+test('entering radial branch preserves an eligible pair but a sequential first treatment cannot stand in for the selected node',async()=>{
+  const g=netGraph(),course=networkTrial('444','agent:a','agent:b',.85);
+  course.intervention={...course.intervention,network_regimen_id:'sequence:a_then_a',network_regimen_label:'A then maintenance A'};
+  g.comparisons.push(course);
+  const {view}=mount(g),indirect=view.indirect;
+  indirect.toggle.click(); await nextFrame();
+  indirect.choose('agent:a','sequence:a_then_a'); indirect.choose('agent:c','agent:c'); await nextFrame();
+  assert.ok(Math.abs(indirect.fit.estimate-.9/.85)<1e-10);
+  view.radialLeftId='agent:a'; view.isRadialBranch=()=>true;
+  indirect.syncRadialLeft(view.radialLeftId); await nextFrame();
+  assert.equal(indirect.first.regimen,'agent:a'); assert.equal(indirect.second.regimen,'agent:c');
+  assert.ok(Math.abs(indirect.fit.estimate-.9/.7)<1e-10);
+  const currentFit=indirect.fit;
+  view.isRadialBranch=()=>false; indirect.refresh();
+  assert.equal(indirect.controls.hidden,false); assert.equal(indirect.fit,currentFit);
+  view.isRadialBranch=()=>true; indirect.syncRadialLeft(view.radialLeftId); indirect.refresh();
+  assert.equal(indirect.controls.hidden,true); assert.equal(indirect.fit,currentFit);
+  view.radialLeftId='agent:b'; indirect.syncRadialLeft(view.radialLeftId);
+  assert.equal(indirect.network.status('agent:b').code,'no_partner');
+  assert.equal(indirect.first,null); assert.equal(indirect.fit,null); assert.equal(indirect.second,null);
+});
+
+test('an external first treatment retains the original contrast, interval and trials when the second treatment is the radial center',async()=>{
+  const g=netGraph();
+  g.comparisons.push(networkTrial('444','agent:d','agent:b',.6));
+  const {view}=mount(g),indirect=view.indirect;
+  indirect.toggle.click(); await nextFrame();
+  indirect.choose('agent:c','agent:c'); indirect.choose('agent:a','agent:a'); await nextFrame();
+  const original=indirect.fit, pair=indirect.pair;
+  assert.ok(Math.abs(original.estimate-.7/.9)<1e-10);
+  view.radialLeftId='agent:a'; view.isRadialBranch=()=>true;
+  indirect.syncRadialLeft('agent:a',{preservePair:true});
+  assert.equal(indirect.fit,original); assert.equal(indirect.pair,pair);
+  assert.deepEqual(indirect.radialSelection(),{activeId:'agent:c',leftIsNumerator:true,fit:original});
+  assert.match(indirect.panel.textContent,/Agent A versus Agent C/);
+  const matches=Object.fromEntries(g.comparisons.map(row=>[row.id,{matched:true}]));
+  view.setAdvancedFilters({active:true,signature:'eligible',matches}); await nextFrame();
+  assert.equal(indirect.radialSelection().leftIsNumerator,true);
+  assert.equal(indirect.radialSelection().activeId,'agent:c');
+  assert.equal(indirect.fit.estimate,original.estimate);
+  assert.equal(indirect.fit.ci_lower,original.ci_lower);
+  assert.equal(indirect.fit.ci_upper,original.ci_upper);
+  indirect.chooseRadialComparator('agent:d'); await nextFrame();
+  assert.equal(indirect.radialSelection().leftIsNumerator,false);
+  assert.equal(indirect.first.regimen,'agent:a'); assert.equal(indirect.second.regimen,'agent:d');
+  assert.ok(Math.abs(indirect.fit.estimate-.6/.7)<1e-10);
+});
+
 test('indirect node selection preserves a disabled bridge; the dotted comparison, source trials and direction match both views',async()=>{
   let publicationsLoaded=0;
   const {view}=mount(netGraph(), {loadNetworkPublications:()=>{publicationsLoaded++; return Promise.resolve(new Map());}});

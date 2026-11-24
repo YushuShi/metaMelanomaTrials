@@ -569,3 +569,161 @@ test('clinical filters mute exact nodes independently of their arrows and preser
  assert.equal(withClass(v.world,'tm-filter-muted').length,0);
  assert.ok(v.edgeEvidence(pair(v,'agent:a','ab').edge).effect?.valid);
 });
+
+test('the radial branch toolbar provides branch, comparison, endpoint, planning and evidence controls in order', () => {
+  const view = mount();
+  view.setBranch('agent:a');
+  view.layoutButtons.get('radial').click();
+  const toolbar = withClass(view.root, 'tm-toolbar')[0];
+  const controlClasses = ['tm-branch-field', 'tm-network-toggle', 'tm-endpoint-field', 'tm-planning-toggle', 'tm-study-scope'];
+  const controlOrder = () => descendants(toolbar).map(element => controlClasses.find(name => element.classList.contains(name))).filter(Boolean);
+  assert.deepEqual(controlOrder(), controlClasses);
+  assert.equal(withClass(toolbar, 'tm-network-toggle')[0].textContent, 'Compare two treatments indirectly');
+  assert.ok(!descendants(view.root).some(element => element.tagName === 'BUTTON' && element.textContent === 'All treatments'));
+
+  view.endpointSelector.value = 'DFS:HR';
+  view.endpointSelector.dispatchEvent({type: 'change'});
+  assert.equal(view.selectedEndpoint, 'DFS:HR');
+  view.scopeSelector.value = 'randomized';
+  view.scopeSelector.dispatchEvent({type: 'change'});
+  assert.equal(view.studyScope, 'randomized');
+  withClass(toolbar, 'tm-planning-toggle')[0].click();
+  assert.equal(view.planningEnabled, true);
+  assert.deepEqual(controlOrder(), controlClasses);
+  assert.equal(withClass(view.root, 'tm-planning-fields').length, 1);
+
+  view.selector.value = '';
+  view.selector.dispatchEvent({type: 'change'});
+  assert.equal(view.tree.overview, true);
+  view.selector.value = 'agent:b';
+  view.selector.dispatchEvent({type: 'change'});
+  assert.equal(view.isRadialBranch(), true);
+  assert.deepEqual(controlOrder(), controlClasses);
+  assert.equal(view.studyScope, 'randomized');
+});
+
+test('radial indirect availability follows exact regimens, endpoint, filters and selected network model', async () => {
+  const comparisons = [
+    ['agent:a','agent:b','OS'], ['agent:b','ab','OS'],
+    ['ac','agent:c','OS'], ['agent:c','bc','OS'],
+    ['agent:a','ac','PFS'], ['ac','abc','PFS']
+  ].map(([first, second, endpoint], i) => {
+    const record = comparison('radial-network-' + i, first, second, endpoint, 'HR', .8, i + 1);
+    if (i === 2) Object.assign(record.intervention, {network_regimen_id:'course:a-then-c', network_regimen_label:'A then C'});
+    return {...record, analysis:analysisMeta('radial-trial-' + i,'randomized_trial',record.pmid)};
+  });
+  const view = mount({...graph, comparisons});
+  view.setBranch('agent:a');
+  view.setBranchLayout('radial');
+  const available = () => view.indirect.radialAvailableRegimens();
+  const options = () => view.indirect.radialComparators().map(option => option.id);
+  const glyph = id => withClass(view.radialHost, 'rb-family-agent').find(el => data(el, 'regimenId') === id);
+  assert.equal(available(), null);
+  view.indirect.setActive(true);
+  assert.equal(available().size, 0, 'pending evidence cannot make an indirect comparison available');
+  await Promise.resolve();
+  assert.deepEqual([...available()].sort(), ['ab','agent:a']);
+  assert.equal(view.indirect.network.status('course:a-then-c').eligible, true);
+  assert.ok(!available().has('ac'), 'a sequential course cannot qualify the concurrent doublet');
+  assert.equal(glyph('ac').getAttribute('aria-disabled'),'true');
+  glyph('ac').click();
+  assert.equal(view.radialLeftId,'agent:a');
+  assert.deepEqual(options(), ['ab']);
+  const same = available();
+  glyph('ab').click();
+  assert.equal(available(), same, 'choosing a first regimen keeps the other eligible first regimens available');
+  assert.deepEqual(options(), ['agent:a']);
+  view.indirect.chooseRadialComparator('agent:a');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(view.indirect.fit?.available,true);
+  view.setNetworkModel('random');
+  assert.equal(available().size, 0);
+  assert.deepEqual(options(), []);
+  assert.equal(view.indirect.second,null);
+  assert.equal(view.indirect.panel.hidden,true);
+  view.setNetworkModel('common');
+  assert.deepEqual([...available()].sort(), ['ab','agent:a']);
+  assert.deepEqual(options(), ['agent:a']);
+
+  view.setEndpoint('PFS:HR');
+  await Promise.resolve();
+  assert.deepEqual([...available()].sort(), ['abc','agent:a']);
+  view.setAdvancedFilters({active:true,pending:true,matches:{}});
+  assert.equal(available().size, 0);
+  view.setAdvancedFilters({active:true,matches:{}});
+  await Promise.resolve();
+  assert.equal(available().size, 0);
+  view.options.loadNetworkGraph = () => Promise.reject(new Error('Network snapshot unavailable'));
+  const failure = view.indirect.reload();
+  assert.match(glyph('ac').getAttribute('aria-label'), /Checking indirect comparisons/);
+  await failure;
+  assert.match(glyph('ac').getAttribute('aria-label'), /No available indirect comparison/);
+  assert.match(view.indirect.panel.textContent,/Network snapshot unavailable/);
+  view.indirect.setActive(false);
+  assert.equal(available(), null);
+});
+
+test('radial planning toggles the event requirement alongside a fitted indirect comparison', async () => {
+  const comparisons = [['agent:a','agent:b'], ['agent:b','agent:c']].map(([first, second], index) => {
+    const record = comparison('network-' + index, first, second, 'OS', 'HR', 0.8, index + 1);
+    return {...record, analysis: analysisMeta('trial-' + index, 'randomized_trial', record.pmid)};
+  });
+  const view = mount({...graph, comparisons});
+  view.setBranch('agent:a');
+  view.layoutButtons.get('radial').click();
+  withClass(view.root, 'tm-network-toggle')[0].click();
+  await Promise.resolve();
+  const opponent = withClass(view.radialHost, 'rb-comparator').find(button => button.getAttribute('data-comparator-id') === 'agent:c');
+  assert.ok(opponent, 'C is connected to A through the two randomized comparisons');
+  opponent.click();
+  await new Promise(resolve => setTimeout(resolve, 0));
+  const panel = view.indirect.panel;
+  const estimate = () => withClass(panel, 'tm-network-estimate-value')[0]?.textContent;
+  const planningToggle = () => withClass(view.root, 'tm-planning-toggle')[0];
+  const indirectHR = estimate();
+  assert.match(indirectHR, /^HR /);
+  assert.equal(withClass(panel, 'tm-network-plan').length, 0);
+  planningToggle().click();
+  assert.match(withClass(panel, 'tm-network-plan')[0].textContent, /E=[\d,]+/);
+  assert.equal(estimate(), indirectHR);
+  planningToggle().click();
+  assert.equal(withClass(panel, 'tm-network-plan').length, 0);
+  assert.equal(estimate(), indirectHR);
+});
+
+test('switching branch layouts carries the filtered direct estimate, interval and cohort table with the selected pair', () => {
+  const view = mount(pooledGraph());
+  view.setBranch('agent:a');
+  const edge = pair(view, 'agent:a', 'ab').edge;
+  const filter = {active:true, selections:{stage:'iv'}, nodeIds:new Set(['agent:a','ab']),
+    matches:Object.fromEntries(edge.comparison_ids.map(id => [id,{matched:true,specificity:1}]))};
+  view.setAdvancedFilters(filter);
+  view.selectParallel(edge.id);
+  const currentResult = () => {
+    const link = withClass(view.comparisonBand, 'tm-effect-link')[0];
+    return ['estimate','ci-lower','ci-upper','basis'].map(k => link.getAttribute('data-'+k));
+  };
+  const result = currentResult(), cohorts = withClass(view.comparisonBand, 'tm-inclusion-table')[0].textContent;
+  assert.equal(result[3], 'pooled');
+  for (const layout of ['radial','branch','radial']) {
+    view.layoutButtons.get(layout).click();
+    assert.equal(view.branchId,'agent:a');
+    assert.equal(view.selectedComparisonPairId,edge.id);
+    assert.equal(view.selectedEndpoint,'OS:HR');
+    assert.deepEqual(view.advanced.selections,{stage:'iv'});
+    assert.deepEqual(currentResult(),result);
+    assert.equal(withClass(view.comparisonBand,'tm-inclusion-table')[0].textContent,cohorts);
+  }
+  const sign = withClass(view.radialHost, 'rb-comparison-sign')[0];
+  assert.equal(sign.getAttribute('data-symbol'),'<','the HR below 1 favors the doublet on the right');
+  assert.equal(withClass(view.radialHost,'rb-comparator')[0].getAttribute('aria-selected'),'true');
+  view.setAdvancedFilters({...filter, pending:true, matches:{}, signature:'loading'});
+  assert.equal(sign.hidden,true); assert.equal(view.comparisonBand.hidden,true);
+  view.setAdvancedFilters(filter);
+  assert.equal(view.selectedComparisonPairId,edge.id); assert.deepEqual(currentResult(),result);
+  view.setEndpoint('DFS:HR');
+  assert.equal(view.selectedComparisonPairId,null); assert.equal(sign.hidden,true);
+  assert.equal(view.comparisonBand.hidden,true,'the old endpoint estimate cannot survive an ineligible comparison');
+  view.setBranch('all');
+  assert.equal(view.isRadialBranch(),false); assert.equal(view.radialHost.hidden,true);
+});

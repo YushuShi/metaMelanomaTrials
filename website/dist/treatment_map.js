@@ -1,8 +1,8 @@
 /* Prepared evidence only: layout and interaction never parse or aggregate trial reports. */
 (function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory(require('./treatment_map_effects.js'), require('./treatment_map_analysis.js'), require('./treatment_map_planning.js'), require('./treatment_map_charts.js'), require('./confidence_intervals.js'), require('./treatment_network_ui.js'), String(factory));
-  else root.TreatmentMap = factory(root.TreatmentMapEffects, root.TreatmentMapAnalysis, root.TreatmentMapPlanning, root.TreatmentMapCharts, root.ConfidenceIntervals, root.TreatmentNetworkUI, String(factory));
-})(typeof globalThis === 'undefined' ? this : globalThis, function (Effects, Analysis, Planning, Charts, ConfidenceIntervals, NetworkUI, sourceCode) {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./treatment_map_effects.js'), require('./treatment_map_analysis.js'), require('./treatment_map_planning.js'), require('./treatment_map_charts.js'), require('./confidence_intervals.js'), require('./treatment_network_ui.js'), require('./radial_branch_panel.js'), String(factory));
+  else root.TreatmentMap = factory(root.TreatmentMapEffects, root.TreatmentMapAnalysis, root.TreatmentMapPlanning, root.TreatmentMapCharts, root.ConfidenceIntervals, root.TreatmentNetworkUI, root.RadialBranchPanel, String(factory));
+})(typeof globalThis === 'undefined' ? this : globalThis, function (Effects, Analysis, Planning, Charts, ConfidenceIntervals, NetworkUI, RadialPanel, sourceCode) {
   'use strict';
   const NS = 'http://www.w3.org/2000/svg';
   const number = (value) => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value).toLocaleString('en-US', { maximumFractionDigits: 2 }) : '—';
@@ -511,6 +511,7 @@
       this.exactNodeBrowse=Array.isArray(graph.study_memberships)&&typeof this.options.renderNodeStudies==='function'; this.selectionMode='node';
       this.directParallelIds = new Set(preparedDefaults(graph)?.direct_parallel_ids||directParallelNodeIds(this.model));
       this.selectedEndpoint = 'OS:HR'; this.selectedComparisonByPair = new Map();
+      this.branchLayout = 'branch';
       this.studyScope = 'all'; this.analysisCache = new Map();
       this.inclusionOverrides = {}; this.inclusionOrder = []; this.advanced = this.options.advanced || {active:false,matches:{}};
       this.planningEnabled = false; this.planningSettings = Planning.indirectSettings(this.options.planningSettings); this.analysisTab = 'comparison';
@@ -558,6 +559,13 @@
       const heading = this.make('div', 'tm-heading', this.root), title = this.make('div', 'tm-title-controls', heading);
       this.make('h2', '', title, 'Treatment map');
       if(this.options.mountAdvanced)this.filterPanel=this.options.mountAdvanced(title,this.root);
+      const layouts = this.make('div', 'tm-layout-switch', title);
+      layouts.setAttribute('role', 'group'); layouts.setAttribute('aria-label', 'Treatment branch layout');
+      this.layoutButtons = new Map();
+      for (const [key, label] of [['branch', 'Branch'], ['radial', 'Radial branch']]) {
+        const button = this.button(layouts, label, () => this.setBranchLayout(key), 'tm-layout-button');
+        this.layoutButtons.set(key, button);
+      }
       const toolbar = this.make('div', 'tm-toolbar', this.root), branchField = this.make('div', 'tm-branch-field', toolbar);
       const label = this.make('label', '', branchField, 'Explore a treatment branch'); label.htmlFor = this.id + '-branch'; label.id = label.htmlFor + '-label';
       this.selector = this.make('select', '', branchField); this.selector.id = label.htmlFor;
@@ -566,8 +574,7 @@
       this.selector.value = this.branchId === 'all' ? '' : this.branchId;
       this.listen(this.selector, 'change', () => this.setBranch(this.selector.value || 'all'));
       this.picker = this.win.TreatmentPicker?.enhance(this.selector);
-      this.allButton = this.button(toolbar, 'All treatments', () => this.setBranch('all'), 'tm-button tm-all-button');
-      this.advancedNote = this.make('div','tm-applied-filters',toolbar); this.renderAdvancedNote();
+      this.advancedNote = this.make('div','tm-applied-filters',this.root); this.renderAdvancedNote();
       const body = this.make('div', 'tm-body', this.root), visual = this.make('div', 'tm-visual', body), mapHeader = this.make('div', 'tm-map-header', visual);
       const mapHeading = this.make('div', '', mapHeader); this.branchTitle = this.make('h3', '', mapHeading); this.branchCount = this.make('p', '', mapHeading);
       const headerTools = this.make('div', 'tm-map-tools', mapHeader);
@@ -587,8 +594,11 @@
       }
       this.world = this.svgElement('g', { class: 'tm-world' }, this.svg);
       this.stageHint = this.make('p', 'tm-stage-hint', this.stage, 'Drag to pan · scroll or pinch to zoom');
+      this.radialHost = this.make('section', 'tm-radial-host', visual); this.radialHost.hidden = true;
       const indirectResult = this.make('section', 'tm-network-result', visual); indirectResult.hidden = true;
       if (NetworkUI) this.indirect = NetworkUI.mount(this, toolbar, indirectControls, indirectResult, defs, parallelLinkGeometry);
+      this.radialTools = this.make('div', 'tm-radial-tools', toolbar);
+      this.radialTools.hidden = true;
       this.categoryLegend = this.make('section', 'tm-category-legend', visual); this.categoryLegend.setAttribute('aria-label', 'Treatment category colors');
       this.legend = this.make('div', 'tm-legend', visual);
       const inclusionKey = this.make('span', '', this.legend); this.make('i', 'tm-solid', inclusionKey); this.make('span', '', inclusionKey, 'Component inclusion · no comparison arrow');
@@ -630,7 +640,9 @@
     }
     setBranch(id) {
       this.branchId = id === 'all' || this.model.byId.has(id) ? id : 'all'; this.syncBranchSelector();
-      this.tree = preparedLayout(this.model, this.branchId); this.allButton.setAttribute('aria-pressed', String(this.branchId === 'all'));
+      this.tree = preparedLayout(this.model, this.branchId);
+      this.radialLeftId = this.branchId === 'all' ? null : this.branchId;
+      this.syncBranchLayout();
       this.root.classList.toggle('tm-overview', this.tree.overview);
       this.branchCount.hidden = this.tree.overview; this.comparisonLegendItem.hidden = false;
       this.endpointBadge.hidden = false; this.endpointBadge.textContent = this.endpointDefinition().label;
@@ -641,6 +653,87 @@
       this.stageHint.textContent = this.tree.overview ? 'Drag to pan · scroll or pinch to zoom' : 'Drag to pan · scroll or pinch to zoom · Fit shows the whole branch';
       this.renderCategoryLegend(); this.renderGraph(); this.indirect?.setBranch(); this.select(this.selectedId, { announce: false }); this.fit(false);
       return this;
+    }
+    isRadialBranch() { return this.branchLayout === 'radial' && !!this.tree && !this.tree.overview; }
+    syncBranchLayout() {
+      const radial = this.isRadialBranch();
+      this.root.classList.toggle('tm-radial-branch', radial);
+      this.radialHost.hidden = !radial;
+      this.radialTools.hidden = !radial;
+      for (const [key, button] of this.layoutButtons) {
+        button.disabled = this.tree.overview;
+        button.setAttribute('aria-pressed', String(!this.tree.overview && this.branchLayout === key));
+      }
+    }
+    setBranchLayout(layout) {
+      if (this.tree.overview || !this.layoutButtons.has(layout) || this.branchLayout === layout) return this;
+      const pair = this.tree.comparisonEdges.find(edge =>
+        (edge.id === this.selectedComparisonPairId && (this.selectionMode === 'comparison' || !this.exactNodeBrowse)) ||
+        (!this.comparisonBand.hidden && edge.comparison_ids.includes(this.activeComparisonId)));
+      this.branchLayout = layout;
+      this.syncBranchLayout();
+      if (this.isRadialBranch()) {
+        const familyIds = new Set(this.tree.nodes.map(node => node.id));
+        const candidateIds = [this.indirect?.active && this.indirect.first?.node, this.indirect?.active && this.indirect.second?.node,
+          this.selectedId, pair?.root_id, pair?.opponent_id];
+        this.radialLeftId = candidateIds.find(id => familyIds.has(id)) || this.branchId;
+        this.indirect?.syncRadialLeft(this.radialLeftId, {preservePair: true});
+        this.select(this.radialLeftId, {comparisonPairId: pair?.id, announce: false, preserveMode: true});
+      } else {
+        this.indirect?.refresh();
+        this.renderDetails(); this.renderComparison(); this.renderNodeStudies(); this.updateSelection();
+        this.fit(false);
+      }
+      return this;
+    }
+    radialDirectComparators(leftId) {
+      if (this.advanced.pending || this.advanced.error) return [];
+      const options = [];
+      for (const edge of this.tree.comparisonEdges) {
+        if (edge.root_id !== leftId && edge.opponent_id !== leftId) continue;
+        if (!this.edgeChoices(edge).some(c => !this.advanced.active || this.advanced.matches?.[c.id]?.matched)) continue;
+        const evidence = this.edgeEvidence(edge);
+        // Keep the inclusion table accessible if the user unchecks its final cohort.
+        if (!evidence.effect?.valid && !evidence.group?.tableRows?.some(row => this.inclusionOverrides[row.comparison?.id] === false)) continue;
+        const id = edge.root_id === leftId ? edge.opponent_id : edge.root_id;
+        options.push({id, label: this.nodeFor(id).label, kind: 'Direct', edge, evidence});
+      }
+      return options.sort(byLabel);
+    }
+    refreshRadialComparators() {
+      if (!this.isRadialBranch()) return;
+      const selected = this.model.byId.get(this.radialLeftId);
+      if (!selected) return;
+      const direct = this.radialDirectComparators(selected.id);
+      const indirect = this.indirect?.active ? this.indirect : null;
+      const availableRegimens = indirect?.radialAvailableRegimens() ?? null;
+      const comparators = direct.concat((indirect?.radialComparators() || []).map(row => ({...row, kind: 'Indirect'})));
+      const active = direct.find(row => row.edge.id === this.selectedComparisonPairId);
+      const networkSelection = indirect?.radialSelection();
+      const activeId = indirect ? networkSelection.activeId : active?.id;
+      const fit = indirect ? networkSelection.fit?.available && networkSelection.fit : active?.evidence.effect;
+      const leftIsNumerator = indirect ? networkSelection.leftIsNumerator : active?.evidence.headId === selected.id;
+      const comparison = RadialPanel.orientComparison(fit, this.endpointDefinition(), leftIsNumerator);
+      RadialPanel.render(this, this.radialHost, {selected, comparators, activeId, availableRegimens,
+        mode: indirect ? 'indirect' : 'direct', comparison,
+        loading: !!this.advanced.pending || (!!indirect && ((!indirect.network && !indirect.error) || indirect.fitPending)),
+        studyLabel: studyLabel(selected,true), countLabel: countLabel(selected),
+        onRegimen: id => {
+          if (availableRegimens && !availableRegimens.has(id)) return;
+          const next = active && this.radialDirectComparators(id).find(row => row.id === active.id);
+          this.radialLeftId = id;
+          this.indirect?.syncRadialLeft(id);
+          this.select(id, {comparisonPairId: next?.edge.id});
+        },
+        onComparator: (id, kind) => {
+          if (kind === 'Indirect') { indirect?.chooseRadialComparator(id); return; }
+          const row = direct.find(item => item.id === id);
+          if (row) {
+            if (indirect) indirect.setActive(false);
+            this.analysisTab = 'comparison';
+            this.select(selected.id, {comparisonPairId: row.edge.id});
+          }
+        }});
     }
     endpointDefinition(key=this.selectedEndpoint) {
       return Effects.endpoints.find(endpoint=>endpoint.key===key)||this.availableEndpoints?.find(endpoint=>endpoint.key===key);
@@ -731,16 +824,26 @@
       this.activeComparisonId = null; this.activeComparisonExplicit = false; this.analysisTab = 'comparison';
       return this.select(this.selectedId, { comparisonPairId: this.selectedComparisonPairId, announce: false, preserveMode:true });
     }
-    renderStudyScope() {
-      const field = this.make('section', 'tm-study-scope', this.details), label = this.make('label', '', field, 'Evidence to include');
+    renderStudyScope(parent = this.details) {
+      const field = this.make('section', 'tm-study-scope', parent), label = this.make('label', '', field, 'Evidence to include');
       label.htmlFor = this.id + '-scope'; const select = this.make('select', '', field); select.id = label.htmlFor;
       for (const [value, text] of [['all', 'All studies, including observational'], ['trials', 'Randomized and nonrandomized trials'], ['randomized', 'Randomized trials only']]) { const option = this.make('option', '', select, text); option.value = value; }
       select.value = this.studyScope; select.addEventListener('change', () => this.setStudyScope(select.value)); this.scopeSelector = select;
     }
-    renderPlanningControls() {
-      const panel = this.make('section', 'tm-planning-controls', this.details), toggle = this.button(panel, 'Sample size calculation', () => { this.planningEnabled = !this.planningEnabled; this.renderDetails(); this.renderComparison(); this.updateSelection(); }, 'tm-button tm-planning-toggle');
+    renderPlanningControls(parent = this.details) {
+      const controls = this.make('section', 'tm-planning-controls', parent);
+      const toggle = this.make('button', 'tm-button tm-planning-toggle', controls, 'Sample size calculation');
+      this.planningToggle = toggle;
+      toggle.type = 'button';
+      toggle.addEventListener('click', () => {
+        this.planningEnabled = !this.planningEnabled;
+        this.renderDetails(); this.renderComparison(); this.updateSelection();
+        if (this.indirect?.active) this.indirect.updateEstimate();
+        this.planningToggle.focus();
+      });
       toggle.setAttribute('aria-pressed', String(this.planningEnabled));
       if (!this.planningEnabled) return;
+      const panel = parent === this.details ? controls : this.make('section', 'tm-planning-controls', this.details);
       const form = this.make('form', 'tm-planning-fields', panel); form.addEventListener('submit', event => event.preventDefault());
       const input = (key, labelText, choices, options = {}) => {
         const label = this.make('label', '', form, labelText), field = this.make(choices ? 'select' : 'input', '', label); field.name = key;
@@ -752,6 +855,7 @@
           const raw = field.value.trim(), value = key==='plannedSide' ? raw : raw === '' && key==='manualProbability' ? null : Number(raw) / (percent ? 100 : 1);
           try { this.planningSettings = Planning.settings({ ...this.planningSettings, [key]: value }); this.planningError = null; } catch (error) { this.planningError = error.message; }
           this.renderDetails(); this.renderComparison(); this.updateSelection();
+          if (this.indirect?.active) this.indirect.updateEstimate();
         });
         return field;
       };
@@ -764,7 +868,7 @@
       if(this.planningSettings.arms===2)input('allocation','Allocation ratio (planned / reference)',null,{min:0.1,max:20,step:0.1});
       if (this.planningError) this.make('p','tm-planning-error',panel,this.planningError);
       const selectedEdge=this.tree.comparisonEdges.find(edge=>edge.comparison_ids.includes(this.activeComparisonId));
-      if(selectedEdge){const d=this.planningDirection(selectedEdge);this.make('p','tm-count-note tm-planning-direction',panel,'Planned: '+this.nodeFor(d.plannedId).label+'. Reference: '+this.nodeFor(d.referenceId).label+'.');}
+      if(selectedEdge && !this.indirect?.active){const d=this.planningDirection(selectedEdge);this.make('p','tm-count-note tm-planning-direction',panel,'Planned: '+this.nodeFor(d.plannedId).label+'. Reference: '+this.nodeFor(d.referenceId).label+'.');}
       this.make('p','tm-count-note',panel,'Reported study rates are used unless you enter a probability.');
       if (this.planningSettings.arms === 1) this.make('p','tm-count-note',panel,'The calculation treats the historical benchmark as fixed.');
     }
@@ -1028,6 +1132,11 @@
         this.activeComparisonId = this.latestSupportedComparison(defaultPair, source)?.id || this.activeComparisonId;
       }
       if (options?.comparisonPairId && this.activeComparisonId) this.activeComparisonExplicit = true;
+      if (this.isRadialBranch() && !this.advanced.pending && this.selectedComparisonPairId &&
+          !this.radialDirectComparators(this.radialLeftId).some(row => row.edge.id === this.selectedComparisonPairId)) {
+        this.selectedComparisonPairId = null; this.activeComparisonId = null; this.activeComparisonExplicit = false;
+        this.selectionMode = 'node';
+      }
       this.renderDetails(); this.renderComparison(); this.renderNodeStudies(); this.updateSelection();
       if (options?.announce !== false && this.selectedId) { const node = this.nodeFor(this.selectedId); this.live.textContent = `${node.label} selected. ${node.type === 'control' ? 'Neutral comparison arm.' : `${studyLabel(node)}. ${countLabel(node)}.`} Evidence is below the map on narrow screens.`; }
       return this;
@@ -1057,6 +1166,7 @@
       return matching.filter((item) => memberIds.has(item.id) || item.intervention.node_id === this.selectedId || item.comparator.node_id === this.selectedId).sort(byComparison);
     }
     updateSelection() {
+      if (this.isRadialBranch()) { this.refreshRadialComparators(); return; }
       const comparison = this.model.comparisons.find((item) => item.id === this.activeComparisonId);
       const activePair = this.tree.comparisonEdges.find((edge) => edge.comparison_ids.includes(this.activeComparisonId));
       for (const [id, element] of this.nodeElements) {
@@ -1109,6 +1219,14 @@
     }
     renderDetails() {
       this.details.replaceChildren();
+      this.radialTools.replaceChildren();
+      if (this.isRadialBranch()) {
+        this.renderEndpointChoice(this.radialTools);
+        this.renderPlanningControls(this.radialTools);
+        this.renderStudyScope(this.radialTools);
+        if (this.indirect?.active) this.indirect.renderTargetChoice(this.details);
+        return;
+      }
       if (this.indirect?.active) {
         this.renderEndpointChoice();
         this.indirect.renderTargetChoice(this.details);
@@ -1151,8 +1269,8 @@
       if (charts?.endpointOptionLabel) { const families = { ...charts.survivalEndpointLabels, ...charts.responseEndpointLabels }, family = Object.keys(families).find((key) => families[key] === value); if (family) return charts.endpointOptionLabel(family); }
       return value || 'Reported outcome';
     }
-    renderEndpointChoice() {
-      const endpointField = this.make('section', 'tm-endpoint-field', this.details), endpointLabel = this.make('label', '', endpointField, 'Endpoint');
+    renderEndpointChoice(parent = this.details) {
+      const endpointField = this.make('section', 'tm-endpoint-field', parent), endpointLabel = this.make('label', '', endpointField, 'Endpoint');
       endpointLabel.htmlFor = this.id + '-endpoint'; this.endpointSelector = this.make('select', '', endpointField); this.endpointSelector.id = endpointLabel.htmlFor;
       const coreIds = new Set(this.tree.nodes.map((item) => item.id)), pairIds = new Set(this.tree.comparisonEdges.flatMap((edge) => edge.comparison_ids));
       const sources = this.model.comparisons.filter((item) => this.tree.overview ? pairIds.has(item.id) : coreIds.has(item.intervention.node_id) || coreIds.has(item.comparator.node_id) || pairIds.has(item.id));
@@ -1224,7 +1342,7 @@
     renderComparison() {
       this.comparisonBand.replaceChildren();
       if(this.methods)this.methods.hidden=false;
-      if (this.indirect?.active || (this.exactNodeBrowse?this.selectionMode!=='comparison':this.tree.overview)) { this.comparisonBand.hidden = true; return; }
+      if (this.indirect?.active || (this.isRadialBranch() && (!this.selectedComparisonPairId || this.advanced.pending)) || (this.exactNodeBrowse?this.selectionMode!=='comparison':this.tree.overview)) { this.comparisonBand.hidden = true; return; }
       let comparison = this.model.comparisons.find((item) => item.id === this.activeComparisonId);
       if (!comparison) { this.comparisonBand.hidden = true; return; }
       this.comparisonBand.hidden = false;
@@ -1238,7 +1356,7 @@
       for(const [key,label] of [['comparison','DIRECT ARM COMPARISON'],['forest','Forest plot'],['bias','Publication bias'],['sensitivity','Sensitivity analysis']]){
         const button=this.button(navigation,label,()=>{this.analysisTab=key;this.renderComparison();},'tm-comparison-tab');button.setAttribute('role','tab');button.setAttribute('aria-selected',String(this.analysisTab===key));button.disabled=key!=='comparison'&&!group?.pooled;if(button.disabled)button.title='Requires at least two independent compatible studies with effect uncertainty';
       }
-      this.make('strong', '', heading, this.outcomeLabel(comparison.outcome));
+      this.make('strong', '', heading, this.isRadialBranch() ? this.endpointDefinition().label : this.outcomeLabel(comparison.outcome));
       if(!group?.pooled&&group&&!group.latest_fallback){
         const selected=list(group.tableRows).filter(row=>row.population_selected??row.included),k=group.single?.k||group.selected?.length||0;
         if(k===1||selected.length===1)this.make('p','tm-meta-availability',this.comparisonBand,'1 independent cohort in this population; meta-analysis needs at least 2.');
@@ -1249,7 +1367,9 @@
         const { tailId, headId, effect, style } = this.edgeEvidence(pair);
         if (effect?.valid) {
           const interpretation = this.make('div', 'tm-arrow-interpretation', this.comparisonBand); interpretation.style.setProperty('--tm-effect-color', style.color);
-          this.make('strong', '', interpretation, `Arrow: ${this.nodeFor(tailId).label} → ${this.nodeFor(headId).label}`);
+          this.make('strong', '', interpretation, this.isRadialBranch()
+            ? this.nodeFor(headId).label + ' vs ' + this.nodeFor(tailId).label
+            : `Arrow: ${this.nodeFor(tailId).label} → ${this.nodeFor(headId).label}`);
           this.make('span', '', interpretation, directedLabel(effect) + (group?.pooled ? ' · '+Charts.modelLabel(group.pooled)+' pooled estimate' : ' · Individual study'));
         }
       }
@@ -1273,6 +1393,7 @@
     }
     bounds() { const points = [...this.tree.positions.values()]; if (!points.length) return { x: -100, y: -100, width: 200, height: 200 }; const pad = this.tree.overview ? 70 : 26, minX = Math.min(...points.map((p) => p.x)) - pad, minY = Math.min(...points.map((p) => p.y - p.height / 2)) - pad; return { x: minX, y: minY, width: Math.max(...points.map((p) => p.x + p.width)) + pad - minX, height: Math.max(...points.map((p) => p.y + p.height / 2)) + pad - minY }; }
     fit(all) {
+      if (this.isRadialBranch()) return this;
       if (!this.tree) return this;
       const width = this.stage.clientWidth || 800, height = this.stage.clientHeight || 600, bounds = this.bounds();
       let scale = Math.min((width - 60) / bounds.width, (height - 70) / bounds.height, this.tree.overview ? 1.1 : 1);

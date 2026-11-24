@@ -50,6 +50,7 @@ function publish(root){
   const networkFile='treatment_network_reference.json';
   const networkPresent=['current','published'].includes(networkReference.status);
   const producers=['website/scripts/treatment_map_defaults.cjs','website/dist/treatment_map.js','website/dist/treatment_map_analysis.js','website/dist/treatment_map_effects.js','website/dist/statistical_math.js','website/dist/confidence_intervals.js'];
+  producers.push('website/dist/radial_branch_panel.js','website/dist/radial_branch_family.js','website/dist/treatment_network_ui.js');
   producers.push('website/scripts/treatment_network_reference_cache.cjs','website/scripts/treatment_network_reference_cache.R',
     'website/scripts/treatment_network_authors.py','website/dist/treatment_network_authors.js',
     'website/dist/treatment_network_model.js','website/dist/treatment_network_cache.js','website/dist/treatment_network_evidence.js');

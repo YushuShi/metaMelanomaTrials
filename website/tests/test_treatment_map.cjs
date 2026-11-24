@@ -168,6 +168,13 @@ function mountedFixture(source = graph, options) {
 const descendants = (element) => element.children.flatMap((child) => [child, ...descendants(child)]);
 const withClass = (element, name) => descendants(element).filter((child) => child.classList.contains(name));
 
+function chooseOverview(view) {
+  const option = view.selector.options.find(item => item.textContent === 'All treatments · radial overview');
+  assert.ok(option, 'the catalogue overview must be reachable from the treatment picker');
+  view.selector.value = option.value;
+  view.selector.dispatchEvent({ type: 'change' });
+}
+
 test('mounted branch → overview → branch clears detailed evidence and restores it on opening a node', () => {
   const { root, view } = mountedFixture();
   assert.equal(view.branchId, 'agent:a'); assert.equal(view.comparisonBand.hidden, false);
@@ -179,7 +186,7 @@ test('mounted branch → overview → branch clears detailed evidence and restor
   assert.equal(view.branchCount.textContent,'3 branch nodes');
   assert.equal(withClass(view.details, 'tm-detail-comparisons').length, 0); assert.equal(withClass(view.details, 'tm-arms').length, 0);
   assert.doesNotMatch(view.details.textContent, /Direct comparisons|Study & outcome|Counted treatment arms|Uncounted arms & source review/);
-  view.allButton.click();
+  chooseOverview(view);
   assert.equal(view.tree.overview, true); assert.equal(view.comparisonBand.hidden, true); assert.equal(view.comparisonBand.children.length, 0);
   assert.equal(withClass(view.details, 'tm-detail-comparisons').length, 0); assert.equal(withClass(view.details, 'tm-arms').length, 0); assert.equal(withClass(view.details, 'tm-coverage').length, 0);
   assert.equal(view.branchCount.hidden, true); assert.equal(view.comparisonLegendItem.hidden, false);
@@ -241,7 +248,7 @@ test('every overview node can open a branch, including a combination with its pr
   assert.equal(view.branchId, 'ab'); assert.equal(view.selector.value, 'ab'); assert.deepEqual(view.tree.nodes.map((node) => node.id), ['ab', 'abc']);
   assert.equal(view.tree.parents.get('abc'), 'ab'); assert.equal(view.comparisonBand.hidden, false);
   assert.equal(view.selector.options.filter((option) => option.value === 'ab').length, 1);
-  view.allButton.click(); assert.equal(view.selector.value, ''); assert.equal(view.selector.options.length, 5);
+  chooseOverview(view); assert.equal(view.selector.value, ''); assert.equal(view.selector.options.length, 5);
   view.selector.value = 'agent:b'; view.selector.dispatchEvent({ type: 'change' });
   assert.equal(view.branchId, 'agent:b'); assert.equal(view.selector.options.length, 5); assert.equal(view.combinationOption, null);
 });
@@ -337,7 +344,7 @@ test('neutral parallel cards have no invented study or participant totals and di
   assert.ok(control.classList.contains('tm-control-node')); assert.match(control.textContent, /Neutral comparison arm/); assert.doesNotMatch(control.textContent, /N=|N unresolved|0 studies|identified studies/);
   control.click(); assert.equal(view.selectedId, 'control:placebo'); assert.equal(withClass(view.details, 'tm-detail-stats').length, 0); assert.equal(withClass(view.details, 'tm-arms').length, 0); assert.equal(view.activeComparisonId, 'a-placebo');
   assert.equal(view.comparisonBand.hidden, false);
-  view.allButton.click(); assert.equal(withClass(view.world, 'tm-parallel-node').length, 0);
+  chooseOverview(view); assert.equal(withClass(view.world, 'tm-parallel-node').length, 0);
   assert.ok(withClass(view.world, 'tm-parallel-link').every(element => element.getAttribute('data-comparison-kind') === 'addon'));
   assert.equal(withClass(view.world, 'tm-parallel-estimate').length, 0); assert.equal(view.comparisonBand.hidden, true);
 });

@@ -55,7 +55,7 @@
     }
     clearPair() {
       this.pathwayView?.destroy(); this.pathwayView=null;
-      this.first=null; this.second=null; this.pair=null; this.fit=null; this.fitPending=false;
+      this.first=null; this.second=null; this.pair=null; this.fit=null; this.fitPending=false; this.radialReversed=false;
       this.fullFit=null; this.selectedPair=null; this.pathSelection=null; this.excluded=new Set();
       this.fitRevision++; this.statusCache.clear(); this.prompt=null; this.feedback='';
     }
@@ -69,6 +69,90 @@
       if (!this.statusCache.has(id)) this.statusCache.set(id,this.network.status(id,this.first?.regimen));
       return this.statusCache.get(id);
     }
+    radialSelection() {
+      return {activeId:(this.radialReversed ? this.first : this.second)?.regimen || null,
+        leftIsNumerator:this.radialReversed,fit:this.fit};
+    }
+    radialAvailableRegimens() {
+      if (!this.active) return null;
+      const {tree} = this.view, {network, model, error} = this;
+      const cached = this.radialAvailability;
+      if (cached && cached.tree === tree && cached.network === network && cached.model === model && cached.error === error) return cached.ids;
+      const ids = new Set();
+      if (network) {
+        const eligible = new Set();
+        for (const group of network.components) {
+          // REML needs at least one residual degree of freedom in this component.
+          if (model === 'random' && group.blocks.reduce((n, block) => n + block.contrasts.length, 0) < group.regimens.length) continue;
+          for (const id of group.regimens) if (network.status(id).eligible) eligible.add(id);
+        }
+        // Family nodes select the exact concurrent regimen as the first treatment.
+        // Other courses mapped to the same icon do not establish its eligibility.
+        for (const node of tree.nodes) if (eligible.has(network.regimenId(node.id))) ids.add(node.id);
+      }
+      this.radialAvailability = {tree, network, model, error, ids};
+      return ids;
+    }
+    radialComparators() {
+      const left=this.radialReversed ? this.second : this.first;
+      if (!this.active || !this.network || !left || !this.radialAvailableRegimens().has(left.node)) return [];
+      const component=this.network.components.find(group=>group.regimens.includes(left.regimen));
+      return (component?.regimens || []).filter(id=>this.network.status(id,left.regimen).eligible)
+        .map(id=>({id,label:this.label(id)})).sort((a,b)=>a.label.localeCompare(b.label)||a.id.localeCompare(b.id));
+    }
+    networkNode(regimen) {
+      // The network also contains complete treatment courses and external
+      // comparators which need not have cards in this particular branch.
+      const positions=this.view.tree.positions;
+      return positions.has(regimen) ? regimen : [...positions.keys()].find(id=>this.regimens(id).includes(regimen)) || regimen;
+    }
+    chooseRadialComparator(regimen) {
+      if (!this.active || !this.network || !this.first) return;
+      if (this.radialReversed) {
+        if (this.first.regimen===regimen) return;
+        const left=this.second;
+        this.clearPair();
+        this.first=left;
+      }
+      this.choose(this.networkNode(regimen),regimen);
+    }
+    syncRadialLeft(node,{preservePair=false}={}) {
+      if (!this.active || !this.view.isRadialBranch?.() || !this.network) return;
+      if (!this.radialAvailableRegimens().has(node)) {
+        this.radialResume=null;
+        this.clearPair();
+        this.refresh();
+        return;
+      }
+      const regimen=this.network.regimenId(node);
+      // The branch can start at an external opponent. Keep that published
+      // direction and its fit when the second treatment is on the left here.
+      if ((preservePair || this.radialReversed) && regimen && this.second?.regimen===regimen && this.second.node===node) {
+        this.radialReversed=true;
+        if(preservePair)this.refresh();
+        return;
+      }
+      if ((preservePair || !this.radialReversed) && regimen && this.first?.regimen===regimen && this.first.node===node) {
+        this.radialReversed=false;
+        if(preservePair)this.refresh();
+        return;
+      }
+      const saved=this.radialResume;
+      const desired=this.radialSelection().activeId || saved?.regimen;
+      this.radialResume=null;
+      this.clearPair();
+      // Always start from the selected exact regimen. A sequential course
+      // sharing its visual node cannot substitute for concurrent treatment.
+      if (regimen) this.first={node,regimen};
+      if (!desired || !this.first || !this.status(desired).eligible) { this.refresh(); return; }
+      if (saved?.reversed && saved.left===regimen) {
+        this.second=this.first;
+        this.first={regimen:desired,node:this.networkNode(desired)};
+        this.radialReversed=true;
+        this.statusCache.clear();
+        this.calculate();
+      } else this.chooseRadialComparator(desired);
+    }
     nodeStatus(id) {
       if (!this.network) return {eligible:false, reason:this.error || (this.view.advanced.pending ? 'Loading selected filters…' : 'Loading randomized comparisons…')};
       const regimens=this.regimens(id);
@@ -77,11 +161,12 @@
       return statuses.find(status=>status.eligible) || statuses[0];
     }
     setActive(active) {
+      this.radialResume=null;
       this.active=active; this.view.root.classList.toggle('tm-indirect-active',active);
       this.toggle.setAttribute('aria-pressed',String(active)); this.controls.hidden=!active;
       if (active) { this.target=null; this.reload(); }
       else {
-        this.revision++; this.clearPair(); this.network=null; this.panel.hidden=true;
+        this.revision++; this.clearPair(); this.network=null; this.radialAvailability=null; this.panel.hidden=true;
         this.controls.replaceChildren(); this.panel.replaceChildren(); this.decorate(); this.drawArrow();
       }
       this.view.renderDetails(); this.view.renderComparison(); this.view.renderNodeStudies(); this.view.updateSelection();
@@ -89,6 +174,9 @@
     async reload() {
       if (!this.active) return;
       const revision=++this.revision;
+      if (!this.view.isRadialBranch?.()) this.radialResume=null;
+      else if (this.second) this.radialResume={regimen:this.radialSelection().activeId,
+        left:(this.radialReversed ? this.second : this.first).regimen,reversed:this.radialReversed};
       this.clearPair(); this.network=null; this.error=this.view.advanced.error || ''; this.refresh();
       if (this.view.advanced.pending || this.error) return;
       try {
@@ -101,19 +189,31 @@
         if (revision!==this.revision || !this.active) return;
         this.error=err.message || 'The randomized comparison network could not be loaded.';
       }
-      this.view.renderDetails(); this.refresh();
+      this.view.renderDetails();
+      if (this.network && this.view.isRadialBranch?.()) this.syncRadialLeft(this.view.radialLeftId || this.view.selectedId || this.view.branchId);
+      else this.refresh();
     }
     setModel(value) {
       const next=value==='random'?'random':'common';
       if (next===this.model) return;
       this.model=next;
       if (this.active) this.view.renderDetails();
+      if (this.active && this.view.isRadialBranch?.() && this.network &&
+          (!this.first || !this.radialAvailableRegimens().has(this.view.radialLeftId))) {
+        this.syncRadialLeft(this.view.radialLeftId);
+        return;
+      }
       if (this.active && this.second) this.calculate();
       else if (this.active) this.refresh();
     }
     setBranch() {
       if (!this.active) return;
       this.prompt=null;
+      if (this.view.isRadialBranch?.()) {
+        this.syncRadialLeft(this.view.radialLeftId || this.view.selectedId || this.view.branchId);
+        this.refresh();
+        return;
+      }
       if ([this.first,this.second].some(item=>item&&!this.view.tree.positions.has(item.node))) this.clearPair();
       this.refresh();
     }
@@ -172,8 +272,17 @@
       return planning().indirect({estimate:fit.estimate,measure:v.endpointDefinition().measure,first:this.second.regimen,
         second:this.first.regimen,comparisons,settings:v.planningSettings});
     }
-    clear() { this.clearPair(); this.refresh(); this.view.live.textContent='Indirect comparison selection cleared.'; }
-    refresh() { this.renderControls(); this.renderPanel(); this.decorate(); this.drawArrow(); }
+    clear() {
+      this.radialResume=null;
+      this.clearPair();
+      if (this.network && this.view.isRadialBranch?.()) this.syncRadialLeft(this.view.radialLeftId || this.view.selectedId || this.view.branchId);
+      else this.refresh();
+      this.view.live.textContent='Indirect comparison selection cleared.';
+    }
+    refresh() {
+      this.renderControls(); this.renderPanel(); this.decorate(); this.drawArrow();
+      if (this.view.isRadialBranch?.()) this.view.refreshRadialComparators?.();
+    }
     renderTargetChoice(parent) {
       const targets=this.network?.targets || [];
       if (targets.length>1) {
@@ -189,6 +298,8 @@
     renderControls() {
       if (!this.active) return;
       const v=this.view, parent=this.controls; parent.replaceChildren(); this.choiceBox=null;
+      parent.hidden=!!v.isRadialBranch?.();
+      if (parent.hidden) return;
       v.make('p','tm-network-instruction',parent,'Select the first treatment, then the second treatment.');
       if (this.first) v.make('span','tm-network-selection',parent,'First treatment · '+this.label(this.first.regimen));
       if (this.first && this.second) {
@@ -266,12 +377,15 @@
       const methodDetailsOpen=box.querySelector?.('.tm-network-weighting')?.open;
       box.replaceChildren();
       const weighted=this.fit.available && this.fit.method==='pathway-weighted';
+      const showPlanning=!v.isRadialBranch?.() || v.planningEnabled;
       this.networkMethodNote.hidden=weighted || !this.fit.available;
       if(weighted)v.make('strong','tm-network-fit-label',box,'Pathway-weighted sensitivity estimate');
       if(this.fit.available) {
         v.make('strong','tm-network-estimate tm-network-estimate-value',box,this.resultLabel());
-        const plan=this.plan(this.fit,this.selectedPair.comparisons);
-        const size=v.make('span','tm-network-plan',box,planning().describeIndirectPlan(plan,v.planningSettings)); size.title=plan.detail;
+        if(showPlanning) {
+          const plan=this.plan(this.fit,this.selectedPair.comparisons);
+          const size=v.make('span','tm-network-plan',box,planning().describeIndirectPlan(plan,v.planningSettings)); size.title=plan.detail;
+        }
       } else {
         v.make('strong','tm-network-estimate',box,'Indirect estimate unavailable'); v.make('p','',box,this.fit.reason);
       }
@@ -283,9 +397,12 @@
         v.make('p','tm-network-note',details,pathways().weightingNote(this.fit));
         const reference=this.pathSelection.referenceFit;
         if(reference?.available) {
-          const plan=this.plan(reference,this.pathSelection.referenceComparisons||this.pair.comparisons);
-          const benchmark=v.make('p','tm-network-note tm-network-benchmark',details,'All pathways, same weighting · '+this.resultLabel(reference)+' · '+planning().describeIndirectPlan(plan,v.planningSettings));
-          benchmark.title=plan.detail;
+          const benchmark=v.make('p','tm-network-note tm-network-benchmark',details,'All pathways, same weighting · '+this.resultLabel(reference));
+          if(showPlanning) {
+            const plan=this.plan(reference,this.pathSelection.referenceComparisons||this.pair.comparisons);
+            benchmark.textContent+=' · '+planning().describeIndirectPlan(plan,v.planningSettings);
+            benchmark.title=plan.detail;
+          }
         }
       }
       this.renderDiagnostics(); this.drawArrow();
@@ -301,6 +418,7 @@
           this.pathSelection=selection;
           this.selectedPair=selection.pair; this.fit=selection.fit; this.excluded=selection.excluded;
           this.updateEstimate(); this.decorate();
+          if (v.isRadialBranch?.()) v.refreshRadialComparators?.();
           v.live.textContent=[pathways().selectionLabel(selection),this.fit.available?this.resultLabel():this.fit.reason].filter(Boolean).join('. ');
         }};
       let mounted=false;
@@ -383,7 +501,7 @@
     }
     drawArrow() {
       if (this.overlay) { this.overlay.parentNode?.removeChild(this.overlay); this.overlay=null; }
-      if (!this.active || !this.first || !this.second || !this.fit?.available) return;
+      if (!this.active || this.view.isRadialBranch?.() || !this.first || !this.second || !this.fit?.available) return;
       const v=this.view, scale=v.camera.scale;
       const first=this.first.node, second=this.second.node;
       let g;

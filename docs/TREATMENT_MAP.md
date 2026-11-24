@@ -28,6 +28,39 @@ The graph model is `website/scripts/treatment_map_model.cjs`; the browser viewer
 is `website/dist/treatment_map.js`. Neither makes model requests. Comparison-level
 statistics and planning run locally using the separately tested modules below.
 
+### Radial branch
+
+Use **Branch | Radial branch** beside **Advanced filter** to change the layout
+of an open branch. Branch is the default. To return to the catalogue-wide
+overview, select **All treatments · radial overview** under **Explore a treatment
+branch**. Both branch layouts share the selected endpoint, clinical filters,
+comparison and cohort inclusions.
+
+In the radial branch toolbar, choose a treatment on the left. The next four
+controls let you compare two treatments indirectly, choose the endpoint, turn
+on sample size calculation and select the evidence to include.
+
+Use **+** and **−** to zoom the diagram. Scroll to explore a magnified branch
+or choose **Fit** to see the whole branch again.
+
+In **Radial branch**, each glyph represents one agent. Each ring adds one
+agent to the central regimen. Selecting the outer agent highlights every drug
+in that regimen with a dark fill and a white icon, and opens its exact-treatment
+study list. The icon legend runs across the bottom of the plot. A dashed-outline component
+can lead to an observed regimen even when the intermediate regimen has no
+evidence of its own. Standalone comparator treatments appear in the scrollable
+list on the right. **Compare two treatments indirectly** adds eligible network
+comparators for the current outcome definition and clinical filters. A gray
+regimen has no eligible indirect comparator for that selection. To explore its
+direct evidence, turn off indirect comparison.
+
+The comparison sign points according to the favorable direction of the endpoint.
+A `>` favors the selected regimen on the left. A `<` favors the comparator
+on the right. A filled sign means the unrounded 95% interval excludes the
+null. An outline indicates the point-estimate direction, with “CI unavailable”
+when the interval is missing. A dash denotes an estimate at the null. The
+estimate, its orientation, interval, and supporting studies appear below.
+
 ## Meaning of the graph
 
 A named-agent node represents a named product or supported treatment modality,
