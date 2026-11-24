@@ -184,18 +184,13 @@
             <label><span>Network meta-analysis model</span><select id="network-model"><option value="common">Common-effect</option><option value="random">Random-effects (REML)</option></select></label>
           </div></fieldset>
           <fieldset><legend>Sample size planning</legend><div class="settings-grid">
-            <label><span>Trial arms</span><select id="planning-arms"><option value="2">Two arms</option><option value="1">Single arm</option></select></label>
-            <label><span>Allocation ratio (planned / reference)</span><input id="planning-allocation" type="number" min="0.01" step="any" value="1" required></label>
-            <label hidden><span>Single-arm planning aim</span><select id="planning-mode"><option value="benchmark">Test historical benchmark</option><option value="precision">Estimate rate precisely</option></select></label>
+            <label><span>Trial arms</span><select id="planning-arms"><option value="2">Two arms</option><option value="1">Single arm against a historical benchmark</option></select></label>
             <label><span>Sidedness</span><select id="planning-sidedness"><option value="2">Two-sided</option><option value="1">One-sided</option></select></label>
             <label><span>Power</span><input id="planning-power" type="number" min="0.500001" max="0.999" value="0.8" step="any" required></label>
             <label><span>Alpha</span><input id="planning-alpha" type="number" min="0.000001" max="0.5" value="0.05" step="any" required></label>
-            <label hidden><span>CI half-width (percentage points)</span><input id="planning-precision" type="number" min="0.01" max="49.99" value="5" step="any" required></label>
-          </div><details><summary>Planning rates</summary><div class="settings-grid">
-            <label><span>Reference event rate (%)</span><input id="planning-reference-rate" type="number" min="0.000001" max="99.999999" step="any" placeholder="Use study rates"></label>
-            <label hidden><span>Expected planned-arm event rate (%)</span><input id="planning-expected-rate" type="number" min="0.000001" max="99.999999" step="any" placeholder="Use study rates"></label>
-            <label><span>Survival time horizon (months)</span><input id="planning-horizon" type="number" min="0.000001" step="any" placeholder="Use study time points"></label>
-          </div></details></fieldset>
+            <label><span>Reference event probability at analysis (%)</span><input id="planning-reference-rate" type="number" min="0.000001" max="99.999999" step="any" placeholder="Use study rates"></label>
+            <label><span>Allocation ratio (planned / reference)</span><input id="planning-allocation" type="number" min="0.01" step="any" value="1" required></label>
+          </div></fieldset>
           <div class="settings-actions"><button class="primary-button" type="submit">Save settings</button><button class="secondary-button" type="button" id="reset-settings">Reset defaults</button><span id="settings-status" role="status"></span></div>
         </form>
       </section>

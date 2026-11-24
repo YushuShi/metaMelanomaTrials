@@ -21,7 +21,7 @@ function sampledPath(svgPath) {
     for (let i = 1; i <= count; i++) {
       const t = i / count, u = 1 - t;
       const at = (axis) => command === 'C' ? u ** 3 * start[axis] + 3 * u ** 2 * t * controls[0][axis] + 3 * u * t ** 2 * controls[1][axis] + t ** 3 * end[axis] : command === 'Q' ? u ** 2 * start[axis] + 2 * u * t * controls[0][axis] + t ** 2 * end[axis] : start[axis] + t * (end[axis] - start[axis]);
-      points.push({ x: at('x'), y: at('y') });
+      points.push(i === count ? end : { x: at('x'), y: at('y') });
     }
     segments.push({ command, start, controls, end }); current = end;
   }
@@ -51,8 +51,8 @@ function distanceToSegment(point, a, b) {
   const t = length ? Math.max(0, Math.min(1, ((point.x - a.x) * dx + (point.y - a.y) * dy) / length)) : 0;
   return Math.hypot(point.x - a.x - t * dx, point.y - a.y - t * dy);
 }
-function verifyCurve(tree, edge) {
-  const geometry = map.parallelLinkGeometry(tree, edge), parsed = sampledPath(geometry.path);
+function verifyCurve(tree, edge, tailId = edge.root_id, state = 'neutral', dashed = false) {
+  const geometry = map.parallelLinkGeometry(tree, edge, tailId, state, dashed), parsed = sampledPath(geometry.path);
   assert.match(geometry.path, /[CQ]/, `${edge.id} uses a curved connector`);
   assert.ok(onBoundary(parsed.points[0], tree.positions.get(edge.opponent_id)), 'starts on the exact opponent card');
   assert.ok(onBoundary(parsed.points.at(-1), tree.positions.get(edge.root_id)), 'ends on the exact in-branch regimen card');
@@ -96,6 +96,48 @@ test('sibling regimen cards use a bowed connector while retaining their exact en
 test('curves route around an intervening treatment card without clipping through it', () => {
   const tree = positioned({ opponent: [0, 0], obstacle: [350, 100], target: [700, 180] });
   verifyCurve(tree, edge);
+});
+
+test('branch arrows use facing edges and group each color, stroke and role on both faces', () => {
+  const tree = positioned({ target:[330,0], west:[0,114], west2:[0,228], east:[660,-114] });
+  const ports = new Map(), center = tree.positions.get('target');
+  for (const state of ['better','neutral','worse']) {
+    for (const dashed of [false,true]) {
+      for (const outgoing of [true,false]) {
+        const band = [state,dashed,outgoing].join(':');
+        for (const opponent of ['west','west2','east']) {
+          const pair = {...edge, opponent_id:opponent};
+          const {parsed} = verifyCurve(tree, pair, outgoing ? 'target' : opponent, state, dashed);
+          const atCenter = parsed.points.at(-1), atOther = parsed.points[0], other = tree.positions.get(opponent);
+          const facesEast = other.x > center.x;
+          assert.equal(atCenter.x, facesEast ? center.x + center.width : center.x);
+          assert.equal(atOther.x, facesEast ? other.x : other.x + other.width);
+          for (let i = 1; i < parsed.points.length; i++) {
+            const step = parsed.points[i].x - parsed.points[i-1].x;
+            assert.ok(facesEast ? step <= 1e-6 : step >= -1e-6, 'unobstructed path never doubles back');
+          }
+          if (ports.has(band)) assert.equal(ports.get(band), atCenter.y);
+          ports.set(band,atCenter.y);
+        }
+      }
+    }
+  }
+  assert.equal(new Set(ports.values()).size,ports.size,'distinct arrow types have distinct ports');
+  const heights = state => [...ports].filter(([key])=>key.startsWith(state)).map(([,y])=>y);
+  assert.ok(Math.max(...heights('better')) < Math.min(...heights('neutral')));
+  assert.ok(Math.max(...heights('neutral')) < Math.min(...heights('worse')));
+});
+
+test('stacked cards use a single gutter inside the branch, including for indirect arrows', () => {
+  for (const neighbor of [-330,330]) {
+    const tree = positioned({ opponent:[0,0], target:[0,228], neighbor:[neighbor,114] });
+    for (const state of ['better','worse','neutral','indirect']) {
+      const {parsed} = verifyCurve(tree, edge, edge.root_id, state);
+      assert.equal(parsed.points[0].x,neighbor < 0 ? 0 : 258);
+      assert.equal(parsed.points.at(-1).x,parsed.points[0].x);
+      assert.equal(parsed.segments.length,1, 'one smooth curve joins the cards');
+    }
+  }
 });
 
 test('a narrow multi-obstacle route retains smooth corners and a valid label position', () => {

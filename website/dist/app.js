@@ -1665,11 +1665,8 @@ if (typeof document !== 'undefined') (() => {
       if (['latest', 'all'].includes(value.record_policy)) fallback.record_policy = value.record_policy;
       if (value.network_model === 'random') fallback.network_model = 'random';
       if (value.arms===1) fallback.arms=1;
-      if (value.mode==='precision') fallback.mode='precision';
-      if (Number.isFinite(value.precision) && value.precision>0 && value.precision<.5) fallback.precision=value.precision;
-      for(const key of ['manualProbability','manualExpectedProbability'])
-        if(Number.isFinite(value[key]) && value[key]>0 && value[key]<1)fallback[key]=value[key];
-      if(Number.isFinite(value.manualHorizon) && value.manualHorizon>0)fallback.manualHorizon=value.manualHorizon;
+      if(Number.isFinite(value.manualProbability) && value.manualProbability>0 && value.manualProbability<1)
+        fallback.manualProbability=value.manualProbability;
       if (typeof value.allocation_ratio === 'number' && Number.isFinite(value.allocation_ratio) && value.allocation_ratio > 0) fallback.allocation_ratio = value.allocation_ratio;
       if ([1, 2].includes(value.sidedness)) fallback.sidedness = value.sidedness;
       if(Number.isFinite(value.power) && value.power>.5 && value.power<1)fallback.power=value.power;
@@ -1679,24 +1676,19 @@ if (typeof document !== 'undefined') (() => {
   }
   function defaultSettings() {
     return { include_history:false,record_policy:'latest',network_model:'common',arms:2,allocation_ratio:1,sidedness:2,power:.8,alpha:.05,
-      mode:'benchmark',precision:.05,manualProbability:null,manualExpectedProbability:null,manualHorizon:null };
+      manualProbability:null };
   }
   function displaySettings() {
-    const bindings = { 'analysis-record-policy': 'record_policy', 'network-model': 'network_model','planning-arms':'arms','planning-mode':'mode', 'planning-allocation': 'allocation_ratio', 'planning-sidedness': 'sidedness', 'planning-power': 'power', 'planning-alpha': 'alpha' };
+    const bindings = { 'analysis-record-policy': 'record_policy', 'network-model': 'network_model','planning-arms':'arms', 'planning-allocation': 'allocation_ratio', 'planning-sidedness': 'sidedness', 'planning-power': 'power', 'planning-alpha': 'alpha' };
     for (const [id, key] of Object.entries(bindings)) $(id).value = String(state.settings[key]);
-    for(const [id,key] of [['precision','precision'],['reference-rate','manualProbability'],['expected-rate','manualExpectedProbability']])
-      $('planning-'+id).value=state.settings[key]===null?'':String(Number((100*state.settings[key]).toFixed(9)));
-    $('planning-horizon').value=state.settings.manualHorizon??'';
+    const rate=state.settings.manualProbability;
+    $('planning-reference-rate').value=rate===null?'':String(Number((100*rate).toFixed(9)));
     displayPlanningFields();
   }
   function displayPlanningFields() {
-    const single=$('planning-arms').value==='1',precision=single && $('planning-mode').value==='precision';
-    for(const [id,visible] of [['allocation',!single],['mode',single],['sidedness',!precision],['power',!precision],
-      ['precision',precision],['expected-rate',precision]]){
-      const input=$('planning-'+id);
-      input.disabled=!visible;
-      input.closest('label').hidden=!visible;
-    }
+    const allocation=$('planning-allocation');
+    allocation.disabled=$('planning-arms').value==='1';
+    allocation.closest('label').hidden=allocation.disabled;
   }
   function saveSettings(reset = false) {
     if (!reset && !$('settings-form').reportValidity()) return;
@@ -1708,10 +1700,8 @@ if (typeof document !== 'undefined') (() => {
     state.settings = reset ? { ...settingsDefaults } : {
       include_history:false, record_policy: $('analysis-record-policy').value,
       network_model: $('network-model').value === 'random' ? 'random' : 'common',
-      arms:Number($('planning-arms').value),mode:$('planning-mode').value,precision:numberSetting('precision','precision',100),
+      arms:Number($('planning-arms').value),
       manualProbability:numberSetting('reference-rate','manualProbability',100),
-      manualExpectedProbability:numberSetting('expected-rate','manualExpectedProbability',100),
-      manualHorizon:numberSetting('horizon','manualHorizon'),
       allocation_ratio:numberSetting('allocation','allocation_ratio'),sidedness:numberSetting('sidedness','sidedness'),
       power:numberSetting('power','power'),alpha:numberSetting('alpha','alpha')
     };
@@ -2027,12 +2017,12 @@ if (typeof document !== 'undefined') (() => {
       }
     };
   }
-  function studyPlanText(fit,pair,first,second,measure) {
+  function studyPlanText(fit,pair,first,second,measure,describe=false) {
     if(!fit?.available)return '—';
     const api=globalThis.TreatmentMapPlanning;
     const plan=fit.defaultPlan && api.defaultIndirectSettings(state.settings)?fit.defaultPlan:
       api.indirect({estimate:fit.estimate,measure,first,second,comparisons:pair.comparisons,settings:state.settings});
-    return '<span class="indirect-plan" title="'+escape(plan.detail)+'">'+escape(plan.label)+'</span>';
+    return '<span class="indirect-plan" title="'+escape(plan.detail)+'">'+escape(describe?api.describeIndirectPlan(plan,state.settings):plan.label)+'</span>';
   }
   function studyEstimateText(fit) {
     return fit?.available?studyNetworkInterval(fit):escape(fit?.reason||'Estimate unavailable');
@@ -2043,7 +2033,7 @@ if (typeof document !== 'undefined') (() => {
     const open=host.querySelector('details')?.open;
     const reference=referenceFit?.available
       ? '<p>All pathways, same weighting · '+escape(measure)+' '+studyNetworkInterval(referenceFit)+' · '+
-        studyPlanText(referenceFit,{comparisons:selection.referenceComparisons},first,second,measure)+'</p>' : '';
+        studyPlanText(referenceFit,{comparisons:selection.referenceComparisons},first,second,measure,true)+'</p>' : '';
     host.innerHTML='<details'+(open?' open':'')+'><summary>Pathway weighting</summary><p>'+escape(globalThis.TreatmentNetworkPathways.weightingNote(fit))+'</p>'+reference+'</details>';
   }
   function studyPathwayCaption(selection) {
@@ -2057,10 +2047,12 @@ if (typeof document !== 'undefined') (() => {
   }
   async function studyNetworkOverview(panel,heading,scope,endpoints,first,second,model,current) {
     const modelLabel=model==='random'?'Random-effects (REML)':'Common-effect';
+    const {power,alpha}=globalThis.TreatmentMapPlanning.indirectSettings(state.settings);
     panel.innerHTML=heading+`<p>Full network model · ${modelLabel}</p><p data-study-progress>Checking available outcomes…</p>
       <div class="table-scroll" hidden><table class="study-indirect-outcomes compact-extraction-table"><thead><tr>
       <th scope="col">Outcome</th><th scope="col">Measure</th><th scope="col">Indirect estimate (95% CI)</th>
-      <th scope="col">Required events (E) or participants (N)</th><th scope="col">Randomized trials in network</th><th scope="col">Evidence</th></tr></thead><tbody></tbody></table></div>`;
+      <th scope="col" class="study-planning-heading">Events or participants needed to detect the estimated effect
+      <small>${Math.round(power*100)}% power · α=${alpha}</small></th><th scope="col">Randomized trials in network</th><th scope="col">Evidence</th></tr></thead><tbody></tbody></table></div>`;
     const body=panel.querySelector('tbody'),progress=panel.querySelector('[data-study-progress]');
     let count=0;
     for await(const result of globalThis.StudyIndirect.estimableOutcomes(scope,endpoints,first,second,model,lookupNetworkFit,current)) {
@@ -2177,7 +2169,7 @@ if (typeof document !== 'undefined') (() => {
           const weighted=fit.method==='pathway-weighted';
           const label=weighted?'Pathway-weighted sensitivity estimate':'Indirect estimate';
           panel.querySelector('.study-indirect-effect').innerHTML=(fit.available?label+' · '+escape(endpoint.measure)+' ':'')+studyEstimateText(fit)+
-            (fit.available?' · '+studyPlanText(fit,pair,intervention,comparator,endpoint.measure):'')+studyPathwayCaption(selection);
+            (fit.available?' · '+studyPlanText(fit,pair,intervention,comparator,endpoint.measure,true):'')+studyPathwayCaption(selection);
           panel.querySelector('[data-model]').textContent=(fit.available && !weighted?modelLabel+' network meta-analysis · ':'')+pair.trials.length+' randomized trials';
           showStudyPathwayMethod(panel.querySelector('[data-weighting]'),selection,intervention,comparator,endpoint.measure);
           panel.querySelector('[data-diagnostics]').innerHTML=studyNetworkDiagnostics(pair,fit);
@@ -2657,10 +2649,10 @@ if (typeof document !== 'undefined') (() => {
     if(cache.key!==key){
       const matched=engine.filterBrowseMatches(cache.index.base,selections,options);
       cache.key=key;cache.nodeIds=globalThis.TreatmentNodeStudies.matchingNodes(cache.index,matched);
-      cache.summary=engine.browseSummary(matched);cache.facets=null;
+      cache.facets=null;
     }
     if(expanded&&!cache.facets)cache.facets=engine.browseFacets(cache.index.base,selections,options);
-    return {facets:cache.facets||[],summary:cache.summary,nodeIds:cache.nodeIds};
+    return {facets:cache.facets||[],nodeIds:cache.nodeIds};
   }
   function networkFilterMatches(comparisons,selections,options,keys){
     const engine=globalThis.AdvancedFilters;
@@ -2903,7 +2895,7 @@ if (typeof document !== 'undefined') (() => {
   }
   $('planning-form').addEventListener('submit', (event) => { event.preventDefault(); updateAvailability('planning'); renderPlanning(); });
   $('settings-form').addEventListener('submit', (event) => { event.preventDefault(); saveSettings(); });
-  for(const id of ['planning-arms','planning-mode'])$(id).addEventListener('change',displayPlanningFields);
+  $('planning-arms').addEventListener('change',displayPlanningFields);
   $('reset-settings').addEventListener('click', () => saveSettings(true));
   state.advancedExpanded=globalThis.AdvancedFilters.activeCount(state.advanced)>0;
   advancedPanel=globalThis.AdvancedFilterPanel.create({toggle:$('advanced-filter-toggle'),panel:$('advanced-filter-panel'),fields:$('advanced-filter-fields'),reset:$('reset-advanced-filters'),status:$('advanced-filter-status'),evidence:$('advanced-evidence-count'),onToggle:()=>withStudyDetails(()=>{state.advancedExpanded=!state.advancedExpanded;renderAdvancedFilters();}),onChange:advancedChanged,onReset:()=>advancedChanged()});

@@ -214,7 +214,7 @@
   }
 
   function mount(host,{pair,network,first,second,measure,model='common',publications,loadPublications,
-    fullFit,excluded=new Set(),onSelectionChange}) {
+    fullFit,excluded=new Set(),onSelectionChange,comparatorFirst=false}) {
     host.replaceChildren();
     const doc=host.ownerDocument;
     const label=id=>network.labels.get(id) || id;
@@ -283,7 +283,7 @@
       const table=element(wrap,'table',null,'network-route-table');
       const header=element(element(table,'thead'),'tr');
       for(const name of columns)element(header,'th',name).scope='col';
-      for(const leg of route.legs) {
+      for(const leg of (comparatorFirst ? route.legs.slice().reverse() : route.legs)) {
         const body=element(table,'tbody');
         const sorted=[...leg.values()].sort((a,b)=>(b.studyRow?.year || 0)-(a.studyRow?.year || 0) || String(a.trialId).localeCompare(String(b.trialId)));
         for(const edge of sorted)studyLine(body,edge);
@@ -294,9 +294,10 @@
     function appendRoute(route,open) {
       const row=element(list,'div',null,'network-route-row');
       const id=routeKey(route.regimens);
+      const displayOrder=comparatorFirst ? route.regimens.slice().reverse() : route.regimens;
       if(onSelectionChange) {
         const checkbox=element(row,'input',null,'network-route-include'); checkbox.type='checkbox';
-        checkbox.setAttribute('aria-label','Include pathway '+route.regimens.map(label).join(' via '));
+        checkbox.setAttribute('aria-label','Include pathway '+displayOrder.map(label).join(' via '));
         checkbox.checked=!excluded.has(id);
         checkbox.addEventListener('change',()=>{
           if(stopped)return;
@@ -306,7 +307,7 @@
         });
       }
       const item=element(row,'details',null,'network-route'),summary=element(item,'summary');
-      for(const [i,id] of route.regimens.entries()) {
+      for(const [i,id] of displayOrder.entries()) {
         if(i)element(summary,'span',' › ','network-route-separator');
         element(summary,'span',label(id),'network-route-regimen');
       }
@@ -330,10 +331,7 @@
       if(more)more.hidden=pending.done;
     }
     if(pending.done)element(list,'p','No pathway has a distinct randomized trial available for every step.');
-    else {
-      element(list,'p','Each pathway compares its first treatment with its last. A shared trial contrast stays in the estimate while any selected pathway uses it.','muted');
-      nextPage();
-    }
+    else nextPage();
     return {destroy(){stopped=true;iterator.return();}};
   }
   return Object.freeze({routeGraph,routes,routeKey,fitRoute,fitSelection,selectionLabel,weightingNote,mount});

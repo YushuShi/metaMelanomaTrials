@@ -39,6 +39,8 @@
 .study-indirect-outcomes { width:100%; border-collapse:collapse; text-align:left; }
 .study-indirect-outcomes > :is(thead,tbody) > tr > :is(th,td) { padding:6px 8px; vertical-align:top; }
 .study-indirect-outcomes > thead { font-size:12px; }
+.study-indirect-outcomes th.study-planning-heading { min-width:18ch; max-width:26ch; white-space:normal; }
+.study-planning-heading small { display:block; font-weight:400; }
 .study-indirect-outcome { font-size:13px; border-top:1px solid #c8d9e6; }
 .study-indirect-outcome button { cursor:pointer; }
 .study-indirect-evidence > td { max-width:0; }
@@ -57,7 +59,7 @@
 .tm-indirect-active .tm-network-legend { display:flex; align-items:center; gap:7px; }
 .tm-indirect-active .tm-legend .tm-network-swatch { width:25px; height:0; border-top:3px dotted #363441; }
 .tm-indirect-active .tm-parallel-link { pointer-events:none; }
-.tm-indirect-active .tm-parallel-estimate,.tm-indirect-active .tm-plan-labels { display:none; }
+.tm-indirect-active .tm-planning-labels { display:none; }
 .tm-indirect-active .tm-parallel-link.tm-network-support-edge .tm-parallel-edge { stroke-width:3.5; }
 .tm-indirect-active .tm-node.tm-network-disabled { filter:grayscale(1); opacity:.36; cursor:not-allowed; }
 .tm-indirect-active .tm-node.tm-network-disabled:is(:focus,:hover) { opacity:.8; }
@@ -66,7 +68,8 @@
 .tm-indirect-active .tm-node:is(.tm-network-first,.tm-network-second) .tm-hit-target,.tm-indirect-active .tm-node:is(.tm-network-first,.tm-network-second) .tm-card { stroke:#302e38; stroke-width:3; stroke-dasharray:none; vector-effect:non-scaling-stroke; }
 .tm-indirect-active .tm-node:is(.tm-network-first,.tm-network-second) .tm-overview-label { display:block; font-weight:700; }
 .tm-network-arrow { fill:none; stroke:#363441; stroke-width:2.5; stroke-linecap:round; stroke-dasharray:0.1 5; vector-effect:non-scaling-stroke; }
-.tm-network-arrow-label { fill:#302e38; stroke:white; stroke-width:calc(4px * var(--tm-inverse-scale,1)); paint-order:stroke; stroke-linejoin:round; font-weight:600; font-size:calc(11px * var(--tm-inverse-scale,1)); }
+.tm-network-arrow-label,.tm-network-arrow-direction { fill:#302e38; stroke:white; stroke-width:calc(4px * var(--tm-inverse-scale,1)); paint-order:stroke; stroke-linejoin:round; font-weight:600; font-size:calc(11px * var(--tm-inverse-scale,1)); }
+.tm-network-arrow-direction { font-weight:400; font-size:calc(9px * var(--tm-inverse-scale,1)); }
 @media(max-width:600px) {
   .tm-network-controls,.tm-network-result { padding:11px 14px; }
   .tm-network-toggle { margin-left:0; }

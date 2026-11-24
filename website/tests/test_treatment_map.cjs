@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const map = require('../dist/treatment_map.js');
 const chooseSource = require('./fixtures/select_map_source.cjs');
-const drug = (id, label) => ({ id: 'agent:' + id, type: 'drug', label, components: [id], count_summary: { known_n: 180, identified_studies: 1, status: 'calculated' } });
+const drug = (id, label) => ({ id: 'agent:' + id, type: 'drug', label, components: [id], count_summary: { known_n: 180, identified_studies: 2, known_n_studies: 1, status: 'partial' } });
 const regimen = (id, components) => ({ id, type: 'combination', label: components.join(' + '), components, count_summary: { known_n: 100, identified_studies: 1, status: 'partial' } });
 const graph = {
   nodes: [drug('a', 'Agent A'), drug('b', 'Agent B'), drug('c', 'Agent C'), drug('isolated', 'Isolated agent'), regimen('ab', ['a', 'b']), regimen('abc', ['a', 'b', 'c'])],
@@ -171,10 +171,12 @@ const withClass = (element, name) => descendants(element).filter((child) => chil
 test('mounted branch → overview → branch clears detailed evidence and restores it on opening a node', () => {
   const { root, view } = mountedFixture();
   assert.equal(view.branchId, 'agent:a'); assert.equal(view.comparisonBand.hidden, false);
-  assert.equal(view.categoryLegend.hidden,false);assert.match(view.categoryLegend.textContent,/visible nodes/);
+  assert.equal(view.categoryLegend.hidden,false);assert.equal(withClass(view.categoryLegend,'tm-category-legend-title')[0].textContent,'Treatment classes');
   assert.ok(view.categoryLegend.parentNode.children.indexOf(view.categoryLegend)<view.legend.parentNode.children.indexOf(view.legend));
   assert.equal(map.recordCoverage(view.model,view.model.byId.get('agent:a')).unlinkedPublications,1);
-  assert.doesNotMatch(withClass(view.details,'tm-coverage')[0].textContent,/publications.*unlinked|publication.*link/i);
+  assert.equal(withClass(view.details,'tm-coverage').length,0);
+  assert.equal(withClass(view.details,'tm-detail-stats')[0].textContent,'2identified studiesN=180*N from 1 study');
+  assert.equal(view.branchCount.textContent,'3 branch nodes');
   assert.equal(withClass(view.details, 'tm-detail-comparisons').length, 0); assert.equal(withClass(view.details, 'tm-arms').length, 0);
   assert.doesNotMatch(view.details.textContent, /Direct comparisons|Study & outcome|Counted treatment arms|Uncounted arms & source review/);
   view.allButton.click();
@@ -217,17 +219,15 @@ test('branch category counts follow visible add-on labels, opposing regimens and
   assert.equal(descendants(view.categoryLegend).filter(x=>x.tagName==='LI').every(x=>x.dataset.nodeCount==='1'),true,'two chemotherapy components on one card count as one node');
   view.setBranch('all');assert.deepEqual(legend(),{ici:1,targeted:1,chemotherapy:2,cytokines:1,radiotherapy:1});
   assert.match(view.categoryLegend.textContent,/named agents/);
-  view.setBranch('agent:hidden');assert.deepEqual(legend(),{radiotherapy:1});assert.match(view.categoryLegend.textContent,/visible nodes/);
+  view.setBranch('agent:hidden');assert.deepEqual(legend(),{radiotherapy:1});assert.equal(withClass(view.categoryLegend,'tm-category-legend-title')[0].textContent,'Treatment classes');
   assert.equal(JSON.stringify(source),before);
 });
 
 test('reading guidance keeps concise count and model definitions without exposing review summaries',()=>{
   const source={...graph,review:{summary:{unlinked_publications:20,review_items:90}}},before=JSON.stringify(source),{root}=mountedFixture(source),content=withClass(root,'tm-methods-content')[0],paragraphs=content.children.filter(node=>node.tagName==='P').map(node=>node.textContent);
-  assert.equal(paragraphs.length,6);
-  assert.deepEqual(paragraphs.slice(0,3),['Radial connections are straight and link an agent or regimen only to displayed combinations based on it.','For an add-on agent, the arrow runs from the original regimen to the expanded regimen.','Counts belong to the selected complete regimen or agent, not to its connecting line.']);
-  assert.match(paragraphs[3],/^Agent N includes exact monotherapy arms.*uncertain alternative.*node totals must not be summed across the tree\.$/);
-  assert.match(paragraphs[4],/^Overall cohorts are preferred.*separately recruited cohorts remain distinct\.$/);
-  assert.match(paragraphs[5],/^The analysis model follows.*two use fixed-effect pooling.*three or more use random-effects pooling with REML.*leave-one-out analysis\.$/);
+  assert.equal(paragraphs.length,2);
+  assert.equal(paragraphs[0],'For an add-on agent, the arrow runs from the original regimen to the expanded regimen.');
+  assert.match(paragraphs[1],/^The analysis model follows.*two use fixed-effect pooling.*three or more use random-effects pooling with REML.*leave-one-out analysis\.$/);
   const statuses=withClass(root,'tm-status-key')[0].children.map(node=>node.textContent);
   assert.deepEqual(statuses,['N','Calculated from linked, eligible exact treatment arms.','N*','Partial known N; some arms or overlaps remain unresolved.','N†','Provisional N; study identity or linkage remains uncertain.','N unresolved','No defensible arm total is available.']);
   assert.doesNotMatch(content.textContent,/Source review:|source-supported trial identifiers|historical ancestry|Unspecified classes|Reversed arrows|source-supported estimate/);
@@ -248,7 +248,8 @@ test('every overview node can open a branch, including a combination with its pr
 
 test('mounted overview removes introductory, scope, annular and central wording while keeping compact counts', () => {
   const { root, view } = mountedFixture(); view.setBranch('all');
-  assert.equal(view.catalogCount.textContent, '4 agents, 2 combinations');
+  assert.equal(withClass(root,'tm-catalog-count').length,0);
+  assert.equal(view.branchCount.textContent,'');
   for (const name of ['tm-intro', 'tm-scope', 'tm-category-note', 'tm-sector-label', 'tm-radial-heading', 'tm-radial-subheading', 'tm-radial-note']) assert.equal(withClass(root, name).length, 0, name);
   assert.doesNotMatch(root.textContent, /Explore named agents, complete regimens|Agents share a sector|NAMED AGENTS|Select any node to explore|Study-table filters do not change this map/);
   assert.equal(withClass(root, 'tm-component-badge').length, 1);

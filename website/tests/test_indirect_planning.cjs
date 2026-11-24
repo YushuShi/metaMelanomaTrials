@@ -37,14 +37,15 @@ test('binary N uses only reported risks for the second regimen on the selected n
   assert.equal(plan('RR',1,edges).min,null);
 });
 
-test('single-arm precision uses the planned arm and requires a fixed horizon for survival',()=>{
-  const opts={arms:1,mode:'precision',manualExpectedProbability:.25};
-  assert.equal(plan('HR',.7,[],opts).min,null);
-  const result=plan('HR',.7,[],{...opts,manualHorizon:12});
-  assert.equal(result.unit,'participants');assert.equal(result.min,Planning.precisionN(.25,.05,.05));
-  const sources=[{planningRates:[{regimen:'A',probability:.3,timeMonths:24,pmid:'88'},{regimen:'C',probability:.4,timeMonths:12,pmid:'99'}]}];
-  const reported=plan('HR',.7,sources,{arms:1,mode:'precision'});
-  assert.equal(reported.scenarios.length,1);assert.match(reported.detail,/PMID 88/);
+test('legacy one-arm preferences use historical testing and keep the saved reference risk',()=>{
+  const stored={arms:1,mode:'precision',manualExpectedProbability:.25,manualHorizon:12,plannedSide:'reported',manualProbability:.3};
+  const settings=Planning.indirectSettings(stored);
+  assert.equal(settings.mode,'benchmark');assert.equal(settings.plannedSide,'head');
+  assert.equal(settings.manualExpectedProbability,null);assert.equal(settings.manualHorizon,null);
+  assert.equal(settings.manualProbability,.3);
+  const result=plan('HR',.7,[],stored);
+  assert.equal(result.unit,'events');assert.equal(result.min,Planning.events(.7,{arms:1}).events);
+  assert.equal(plan('RR',1.5,[],stored).min,Planning.calculate(1.5,'RR',{kind:'reference_probability',probability:.3},{arms:1}).n);
 });
 
 test('eligible network arms carry compatible binary risks including on reconstructed multi-arm contrasts',()=>{

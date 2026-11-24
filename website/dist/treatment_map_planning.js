@@ -1,7 +1,7 @@
 /* Source-bound planning scenarios. All N values are prospective calculations, never observed counts. */
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory(require('./treatment_map_analysis.js'),require('./treatment_map_effects.js'));else root.TreatmentMapPlanning=factory(root.TreatmentMapAnalysis,root.TreatmentMapEffects);})(typeof globalThis==='undefined'?this:globalThis,function(Analysis,Effects){
   'use strict';
-  const defaults=Object.freeze({alpha:0.05,power:0.8,sidedness:2,arms:2,allocation:1,mode:'benchmark',plannedSide:'reported',precision:0.05,dropout:0,manualProbability:null,manualExpectedProbability:null,manualHorizon:null});
+  const defaults=Object.freeze({alpha:0.05,power:0.8,sidedness:2,arms:2,allocation:1,mode:'benchmark',plannedSide:'head',precision:0.05,dropout:0,manualProbability:null,manualExpectedProbability:null,manualHorizon:null});
   const probability=x=>typeof x==='number'&&Number.isFinite(x)&&x>0&&x<1;
   const finite=x=>typeof x==='number'&&Number.isFinite(x);
   const text=x=>String(x??'').trim().toLowerCase().replace(/[‐‑–—]/g,'-').replace(/\s+/g,' ');
@@ -17,7 +17,8 @@
     if(s.manualProbability!==null&&!probability(s.manualProbability))throw Error('The reference probability must be between 0% and 100%.');
     if(s.manualExpectedProbability!==null&&!probability(s.manualExpectedProbability))throw Error('The expected planned-arm probability must be between 0% and 100%.');
     if(s.manualHorizon!==null&&(!finite(s.manualHorizon)||s.manualHorizon<=0))throw Error('The time horizon must be positive.');
-    if(!['reported','tail','head'].includes(s.plannedSide))throw Error('Choose the reported intervention, arrow tail or arrowhead for planning.');
+    if(s.plannedSide==='reported')s.plannedSide='head';
+    if(!['tail','head'].includes(s.plannedSide))throw Error('Choose the arrowhead or arrow tail for planning.');
     if(!['benchmark','precision'].includes(s.mode))throw Error('Unknown planning mode.');
     return s;
   }
@@ -194,7 +195,7 @@
       const manualContext=context?{reported_context_only:true,reported_reference_probability:context.reported_reference_probability,
         reported_target_probability:context.reported_target_probability,reported_reference_source:context.reported_reference_source,reported_target_source:context.reported_target_source}:{};
       const manual={...manualContext,provenance:'user_specified',source_refs:[]};
-      const scenarios=s.arms===1&&s.mode==='precision'&&s.manualExpectedProbability!==null?[{...manual,id:'manual-expected',kind:'expected_probability',probability:s.manualExpectedProbability,time_months:s.manualHorizon,fixed_time:measure!=='HR'||finite(s.manualHorizon)&&s.manualHorizon>0,label:'User-specified planned-arm probability'}]:s.manualProbability===null?reported:[{...manual,id:'manual',kind:'reference_probability',probability:s.manualProbability,time_months:s.manualHorizon,fixed_time:measure!=='HR'||finite(s.manualHorizon)&&s.manualHorizon>0,label:'User-specified reference probability'}];
+      const scenarios=s.arms===1&&s.mode==='precision'&&s.manualExpectedProbability!==null?[{...manual,id:'manual-expected',kind:'expected_probability',probability:s.manualExpectedProbability,time_months:s.manualHorizon,fixed_time:measure!=='HR'||finite(s.manualHorizon)&&s.manualHorizon>0,label:'User-specified planned-arm probability'}]:s.manualProbability===null?reported:[{...manual,id:'manual',kind:'reference_probability',probability:s.manualProbability,time_months:s.manualHorizon,fixed_time:true,label:'User-specified reference probability by planned analysis'}];
       if(!scenarios.length)scenarios.push({id:'missing',kind:'missing',label:'Event probability not reported'});
       for(const original of scenarios){
         let a=original;
@@ -208,8 +209,17 @@
     return rows;
   }
   function indirectSettings(values={}) {
-    const supplied=Object.fromEntries(Object.keys(defaults).filter(k=>values[k]!==undefined).map(k=>[k,values[k]]));
+    // Older saved preferences can contain a rate-precision aim and a calendar horizon.
+    // The interactive calculator always plans a hypothesis test at the analysis visit.
+    const keys=['arms','plannedSide','alpha','power','sidedness','allocation','dropout','manualProbability'];
+    const supplied=Object.fromEntries(keys.filter(k=>values[k]!==undefined).map(k=>[k,values[k]]));
     return settings({...supplied,allocation:values.allocation_ratio??supplied.allocation??defaults.allocation});
+  }
+  function describeIndirectPlan(plan,values) {
+    if(plan.label==='Unavailable')return 'Planning target unavailable';
+    const unit=plan.label.startsWith('E=')?'Events':'Participants';
+    const {power,alpha}=indirectSettings(values);
+    return unit+' needed to detect the estimated effect at '+Math.round(power*100)+'% power (α='+alpha+') · '+plan.label;
   }
   function defaultIndirectSettings(values={}) {
     const selected=indirectSettings(values);
@@ -217,17 +227,16 @@
       .every(k=>selected[k]===defaults[k]);
   }
 
-  // The network reports the first treatment over the second. Use reported
-  // baseline risks from the second regimen in the retained trial contrasts.
+  // The calling view supplies the effect numerator first (planned treatment)
+  // and its denominator second (reference treatment).
   function indirect({estimate,measure,first,second,comparisons=[],settings:values={}}) {
-    const s=indirectSettings(values),precision=s.arms===1 && s.mode==='precision';
-    const unit=measure==='HR' && !precision?'events':'participants', prefix=unit==='events'?'E=':'N=';
+    const s=indirectSettings(values);
+    const unit=measure==='HR'?'events':'participants', prefix=unit==='events'?'E=':'N=';
     const plan={label:'Unavailable',detail:'',min:null,max:null,unit,scenarios:[]};
     if(!(finite(estimate) && estimate>0))return {...plan,detail:'Select an estimable comparison.'};
     const design=s.arms===2?'Two-arm trial ('+s.allocation+':1 allocation)':'Single-arm trial';
     const numeric=value=>value.toLocaleString('en-US');
-    const description=precision?'fixed-time rate precision, CI half-width '+(100*s.precision)+' percentage points':
-      (100*s.power)+'% power, '+(s.sidedness===2?'two-sided':'one-sided')+' α='+s.alpha;
+    const description=(100*s.power)+'% power, '+(s.sidedness===2?'two-sided':'one-sided')+' α='+s.alpha;
     if(unit==='events') {
       const result=events(estimate,s);
       if(!result.events)return {...plan,detail:result.reason || 'Required events exceed the numerical range.'};
@@ -235,46 +244,28 @@
       return {...plan,min:result.events,max:result.events,label:prefix+numeric(result.events),
         detail:design+' · '+description+'. '+basis+'.'};
     }
-    if(!['HR','RR','OR'].includes(measure))return {...plan,detail:'Planning is unavailable for this measure.'};
-    const fixedTime=measure==='HR';
-    const horizonOk=!fixedTime || s.manualHorizon>0;
-    let rates=[];
-    if(precision && s.manualExpectedProbability!==null) {
-      if(horizonOk)rates=[{probability:s.manualExpectedProbability,planned:true,timeMonths:fixedTime?s.manualHorizon:null}];
-    } else if(s.manualProbability!==null) {
-      if(horizonOk)rates=[{probability:s.manualProbability,timeMonths:fixedTime?s.manualHorizon:null}];
-    } else {
-      for(const edge of comparisons)for(const rate of edge.planningRates || []) {
-        const planned=precision && rate.regimen===first;
-        if(!planned && rate.regimen!==second)continue;
-        if(fixedTime && (!(rate.timeMonths>0) || (s.manualHorizon!==null && rate.timeMonths!==s.manualHorizon)))continue;
-        rates.push({...rate,planned});
-      }
-      if(precision && rates.some(r=>r.planned && probability(r.probability)))rates=rates.filter(r=>r.planned);
-    }
-    const uniqueRates=new Map(rates.map(r=>[JSON.stringify([r.pmid,r.probability,r.timeMonths,r.planned]),r]));
+    if(!['RR','OR'].includes(measure))return {...plan,detail:'Planning is unavailable for this measure.'};
+    const rates=s.manualProbability!==null ? [{probability:s.manualProbability}] :
+      comparisons.flatMap(edge=>(edge.planningRates||[]).filter(rate=>rate.regimen===second));
+    const uniqueRates=new Map(rates.map(r=>[JSON.stringify([r.pmid,r.probability,r.timeMonths]),r]));
     for(const r of uniqueRates.values()) {
-      const a={kind:r.planned?'expected_probability':'reference_probability',probability:r.probability,
-        fixed_time:!fixedTime || r.timeMonths>0,time_months:r.timeMonths};
+      const a={kind:'reference_probability',probability:r.probability,time_months:r.timeMonths};
       const scenario=calculate(estimate,measure,a,s);
       if(scenario.n)plan.scenarios.push({n:scenario.n,probability:r.probability,
-        planned:!!r.planned,pmid:r.pmid || null,timeMonths:r.timeMonths ?? null});
+        planned:false,pmid:r.pmid || null,timeMonths:r.timeMonths ?? null});
     }
     if(!plan.scenarios.length) {
-      if(fixedTime && !horizonOk && (s.manualProbability!==null || s.manualExpectedProbability!==null))
-        return {...plan,detail:'Set a time horizon for the survival probability in Settings.'};
-      if(!precision && Math.abs(Math.log(estimate))<1e-12)return {...plan,detail:'No finite sample size for equal rates.'};
-      if(measure==='RR' && rates.length && rates.every(r=>!r.planned && r.probability*estimate>1))
+      if(Math.abs(Math.log(estimate))<1e-12)return {...plan,detail:'No finite sample size for equal rates.'};
+      if(measure==='RR' && rates.length && rates.every(r=>r.probability*estimate>1))
         return {...plan,detail:'The estimated risk ratio implies a planned-arm probability above 100% at every available reference rate. Enter a different planning rate in Settings.'};
       return {...plan,detail:rates.length?'The supplied rate and effect do not give a feasible planning scenario.':
-        precision?'A compatible fixed-time event rate is required. Enter a planning rate in Settings.':
-        'No eligible study supplies a baseline risk for the second treatment. Enter a reference event rate in Settings.'};
+        'No eligible study supplies a baseline risk for the reference treatment. Enter a reference event rate in Settings.'};
     }
     plan.min=Math.min(...plan.scenarios.map(r=>r.n));plan.max=Math.max(...plan.scenarios.map(r=>r.n));
     plan.label=prefix+numeric(plan.min)+(plan.min===plan.max?'':'–'+numeric(plan.max));
     const sources=plan.scenarios.map(r=>{
       const pct=Number((r.probability*100).toFixed(2))+'%';
-      return (r.planned?'Planned':'Reference')+' rate '+pct+(r.timeMonths?' at '+r.timeMonths+' months':'')+
+      return 'Reference rate '+pct+(r.timeMonths?' at '+r.timeMonths+' months':'')+
         (r.pmid?' (PMID '+r.pmid+')':' (user-specified)')+' → N='+numeric(r.n);
     });
     plan.detail=design+' · '+description+'. '+sources.join('. ')+'.';
@@ -282,5 +273,5 @@
     return plan;
   }
   return Object.freeze({defaults,settings,events,targetProbability,precisionN,calculate,assumptions,tableRows,
-    indirectSettings,defaultIndirectSettings,indirect});
+    indirectSettings,describeIndirectPlan,defaultIndirectSettings,indirect});
 });

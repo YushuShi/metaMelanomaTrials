@@ -53,12 +53,13 @@ test('own and pooled planning reuse exactly the same reference probability, incl
   [row]=Planning.tableRows([c],{tailId:'A',headId:'B',measure:'RR',pooledEffect:1.5});
   close(row.own.p0,.2);close(row.pooled.p0,.2);close(row.pooled.p1,.3);assert.ok(row.pooled.n>row.own.n);
 });
-test('HR planning cannot manufacture N from a median, missing rate or unanchored time horizon',()=>{
+test('HR planning distinguishes unanchored source rates from a user-entered probability by the planned analysis',()=>{
   const c=comparison();c.analysis.planning_assumptions=[assumption({kind:'median',probability:12,time_months:null})];
   const [row]=Planning.tableRows([c],{tailId:'A',headId:'B',measure:'HR'});assert.equal(row.own.n,null);assert.ok(row.own.events>0);assert.match(row.own.reason,/proportion unavailable/i);
   const noHorizon=Planning.calculate(.7,'HR',{kind:'reference_probability',probability:.4,fixed_time:false});assert.equal(noHorizon.n,null);assert.ok(noHorizon.events>0);
   const explicit=Planning.calculate(.7,'HR',{kind:'reference_probability',probability:.4,fixed_time:true,time_months:24});assert.ok(explicit.n>0);
-  const manual=Planning.tableRows([c],{tailId:'A',headId:'B',measure:'HR',manualProbability:.4})[0];assert.equal(manual.own.n,null);
+  const manual=Planning.tableRows([c],{tailId:'A',headId:'B',measure:'HR',manualProbability:.4})[0];
+  assert.equal(manual.own.n,explicit.n);assert.equal(manual.assumption.time_months,null);assert.equal(manual.assumption.provenance,'user_specified');
 });
 test('null effects and impossible probabilities do not become finite sample sizes',()=>{
   const one=Planning.calculate(1,'HR',{kind:'overall_event_fraction',probability:.4});assert.equal(one.n,null);assert.equal(one.events,null);assert.match(one.reason,/HR=1/);

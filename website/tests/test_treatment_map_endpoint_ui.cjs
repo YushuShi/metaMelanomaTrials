@@ -67,6 +67,10 @@ function pair(view, first, second) {
 }
 function state(view, first, second) { return data(pair(view, first, second).element, 'effectState'); }
 function arrowPath(element) { return withClass(element, 'tm-parallel-edge')[0]; }
+function comparisonTooltip(element) {
+  assert.ok(!descendants(element).some(child => child.tagName === 'TEXT'), 'direct comparison has no persistent SVG text');
+  return element.children.find(child => child.tagName === 'TITLE').textContent;
+}
 function hasArrow(path) { return ['marker-start', 'marker-end'].some(attribute => /^url\(/.test(path.getAttribute(attribute) || '')); }
 
 test('endpoint control defaults to OS in the concise sidebar and the plot names the same endpoint', () => {
@@ -82,15 +86,17 @@ test('endpoint control defaults to OS in the concise sidebar and the plot names 
   assert.ok(view.endpointSelector.options.some(option => option.value === 'ORR:OR'));
 });
 
-test('parallel arrows follow the centered complete arm and colors reverse when the branch is rerooted', () => {
+test('parallel arrows expose the directed estimate only on hover and reverse it when the branch is rerooted', () => {
   const { view } = mount(), a = pair(view, 'agent:a', 'agent:b');
   assert.equal(data(a.element, 'tailId'), 'agent:a'); assert.equal(data(a.element, 'headId'), 'agent:b');
   assert.equal(data(a.element, 'comparisonKind'), 'parallel'); assert.equal(data(a.element, 'effectState'), 'worse');
   assert.ok(hasArrow(arrowPath(a.element)));
+  assert.equal(comparisonTooltip(a.element), 'Agent B vs Agent A HR=0.700');
   assert.equal(Number(data(a.element,'estimate')),0.7);
   view.setBranch('agent:b'); const b = pair(view, 'agent:a', 'agent:b');
   assert.equal(data(b.element, 'tailId'), 'agent:b'); assert.equal(data(b.element, 'headId'), 'agent:a');
   assert.equal(data(b.element, 'effectState'), 'better');
+  assert.equal(comparisonTooltip(b.element), 'Agent A vs Agent B HR=1.429');
   assert.equal(Number(data(b.element,'estimate')),1/0.7);
   assert.equal(view.model.comparisons.find(item => item.id === 'b-a-os-primary').estimate, 0.7);
 });
@@ -117,13 +123,16 @@ test('endpoint changes filter both direct choices and arrow colors without mixin
   assert.equal(view.selectedEndpoint, 'PFS:HR'); assert.match(view.endpointBadge.textContent, /Progression-free survival|Progression free survival/i);
   assert.deepEqual(view.comparisonChoices().map(item => item.id), ['b-a-pfs']);
   assert.equal(state(view, 'agent:a', 'agent:b'), 'better');
+  assert.equal(comparisonTooltip(pair(view,'agent:a','agent:b').element), 'Agent B vs Agent A HR=1.400');
   view.setEndpoint('ORR:RR');
   assert.deepEqual(view.comparisonChoices().map(item => item.id), ['a-b-orr-rr']);
   assert.equal(state(view, 'agent:a', 'agent:b'), 'better', 'RR above 1 favors the numerator for ORR');
   assert.equal(Number(data(pair(view,'agent:a','agent:b').element,'estimate')),1/1.4);
+  assert.equal(comparisonTooltip(pair(view,'agent:a','agent:b').element), 'Agent B vs Agent A RR=0.714');
   assert.match(withClass(view.comparisonBand,'tm-effect-link')[0].textContent,/RR 0\.71/); assert.doesNotMatch(view.comparisonBand.textContent, /OR 2\.2/);
   view.setEndpoint('ORR:OR'); assert.deepEqual(view.comparisonChoices().map(item => item.id), ['a-b-orr-or']);
   assert.equal(Number(data(pair(view,'agent:a','agent:b').element,'estimate')),1/2.2);
+  assert.equal(comparisonTooltip(pair(view,'agent:a','agent:b').element), 'Agent B vs Agent A OR=0.455');
   assert.match(withClass(view.comparisonBand,'tm-effect-link')[0].textContent,/OR 0\.45/);
 });
 
@@ -135,6 +144,7 @@ test('absent selected endpoint stays explicit and leaves neutral links without b
   for (const element of view.parallelLinks.values()) {
     assert.equal(data(element, 'effectState'), 'neutral');
     const path = arrowPath(element); assert.ok(!hasArrow(path));
+    assert.equal(comparisonTooltip(element), 'Effect estimate unavailable');
   }
 });
 
@@ -143,6 +153,11 @@ test('endpoint selection persists across branch and overview navigation while ov
   assert.equal(view.selectedEndpoint, 'PFS:HR'); assert.equal(view.endpointSelector.value, 'PFS:HR');
   view.setBranch('all'); assert.equal(view.endpointBadge.hidden, false); assert.equal(view.comparisonBand.hidden, true);
   assert.ok(withClass(view.world, 'tm-parallel-link').every(element => data(element, 'comparisonKind') === 'addon'));
+  const radial = pair(view, 'agent:a', 'ab').element;
+  assert.equal(comparisonTooltip(radial), 'Agent A + Agent B vs Agent A HR=0.900');
+  assert.equal(data(radial, 'ciExcludesNull'), 'false');
+  view.zoom(1.3);
+  assert.equal(comparisonTooltip(radial), 'Agent A + Agent B vs Agent A HR=0.900');
   for (const path of withClass(view.world, 'tm-branch-edge')) { assert.equal(path.getAttribute('marker-start'), null); assert.equal(path.getAttribute('marker-end'), null); }
   view.setBranch('agent:a'); assert.equal(view.selectedEndpoint, 'PFS:HR'); assert.equal(view.endpointSelector.value, 'PFS:HR');
 });
@@ -153,6 +168,7 @@ test('shared-background comparisons use complete source intervention direction, 
   assert.equal(data(shared.element, 'effectState'), 'worse');
   assert.equal(data(deeper.element, 'tailId'), 'ac'); assert.equal(data(deeper.element, 'headId'), 'abd');
   assert.equal(data(deeper.element, 'effectState'), 'better');
+  assert.equal(comparisonTooltip(deeper.element), 'Agent A + Agent B + Agent D vs Agent A + Agent C HR=1.300');
   deeper.element.click(); assert.equal(view.activeComparisonId, 'abd-ac-os');
   assert.match(view.comparisonBand.textContent, /Agent A \+ Agent B \+ Agent D/);
   assert.match(view.comparisonBand.textContent, /Agent A \+ Agent C/);
@@ -169,12 +185,13 @@ test('ranked defaults do not favor effect magnitude and selecting a source recol
   assert.match(view.comparisonBand.textContent, /HR 1\.2/);
 });
 
-test('selecting an oppositely reported shared-background contrast updates its arrow and visible pair label together', () => {
+test('selecting an oppositely reported shared-background contrast updates the arrow, tooltip and comparison panel together', () => {
   const source = { ...graph, comparisons: [...graph.comparisons, comparison('ab-ac-reverse', 'ab', 'ac', 'OS', 'HR', 1.25, 10)] };
   const { view } = mount(source), item = pair(view, 'ab', 'ac'); item.element.click();
   assert.match(withClass(view.comparisonBand, 'tm-arrow-interpretation')[0].textContent, /Agent A \+ Agent B → Agent A \+ Agent C/);
   chooseSource(view, 'ab-ac-reverse');
   assert.equal(data(item.element, 'tailId'), 'ac'); assert.equal(data(item.element, 'headId'), 'ab');
+  assert.equal(comparisonTooltip(item.element), 'Agent A + Agent B vs Agent A + Agent C HR=1.250');
   assert.equal(data(item.element, 'effectState'), 'better');
   assert.match(withClass(view.comparisonBand, 'tm-arrow-interpretation')[0].textContent, /Agent A \+ Agent C → Agent A \+ Agent B/);
   assert.doesNotMatch(withClass(view.comparisonBand, 'tm-arrow-interpretation')[0].textContent, /reciprocal/i);
@@ -188,7 +205,7 @@ test('branch legend has two direction keys for all comparison kinds', () => {
   assert.match(view.legend.textContent, /tail fares worse/i);
   assert.match(view.legend.textContent,/comparator → intervention.*intervention versus comparator/i);
   assert.deepEqual(withClass(view.legend, 'tm-effect-key').map(element => data(element, 'effectState')), ['better', 'worse']);
-  assert.match(view.legend.textContent, /Gray: no result for this endpoint or no directional difference/);
+  assert.doesNotMatch(view.legend.textContent, /Gray: no result for this endpoint or no directional difference/);
   assert.match(view.legend.textContent,/CI includes 0 on the log scale/);
   assert.equal(view.categoryLegend.hidden,false);
 });
@@ -255,23 +272,26 @@ test('indirect node selection preserves a disabled bridge; the dotted comparison
   view.nodeElements.get('agent:b').click(); assert.equal(indirect.second,null);
   view.nodeElements.get('agent:c').click(); await nextFrame();
   assert.equal(indirect.fit.available,true);
-  assert.ok(Math.abs(indirect.fit.estimate-.7/.9)<1e-9);
+  assert.ok(Math.abs(indirect.fit.estimate-.9/.7)<1e-9);
   assert.equal(withClass(view.world,'tm-network-overlay').length,1);
-  assert.match(indirect.panel.textContent,/HR 0.778 \(95% CI/);
+  assert.match(indirect.panel.textContent,/HR 1.286 \(95% CI/);
   assert.equal(withClass(indirect.panel,'tm-network-estimate-value').length,1);
   const radialPaths=withClass(indirect.panel,'tm-network-pathways')[0];
   assert.equal(radialPaths.children[0].textContent,'Evidence pathways');
   assert.equal(radialPaths.children[1].children.length,0);
-  assert.match(indirect.panel.textContent,/Hazard ratio for Agent A relative to Agent C/);
+  assert.match(indirect.panel.textContent,/Indirect comparison · Agent C versus Agent A/);
+  assert.doesNotMatch(indirect.panel.textContent,/Hazard ratio for|Each pathway compares/);
+  assert.equal(withClass(view.world,'tm-network-arrow-direction')[0].textContent,'Agent C versus Agent A');
+  assert.match(withClass(indirect.panel,'tm-network-plan')[0].textContent,/Events needed.+80% power.+E=/);
   assert.doesNotMatch(indirect.panel.textContent,/Supporting evidence/);
-  assert.equal(withClass(view.world,'tm-network-arrow-label')[0].textContent,'HR 0.778');
+  assert.equal(withClass(view.world,'tm-network-arrow-label')[0].textContent,'HR 1.286');
   assert.equal(view.nodeElements.get('agent:b').classList.contains('tm-network-bridge'),true);
   view.setBranch('agent:b');
   assert.equal(indirect.first.regimen,'agent:a'); assert.equal(indirect.second.regimen,'agent:c');
   const branchPaths=withClass(indirect.panel,'tm-network-pathways')[0];
   branchPaths.open=true; branchPaths.dispatchEvent({type:'toggle'});
   assert.equal(withClass(branchPaths,'network-route-table').length,1);
-  assert.match(withClass(branchPaths,'network-route-estimate')[0].textContent,/Pathway-specific HR 0.778/);
+  assert.match(withClass(branchPaths,'network-route-estimate')[0].textContent,/Pathway-specific HR 1.286/);
   assert.match(branchPaths.textContent,/Trial 111/); assert.match(branchPaths.textContent,/Trial 222/);
   const include=withClass(branchPaths,'network-route-include')[0];assert.equal(include.checked,true);
   include.checked=false;include.dispatchEvent({type:'change'});
@@ -287,10 +307,13 @@ test('indirect node selection preserves a disabled bridge; the dotted comparison
   assert.equal(withClass(view.world,'tm-network-overlay').length,1);
   assert.equal(withClass(view.world,'tm-network-support-edge').length,2);
   const original=withClass(view.world,'tm-network-arrow')[0].getAttribute('d');
+  const markerWidth=indirect.marker.getAttribute('markerWidth');
   view.zoom(1.7);
-  assert.notEqual(withClass(view.world,'tm-network-arrow')[0].getAttribute('d'),original);
+  assert.equal(withClass(view.world,'tm-network-arrow')[0].getAttribute('d'),original,'the same card ports stay connected through zoom');
+  assert.notEqual(indirect.marker.getAttribute('markerWidth'),markerWidth);
   withClass(indirect.controls,'tm-text-button').find(b=>b.textContent==='Reverse comparison').click(); await nextFrame();
-  assert.ok(Math.abs(indirect.fit.estimate-.9/.7)<1e-9);
+  assert.ok(Math.abs(indirect.fit.estimate-.7/.9)<1e-9);
+  assert.equal(withClass(view.world,'tm-network-arrow-direction')[0].textContent,'Agent A versus Agent C');
   view.nodeElements.get('agent:b').click();
   assert.equal(indirect.second,null);
   assert.equal(indirect.panel.hidden,true);
@@ -327,8 +350,8 @@ test('unchecking one of two pathways updates the map estimate, required events, 
   assert.match(withClass(indirect.panel,'tm-network-weighting')[0].textContent,/Pathway weighting/);
   assert.match(withClass(indirect.panel,'tm-network-benchmark')[0].textContent,/All pathways, same weighting · HR .+95% CI.+E=/);
   assert.equal(withClass(indirect.panel,'tm-network-diagnostics')[0].hidden,true);
-  assert.match(withClass(indirect.panel,'tm-network-estimate-value')[0].textContent,/HR 0\.444/);
-  assert.equal(arrow(),'HR 0.444'); assert.notEqual(number(),initial.number);
+  assert.match(withClass(indirect.panel,'tm-network-estimate-value')[0].textContent,/HR 2\.250/);
+  assert.equal(arrow(),'HR 2.250'); assert.notEqual(number(),initial.number);
   choices[0].checked=true; choices[0].dispatchEvent({type:'change'});
   assert.deepEqual({number:number(),arrow:arrow()},initial);
   assert.equal(withClass(indirect.panel,'tm-network-selection-note').length,0);
@@ -370,8 +393,8 @@ test('ambiguous visual nodes select a complete regimen before computing a compar
   withClass(indirect.choiceBox,'tm-button').find(b=>b.textContent==='A then maintenance A').click();
   assert.equal(indirect.first.regimen,'sequence:a_then_a');
   view.nodeElements.get('agent:c').click(); await nextFrame();
-  assert.ok(Math.abs(indirect.fit.estimate-.85/.9)<1e-9);
-  assert.match(indirect.panel.textContent,/A then maintenance A versus Agent C/);
+  assert.ok(Math.abs(indirect.fit.estimate-.9/.85)<1e-9);
+  assert.match(indirect.panel.textContent,/Agent C versus A then maintenance A/);
   view.setNetworkModel('random'); await nextFrame();
   assert.match(view.details.textContent,/Random-effects network meta-analysis/);
   assert.match(indirect.panel.textContent,/Indirect estimate unavailable/);
@@ -405,7 +428,7 @@ test('saved estimates cannot replace a subsequent filtered target while its clas
   });
   view.setBranch('all'); const indirect=view.indirect; indirect.toggle.click(); await nextFrame();
   view.nodeElements.get('agent:a').click(); view.nodeElements.get('agent:c').click(); await nextFrame();
-  assert.deepEqual(lookups,[['network-fixture',2,'agent:a','agent:c','common']]);
+  assert.deepEqual(lookups,[['network-fixture',2,'agent:c','agent:a','common']]);
   view.setAdvancedFilters({active:true,pending:true,label:'Loading selected filters…',matches:{}});
   assert.match(indirect.panel.textContent,/Loading selected filters/);
   resolveFit({estimate:10,ci_lower:9,ci_upper:11}); await nextFrame();
@@ -419,7 +442,7 @@ test('saved estimates cannot replace a subsequent filtered target while its clas
   assert.match(indirect.panel.textContent,/HR 0.777 \(95% CI 0.560–1.020\)/);
 });
 
-test('an observational head-to-head estimate is displayed in selection order alongside the randomized indirect result',async()=>{
+test('an observational head-to-head estimate is displayed as arrowhead versus tail alongside the randomized indirect result',async()=>{
   const graph=netGraph(), observational=networkTrial('555','agent:c','agent:a',.8);
   observational.title='A retrospective cohort study'; observational.analysis.design='observational';
   graph.comparisons.push(observational);
@@ -429,9 +452,9 @@ test('an observational head-to-head estimate is displayed in selection order alo
   view.nodeElements.get('agent:a').click(); view.nodeElements.get('agent:c').click(); await nextFrame();
   const details=withClass(indirect.panel,'tm-network-observational')[0];
   assert.ok(details); assert.match(details.textContent,/Observational head-to-head evidence/);
-  assert.match(details.textContent,/Agent A versus Agent C/); assert.match(details.textContent,/HR 1.250 \(95% CI 1.042–1.562\)/);
+  assert.match(details.textContent,/Agent C versus Agent A/); assert.match(details.textContent,/HR 0.800 \(95% CI 0.640–0.960\)/);
   assert.equal(indirect.selectedPair.trials.length,2);
   assert.doesNotMatch(indirect.panel.textContent,/Supporting evidence/);
-  assert.ok(Math.abs(indirect.fit.estimate-.7/.9)<1e-9);
+  assert.ok(Math.abs(indirect.fit.estimate-.9/.7)<1e-9);
   withClass(details,'tm-text-button')[0].click(); assert.equal(opened,'555');
 });

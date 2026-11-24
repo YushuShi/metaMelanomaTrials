@@ -29,8 +29,12 @@
     return {...row,plans};
   }
   function belowThresholds(assessed,eventThreshold,participantThreshold){
-    return assessed.filter(row=>row.plans.length>0 && row.plans.every(
-      p=>row.measure==='HR'?p.events<eventThreshold:p.required_n<participantThreshold));
+    const qualified=[];
+    for(const row of assessed){
+      const plans=row.plans.filter(p=>row.measure==='HR'?p.events<eventThreshold:p.required_n<participantThreshold);
+      if(plans.length)qualified.push({...row,plans});
+    }
+    return qualified;
   }
   function matchingRows(data,power,eventThreshold=defaultEventThreshold,participantThreshold=defaultParticipantThreshold){
     if(!validPower(power)||!validThreshold(eventThreshold)||!validThreshold(participantThreshold))return [];
@@ -72,10 +76,16 @@
     const publication=/^\d+$/.test(pmid)?`<a href="https://pubmed.ncbi.nlm.nih.gov/${pmid}/" target="_blank" rel="noopener noreferrer">${escape(row.title)}</a>`:escape(row.title);
     const events=displayRange(row.plans,'events');
     const sampleSize=displayRange(row.plans,'required_n');
-    const details=row.plans.length>1?`<details><summary>By follow-up</summary>${row.plans.map(p=>{
-      const when=Number.isFinite(p.time_months)?p.time_months+' mo':p.cutoff||'Study follow-up';
-      return '<small>'+escape(when)+' · N='+p.required_n.toLocaleString('en-US')+'</small>';
-    }).join('')}</details>`:'';
+    const followUp=p=>Number.isFinite(p.time_months)?p.time_months+' mo':p.cutoff||'';
+    let details='';
+    if(row.plans.length>1){
+      details=`<details><summary>By follow-up</summary>${row.plans.map(p=>
+        '<small>'+escape(followUp(p)||'Study follow-up')+' · N='+p.required_n.toLocaleString('en-US')+'</small>'
+      ).join('')}</details>`;
+    }else{
+      const when=followUp(row.plans[0]);
+      if(when&&when!==row.cutoff)details=`<small>${escape(when)}</small>`;
+    }
     const note=row.cutoff ? `<small>${escape(row.cutoff)}</small>` : '';
     const provenance=[row.original_level ? `From ${row.original_level}% CI` : '',row.calculated ? 'Calculated from arm rates' : ''].filter(Boolean);
     const mark=row.abstract_only ? '<sup class="abstract-only-mark" title="Results based on abstract only" aria-label="Abstract only">*</sup>' : '';
@@ -99,10 +109,11 @@
     };
     const initialEvents=previousThreshold('data-event-threshold',defaultEventThreshold);
     const initialParticipants=previousThreshold('data-participant-threshold',defaultParticipantThreshold);
+    const multipleTimes=data.rows.some(row=>row.measure!=='HR' && row.scenarios?.length>1);
     panel.innerHTML=`<div class="panel-heading"><div class="evidence-tab-heading" data-power-heading><h2>Underpowered studies</h2></div><label class="evidence-threshold">Survival event cutoff <input type="number" min="1" step="1" required data-event-threshold value="${initialEvents}"></label><label class="evidence-threshold">Binary participant cutoff <input type="number" min="1" step="1" required data-participant-threshold value="${initialParticipants}"></label></div><div data-power-filter></div>
       <p class="evidence-tab-note">The 95% CI includes 1 and the required events (survival) or participants (binary outcomes) fall below the corresponding cutoff. Two-sided α = 0.05, with equal allocation.</p>
       <div data-power-results></div><details class="evidence-tab-note"><summary>How the targets are calculated</summary>
-      <p>For survival outcomes, the reported HR determines the required events using the Schoenfeld formula. For binary outcomes, the two anticipated arm rates determine the required total sample size. Targets are rounded up before applying each cutoff. When several binary assessment times are available, each required sample size must meet the cutoff. <a href="https://pubmed.ncbi.nlm.nih.gov/6354290/" target="_blank" rel="noopener noreferrer">Survival method</a> · <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.proportion.power_proportions_2indep.html" target="_blank" rel="noopener noreferrer">Binary method</a></p></details>`;
+      <p>For survival outcomes, the reported HR determines the required events using the Schoenfeld formula. For binary outcomes, the two anticipated arm rates determine the required total sample size. Targets are rounded up before applying each cutoff.${multipleTimes?' Each binary assessment time appears if its required sample size falls below the participant cutoff.':''} <a href="https://pubmed.ncbi.nlm.nih.gov/6354290/" target="_blank" rel="noopener noreferrer">Survival method</a> · <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.proportion.power_proportions_2indep.html" target="_blank" rel="noopener noreferrer">Binary method</a></p></details>`;
     const eventInput=panel.querySelector('[data-event-threshold]'),participantInput=panel.querySelector('[data-participant-threshold]'),output=panel.querySelector('[data-power-results]');
     let sort={column:'year',direction:'descending'}, selections=Advanced.resetSelections(), options={};
     let assessed=[],qualified=[],power=null,eventThreshold=null,participantThreshold=null,filterUI;

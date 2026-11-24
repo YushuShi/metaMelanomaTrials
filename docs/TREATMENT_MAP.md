@@ -40,8 +40,7 @@ evidence but no monotherapy are labelled “No monotherapy studies.” Empty
 catalogue roots and unresolved broader-regimen roots are hidden from the active
 map and branch selector. Historical component coverage alone does not show
 a treatment phase as a complete regimen. This applies to both map views.
-Branch comparison-arrow tooltips show only the current effect measure and
-three-decimal estimate. Full comparison context remains available on selection.
+Selecting a comparison arrow opens its full comparison details.
 
 Alternatives and sequential phases are kept distinct; unspecified components
 are not discarded to manufacture complete combinations. Unresolved source
@@ -93,11 +92,12 @@ leftmost compared branch node, with separate links for each exact regimen pair.
 Opponent-only comparisons do not recursively expand the branch. Internal pairs
 reuse their existing branch cards. Comparison routes avoid treatment cards;
 extra space is reserved for external arms beside combination descendants.
-Comparison links use smooth Bezier curves, including gentle arcs for aligned nodes.
-Where a direct curve would cross a card, the route follows rounded bends around
-the intervening cards. Click targets follow the same curve and the selected
-estimate sits along that curve. Comparison ports stay separate from plain inclusion
-lines; scientific endpoints and source direction do not depend on the shape.
+Comparison curves meet the facing edges of cards in different columns.
+Cards in the same column share a side gutter. Each side groups blue arrows
+above gray and red below, with separate attachment points for incoming and
+outgoing arrows and for solid and dashed strokes. Curves take a direct path
+where space permits. Around intervening cards, the router favors short paths
+with few bends. Click targets follow the drawn curves.
 Neutral controls have no fabricated participant or study totals. Parallel-arm
 cards and links stay out of the radial overview.
 
@@ -159,12 +159,7 @@ category color. Add-on cards use the displayed added components; a complete
 opposing combination can count once in each of its distinct component categories.
 Re-rooting recalculates the legend. Off-branch catalogue agents are not counted.
 
-The public Reading the map guidance is deliberately concise: straight radial
-connections between an agent/regimen and displayed combinations based on it;
-original-to-expanded regimen arrows; exact-treatment node counts;
-overall/subgroup deduplication; the four N statuses; and automatic model
-selection. Source-review totals and the longer technical explanations remain
-in saved evidence/documentation rather than this public guidance.
+The selected node displays the total number of identified studies. Under the participant total, “N from X studies” counts the distinct eligible cohort identities that supplied that total. **Reading the map & understanding the counts** explains the add-on arrow direction, the four N statuses and automatic model selection.
 
 The radial overview displays comparisons only along its existing immediate
 parent–child connections, such as A → A+B when A is the displayed parent of A+B.
@@ -460,16 +455,12 @@ the reported effect precision.
 
 `treatment_map_planning.js` calculates prospective requirements; these are not
 observed participant counts. Default settings are alpha .05, 80% power,
-two-sided testing, two arms and 1:1 planned/reference allocation. Users can
-choose one arm and either test a fixed historical benchmark or estimate a rate
-to a desired confidence-interval half-width. There is no multiple-arm or
-Bonferroni adjustment.
+two-sided testing, two arms and 1:1 planned/reference allocation. With one arm, the calculator tests the planned treatment against a fixed historical benchmark.
 
-Planning effects are **planned treatment versus reference**. The default planned
-treatment is the reported intervention and the reference is its comparator,
-independently of the plotted arrow direction. Users may instead select the
-arrow-tail or arrowhead treatment explicitly; the effect and rate roles are
-reoriented together. Each table scenario shows N from the study's
+Planning effects are **planned treatment versus reference**. Branch planning uses
+the arrowhead as the planned treatment by default. Users can switch to the arrow
+tail. The planner reorients the effect and swaps the two arm roles and their rates.
+Each table scenario shows N from the study's
 effect and N from the pooled effect, with exactly the same baseline/event
 assumption. Source-reported S(t) is converted to 1 - S(t); it is not confused
 with an observed events/N fraction under censoring. A fixed-time reference event
@@ -484,8 +475,9 @@ If only a planned-arm rate is reported, the reference probability is derived
 once from that study's effect, explicitly labelled, and held constant in both
 columns. Invalid or unavailable probabilities produce an explanation, not an N.
 Reported rates from different times are separate scenarios; their range is not
-a statistical confidence interval. Entering a reference rate overrides the
-reported rates; survival inputs also require a time horizon.
+a statistical confidence interval. An entered reference probability overrides the
+published rates. For survival outcomes it represents the probability of an event
+by the planned analysis date. The calculation uses that probability directly.
 
 For two-arm survival planning, Schoenfeld's event approximation is
 D = (z(1-alpha/sides) + z(power))^2 / [a(1-a)*log(HR)^2], where
@@ -506,20 +498,13 @@ they do not model staggered accrual, loss to follow-up or competing risks.
 
 Binary two-arm N uses the normal approximation for two independent proportions;
 one-arm historical testing uses the one-sample proportion normal approximation.
-Integer arm sizes respect the selected allocation ratio. One-arm precision uses
-the expected Wilson interval half-width, rather than a power calculation. A
-user-entered expected planned-arm rate makes precision independent of the effect
-estimate, so the two N columns agree. Fixed-time survival-rate precision assumes
-complete observation at that time, not a censored Kaplan–Meier design.
+The two-arm calculation rounds each arm size upward using the selected allocation ratio.
 
 Planning works with a single eligible source effect even without a poolable CI.
 Pooled N remains unavailable unless a compatible pool exists. For time-to-event outcomes, branch arrows show **E=** followed by the required
 event count from the pooled effect, or the selected study effect when no pool
 is available. They never substitute total N for this label. Binary outcomes
-retain N scenario ranges. Total N remains in the planning table. One-arm rate
-precision has no required-event target, so its survival arrow shows E unavailable
-while the table retains the precision-based N. The radial overview remains
-uncluttered.
+retain N scenario ranges. Total N appears in the planning table.
 
 Method references: [Cochrane, chapter 13: reporting biases and funnel asymmetry](https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-13),
 [powerSurvEpi reference manual: Schoenfeld planning](https://cran.r-project.org/web/packages/powerSurvEpi/powerSurvEpi.pdf),
@@ -560,10 +545,16 @@ Both straight radial comparison links and curved branch comparison links use
 dashes only when a valid full-precision displayed 95% ratio interval includes or touches 1
 (equivalently, includes zero after logging). An interval wholly below or above
 1 is solid. Missing, invalid or degenerate intervals also remain solid
-and are identified as unavailable in the tooltip. Reversing an arrow inverts
+and are identified as unavailable in the accessible arrow description. Reversing an arrow inverts
 both CI bounds and leaves this test unchanged. Pooled comparisons use the pooled
 CI, not the currently displayed original study's CI. Endpoint, evidence scope,
 advanced-filter and study-inclusion changes refresh the style and clear stale states.
+
+Hover over a direct comparison arrow in either map to see its estimate.
+The format is “Treatment B vs Treatment A HR=0.700” for an illustrative
+survival comparison pointing from A to B. The tooltip names both complete
+regimens and uses the selected endpoint’s measure and current study or pooled
+estimate. Reversing the comparison swaps the names and inverts the ratio.
 
 The legend distinguishes CI line style from the existing direction colors.
 Pure component-inclusion lines remain gray, solid and arrow-free. Radial
@@ -592,9 +583,7 @@ and therefore different allocation-weighted overall event probabilities.
 E is rounded up first, then N = ceil(E/event_probability), with any explicitly
 configured dropout inflation applied afterward. This conservatively makes the
 visible integer E reproduce the visible N using the full-precision probability.
-The unrounded event target remains available internally. Binary calculations
-and one-arm rate-precision calculations have no E/probability conversion;
-precision rows retain N with E and the event-denominator field unavailable.
+The unrounded event target remains available internally. Binary calculations produce a participant target directly from the two response or event probabilities.
 
 For CheckMate 067, PMID 28889792, combination versus nivolumab PFS at 36 months:
 reported PFS is 39% and 32%, respectively, so reported event probabilities are 61%
@@ -643,7 +632,7 @@ Keep both generated JSON files and their producing code in the same release.
 
 ## Indirect comparison
 
-Select **Compare two treatments indirectly** on either map, then select the first and second treatments. The curved dotted arrow A → C reports A relative to C. **Reverse comparison** gives the reciprocal estimate and the interval from 1/upper to 1/lower. If only one complete regimen can be selected for the outcome and filters, clicking its node selects it directly. If several courses qualify, choose the intended complete regimen.
+Select **Compare two treatments indirectly** on either map, then select the first and second treatments. The curved dotted arrow A → C reports C relative to A, matching the direct comparison arrows. The label next to the arrow names both regimens in estimate order. **Reverse comparison** gives the reciprocal estimate and the interval from 1/upper to 1/lower. If only one complete regimen can be selected for the outcome and filters, clicking its node selects it directly. If several courses qualify, choose the intended complete regimen.
 
 In **Studies**, choose a complete comparator regimen and a complete intervention regimen. With the endpoint left at **All endpoints**, the light-blue outcomes table lists each estimable indirect effect for the intervention relative to the comparator. Distinct measures, outcome definitions and time points have separate rows. Selecting an endpoint focuses the display on that outcome. Both treatments can be selected even when no publication in the table compares them directly. The **all regimens** option for a drug includes combination arms containing it when browsing studies. Studies and the maps use the same trial network, clinical filters, network model and published reference fits.
 
@@ -663,7 +652,7 @@ The default includes all clinical settings. Advanced filters restrict the networ
 
 The common-effect model uses generalized least squares on log ratios from the whole connected component. Settings offers random effects with one network-wide between-trial variance estimated using restricted maximum likelihood. Both models report 95% Wald confidence intervals. Where data permit, the panel reports within-design heterogeneity and between-design inconsistency separately. A model that cannot be estimated has a stated reason.
 
-Indirect estimates also give prospective trial requirements under **Settings → Sample size planning**. Defaults are two arms, equal allocation, two-sided α = 0.05 and 80% power. Each survival HR gives a whole-number event target by the Schoenfeld formula. For binary RR or OR, the first treatment is the planned treatment and the second supplies the baseline risk. Each eligible second-treatment risk yields a required total N. Multiple compatible published rates yield a range, and the planning note gives their PMIDs and individual calculations. A user-entered rate overrides these rates. Single-arm planning supports a fixed historical benchmark or estimation to a specified CI half-width. Survival precision planning uses event probability at a fixed horizon and assumes complete follow-up to that horizon. [Schoenfeld's event formula](https://pubmed.ncbi.nlm.nih.gov/6354290/)
+Indirect estimates also give prospective trial requirements under **Settings → Sample size planning**. Defaults are two arms, equal allocation, two-sided α = 0.05 and 80% power. Each survival HR gives a whole-number event target by the Schoenfeld formula. For binary RR or OR, the arrowhead is the planned treatment and the arrow tail supplies the baseline risk. Each eligible reference-arm risk yields a required total N. Multiple compatible published rates yield a range, and the planning note gives their PMIDs and individual calculations. A user-entered rate overrides these rates. Single-arm planning tests a fixed historical benchmark. [Schoenfeld's event formula](https://pubmed.ncbi.nlm.nih.gov/6354290/)
 
 During publication, `website/scripts/treatment_network_reference_cache.cjs` computes default OS fits using R `metafor::rma.mv` and checks them against the browser model. The reference asset is keyed by the source graph and the signed trial contrasts and covariance matrices. Filtered analyses and other endpoints run the same model in the browser. Running the public website requires only `python app.py`. Rebuilding the R reference for a new dataset requires R with metafor, jsonlite and Matrix. [Statistical method and R implementation](https://www.metafor-project.org/doku.php/analyses:network_meta-analysis)
 

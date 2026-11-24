@@ -204,6 +204,20 @@ test('mounted descendant comparison selection keeps the full arms and reversed s
   assert.ok(view.tree.parallelEdges.some((item) => pairKey(item) === 'ab|cd'));
 });
 
+test('branch descendants show the complete preceding regimen in active root order above their additions', () => {
+  const view = mount();
+  for (const [root,drug,next] of [['agent:a','Agent A','Agent B'],['agent:b','Agent B','Agent A']]) {
+    view.setBranch(root);
+    const context=id=>withClass(view.nodeElements.get(id),'tm-card-regimen');
+    assert.equal(context('ab')[0].textContent, drug);
+    assert.equal(context('abd')[0].textContent, drug+' + '+next);
+    assert.equal(context(root).length, 0);
+    const added=withClass(view.nodeElements.get('abd'),'tm-card-label')[0];
+    assert.match(added.textContent,/^\+ .*Agent D$/);
+    assert.ok(Number(context('abd')[0].getAttribute('y')) < Number(added.getAttribute('y')));
+  }
+});
+
 test('mounted sibling and deeper links reuse their existing nodes and show comparison-direction arrows', () => {
   const view = mount(); view.setBranch('agent:a');
   assert.equal(withClass(view.world, 'tm-node').filter((element) => element.getAttribute('data-node-id') === 'ac').length, 1);

@@ -23,8 +23,8 @@
       status.hidden=!status.textContent;status.classList.toggle('advanced-filter-warning',unavailable);
       reset.hidden=!active;
       reset.parentElement.hidden=!active;
-      if(loading){evidence.textContent='';evidence.hidden=true;return;}
-      const n=summary.report_count||0;
+      const n=summary?.report_count;
+      if(loading || !Number.isInteger(n)){evidence.textContent='';evidence.hidden=true;return;}
       evidence.textContent=`${n.toLocaleString('en-US')} ${n===1?'report':'reports'}`;
       evidence.title='Distinct reports in this view. Each PMID counts once, regardless of its number of groups or outcomes.';
       evidence.hidden=!active&&!expanded;evidence.classList.remove('advanced-filter-warning');

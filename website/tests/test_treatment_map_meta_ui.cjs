@@ -135,6 +135,7 @@ test('direct-comparison primary estimate is pooled and agrees with the arrow acr
   assert.equal(Number(link.getAttribute('data-ci-upper')),e.group.pooled.ci_upper);
   assert.equal(e.effect.estimate,e.group.pooled.estimate);
   assert.notEqual(e.group.pooled.estimate,e.comparison.estimate,'the pooled estimate differs from its individual source');
+  assert.equal(v.parallelLinkTitles.get(p.edge.id).title.textContent,'A + B vs A HR='+e.group.pooled.estimate.toFixed(3));
   const boxes=withClass(v.comparisonBand,'tm-comparison-arm');assert.match(boxes[0].textContent,/InterventionA \+ B/);assert.match(boxes[1].textContent,/ComparatorA/);
   assert.doesNotMatch(v.comparisonBand.textContent,/reciprocal/i);
  };
@@ -143,6 +144,7 @@ test('direct-comparison primary estimate is pooled and agrees with the arrow acr
  v.setInclusion('pool-two',false);
  assert.equal(withClass(v.comparisonBand,'tm-reported-label')[0].textContent,'Study estimate');
  assert.equal(Number(withClass(v.comparisonBand,'tm-effect-link')[0].getAttribute('data-estimate')),.7);
+ assert.equal(v.parallelLinkTitles.get(p.edge.id).title.textContent,'A + B vs A HR=0.700');
  assert.equal(v.edgeEvidence(p.edge).comparison.pmid,'200');
  for(const name of ['tm-source-choice','tm-comparison-source','tm-comparison-population','tm-estimate-context'])assert.equal(withClass(v.comparisonBand,name).length,0);
  assert.ok(withClass(v.comparisonBand,'tm-inclusion-table').length,'study sources remain in the cohort table');
@@ -163,7 +165,7 @@ test('automatic model labels update across three, two and one included cohorts w
  assert.equal(v.edgeEvidence(p.edge).group.pooled.k,3);assert.match(withClass(v.comparisonBand,'tm-pooled-summary')[0].textContent,/Random-effects \(REML\)/);assert.match(v.parallelLinks.get(p.edge.id).getAttribute('aria-label'),/Random-effects \(REML\) meta-analysis/);
  v.setStudyScope('randomized');assert.equal(v.edgeEvidence(p.edge).group.pooled.k,2);assert.match(withClass(v.comparisonBand,'tm-pooled-summary')[0].textContent,/Fixed-effect/);assert.match(v.parallelLinks.get(p.edge.id).getAttribute('aria-label'),/Fixed-effect meta-analysis/);
  v.setInclusion('pool-two',false);assert.equal(v.edgeEvidence(p.edge).group.pooled,null);assert.equal(withClass(v.comparisonBand,'tm-pooled-summary').length,0);assert.match(v.parallelLinks.get(p.edge.id).getAttribute('aria-label'),/Individual study/);assert.doesNotMatch(v.parallelLinkTitles.get(p.edge.id).title.textContent,/meta-analysis/);assert.ok(withClass(v.comparisonBand,'tm-comparison-tab').slice(1).every(button=>button.disabled));
- assert.equal(v.parallelLinkTitles.get(p.edge.id).title.textContent, 'HR '+v.edgeEvidence(p.edge).effect.estimate.toFixed(3));
+ assert.equal(v.parallelLinkTitles.get(p.edge.id).title.textContent, 'A + B vs A HR='+v.edgeEvidence(p.edge).effect.estimate.toFixed(3));
  assert.equal(withClass(v.comparisonBand,'tm-meta-availability')[0].textContent,'1 independent cohort in this population; meta-analysis needs at least 2.');
 });
 test('diagnostics hide map guidance only while open and restore it for direct comparisons, overview and absent endpoints',()=>{
@@ -306,15 +308,16 @@ test('default arrows and selected source advance to a supported newer trial resu
  assert.equal(v.activeComparisonId,'newer');assert.equal(v.edgeEvidence(p.edge).comparison.id,'newer');assert.equal(v.edgeEvidence(p.edge).effect.estimate,.4);
  assert.equal(v.planningFor(p.edge).rows[0].comparison.id,'newer');
 });
-test('parallel one-arm planning defaults to the reported intervention and can switch planned arms without changing the arrow',()=>{
+test('parallel one-arm planning defaults to the arrowhead and switches the effect and reference probability together',()=>{
  const source=graph.comparisons.find(c=>c.id==='a-b-os-parallel');
  const g={...graph,comparisons:[{...source,analysis:analysisMeta('nct:one','randomized_trial',source.pmid)}]};
  const v=mount(g);v.setBranch('agent:a');const p=pair(v,'agent:a','agent:b');v.selectParallel(p.edge.id);
  v.planningSettings={...v.planningSettings,arms:1};let plan=v.planningFor(p.edge);const arrow=v.edgeEvidence(p.edge).effect.estimate;
- assert.equal(plan.plannedId,'agent:a');assert.equal(plan.referenceId,'agent:b');assert.equal(plan.rows[0].effect,.8);assert.ok(plan.rows[0].own.n);
- v.planningSettings={...v.planningSettings,plannedSide:'head'};plan=v.planningFor(p.edge);
  assert.equal(plan.plannedId,'agent:b');assert.equal(plan.referenceId,'agent:a');assert.equal(plan.rows[0].effect,1.25);assert.ok(plan.rows[0].own.n);
- assert.equal(v.edgeEvidence(p.edge).effect.estimate,arrow);assert.ok(Math.abs(plan.rows[0].own.p1-.4)<1e-12);
+ assert.ok(Math.abs(plan.rows[0].own.p1-.4)<1e-12);
+ v.planningSettings={...v.planningSettings,plannedSide:'tail'};plan=v.planningFor(p.edge);
+ assert.equal(plan.plannedId,'agent:a');assert.equal(plan.referenceId,'agent:b');assert.equal(plan.rows[0].effect,.8);assert.ok(plan.rows[0].own.n);
+ assert.equal(v.edgeEvidence(p.edge).effect.estimate,arrow);assert.ok(Math.abs(plan.rows[0].own.p0-.4)<1e-12);
 });
 
 function assertDash(view, edge, expected) {
@@ -339,8 +342,9 @@ test('HR plot labels prioritize required events even when source and pooled tota
   assert.ok(withClass(v.world, 'tm-planning-label').every(element => /E=/.test(element.textContent) && !/N=|D=/.test(element.textContent)));
   v.planningSettings = { ...v.planningSettings, arms: 1 }; v.renderDetails(); v.renderComparison(); v.updateSelection();
   plan = v.planningFor(p.edge); assert.ok(plan.required.events > 0); assert.match(plan.label, /^E=/);
-  v.planningSettings = { ...v.planningSettings, mode: 'precision', manualExpectedProbability: 0.3, manualHorizon: 12 }; v.renderDetails(); v.renderComparison(); v.updateSelection();
-  plan = v.planningFor(p.edge); assert.equal(plan.required, null); assert.equal(plan.label, 'E unavailable');
+  v.setPlanningSettings({arms:1,mode:'precision',manualExpectedProbability:.3,manualHorizon:12,manualProbability:.4});
+  plan = v.planningFor(p.edge); assert.ok(plan.required.events>0); assert.match(plan.label,/^E=/);
+  assert.doesNotMatch(v.details.textContent,/Planning aim|Time horizon|Reported intervention|Estimate rate precisely|CI half-width/);
   assert.ok(plan.rows.every(row => row.own.n > 0 && row.pooled.n > 0)); assert.match(v.comparisonBand.textContent, /Total N/);
 });
 
@@ -370,6 +374,7 @@ test('the CI legend states the requested null-including dashed convention exactl
   const v = mount(intervalGraph([[0.8, 0.6, 1.1]]));
   for (const [className, label] of [['tm-ci-dashed', 'Dashed · CI includes 0 on the log scale'], ['tm-ci-solid', 'Solid · CI excludes 0 or is unavailable']]) {
     const marker = withClass(v.legend, className)[0]; assert.ok(marker, className);
+    assert.ok(marker.classList.contains('tm-arrow'));
     assert.equal(marker.parentNode.textContent, label);
   }
 });
@@ -419,8 +424,10 @@ test('survival planning table pairs each study and pooled E, actual event denomi
  assert.equal(rates.length,plan.rows.length*2);assert.equal(events.length,rates.length);assert.equal(ns.length,rates.length);
  plan.rows.forEach((row,i)=>[row.own,row.pooled].forEach((r,j)=>{const at=i*2+j;assert.equal(Number(data(events[at],'value')),r.events);assert.equal(Number(data(rates[at],'value')),r.event_rate);assert.equal(Number(data(ns[at],'value')),r.n);assert.equal(r.n,Math.ceil(r.events/r.event_rate));}));
  assert.match(v.comparisonBand.textContent,/Each HR can imply a different planned-arm rate/);
- v.planningSettings={...v.planningSettings,arms:1,mode:'precision',manualExpectedProbability:.3,manualHorizon:12};v.renderDetails();v.renderComparison();
- assert.ok(withClass(v.comparisonBand,'tm-plan-events').every(c=>data(c,'value')===''));assert.ok(withClass(v.comparisonBand,'tm-plan-rate').every(c=>data(c,'value')===''));assert.ok(withClass(v.comparisonBand,'tm-plan-n').some(c=>Number(data(c,'value'))>0));
+ v.setPlanningSettings({arms:1,manualProbability:.3});
+ assert.ok(withClass(v.comparisonBand,'tm-plan-events').every(c=>Number(data(c,'value'))>0));
+ assert.ok(withClass(v.comparisonBand,'tm-plan-rate').every(c=>Number(data(c,'value'))>0));
+ assert.ok(withClass(v.comparisonBand,'tm-plan-n').every(c=>Number(data(c,'value'))>0));
 });
 
 test('actual CheckMate067 shows both reported arm event probabilities visibly in one study row without changing E or N', () => {
@@ -551,6 +558,7 @@ test('clinical filters mute exact nodes independently of their arrows and preser
    assert.equal(v.nodeElements.get('ab').classList.contains('tm-filter-muted'),true);
    assert.ok(link.classList.contains('tm-filter-muted'));
    assert.equal(data(link,'effectState'),'neutral');assert.equal(data(link,'estimate'),'');
+   assert.equal(v.parallelLinkTitles.get(edge.id).title.textContent,'Effect estimate unavailable','a muted comparison cannot display an unfiltered estimate');
    assert.ok(hasArrow(v.parallelLinkTitles.get(edge.id).path));
    assert.equal(v.edgeEvidence(edge).effect,null);
    assert.equal(v.nodeElements.get('ab').getAttribute('tabindex'),'0');

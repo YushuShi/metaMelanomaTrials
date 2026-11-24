@@ -12,6 +12,9 @@ endpoint has eligible evidence for that comparison. Underpowered studies applies
 the selection to the population for each effect estimate. Its required events
 and participant counts use the target power saved in **Settings**, which
 defaults to 80%. The tab keeps separate cutoffs for events and participants.
+For binary outcomes, each assessment time with a required sample size below
+the participant cutoff stays in the table, even if a later or earlier time
+for the same result exceeds the cutoff.
 
 The controls are treatment setting, disease stage, melanoma type, BRAF mutation
 status, advanced-disease treatment line and baseline LDH. Stage I–IV includes

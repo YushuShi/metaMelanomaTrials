@@ -18,6 +18,37 @@ test('binary outcomes use a separate strict participant cutoff independent of ob
   assert.deepEqual(matchingRows({rows},.8),[]);
   assert.deepEqual(matchingRows({rows},1),[]);
 });
+test('each binary follow-up qualifies independently and the displayed range uses only qualifying times',()=>{
+  const followUp={...row,estimate:2,scenarios:[
+    {...rate,probability:.311,time_months:6},{...rate,probability:.246,time_months:12}
+  ]};
+  const data={schema_version:2,rows:[followUp]};
+  const control=()=>({value:'100',addEventListener(event,handle){this[event]=handle;}});
+  const events=control(),participants=control(),results={addEventListener(){}};
+  const panel={querySelector:selector=>({
+    '[data-event-threshold]':events,'[data-participant-threshold]':participants,'[data-power-results]':results
+  })[selector]};
+  let reportCount;
+  mount(panel,data,(_heading,_panel,getEvidence)=>{
+    reportCount=()=>getEvidence({},false,{}).summary.report_count;
+    return {refresh(){}};
+  });
+  assert.equal(reportCount(),1);
+  assert.match(results.innerHTML,/<td>80<small>6 mo<\/small><\/td>/);
+  assert.doesNotMatch(results.innerHTML,/120|12 mo/);
+  for(const [cutoff,expected] of [[120,[80]],[121,[80,120]],[80,[]],[100,[80]]]){
+    participants.value=String(cutoff);participants.input();
+    const qualified=matchingRows(data,.8,100,cutoff);
+    assert.deepEqual(qualified.flatMap(result=>result.plans.map(p=>p.required_n)),expected);
+    assert.equal(reportCount(),expected.length?1:0);
+    if(expected.length===2){
+      assert.match(results.innerHTML,/80–120/);
+      assert.match(results.innerHTML,/6 mo · N=80/);
+      assert.match(results.innerHTML,/12 mo · N=120/);
+    }
+  }
+  assert.doesNotMatch(results.innerHTML,/120|12 mo/);
+});
 test('survival uses whole Schoenfeld events with no enrollment, rate or follow-up dependency',()=>{
   const hr={...row,measure:'HR',estimate:.5,n:null,lower:.1,upper:1,scenarios:[]};
   const events=Math.ceil((1.959963984540054+.8416212335729143)**2/(.25*Math.log(.5)**2));

@@ -366,11 +366,22 @@ test('an exact melanoma outcome-arm binding preserves a mixed-parent regimen eve
   assert.ok(rows(graph).some(c=>c.relevant_node_ids.includes(combination.id)&&c.source_refs.some(s=>s.arm_id==='arm_peg')));
 });
 
+// Include the accepted, PDF-bound full-text reviews that supplement the
+// original extraction (for example the NIBIT-M2 follow-up).
+const auditSources=require('../dist/treatment_source_reviews.js').supplement(quantitative);
+const sourceKey=(pmid,stage,sha)=>[pmid,stage,sha].join('|');
+const sourceLookup=new Map(auditSources.articles.flatMap(a=>a.records.map(w=>
+  [sourceKey(a.pmid,w.record.stage,w.record.source_sha256),w])));
+function auditedSource(ref){
+  const key=sourceKey(ref.pmid,ref.stage,ref.source_sha256),wrapper=sourceLookup.get(key);
+  assert.ok(wrapper,'Missing accepted source record '+key);
+  return wrapper;
+}
+
 test('every full-catalogue N reconciles and is bound to an accepted original source count',()=>{
   const graph=actualGraph('all',quantitative.articles.map(a=>a.pmid));
-  const records=new Map(quantitative.articles.flatMap(a=>a.records.map(w=>[[a.pmid,w.record.stage,w.record.source_sha256].join('|'),w.record])));
-  const clinical=new Map(quantitative.clinical_evidence.articles.map(a=>[a.pmid,a]));
-  const evidence=quantitative.clinical_evidence.evidence_registry;
+  const clinical=new Map(auditSources.clinical_evidence.articles.map(a=>[a.pmid,a]));
+  const evidence=auditSources.clinical_evidence.evidence_registry;
   for(const node of graph.nodes){
     const counted=rows(graph).filter(c=>c.node_ids.includes(node.id));
     if(node.count_summary.known_n!==null)assert.equal(node.count_summary.known_n,counted.reduce((n,c)=>n+c.n,0),node.label);
@@ -380,8 +391,9 @@ test('every full-catalogue N reconciles and is bound to an accepted original sou
   for(const contribution of rows(graph).filter(c=>c.n!==null)){
     const ref=contribution.selected_source_ref;
     assert.ok(ref,contribution.id);
-    const record=records.get([ref.pmid,ref.stage,ref.source_sha256].join('|'));
+    const record=auditedSource(ref).record;
     const count=record.sample_sizes.find(s=>s.id===ref.sample_id);
+    assert.ok(count,contribution.id+' requires source count '+ref.sample_id);
     assert.equal(contribution.n,count.n,contribution.id);
     assert.ok(clinical.get(ref.pmid).sample_size_records.some(s=>s.source_input_sha256===ref.source_sha256&&s.quantitative_record?.id===ref.sample_id),contribution.id+' must remain inside current accepted source scope');
     const population=record.populations.find(p=>p.id===count.population_id);
@@ -397,15 +409,15 @@ test('every full-catalogue N reconciles and is bound to an accepted original sou
 
 test('every displayed full-catalogue effect preserves its original tuple and resolvable evidence',()=>{
   const graph=actualGraph('all',quantitative.articles.map(a=>a.pmid));
-  const records=new Map(quantitative.articles.flatMap(a=>a.records.map(w=>[[a.pmid,w.record.stage,w.record.source_sha256].join('|'),w])));
-  const evidence=quantitative.clinical_evidence.evidence_registry;
+  const evidence=auditSources.clinical_evidence.evidence_registry;
   for(const effect of graph.comparisons){
     assert.ok(effect.source_refs.length,effect.id);
     assert.notEqual(effect.intervention.node_id,effect.comparator.node_id,effect.id);
     assert.match(effect.source_url,new RegExp(effect.pmid));
     for(const ref of effect.source_refs){
-      const wrapper=records.get([ref.pmid,ref.stage,ref.source_sha256].join('|'));
+      const wrapper=auditedSource(ref);
       const source=(effect.calculation?wrapper.calculated_effects:wrapper.record.effects).find(e=>e.id===ref.effect_id);
+      assert.ok(source,effect.id+' requires source effect '+ref.effect_id);
       if(effect.calculation){
         for(const side of ['intervention','reference']){
           const input=effect.calculation[side];

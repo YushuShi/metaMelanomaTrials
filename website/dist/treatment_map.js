@@ -261,10 +261,16 @@
       }
     }
     const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
-    let remaining = sampledPoints.slice(1).reduce((sum, p, i) => sum + distance(p, sampledPoints[i]), 0) / 2, midpoint = sampledPoints[0];
+    const lengths = sampledPoints.slice(1).map((point, i) => distance(point, sampledPoints[i]));
+    const total = lengths.reduce((sum, length) => sum + length, 0);
+    let remaining = total / 2, midpoint = sampledPoints[0];
     for (let i = 1; i < sampledPoints.length; i++) {
-      const a = sampledPoints[i - 1], b = sampledPoints[i], length = distance(a, b);
-      if (remaining <= length) { const t = length ? remaining / length : 0; midpoint = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; break; }
+      const a = sampledPoints[i - 1], b = sampledPoints[i], length = lengths[i - 1];
+      if (remaining <= length) {
+        const t = length ? remaining / length : 0;
+        midpoint = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+        break;
+      }
       remaining -= length;
     }
     return { path: path.join(' '), segments, sampledPoints, midpoint };
@@ -292,17 +298,28 @@
     };
     return ![...tree.positions.values()].some((box) => geometry.sampledPoints.slice(1).some((point, i) => intersects(geometry.sampledPoints[i], point, box)));
   }
-  function parallelLinkGeometry(tree, edge) {
+  function parallelLinkGeometry(tree, edge, tailId = edge.root_id, state = 'neutral', dashed = false) {
     const a = tree.positions.get(edge.opponent_id), b = tree.positions.get(edge.root_id), margin = 16;
-    // Keep comparison ports separate from the inclusion centreline.
-    const port = (point, side) => ({ x: side === 'left' ? point.x : side === 'right' ? point.x + point.width : point.x + point.width / 2, y: point.y + (side === 'top' ? -point.height / 2 : side === 'bottom' ? point.height / 2 : 14) });
-    let aSide, bSide;
-    if (a.x + a.width < b.x) { aSide = 'right'; bSide = 'left'; }
-    else if (b.x + b.width < a.x) { aSide = 'left'; bSide = 'right'; }
-    else { aSide = a.y < b.y ? 'bottom' : 'top'; bSide = a.y < b.y ? 'top' : 'bottom'; }
-    const startPort = port(a, aSide), endPort = port(b, bSide);
-    const outside = (p, side) => ({ x: p.x + (side === 'left' ? -margin : side === 'right' ? margin : 0), y: p.y + (side === 'top' ? -margin : side === 'bottom' ? margin : 0) });
-    const start = outside(startPort, aSide), end = outside(endPort, bSide);
+    const cards = [...tree.positions.values()];
+    const stacked = a.x === b.x;
+    // Stacked siblings share one gutter. Prefer the side inside the plot
+    // so the curve remains visible even when the column is at the edge.
+    const roomLeft = a.x - Math.min(...cards.map(p => p.x));
+    const roomRight = Math.max(...cards.map(p => p.x + p.width)) - (a.x + a.width);
+    const aSide = (stacked ? roomRight > roomLeft : a.x < b.x) ? 'right' : 'left';
+    const bSide = stacked ? aSide : aSide === 'left' ? 'right' : 'left';
+    // Both card faces have the same color bands. Within a band, incoming
+    // and outgoing arrows of each stroke style share an attachment point.
+    function port(card, side, isTail) {
+      const band = { better: -0.29, worse: 0.29, neutral: 0, indirect: 0 }[state];
+      const role = isTail ? -0.068 : 0.068;
+      const stroke = state === 'indirect' ? 0 : dashed ? 0.032 : -0.032;
+      const level = state === 'indirect' ? 0 : band + role + stroke;
+      return { x: card.x + (side === 'right' ? card.width : 0), y: card.y + card.height * level };
+    }
+    const startPort = port(a, aSide, edge.opponent_id === tailId), endPort = port(b, bSide, edge.root_id === tailId);
+    const outside = (p, side, gap) => ({x: p.x + (side === 'left' ? -gap : gap), y: p.y});
+    const start = outside(startPort, aSide, margin), end = outside(endPort, bSide, margin);
     const obstacles = [...tree.positions.values()].map((p) => ({ left: p.x - margin, right: p.x + p.width + margin, top: p.y - p.height / 2 - margin, bottom: p.y + p.height / 2 + margin }));
     const xs = [...new Set([start.x, end.x, ...obstacles.flatMap((r) => [r.left, r.right])])].sort((a, b) => a - b);
     const ys = [...new Set([start.y, end.y, ...obstacles.flatMap((r) => [r.top, r.bottom])])].sort((a, b) => a - b);
@@ -310,35 +327,45 @@
     const first = key(xs.indexOf(start.x), ys.indexOf(start.y)), last = key(xs.indexOf(end.x), ys.indexOf(end.y));
     const clear = (p, q) => !obstacles.some((r) => p.x === q.x ? p.x > r.left && p.x < r.right && Math.max(p.y, q.y) > r.top && Math.min(p.y, q.y) < r.bottom : p.y > r.top && p.y < r.bottom && Math.max(p.x, q.x) > r.left && Math.min(p.x, q.x) < r.right);
     const distance = (p, q) => Math.abs(p.x - q.x) + Math.abs(p.y - q.y);
-    const costs = new Map([[first, 0]]), previous = new Map(), pending = new Set([first]), closed = new Set();
+    // A short detour is preferable to a staircase. Include the incoming axis
+    // in the search so equal-length routes with fewer bends win consistently.
+    const initial = first * 2, bendCost = 24;
+    const costs = new Map([[initial, 0]]), previous = new Map(), pending = new Set([initial]), closed = new Set();
+    let finish;
     while (pending.size) {
-      let current = null, best = Infinity;
-      for (const id of pending) { const score = costs.get(id) + distance(point(id), end); if (score < best) { best = score; current = id; } }
-      if (current === last) break;
+      let current, best = Infinity;
+      for (const id of pending) {
+        const score = costs.get(id) + distance(point(Math.floor(id / 2)), end);
+        if (score < best) { best = score; current = id; }
+      }
+      const cell = Math.floor(current / 2);
+      if (cell === last) { finish = current; break; }
       pending.delete(current); closed.add(current);
-      const x = current % width, y = Math.floor(current / width), p = point(current);
+      const x = cell % width, y = Math.floor(cell / width), p = point(cell);
       for (const [nx, ny] of [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]) {
         if (nx < 0 || nx >= width || ny < 0 || ny >= ys.length) continue;
-        const id = key(nx, ny), q = point(id); if (closed.has(id) || !clear(p, q)) continue;
-        const cost = costs.get(current) + distance(p, q);
+        const next = key(nx, ny), axis = Number(ny !== y), id = next * 2 + axis, q = point(next);
+        if (closed.has(id) || !clear(p, q)) continue;
+        let cost = costs.get(current) + distance(p, q);
+        if (axis !== current % 2) cost += bendCost;
+        if (next === last && axis === 1) cost += bendCost;
         if (cost >= (costs.get(id) ?? Infinity)) continue;
         costs.set(id, cost); previous.set(id, current); pending.add(id);
       }
     }
-    const route = []; let id = last;
-    if (costs.has(last)) { while (id !== undefined) { route.unshift(point(id)); id = previous.get(id); } }
-    else throw new Error('No unobstructed comparison route for ' + edge.id);
+    if (finish === undefined) throw new Error('No unobstructed comparison route for ' + edge.id);
+    const route = [];
+    for (let id = finish; id !== undefined; id = previous.get(id)) route.unshift(point(Math.floor(id / 2)));
     const points = [startPort, ...route, endPort].filter((p, i, all) => !i || p.x !== all[i - 1].x || p.y !== all[i - 1].y);
     const compact = points.filter((p, i) => !i || i === points.length - 1 || !((points[i - 1].x === p.x && p.x === points[i + 1].x) || (points[i - 1].y === p.y && p.y === points[i + 1].y)));
-    const horizontal = aSide === 'left' || aSide === 'right';
-    const span = horizontal ? Math.abs(endPort.x - startPort.x) : Math.abs(endPort.y - startPort.y);
-    const reach = Math.min(180, span * 0.48), bow = Math.max(28, Math.min(70, span * 0.22));
-    const control = (p, side) => ({ x: p.x + (side === 'left' ? -reach : side === 'right' ? reach : 0), y: p.y + (side === 'top' ? -reach : side === 'bottom' ? reach : 0) });
-    // Prefer an uninterrupted Bezier curve. Same-row/column pairs get a gentle bow.
+    const span = Math.abs(endPort.x - startPort.x);
+    const reach = stacked ? Math.min(roomLeft || roomRight ? 60 : 26, Math.abs(a.y - b.y) * 0.4) : Math.min(180, span * 0.48);
+    const bow = Math.min(18, span * 0.15);
+    // A shallow arc is enough for aligned cards. Other direct curves have
+    // horizontal terminal tangents and progress toward the facing edge.
     for (const sign of [1, -1]) {
-      const c = control(startPort, aSide), d = control(endPort, bSide);
-      if (horizontal && Math.abs(startPort.y - endPort.y) < 24) { c.y += sign * bow; d.y += sign * bow; }
-      if (!horizontal && Math.abs(startPort.x - endPort.x) < 24) { c.x += sign * bow; d.x += sign * bow; }
+      const c = outside(startPort, aSide, reach), d = outside(endPort, bSide, reach);
+      if (!stacked && Math.abs(startPort.y - endPort.y) < 24) { c.y += sign * bow; d.y += sign * bow; }
       const geometry = curveGeometry([{ type: 'C', start: startPort, control1: c, control2: d, end: endPort }]);
       if (curveClearsCards(geometry, tree)) return { ...geometry, points: compact };
     }
@@ -530,7 +557,6 @@
     build() {
       const heading = this.make('div', 'tm-heading', this.root), title = this.make('div', 'tm-title-controls', heading);
       this.make('h2', '', title, 'Treatment map');
-      this.catalogCount = this.make('p', 'tm-catalog-count', heading, `${number(this.model.agents.length)} agents, ${number(this.model.nodes.filter((node) => node.type === 'combination').length)} combinations`);
       if(this.options.mountAdvanced)this.filterPanel=this.options.mountAdvanced(title,this.root);
       const toolbar = this.make('div', 'tm-toolbar', this.root), branchField = this.make('div', 'tm-branch-field', toolbar);
       const label = this.make('label', '', branchField, 'Explore a treatment branch'); label.htmlFor = this.id + '-branch'; label.id = label.htmlFor + '-label';
@@ -562,13 +588,13 @@
       this.world = this.svgElement('g', { class: 'tm-world' }, this.svg);
       this.stageHint = this.make('p', 'tm-stage-hint', this.stage, 'Drag to pan · scroll or pinch to zoom');
       const indirectResult = this.make('section', 'tm-network-result', visual); indirectResult.hidden = true;
-      if (NetworkUI) this.indirect = NetworkUI.mount(this, toolbar, indirectControls, indirectResult, defs);
+      if (NetworkUI) this.indirect = NetworkUI.mount(this, toolbar, indirectControls, indirectResult, defs, parallelLinkGeometry);
       this.categoryLegend = this.make('section', 'tm-category-legend', visual); this.categoryLegend.setAttribute('aria-label', 'Treatment category colors');
       this.legend = this.make('div', 'tm-legend', visual);
       const inclusionKey = this.make('span', '', this.legend); this.make('i', 'tm-solid', inclusionKey); this.make('span', '', inclusionKey, 'Component inclusion · no comparison arrow');
       this.comparisonLegendItem = this.make('div', 'tm-effect-legend', this.legend);
       const indirectKey = this.make('div', 'tm-network-legend', this.legend);
-      this.make('i', 'tm-network-swatch', indirectKey); this.make('span', '', indirectKey, 'Dotted indirect arrow · first treatment relative to second treatment');
+      this.make('i', 'tm-network-swatch', indirectKey); this.make('span', '', indirectKey, 'Dotted indirect arrow · second treatment versus first treatment');
       for (const direction of ['better', 'worse']) {
         const item = this.make('span', 'tm-effect-key', this.comparisonLegendItem);
         item.style.setProperty('--tm-effect-color', Effects.styles[direction].color);
@@ -577,11 +603,10 @@
         this.make('span', '', item, 'Arrow tail fares ' + direction);
       }
       for (const [className, text] of [['tm-ci-dashed','Dashed · CI includes 0 on the log scale'],['tm-ci-solid','Solid · CI excludes 0 or is unavailable']]) {
-        const item = this.make('span','tm-ci-key',this.comparisonLegendItem); this.make('i',className,item); this.make('span','',item,text);
+        const item = this.make('span','tm-ci-key',this.comparisonLegendItem); this.make('i','tm-arrow '+className,item); this.make('span','',item,text);
       }
       this.make('p','tm-ci-explanation',this.comparisonLegendItem,'Line style uses the study CI, or the pooled CI when multiple independent studies are combined.');
       this.make('p', 'tm-direction-explanation', this.comparisonLegendItem, 'Arrow: comparator → intervention. Effect estimate: intervention versus comparator.');
-      this.make('p', 'tm-neutral-explanation', this.comparisonLegendItem, 'Gray: no result for this endpoint or no directional difference.');
       this.comparisonBand = this.make('section', 'tm-comparison-band', visual); this.comparisonBand.setAttribute('aria-label', 'Selected direct comparison');
       this.details = this.make('aside', 'tm-details', body); this.details.setAttribute('aria-label', 'Selected treatment evidence');
       this.live = this.make('p', 'sr-only', this.root); this.live.setAttribute('role', 'status'); this.live.setAttribute('aria-live', 'polite');
@@ -591,11 +616,7 @@
     buildMethods() {
       const methods = this.methods = this.make('details', 'tm-methods', this.root); this.make('summary', '', methods, 'Reading the map & understanding the counts');
       const content = this.make('div', 'tm-methods-content', methods);
-      this.make('p', '', content, 'Radial connections are straight and link an agent or regimen only to displayed combinations based on it.');
       this.make('p', '', content, 'For an add-on agent, the arrow runs from the original regimen to the expanded regimen.');
-      this.make('p', '', content, 'Counts belong to the selected complete regimen or agent, not to its connecting line.');
-      this.make('p', '', content, 'Agent N includes exact monotherapy arms. Combination N includes the complete concurrent regimen. Sequential and uncertain alternative (OR) treatments are not assigned to these exact nodes. Repeated reports do not add participants again; node totals must not be summed across the tree.');
-      this.make('p', '', content, 'Overall cohorts are preferred. A subgroup-only count can supply a labelled partial N when an overall count is unavailable. Repeated reports and overlapping parent/subgroup populations do not add participants again; separately recruited cohorts remain distinct.');
       const statuses = this.make('dl', 'tm-status-key', content);
       for (const [term, explanation] of [['N', 'Calculated from linked, eligible exact treatment arms.'], ['N*', 'Partial known N; some arms or overlaps remain unresolved.'], ['N†', 'Provisional N; study identity or linkage remains uncertain.'], ['N unresolved', 'No defensible arm total is available.']]) { this.make('dt', '', statuses, term); this.make('dd', '', statuses, explanation); }
       this.make('p', '', content, 'The analysis model follows the number of eligible independent cohorts: one shows its individual estimate, two use fixed-effect pooling, and three or more use random-effects pooling with REML. This rule also applies after filtering, inclusion changes and leave-one-out analysis.');
@@ -616,8 +637,7 @@
       if (this.branchId !== 'all') this.selectedId = this.branchId;
       this.branchTitle.hidden = this.tree.overview;
       this.branchTitle.textContent = this.tree.overview ? '' : this.model.byId.get(this.branchId).label + ' branch';
-      const combinations = this.tree.nodes.filter((node) => node.type === 'combination').length;
-      this.branchCount.textContent = this.tree.overview ? `${number(this.model.agents.length)} agents · ${number(combinations)} combinations · isolated agents included` : `${number(this.tree.nodes.length)} branch nodes · ${number(combinations)} complete combinations` + (this.tree.parallelNodes.length ? ` · ${number(this.tree.parallelNodes.length)} parallel arms` : '');
+      this.branchCount.textContent = this.tree.overview ? '' : `${number(this.tree.nodes.length)} branch ${this.tree.nodes.length === 1 ? 'node' : 'nodes'}`;
       this.stageHint.textContent = this.tree.overview ? 'Drag to pan · scroll or pinch to zoom' : 'Drag to pan · scroll or pinch to zoom · Fit shows the whole branch';
       this.renderCategoryLegend(); this.renderGraph(); this.indirect?.setBranch(); this.select(this.selectedId, { announce: false }); this.fit(false);
       return this;
@@ -726,36 +746,31 @@
         const label = this.make('label', '', form, labelText), field = this.make(choices ? 'select' : 'input', '', label); field.name = key;
         if (choices) for (const [value, text] of choices) { const option = this.make('option', '', field, text); option.value = String(value); }
         else { field.type = 'number'; for (const [attribute, value] of Object.entries(options)) field.setAttribute(attribute, value); }
-        const percent = ['power', 'dropout', 'precision', 'manualProbability', 'manualExpectedProbability'].includes(key);
+        const percent = key==='power' || key==='manualProbability';
         field.value = this.planningSettings[key] === null ? '' : String(percent ? this.planningSettings[key] * 100 : this.planningSettings[key]);
         field.addEventListener('change', () => {
-          const raw = field.value.trim(), value = ['mode','plannedSide'].includes(key) ? raw : raw === '' && ['manualProbability','manualExpectedProbability','manualHorizon'].includes(key) ? null : Number(raw) / (percent ? 100 : 1);
+          const raw = field.value.trim(), value = key==='plannedSide' ? raw : raw === '' && key==='manualProbability' ? null : Number(raw) / (percent ? 100 : 1);
           try { this.planningSettings = Planning.settings({ ...this.planningSettings, [key]: value }); this.planningError = null; } catch (error) { this.planningError = error.message; }
           this.renderDetails(); this.renderComparison(); this.updateSelection();
         });
         return field;
       };
-      input('arms', 'Trial arms', [[2,'Two arms'],[1,'One arm']]);
-      input('plannedSide','Planned treatment',[['reported','Reported intervention'],['tail','Arrow-tail treatment'],['head','Arrowhead treatment']]);
-      if (this.planningSettings.arms === 1) input('mode', 'Planning aim', [['benchmark','Test historical benchmark'],['precision','Estimate rate precisely']]);
+      input('arms', 'Trial arms', [[2,'Two arms'],[1,'One arm against a historical benchmark']]);
+      input('plannedSide','Planned treatment',[['head','Arrowhead treatment'],['tail','Arrow-tail treatment']]);
       input('alpha', 'Type I error (α)', null, { min:0.001,max:0.49,step:0.005 });
-      if (!(this.planningSettings.arms === 1 && this.planningSettings.mode === 'precision')) { input('power', 'Power (%)', null, { min:51,max:99.9,step:1 }); input('sidedness','Sidedness',[[2,'Two-sided'],[1,'One-sided']]); }
-      else input('precision',number((1-this.planningSettings.alpha)*100)+'% CI half-width (percentage points)',null,{min:0.1,max:49,step:0.5});
-      if (this.planningSettings.arms === 2) input('allocation','Allocation: planned / reference',null,{min:0.1,max:20,step:0.1});
-      input('manualProbability',this.endpointDefinition().measure === 'HR' ? 'Reference event probability (%) · optional' : 'Reference response/event probability (%) · optional',null,{min:0.1,max:99.9,step:0.1});
-      if(this.planningSettings.arms===1&&this.planningSettings.mode==='precision')input('manualExpectedProbability','Expected planned-arm rate (%) · optional',null,{min:0.1,max:99.9,step:0.1});
-      if (this.endpointDefinition().measure === 'HR') input('manualHorizon','Time horizon (months) · for entered probability',null,{min:0.1,step:1});
+      input('power', 'Power (%)', null, { min:51,max:99.9,step:1 });
+      input('sidedness','Sidedness',[[2,'Two-sided'],[1,'One-sided']]);
+      input('manualProbability',this.endpointDefinition().measure==='HR' ? 'Reference event probability by planned analysis (%) · optional' : 'Reference response/event probability (%) · optional',null,{min:0.1,max:99.9,step:0.1});
+      if(this.planningSettings.arms===2)input('allocation','Allocation ratio (planned / reference)',null,{min:0.1,max:20,step:0.1});
       if (this.planningError) this.make('p','tm-planning-error',panel,this.planningError);
       const selectedEdge=this.tree.comparisonEdges.find(edge=>edge.comparison_ids.includes(this.activeComparisonId));
       if(selectedEdge){const d=this.planningDirection(selectedEdge);this.make('p','tm-count-note tm-planning-direction',panel,'Planned: '+this.nodeFor(d.plannedId).label+'. Reference: '+this.nodeFor(d.referenceId).label+'.');}
       this.make('p','tm-count-note',panel,'Reported study rates are used unless you enter a probability.');
-      if (this.planningSettings.arms === 1) this.make('p','tm-count-note',panel,this.planningSettings.mode === 'precision' ? 'Precision planning assumes complete follow-up to the specified time.' : 'The historical benchmark is treated as fixed; its sampling uncertainty is not included.');
+      if (this.planningSettings.arms === 1) this.make('p','tm-count-note',panel,'The calculation treats the historical benchmark as fixed.');
     }
     planningDirection(edge, evidence) {
-      const { tailId, headId, comparison } = evidence || this.edgeEvidence(edge);
-      const reported=Effects.armId(comparison?.intervention);
-      const plannedId=this.planningSettings.plannedSide==='tail'?tailId:this.planningSettings.plannedSide==='head'?headId:[tailId,headId].includes(reported)?reported:headId;
-      return {plannedId,referenceId:plannedId===tailId?headId:tailId};
+      const {tailId,headId}=evidence || this.edgeEvidence(edge);
+      return this.planningSettings.plannedSide==='tail' ? {plannedId:tailId,referenceId:headId} : {plannedId:headId,referenceId:tailId};
     }
     planningFor(edge, evidence) {
       const { tailId, headId, group, comparison } = evidence || this.edgeEvidence(edge);
@@ -774,7 +789,7 @@
       const rows = Planning.tableRows(unique, { ...this.planningSettings, tailId:referenceId, headId:plannedId, measure: this.endpointDefinition().measure, pooledEffect });
       const ns = rows.map(row => (group?.pooled ? row.pooled : row.own)?.n).filter(value => Number.isFinite(value));
       const effect = chosen.length ? group?.pooled?.estimate || (evidence || this.edgeEvidence(edge)).effect?.estimate : null;
-      const required = !(this.planningSettings.arms===1&&this.planningSettings.mode==='precision') && this.endpointDefinition().measure === 'HR' && effect ? Planning.events(plannedId===headId?effect:1/effect, this.planningSettings) : null;
+      const required = this.endpointDefinition().measure === 'HR' && effect ? Planning.events(plannedId===headId?effect:1/effect, this.planningSettings) : null;
       const label = this.endpointDefinition().measure === 'HR' ? required?.events ? 'E=' + number(required.events) : 'E unavailable' : ns.length ? 'N=' + number(Math.min(...ns)) + (Math.max(...ns) !== Math.min(...ns) ? '–' + number(Math.max(...ns)) : '') : 'N unavailable';
       return { rows, required, label, group, tailId, headId, plannedId, referenceId };
     }
@@ -791,7 +806,7 @@
         const group=this.svgElement('g', {class:'tm-planning-label','data-comparison-pair':edge.id,role:'button',tabindex:0}, this.planningLabels);
         this.svgElement('rect',{x:x-width/2,y:y+7/scale,width,height:22/scale,rx:3/scale},group);
         this.svgElement('text',{x,y:y+22/scale,'text-anchor':'middle','font-size':12/scale},group,plan.label);
-        const eventNote=this.endpointDefinition().measure==='HR'?' · '+(plan.required?.event_basis||plan.required?.reason||(this.planningSettings.arms===1&&this.planningSettings.mode==='precision'?'Rate-precision planning has no required-event target; planned N remains in the table.':'Required events unavailable.')):'';
+        const eventNote=this.endpointDefinition().measure==='HR'?' · '+(plan.required?.event_basis||plan.required?.reason||'Required events unavailable.'):'';
         this.svgElement('title',{},group,plan.label+eventNote+' · '+(plan.group?.pooled?Charts.modelLabel(plan.group.pooled)+' pooled effect':'Individual-study effect')+' · Select comparison for study-specific planning assumptions.');
         group.addEventListener('click',()=>this.selectParallel(edge.id)); group.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();this.selectParallel(edge.id);}});
       }
@@ -799,7 +814,7 @@
     renderPlanningTable(edge, evidence) {
       if (!this.planningEnabled) return;
       const plan=this.planningFor(edge,evidence),section=this.make('section','tm-planning-results',this.comparisonBand);
-      const survival=this.endpointDefinition().measure==='HR',precision=this.planningSettings.arms===1&&this.planningSettings.mode==='precision';
+      const survival=this.endpointDefinition().measure==='HR';
       const percentage=value=>Number.isFinite(value)?number(value*100)+'%':'—';
       this.make('h4','',section,'Sample size planning');
       this.make('p','tm-count-note',section,'Planned: '+this.nodeFor(plan.plannedId).label+' · Reference: '+this.nodeFor(plan.referenceId).label);
@@ -836,17 +851,16 @@
           if(Number.isFinite(result.p1))this.make('p','',details,this.nodeFor(plan.plannedId).label+' (planned): '+percentage(result.p1)+(result.derived_probability?' · HR-implied':''));
           this.make('p','',details,'Probability used for N: '+(result.event_rate*100).toPrecision(10)+'%.');
           if(result.event_rate_basis)this.make('p','',details,String(result.event_rate_basis).replace(/_/g,' '));
-        }else if(precision&&result?.n)this.make('small','',rate,'Precision-based N');
+        }
         const n=this.make('td','tm-plan-n',row);n.setAttribute('data-basis',basis);cellN(n,result);
       };
       for(const row of plan.rows){
         const tr=this.make('tr','',body);tr.setAttribute('data-comparison-id',row.comparison.id);tr.setAttribute('data-assumption-id',row.assumption.id);
         const study=this.make('td','',tr,row.comparison.study_name||'Publication');this.make('br','',study);this.sourceLink(study,row.comparison);
         const a=row.assumption,context=this.make('td','tm-plan-assumption',tr);
-        this.make('strong','',context,a.time_months?number(a.time_months)+' months':a.cutoff||'Time not reported');
+        this.make('strong','',context,a.time_months?number(a.time_months)+' months':a.cutoff||(a.id==='manual'?'Planned analysis':'Time not reported'));
         const reference=row.own.p0??row.pooled?.p0;
         if(Number.isFinite(reference))this.make('small','',context,(a.provenance==='derived_reference_probability'?'Derived reference ':a.id==='manual'?'Entered reference ':'Reference ')+(survival?'event probability: ':'response/event probability: ')+percentage(reference));
-        else if(a.kind==='expected_probability')this.make('small','',context,'Entered planned-arm probability: '+percentage(a.probability));
         else if(a.kind==='overall_event_fraction')this.make('small','',context,'Reported overall event proportion: '+percentage(a.probability));
         else this.make('small','',context,survival?'Event probability unavailable':'Reference probability unavailable');
         const reported=[['reference',a.reported_reference_probability,a.reported_reference_source,plan.referenceId],['planned',a.reported_target_probability,a.reported_target_source,plan.plannedId]].filter(([,rate])=>Number.isFinite(rate));
@@ -857,8 +871,7 @@
         else{cellN(this.make('td','',tr),row.own);cellN(this.make('td','',tr),row.pooled);}
       }
       if(!plan.rows.length)this.make('p','tm-muted',section,'No source estimate is available for planning.');
-      if(precision)this.make('p','tm-count-note',section,'Precision planning uses the chosen confidence-interval half-width, without an event target. A directly entered planned-arm rate gives the same N in both columns.');
-      else if(survival){
+      if(survival){
         this.make('p','tm-count-note',section,'N = ceiling(E ÷ event probability), using unrounded probabilities. The event rate for N is the expected proportion with the endpoint event, not the event-free survival rate.');
         this.make('p','tm-count-note',section,this.planningSettings.arms===2?'Both effect columns use the same reference probability. Each HR can imply a different planned-arm rate; the event rate for N is weighted by the selected allocation.':'One-arm E is on the historical-null scale. Its conversion to N uses the mean of the historical and alternative event probabilities.');
       }
@@ -867,7 +880,7 @@
     }
     renderCategoryLegend() {
       this.categoryLegend.replaceChildren(); this.categoryLegend.hidden = false;
-      this.make('p', 'tm-category-legend-title', this.categoryLegend, this.tree.overview?'Treatment classes · named agents':'Treatment classes · visible nodes');
+      this.make('p', 'tm-category-legend-title', this.categoryLegend, this.tree.overview?'Treatment classes · named agents':'Treatment classes');
       const legend = this.make('ul', '', this.categoryLegend);
       const categories=new Map(),add=info=>{if(!categories.has(info.id))categories.set(info.id,{...info,count:0});categories.get(info.id).count++;};
       if(this.tree.overview)for(const agent of this.model.agents)add(categoryInfo(agent));
@@ -911,12 +924,7 @@
       if (this.tree.overview) {
         this.svgElement('circle', { cx: 0, cy: 0, r: 250, class: 'tm-inner-ring' }, this.world);
       }
-      this.parallelEstimateGroup = null;
       this.renderParallelLinks();
-      if (!this.tree.overview) {
-        this.parallelEstimateGroup = this.svgElement('g', { class: 'tm-parallel-estimate', 'aria-hidden': 'true' }, this.world);
-        this.parallelEstimateGroup.addEventListener('click', () => { const edge = this.tree.comparisonEdges.find((item) => item.comparison_ids.includes(this.activeComparisonId)); if (edge && !this.suppressClick) this.selectParallel(edge.id); });
-      }
       const nodesGroup = this.svgElement('g', { class: 'tm-nodes' }, this.world);
       for (const node of [...this.tree.nodes, ...this.tree.parallelNodes]) {
         const point = this.tree.positions.get(node.id), evidence = node.type === 'control' ? 'Neutral comparison arm' : `${studyLabel(node)}. ${countLabel(node)}`;
@@ -946,12 +954,15 @@
       const group = this.svgElement('g', { class: 'tm-parallel-links' }, this.world);
       this.parallelGeometry = new Map();
       for (const edge of this.tree.comparisonEdges) {
-        const geometry = this.tree.overview ? radialComparisonGeometry(this.model, this.tree, edge, this.camera.scale) : parallelLinkGeometry(this.tree, edge), path = geometry.path; this.parallelGeometry.set(edge.id, geometry);
+        const geometry = this.tree.overview ? radialComparisonGeometry(this.model, this.tree, edge, this.camera.scale) : null;
+        if (geometry) this.parallelGeometry.set(edge.id, geometry);
+        const path = geometry?.path || '';
         const label = `${this.nodeFor(edge.root_id).label} versus ${this.nodeFor(edge.opponent_id).label}: ${number(edge.publication_ids.length)} supporting publications; ${number(edge.comparison_ids.length)} source estimates. Select a study and outcome.`;
         const link = this.svgElement('g', { class: 'tm-parallel-link tm-comparison-' + edge.kind + (this.tree.overview ? ' tm-radial-comparison-link' : ''), tabindex: 0, role: 'button', 'aria-label': label, 'data-root-id': edge.root_id, 'data-opponent-id': edge.opponent_id, 'data-comparison-pair': edge.id, 'data-comparison-kind': edge.kind }, group);
+        const title = this.svgElement('title', {}, link);
         const hit = this.svgElement('path', { d: path, class: 'tm-parallel-hit' }, link);
         const line = this.svgElement('path', { d: path, class: 'tm-parallel-edge' }, link);
-        const title = this.svgElement('title', {}, link, label); this.parallelLinkTitles.set(edge.id, { title, label, path: line, hit });
+        this.parallelLinkTitles.set(edge.id, { title, path: line, hit });
         link.addEventListener('click', () => { if (!this.suppressClick) this.selectParallel(edge.id); });
         link.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); this.selectParallel(edge.id); } });
         link.addEventListener('focus', () => this.reveal(edge.opponent_id));
@@ -967,24 +978,25 @@
       this.live.textContent = this.parallelLinkTitles.get(id)?.title.textContent || this.live.textContent;
       return this;
     }
-    updateParallelEstimate() {
-      this.parallelEstimateGroup?.replaceChildren();
-      if (!this.parallelEstimateGroup || this.tree.overview) return;
-      const edge = this.tree.comparisonEdges.find((item) => item.comparison_ids.includes(this.activeComparisonId)), comparison = this.model.comparisons.find((item) => item.id === this.activeComparisonId);
-      if (!edge || !comparison) return;
-      const { effect } = this.edgeEvidence(edge); if (!effect?.valid) return;
-      const midpoint = this.parallelGeometry.get(edge.id).midpoint, scale = this.camera.scale;
-      const text = `${effect.measure} ${effectNumber(effect.estimate)}`, width = (text.length * 6 + 14) / scale, x = midpoint.x, y = midpoint.y - 12 / scale;
-      this.svgElement('rect', { x: x - width / 2, y: y - 12 / scale, width, height: 19 / scale, rx: 3 / scale }, this.parallelEstimateGroup);
-      this.svgElement('text', { x, y, 'text-anchor': 'middle', 'dominant-baseline': 'middle' }, this.parallelEstimateGroup, text);
-      this.svgElement('title', {}, this.parallelEstimateGroup, text);
-    }
     drawCard(group, node, point) {
       this.svgElement('rect', { x: 0, y: -point.height / 2, width: point.width, height: point.height, rx: 10, class: 'tm-card' }, group);
       this.svgElement('rect', { x: 0, y: -point.height / 2 + 10, width: 3, height: point.height - 20, rx: 1.5, class: 'tm-card-accent' }, group);
-      const label = branchNodeLabel(this.model, this.tree, node.id);
-      this.svgDrugNames(group,node,{x:15,y:-16,class:'tm-card-label'},{relative:true,maxChars:29,maxLines:2});
-      this.svgDrugNames(group,node,{x:12,y:-7,class:'tm-card-compact'},{relative:true,maxChars:20});
+      const parentId = this.tree.parents.get(node.id);
+      if (parentId) {
+        // Follow this branch's order even when the registry sorts the same
+        // combination differently or the user re-roots it at another agent.
+        const steps = [];
+        for (let id=parentId; id; id=this.tree.parents.get(id))
+          steps.unshift(branchNodeLabel(this.model, this.tree, id));
+        const context = this.svgElement('text', {x:15, y:-27, class:'tm-card-regimen'}, group, steps.join(' '));
+        const available = point.width - 30;
+        if (context.getComputedTextLength?.() > available) {
+          context.setAttribute('textLength', available);
+          context.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+        }
+      }
+      this.svgDrugNames(group,node,{x:15,y:parentId?-9:-16,class:'tm-card-label'},{relative:true,maxChars:29,maxLines:2});
+      this.svgDrugNames(group,node,{x:12,y:parentId?0:-7,class:'tm-card-compact'},{relative:true,maxChars:20});
       if (node.type === 'control') {
         this.svgElement('text', { x: 15, y: 24, class: 'tm-card-count' }, group, 'Neutral comparison arm');
         this.svgElement('text', { x: 12, y: 25, class: 'tm-card-compact-count' }, group, 'Control arm');
@@ -1063,6 +1075,18 @@
         // filtered out. Its original estimate never enters the filtered analysis.
         const original=filteredOut?this.edgeEvidence(edge,{active:false,matches:{}}):evidence;
         const {headId,tailId}=original.effect?.valid?original:evidence;
+        if (!this.tree.overview) {
+          const portColor = filteredOut ? 'neutral' : style.state;
+          const dashed = effect?.ciExcludesNull === false;
+          const portKey = tailId + '|' + portColor + '|' + dashed;
+          if (metadata.portKey !== portKey) {
+            const geometry = parallelLinkGeometry(this.tree,edge,tailId,portColor,dashed);
+            this.parallelGeometry.set(edge.id,geometry);
+            metadata.path.setAttribute('d',geometry.path);
+            metadata.hit.setAttribute('d',geometry.path);
+            metadata.portKey = portKey;
+          }
+        }
         element.classList.toggle('tm-filter-muted',!!filteredOut);
         element.classList.toggle('tm-active-comparison', active); element.setAttribute('aria-pressed', String(active));
         element.style.setProperty('--tm-effect-color', style.color);
@@ -1074,10 +1098,11 @@
         metadata.path.setAttribute('marker-start', headId === edge.opponent_id ? arrow : 'none');
         metadata.path.setAttribute('marker-end', headId === edge.root_id ? arrow : 'none');
         const label = filteredOut ? `${this.nodeFor(headId).label} versus ${this.nodeFor(tailId).label}. No matching ${this.endpointDefinition().label} evidence for the selected filters.` : source && effect?.valid ? `${this.nodeFor(headId).label} versus ${this.nodeFor(tailId).label}. ${this.endpointDefinition().label}. ${directedLabel(effect)}. Tail fares ${effect.direction === 'neutral' ? 'neither better nor worse by the point estimate' : effect.direction}. ${group?.pooled ? Charts.modelLabel(group.pooled)+' meta-analysis of '+group.pooled.k+' independent cohorts. '+group.label : 'Individual study, PMID '+source.pmid}. ${ciState===true?'Solid: confidence interval excludes 0 on the log scale.':ciState===false?'Dashed: confidence interval includes 0 on the log scale.':'Solid: a valid confidence interval is unavailable.'} Select a study and outcome.` : `${this.nodeFor(edge.opponent_id).label} versus ${this.nodeFor(edge.root_id).label}. No matching ${this.endpointDefinition().label} estimate; no comparison arrow. Select another endpoint. Custom regimen counts remain unchanged.`;
-        metadata.title.textContent = this.tree.overview ? label : effect?.valid ? `${effect.measure} ${effectNumber(effect.estimate)}` : 'Effect estimate unavailable';
+        metadata.title.textContent = effect?.valid && !filteredOut
+          ? `${this.nodeFor(headId).label} vs ${this.nodeFor(tailId).label} ${effect.measure}=${effectNumber(effect.estimate)}`
+          : 'Effect estimate unavailable';
         element.setAttribute('aria-label', label);
       }
-      this.updateParallelEstimate();
       this.updatePlanningLabels();
       if (this.tree.overview) this.updateOverviewLabels();
       if (this.indirect?.active) this.indirect.decorate();
@@ -1098,17 +1123,24 @@
       for (const id of node.components) { const agent = this.model.byAgent.get(id), badge = this.make('span', 'tm-component-badge', badges, agent?.label || id); badge.dataset.treatmentClass = agent?.class_id || 'other'; }
       const summary = count(node), stats = this.make('div', 'tm-detail-stats', this.details);
       const studies = Number(summary.identified_studies || 0), publications = publicationCount(node), studyStat = this.make('div', '', stats);
-      this.make('strong', '', studyStat, studies ? number(studies) : publications ? number(publications) : '—'); this.make('span', '', studyStat, studies ? 'identified studies' : publications ? 'supporting publications' : node.type === 'drug' ? 'No monotherapy studies' : 'No linked evidence');
-      const nStat = this.make('div', '', stats); this.make('strong', '', nStat, countLabel(node)); this.make('span', '', nStat, ({ calculated: 'calculated participants', partial: 'partial known participants', provisional: 'provisional participants', unresolved: 'arm allocation unresolved' })[summary.status] || 'arm allocation unresolved');
+      this.make('strong', '', studyStat, studies ? number(studies) : publications ? number(publications) : '—'); this.make('span', '', studyStat, studies ? (studies === 1 ? 'identified study' : 'identified studies') : publications ? (publications === 1 ? 'supporting publication' : 'supporting publications') : node.type === 'drug' ? 'No monotherapy studies' : 'No linked evidence');
+      const nStat = this.make('div', '', stats);
+      this.make('strong', '', nStat, countLabel(node));
+      const knownStudies = summary.known_n_studies;
+      let countSource = 'Participants';
+      if (summary.status === 'unresolved') countSource = 'Participant count unavailable';
+      else if (summary.status === 'provisional') countSource = 'N from one publication';
+      else if (Number.isInteger(knownStudies) && knownStudies > 0 && knownStudies <= studies) {
+        countSource = `N from ${number(knownStudies)} ${knownStudies === 1 ? 'study' : 'studies'}`;
+      }
+      this.make('span', '', nStat, countSource);
+      if (!studies && publications) this.make('p', 'tm-count-note', this.details, 'Study linkage pending.');
       if (this.tree.overview) {
-        if (!studies && publications) this.make('p', 'tm-count-note', this.details, 'Study linkage pending.');
         this.button(this.details, 'Open this branch →', () => { const pair = this.selectedComparisonPairId; this.setBranch(node.id); if (pair) this.selectParallel(pair); }, 'tm-button tm-open-branch');
         this.renderEndpointChoice();
         this.renderStudyScope();
         return;
       }
-      const coverage = studies ? `${number(studies)} identified studies; known N from ${number(summary.known_n_studies || 0)} studies.` : publications ? `${studyLabel(node)} for this ${node.type === 'combination' ? 'regimen' : 'agent'}. ${summary.status === 'provisional' ? 'The available participant count is provisional.' : 'A defensible participant total remains unresolved.'}` : '';
-      if (coverage) this.make('p', 'tm-coverage', this.details, coverage);
       if(!Array.isArray(this.model.graph.study_memberships)&&[...this.model.contributions.values()].some(item=>list(item.node_ids).includes(node.id)&&item.inclusive_or_count))this.make('p','tm-count-note tm-or-count-note',this.details,'Includes the full cohort N for alternative treatment assignments (OR). These participants are also credited to the alternative agents; exact drug allocation is unknown.');
       this.make('p', 'tm-count-note', this.details, node.type === 'drug' ? 'Agent counts and studies refer to exact monotherapy arms.' : 'Counts and studies refer to this complete concurrent combination.');
       if (node.first_publication) this.make('p', 'tm-count-note', this.details, 'First publication in this database: ' + node.first_publication);
@@ -1265,7 +1297,7 @@
         for (const edge of this.tree.comparisonEdges) { const geometry = radialComparisonGeometry(this.model, this.tree, edge, scale), metadata = this.parallelLinkTitles.get(edge.id); this.parallelGeometry.set(edge.id, geometry); metadata.path.setAttribute('d', geometry.path); metadata.hit.setAttribute('d', geometry.path); }
         this.updateOverviewLabels();
       }
-      else { this.updateParallelEstimate(); this.updatePlanningLabels(); }
+      else this.updatePlanningLabels();
       if (this.indirect?.active) this.indirect.drawArrow();
     }
     updateOverviewLabels() {
@@ -1291,7 +1323,7 @@
     reveal(id) { const point = this.tree.positions.get(id); if (!point) return; const width = this.stage.clientWidth, height = this.stage.clientHeight, left = point.x * this.camera.scale + this.camera.x, top = point.y * this.camera.scale + this.camera.y, right = left + point.width * this.camera.scale; if (left < 15) this.camera.x += 15 - left; else if (right > width - 15) this.camera.x -= right - width + 15; if (top < 55) this.camera.y += 55 - top; else if (top > height - 55) this.camera.y -= top - height + 55; this.applyCamera(); }
     bindCamera() {
       this.listen(this.stage, 'wheel', (event) => { event.preventDefault(); const rect = this.stage.getBoundingClientRect(); this.zoom(Math.exp(-Math.max(-120, Math.min(120, event.deltaY)) * 0.0025), { x: event.clientX - rect.left, y: event.clientY - rect.top }); }, { passive: false });
-      this.listen(this.stage, 'pointerdown', (event) => { if (event.button !== 0) return; this.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY }); (event.target.closest?.('.tm-node,.tm-parallel-link,.tm-parallel-estimate') || this.stage).setPointerCapture?.(event.pointerId); this.drag = { x: event.clientX, y: event.clientY, distance: 0 }; this.suppressClick = false; if (this.pointers.size === 2) { const points = [...this.pointers.values()]; this.pinchDistance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y); } });
+      this.listen(this.stage, 'pointerdown', (event) => { if (event.button !== 0) return; this.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY }); (event.target.closest?.('.tm-node,.tm-parallel-link') || this.stage).setPointerCapture?.(event.pointerId); this.drag = { x: event.clientX, y: event.clientY, distance: 0 }; this.suppressClick = false; if (this.pointers.size === 2) { const points = [...this.pointers.values()]; this.pinchDistance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y); } });
       this.listen(this.stage, 'pointermove', (event) => {
         if (!this.pointers.has(event.pointerId)) return;
         this.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
