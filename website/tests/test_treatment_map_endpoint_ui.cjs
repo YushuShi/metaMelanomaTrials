@@ -56,6 +56,7 @@ const data = (element, name) => element.getAttribute('data-' + name.replace(/[A-
 function mount(source = graph, options) {
   const doc = { defaultView: { setTimeout }, createElement(tag) { return new Element(tag, this); }, createElementNS(namespace, tag) { return this.createElement(tag); } };
   const root = new Element('div', doc), view = map.mount(root, source, options);
+  view.setBranchLayout('branch');
   view.setBranch('agent:a');
   return { root, view };
 }

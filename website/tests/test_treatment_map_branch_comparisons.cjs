@@ -181,7 +181,7 @@ const descendants = (element) => element.children.flatMap((child) => [child, ...
 const withClass = (element, name) => descendants(element).filter((child) => child.classList.contains(name));
 function mount(source = graph) {
   const doc = { defaultView: { setTimeout }, createElement(tag) { return new Element(tag, this); }, createElementNS(namespace, tag) { return this.createElement(tag); } };
-  return map.mount(new Element('div', doc), source);
+  return map.mount(new Element('div', doc), source).setBranchLayout('branch');
 }
 
 test('mounted descendant comparison selection keeps the full arms and reversed source effect', () => {

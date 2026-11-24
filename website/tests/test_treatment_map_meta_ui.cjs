@@ -56,9 +56,15 @@ const descendants = element => element.children.flatMap(child => [child, ...desc
 const withClass = (element, name) => descendants(element).filter(child => child.classList.contains(name));
 const data = (element, name) => element.getAttribute('data-' + name.replace(/[A-Z]/g, letter => '-' + letter.toLowerCase())) ?? element.dataset[name];
 const hasArrow = path => ['marker-start', 'marker-end'].some(attribute => /^url\(/.test(path.getAttribute(attribute) || ''));
-function mount(source = graph) {
+function freshMap(source = graph) {
   const doc = { defaultView: { setTimeout }, createElement(tag) { return new Element(tag, this); }, createElementNS(namespace, tag) { return this.createElement(tag); } };
-  const view = map.mount(new Element('div', doc), source); view.setBranch('all'); return view;
+  return map.mount(new Element('div', doc), source);
+}
+function mount(source = graph) {
+  const view = freshMap(source);
+  view.setBranchLayout('branch');
+  view.setBranch('all');
+  return view;
 }
 function pair(view, tail, head) {
   const edge = view.tree.comparisonEdges.find(item => item.root_id === tail && item.opponent_id === head);
@@ -568,6 +574,32 @@ test('clinical filters mute exact nodes independently of their arrows and preser
  v.setAdvancedFilters({active:false,matches:{}});
  assert.equal(withClass(v.world,'tm-filter-muted').length,0);
  assert.ok(v.edgeEvidence(pair(v,'agent:a','ab').edge).effect?.valid);
+});
+
+test('Radial branch opens first and switching to Treatment map preserves the selected treatment and endpoint', () => {
+  const view = freshMap();
+  const radial = view.layoutButtons.get('radial');
+  const treatment = view.layoutButtons.get('branch');
+  assert.equal(radial.textContent, 'Radial branch');
+  assert.equal(treatment.textContent, 'Treatment map');
+  assert.equal(radial.getAttribute('aria-pressed'), 'true');
+  assert.equal(treatment.getAttribute('aria-pressed'), 'false');
+  assert.equal(view.radialHost.hidden, false);
+  assert.ok(withClass(view.radialHost, 'rb-family-agent').length);
+
+  view.setBranch('agent:b');
+  view.setEndpoint('DFS:HR');
+  treatment.click();
+  assert.equal(treatment.getAttribute('aria-pressed'), 'true');
+  assert.equal(radial.getAttribute('aria-pressed'), 'false');
+  assert.equal(view.radialHost.hidden, true);
+  assert.equal(view.branchId, 'agent:b');
+  assert.equal(view.selectedEndpoint, 'DFS:HR');
+  radial.click();
+  assert.equal(radial.getAttribute('aria-pressed'), 'true');
+  assert.equal(view.radialHost.hidden, false);
+  assert.equal(view.branchId, 'agent:b');
+  assert.equal(view.selectedEndpoint, 'DFS:HR');
 });
 
 test('the radial branch toolbar provides branch, comparison, endpoint, planning and evidence controls in order', () => {

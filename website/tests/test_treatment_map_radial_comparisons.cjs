@@ -142,6 +142,7 @@ test('Open this branch carries the selected radial pair to the full comparison d
   assert.equal(view.comparisonBand.hidden, false); assert.match(view.comparisonBand.textContent, /Study estimate/);
   assert.match(view.comparisonBand.textContent, /HR 0\.8/);
   assert.match(view.branchTitle.textContent, /A \+ B branch/);
+  view.layoutButtons.get('branch').click();
   for (const link of view.parallelLinks.values()) assert.match(withClass(link, 'tm-parallel-edge')[0].getAttribute('d'), /C|Q/, 'branch comparison lines stay curved');
   assert.deepEqual(visibleLegendStates(view), ['better', 'worse']);
   view.setBranch('all'); assert.equal(view.selectedEndpoint, 'PFS:HR'); assert.equal(view.endpointSelector.value, 'PFS:HR');

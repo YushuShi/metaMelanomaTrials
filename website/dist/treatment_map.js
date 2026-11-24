@@ -511,7 +511,7 @@
       this.exactNodeBrowse=Array.isArray(graph.study_memberships)&&typeof this.options.renderNodeStudies==='function'; this.selectionMode='node';
       this.directParallelIds = new Set(preparedDefaults(graph)?.direct_parallel_ids||directParallelNodeIds(this.model));
       this.selectedEndpoint = 'OS:HR'; this.selectedComparisonByPair = new Map();
-      this.branchLayout = 'branch';
+      this.branchLayout = 'radial';
       this.studyScope = 'all'; this.analysisCache = new Map();
       this.inclusionOverrides = {}; this.inclusionOrder = []; this.advanced = this.options.advanced || {active:false,matches:{}};
       this.planningEnabled = false; this.planningSettings = Planning.indirectSettings(this.options.planningSettings); this.analysisTab = 'comparison';
@@ -562,7 +562,7 @@
       const layouts = this.make('div', 'tm-layout-switch', title);
       layouts.setAttribute('role', 'group'); layouts.setAttribute('aria-label', 'Treatment branch layout');
       this.layoutButtons = new Map();
-      for (const [key, label] of [['branch', 'Branch'], ['radial', 'Radial branch']]) {
+      for (const [key, label] of [['radial', 'Radial branch'], ['branch', 'Treatment map']]) {
         const button = this.button(layouts, label, () => this.setBranchLayout(key), 'tm-layout-button');
         this.layoutButtons.set(key, button);
       }

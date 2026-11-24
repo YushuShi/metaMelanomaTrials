@@ -2,7 +2,7 @@
   "schema_version": 1,
   "repository": "https://github.com/YushuShi/metaMelanomaTrials",
   "visibility": "public",
-  "built_at": "2026-11-24T19:48:09.645238+00:00",
+  "built_at": "2026-11-24T20:29:24.261945+00:00",
   "scientific_snapshot_changed": false,
   "files": [
     {
@@ -502,11 +502,11 @@
     },
     {
       "path": "docs/TREATMENT_MAP.md",
-      "sha256": "9ba2e3632a81fd4141c5c4595db909a279147ae42aec596521d1cb6ed665ddf1",
-      "bytes": 54483,
+      "sha256": "5ad202e8a605fb49ececd840e0555cec5f9bd4bc11c4200977200bbea61489ba",
+      "bytes": 54479,
       "original_path": "docs/TREATMENT_MAP.md",
-      "original_sha256": "9ba2e3632a81fd4141c5c4595db909a279147ae42aec596521d1cb6ed665ddf1",
-      "original_bytes": 54483,
+      "original_sha256": "5ad202e8a605fb49ececd840e0555cec5f9bd4bc11c4200977200bbea61489ba",
+      "original_bytes": 54479,
       "gzip": false
     },
     {
@@ -1915,20 +1915,20 @@
     },
     {
       "path": "website/dist/data/treatment_map_default.json.gz",
-      "sha256": "c0130adb12d44aa7b3d4ca8d793d15b5923e84082c3e4c5699bffef0b535a2cc",
-      "bytes": 3565676,
+      "sha256": "843b0d28e01ee78d7e342d843c0eefac3858709db0dcf10e75a110f87c88b9e8",
+      "bytes": 3565677,
       "original_path": "website/dist/data/treatment_map_default.json",
-      "original_sha256": "c3bf6975c2ebdc910796e8090c941e2735e1fc4e659b8b66e03ddc6d5c4134ac",
-      "original_bytes": 29031198,
+      "original_sha256": "5f3c938279e8e42d749a33b4864de55d5934a26b58c847031305daa32c44c656",
+      "original_bytes": 29031199,
       "gzip": true
     },
     {
       "path": "website/dist/data/treatment_map_version.json.gz",
-      "sha256": "07623f567f72e3c000c94a09031cc551f7753f01f19a1cf36fe53138a08ce6e1",
-      "bytes": 4103,
+      "sha256": "a84e53862efe7adc9c31702d76e04d2bb9a296f5edcf794ae6286841a15f63a3",
+      "bytes": 4107,
       "original_path": "website/dist/data/treatment_map_version.json",
-      "original_sha256": "fcb839bda432baa80c5989848adb88f25f307e33bdebd5399999bee9322582c9",
-      "original_bytes": 9730,
+      "original_sha256": "70adacd81b49001d36707710b689c57b89421e258ec5e036bc28a6a05733e1fb",
+      "original_bytes": 9731,
       "gzip": true
     },
     {
@@ -2248,11 +2248,11 @@
     },
     {
       "path": "website/dist/treatment_map.js",
-      "sha256": "33b9a0066388ca62de47fcca165c58937d41c6ac0ed45e29fc5c2227a694dbd5",
-      "bytes": 135844,
+      "sha256": "9bdd648234204744e65c81dffb180f72b590908f233129120598ef348b1c2a0d",
+      "bytes": 135851,
       "original_path": "website/dist/treatment_map.js",
-      "original_sha256": "33b9a0066388ca62de47fcca165c58937d41c6ac0ed45e29fc5c2227a694dbd5",
-      "original_bytes": 135844,
+      "original_sha256": "9bdd648234204744e65c81dffb180f72b590908f233129120598ef348b1c2a0d",
+      "original_bytes": 135851,
       "gzip": false
     },
     {
@@ -3355,11 +3355,11 @@
     },
     {
       "path": "website/tests/test_treatment_map.cjs",
-      "sha256": "ed9e95a6401929ee0bee78b49e4f9c77356d90f84f6a23d8842c94e03f3a5ca9",
-      "bytes": 38805,
+      "sha256": "6b6341608ed9fecb31550be9b5e633b5c6b79aae185f8efa8ddb2e99ed8ea68b",
+      "bytes": 38846,
       "original_path": "website/tests/test_treatment_map.cjs",
-      "original_sha256": "ed9e95a6401929ee0bee78b49e4f9c77356d90f84f6a23d8842c94e03f3a5ca9",
-      "original_bytes": 38805,
+      "original_sha256": "6b6341608ed9fecb31550be9b5e633b5c6b79aae185f8efa8ddb2e99ed8ea68b",
+      "original_bytes": 38846,
       "gzip": false
     },
     {
@@ -3382,11 +3382,11 @@
     },
     {
       "path": "website/tests/test_treatment_map_branch_comparisons.cjs",
-      "sha256": "cbd545db0617c461d683bdb2aba39f9ca9e42256689a61cc9faa8eff0ffe96f9",
-      "bytes": 28063,
+      "sha256": "97f377fd63acfad695646b6a9bd53397bb4dbd3eeb449dfebf2f848dfa4803d8",
+      "bytes": 28089,
       "original_path": "website/tests/test_treatment_map_branch_comparisons.cjs",
-      "original_sha256": "cbd545db0617c461d683bdb2aba39f9ca9e42256689a61cc9faa8eff0ffe96f9",
-      "original_bytes": 28063,
+      "original_sha256": "97f377fd63acfad695646b6a9bd53397bb4dbd3eeb449dfebf2f848dfa4803d8",
+      "original_bytes": 28089,
       "gzip": false
     },
     {
@@ -3454,11 +3454,11 @@
     },
     {
       "path": "website/tests/test_treatment_map_endpoint_ui.cjs",
-      "sha256": "037a7e76ad43881fd203938f596b693254c25f123f2526ad745fd2bda063d2d6",
-      "bytes": 38658,
+      "sha256": "1bb3ca70bf1984321da19cdd31fcd71329714feab6f02636f181cda5fd2b72e3",
+      "bytes": 38692,
       "original_path": "website/tests/test_treatment_map_endpoint_ui.cjs",
-      "original_sha256": "037a7e76ad43881fd203938f596b693254c25f123f2526ad745fd2bda063d2d6",
-      "original_bytes": 38658,
+      "original_sha256": "1bb3ca70bf1984321da19cdd31fcd71329714feab6f02636f181cda5fd2b72e3",
+      "original_bytes": 38692,
       "gzip": false
     },
     {
@@ -3481,11 +3481,11 @@
     },
     {
       "path": "website/tests/test_treatment_map_meta_ui.cjs",
-      "sha256": "75fe67c0a8659de82540d9ec56b4b90a53df09e56c122ac945161806e851fff2",
-      "bytes": 64156,
+      "sha256": "4b2240b09486dd015310cff0ba5615b901c5c2f6f520326b9f1e3cf1d78973b2",
+      "bytes": 65425,
       "original_path": "website/tests/test_treatment_map_meta_ui.cjs",
-      "original_sha256": "75fe67c0a8659de82540d9ec56b4b90a53df09e56c122ac945161806e851fff2",
-      "original_bytes": 64156,
+      "original_sha256": "4b2240b09486dd015310cff0ba5615b901c5c2f6f520326b9f1e3cf1d78973b2",
+      "original_bytes": 65425,
       "gzip": false
     },
     {
@@ -3526,11 +3526,11 @@
     },
     {
       "path": "website/tests/test_treatment_map_radial_comparisons.cjs",
-      "sha256": "47638b1d228aca2130e0e280e0fb7d938de25d127b4e559ce07f41fac5a86a65",
-      "bytes": 16875,
+      "sha256": "554385d03660e8641eb79d61c5d7611e74dc33452bfd87f2a7c88d2ed0a6959a",
+      "bytes": 16919,
       "original_path": "website/tests/test_treatment_map_radial_comparisons.cjs",
-      "original_sha256": "47638b1d228aca2130e0e280e0fb7d938de25d127b4e559ce07f41fac5a86a65",
-      "original_bytes": 16875,
+      "original_sha256": "554385d03660e8641eb79d61c5d7611e74dc33452bfd87f2a7c88d2ed0a6959a",
+      "original_bytes": 16919,
       "gzip": false
     },
     {

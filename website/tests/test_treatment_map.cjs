@@ -163,7 +163,8 @@ function mountedFixture(source = graph, options) {
     { id: 'included', node_ids: ['agent:a', 'ab'], n: 100, pmid: '123', arm_label: 'A + B' },
     { id: 'withheld', relevant_node_ids: ['agent:a', 'ab'], node_ids: [], n: null, available_n: 30, pmid: '456' },
   ] };
-  return { root, view: map.mount(root, fixture, options), fixture };
+  const view = map.mount(root, fixture, options).setBranchLayout('branch');
+  return { root, view, fixture };
 }
 const descendants = (element) => element.children.flatMap((child) => [child, ...descendants(child)]);
 const withClass = (element, name) => descendants(element).filter((child) => child.classList.contains(name));

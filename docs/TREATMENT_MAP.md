@@ -30,8 +30,8 @@ statistics and planning run locally using the separately tested modules below.
 
 ### Radial branch
 
-Use **Branch | Radial branch** beside **Advanced filter** to change the layout
-of an open branch. Branch is the default. To return to the catalogue-wide
+The app opens in **Radial branch**. Select **Treatment map** beside
+**Radial branch** to switch to the horizontal layout. To open the catalogue-wide
 overview, select **All treatments · radial overview** under **Explore a treatment
 branch**. Both branch layouts share the selected endpoint, clinical filters,
 comparison and cohort inclusions.
