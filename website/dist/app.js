@@ -10,6 +10,7 @@
   const sampleDisplay = typeof module === 'object' && module.exports ? require('./evidence_display.js') : globalThis.EvidenceDisplay;
   const melanomaScope = typeof module === 'object' && module.exports ? require('./melanoma_scope.js') : globalThis.MelanomaScope;
   const trialIdentifiers = typeof module === 'object' && module.exports ? require('./trial_identifiers.js') : globalThis.TrialIdentifiers;
+  const trialSearch = typeof module === 'object' && module.exports ? require('./trial_search.js') : globalThis.TrialSearch;
   const confidenceIntervals = typeof module === 'object' && module.exports ? require('./confidence_intervals.js') : globalThis.ConfidenceIntervals;
   const waldInterval = typeof module === 'object' && module.exports ? require('./wald_interval.js') : globalThis.WaldInterval;
   const compactExtraction = typeof module === 'object' && module.exports ? require('./quantitative_extraction.js') : globalThis.QuantitativeExtraction;
@@ -1276,6 +1277,24 @@
     if(study.quantitative_only===true&&compactExtraction)return compactExtraction.trialIdentifiers(study);
     return trialIdentifiers?.get(study,{registry})||{trial_label:'NA',nct_label:'NA',names:[],nct_ids:[],provenance:[]};
   }
+  const studySearchCache = new WeakMap();
+  function studyTrialSearchIndex(match, registry) {
+    const study = match.study;
+    const source = match.prepared_trial || registry;
+    let cached = studySearchCache.get(study);
+    if (!cached || cached.source !== source) {
+      const trial = match.prepared_trial || studyTrialIdentifiers(study, {registry});
+      const names = trial.names?.length ? trial.names : (trial.trial_label || '').split(';');
+      const nct = trial.nct_ids?.length ? trial.nct_ids : (trial.nct_label || '').split(';');
+      cached = {source, index:trialSearch.index({names, nct, pmid:study.pmid})};
+      studySearchCache.set(study, cached);
+    }
+    return cached.index;
+  }
+  function filterStudyTrials(matches, query, registry) {
+    if (!query?.trim()) return matches;
+    return matches.filter(match => trialSearch.matches(studyTrialSearchIndex(match, registry), query));
+  }
   function orderedStudyResults(rows) {
     const score = (row) => (row.analysis?.contrast_type === 'treatment_comparison' ? 100 : 0) + (['HR','RR','OR','RD','MD','SMD'].includes(displayMeasure(row)) ? 30 : displayMeasure(row) === 'ORR' ? 20 : 0) + (row.estimate?.status === 'reported' ? 2 : 0) + (row.ci_lower?.status === 'reported' && row.ci_upper?.status === 'reported' ? 5 : 0);
     return rows.map((row,index)=>({row,index})).sort((a,b)=>score(b.row)-score(a.row)||a.index-b.index).map(({row})=>row);
@@ -1515,7 +1534,7 @@
     const placebo=description.components?.length>1&&description.placebo?' <span class="treatment-placebo">(+placebo)</span>':'';
     return treatmentRegimen(content+placebo,addOn);
   }
-  const api = Object.freeze({ armTag, exactBrowsePair, completeArmKey, treatmentBadge, treatmentRegimen, savedTreatmentTag, studyDesignInfo:study=>studyDesign.designInfo(study), abstractOnly:study=>studyDesign.abstractOnly(study), specialOutcomeDetails:(study,options)=>studyDesign.specialOutcomeDetails(study,options), survivalEndpointLabels, responseEndpointLabels, endpointLabel, endpointOptionLabel, reportedHazardRatio, reportedSurvivalEndpoint, derivedInterval, studyTrialIdentifiers, studyTableData, studyTablePresentation, studyTablePresentationRows, studyOutcomeChoices, hasPairedArmCounts, visibleStudyMatches, conciseTreatmentLabel, studyTableCSV, tableEndpoint, tableValue, studyTreatmentRows, interventionPresentation, interventionGroupLabels, regimenDescription, advancedPopulationMatch, advancedArmSettings, advancedBrowseOptions, advancedAnalysisOptions, treatmentClass, additionalPresentation, additionalGroupLabels, defaultEffectMeasure, isORRResult, treatmentSelectionMatches, resultMatches, semanticExtractionStatus, articleStatusLabel, scopedStudies, studyResults, mainResultEligible, displayEndpointFamily, orderedStudyResults, compactClinicalResult, compactContrast, reportedStudyCounts, reportedCountLabel, displayMeasure, comparatorKey, comparatorPresentation, comparatorDisplayLabel, comparatorGroupLabels, additionalDrugIds, additionalInterestIds, comparisonBrowseEligible, studyComparisons, filterStudies, constrainStudyChoices, sortStudyRows, colors, dotRadius, independentCount, savedPoolingMetadata, direction, matrixEligible, validEstimate, endpointKind, relevantMeasures, ancestorClosure, diseaseMatches, joinR2Articles, filterR2Articles, joinProvisionalStudies, filterProvisionalStudies, joinQuantitativeResults, joinQuantitativeSamples, quantitativeText, reportedNumber, confidence95, quantitativeMeasure, populationCountIsContext, filterQuantitativeResults, quantitativeBrowseEvidence, studyArticles, evidenceIndex, availableCombination, reconcileEvidenceSelection, forestSvg, funnelSvg, sampleSizeSvg });
+  const api = Object.freeze({ armTag, exactBrowsePair, completeArmKey, treatmentBadge, treatmentRegimen, savedTreatmentTag, studyDesignInfo:study=>studyDesign.designInfo(study), abstractOnly:study=>studyDesign.abstractOnly(study), specialOutcomeDetails:(study,options)=>studyDesign.specialOutcomeDetails(study,options), survivalEndpointLabels, responseEndpointLabels, endpointLabel, endpointOptionLabel, reportedHazardRatio, reportedSurvivalEndpoint, derivedInterval, studyTrialIdentifiers, studyTrialSearchIndex, filterStudyTrials, studyTableData, studyTablePresentation, studyTablePresentationRows, studyOutcomeChoices, hasPairedArmCounts, visibleStudyMatches, conciseTreatmentLabel, studyTableCSV, tableEndpoint, tableValue, studyTreatmentRows, interventionPresentation, interventionGroupLabels, regimenDescription, advancedPopulationMatch, advancedArmSettings, advancedBrowseOptions, advancedAnalysisOptions, treatmentClass, additionalPresentation, additionalGroupLabels, defaultEffectMeasure, isORRResult, treatmentSelectionMatches, resultMatches, semanticExtractionStatus, articleStatusLabel, scopedStudies, studyResults, mainResultEligible, displayEndpointFamily, orderedStudyResults, compactClinicalResult, compactContrast, reportedStudyCounts, reportedCountLabel, displayMeasure, comparatorKey, comparatorPresentation, comparatorDisplayLabel, comparatorGroupLabels, additionalDrugIds, additionalInterestIds, comparisonBrowseEligible, studyComparisons, filterStudies, constrainStudyChoices, sortStudyRows, colors, dotRadius, independentCount, savedPoolingMetadata, direction, matrixEligible, validEstimate, endpointKind, relevantMeasures, ancestorClosure, diseaseMatches, joinR2Articles, filterR2Articles, joinProvisionalStudies, filterProvisionalStudies, joinQuantitativeResults, joinQuantitativeSamples, quantitativeText, reportedNumber, confidence95, quantitativeMeasure, populationCountIsContext, filterQuantitativeResults, quantitativeBrowseEvidence, studyArticles, evidenceIndex, availableCombination, reconcileEvidenceSelection, forestSvg, funnelSvg, sampleSizeSvg });
   if (typeof window !== 'undefined') window.MetaSampleSizeCharts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })();
@@ -1580,7 +1599,8 @@ if (typeof document !== 'undefined') (() => {
       underpoweredController=globalThis.UnderpoweredStudies.mount(panel, data,
         (heading,body,evidence,change)=>mountTabAdvanced(heading,body,'underpowered-advanced',evidence,change),state.settings.power);
     } },
-    'new-findings': { path: './data/new_findings.json', render: (panel, data) => globalThis.NewFindings.render(panel, data) }
+    'new-findings': { path: './data/new_findings.json', render: (panel, data) => globalThis.NewFindings.render(panel, data) },
+    'phase-comparison': { path: './data/phase_comparison.json', render: (panel, data) => globalThis.PhaseComparison.render(panel, data) }
   };
   const tabLoads = new Map();
 
@@ -2213,31 +2233,36 @@ if (typeof document !== 'undefined') (() => {
   }
   function treatmentTag(label,addOn=false,definition=null){return charts.armTag(label,addOn,definition);}
   function armTreatmentTag(label,addOn,definition,n,prepared){return (prepared??treatmentTag(label,addOn,definition))+(Number.isInteger(n)&&n>=0?` <span class="treatment-arm-n">(N=${number.format(n)})</span>`:'');}
-  function studyRowsHTML(rows,{include_missing_n=false,show_pmid=false,node_table=false}={}){
+  function studyRowsHTML(rows,{include_missing_n=false,show_pmid=false,node_table=false,trialQuery=''}={}){
     return rows.map(match=>{
       const study=match.study,nonTrial=match.prepared_design??charts.studyDesignInfo(study).is_non_trial,abstractOnly=match.prepared_abstract??charts.abstractOnly(study),contrasts=match.presentation_rows||charts.studyTablePresentationRows(match,{registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels,include_missing_n}),trial=match.prepared_trial||charts.studyTrialIdentifiers(study,{registry:state.scopedPayload?.evidence_registry||{}});
+      const trialName = trialQuery.trim()
+        ? globalThis.TrialSearch.displayName(charts.studyTrialSearchIndex(match, state.scopedPayload?.evidence_registry), trialQuery, trial.trial_label)
+        : trial.trial_label;
       return contrasts.map((contrast,index)=>{
         const cells=studyTableCells({...match,...contrast}),settings=charts.advancedArmSettings(match,contrast),settingNote=label=>label?`<span class="treatment-setting-note">${escape(label)}</span>`:'';
         const title=study.report_id?`<button class="study-title" data-open="${escape(study.report_id)}">${escape(study.title)}${abstractOnly?'<sup class="abstract-only-mark" title="Results based on abstract only" aria-label="Abstract only">*</sup>':''}</button>`:external(pubmedLink(study.pmid),study.title);
         const related=node_table&&match.related_report_count>1?`<small class="tm-related-report">${match.related_report_count} reports for this study</small>`:'';
         const n=include_missing_n&&['NA','—',''].includes(cells.sample_size)?'Unavailable':cells.sample_size;
-        return `<tr class="${index?'study-treatment-row':'study-start'}${nonTrial?' study-nontrial':''}" data-pmid="${escape(study.pmid||'')}">${index?'':`<td rowspan="${contrasts.length}">${title}${related}${(match.prepared_status??charts.articleStatusLabel(study))?`<small> ${escape(match.prepared_status??charts.articleStatusLabel(study))}</small>`:''}</td><td rowspan="${contrasts.length}">${escape(study.author_display||(study.first_author_surname?`${study.first_author_surname} et al.`:'—'))}</td><td rowspan="${contrasts.length}">${escape(study.year??'—')}</td>${show_pmid?`<td rowspan="${contrasts.length}">${study.pmid?external(pubmedLink(study.pmid),study.pmid):'—'}</td>`:''}<td rowspan="${contrasts.length}">${escape(trial.trial_label)}</td><td rowspan="${contrasts.length}" class="study-nct-cell">${escape(trial.nct_label)}</td>`}<td class="study-group-cell">${escape(cells.group||'—')}</td><td>${armTreatmentTag(contrast.comparator_label,false,contrast.comparator_definition,contrast.comparator_n,contrast.prepared_arms?.[0])}${settingNote(settings.comparator)}</td><td>${armTreatmentTag(contrast.intervention_label,contrast.is_add_on,contrast.intervention_definition,contrast.intervention_n,contrast.prepared_arms?.[1])}${settingNote(settings.intervention)}</td><td>${n}</td><td class="study-effect-cell">${cells.effect}</td></tr>`;
+        return `<tr class="${index?'study-treatment-row':'study-start'}${nonTrial?' study-nontrial':''}" data-pmid="${escape(study.pmid||'')}">${index?'':`<td rowspan="${contrasts.length}">${title}${related}${(match.prepared_status??charts.articleStatusLabel(study))?`<small> ${escape(match.prepared_status??charts.articleStatusLabel(study))}</small>`:''}</td><td rowspan="${contrasts.length}">${escape(study.author_display||(study.first_author_surname?`${study.first_author_surname} et al.`:'—'))}</td><td rowspan="${contrasts.length}">${escape(study.year??'—')}</td>${show_pmid?`<td rowspan="${contrasts.length}">${study.pmid?external(pubmedLink(study.pmid),study.pmid):'—'}</td>`:''}<td rowspan="${contrasts.length}">${escape(trialName)}</td><td rowspan="${contrasts.length}" class="study-nct-cell">${escape(trial.nct_label)}</td>`}<td class="study-group-cell">${escape(cells.group||'—')}</td><td>${armTreatmentTag(contrast.comparator_label,false,contrast.comparator_definition,contrast.comparator_n,contrast.prepared_arms?.[0])}${settingNote(settings.comparator)}</td><td>${armTreatmentTag(contrast.intervention_label,contrast.is_add_on,contrast.intervention_definition,contrast.intervention_n,contrast.prepared_arms?.[1])}${settingNote(settings.intervention)}</td><td>${n}</td><td class="study-effect-cell">${cells.effect}</td></tr>`;
       }).join('');
     }).join('');
   }
-  function renderStudies(resetPage = true) {
+  function renderStudies(resetPage = true, tableOnly = false) {
     if (!$('scoped-studies-rows')) return;
     const prepared=state.studyPreview?.active && !state.studyPreview.hydrating ? state.studyPreview.data : null;
-    if(!prepared){renderStudyIndirect();renderAdvancedFilters();}
+    if(!prepared && !tableOnly){renderStudyIndirect();renderAdvancedFilters();}
     const current=prepared?null:advancedEvidence(),loading=state.loading&&!prepared;
-    const rows = prepared?charts.sortStudyRows(prepared.rows,state.scopedSort||'year',state.scopedOrder||'desc'): charts.sortStudyRows(current.visibleMatches||charts.visibleStudyMatches(current.matches,{registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels}), state.scopedSort || 'year', state.scopedOrder || 'desc');
+    const registry = state.scopedPayload?.evidence_registry;
+    const visible = prepared ? prepared.rows : current.visibleMatches || charts.visibleStudyMatches(current.matches,{registry,labels:state.drugLabels});
+    const rows = charts.sortStudyRows(charts.filterStudyTrials(visible, state.studyTrialQuery, registry), state.scopedSort || 'year', state.scopedOrder || 'desc');
     const size = 10, pages = Math.max(1, Math.ceil(rows.length / size));
     state.scopedPage = resetPage ? 1 : Math.max(1, Math.min(state.scopedPage || 1, pages));
     const start = (state.scopedPage - 1) * size;
     $('download-study-table').disabled=loading||!rows.length;
     if($('trial-only-toggle')){$('trial-only-toggle').disabled=loading;$('trial-only-toggle').setAttribute('aria-pressed',String(state.trialsOnly===true));}
     text('scoped-studies-count', loading ? '' : `${number.format(rows.length)} ${rows.length===1?'report':'reports'}`);
-    $('scoped-studies-rows').innerHTML = loading ? '<tr><td colspan="10">Loading studies…</td></tr>' : studyRowsHTML(rows.slice(start,start+size)) || '<tr><td colspan="10">No studies match these selections.</td></tr>';
+    $('scoped-studies-rows').innerHTML = loading ? '<tr><td colspan="10">Loading studies…</td></tr>' : studyRowsHTML(rows.slice(start,start+size),{trialQuery:state.studyTrialQuery}) || '<tr><td colspan="10">No studies match these selections.</td></tr>';
     text('scoped-studies-range', rows.length ? `${number.format(start+1)}–${number.format(Math.min(start+size,rows.length))} of ${number.format(rows.length)}` : '0 reports');
     text('scoped-studies-page', `Page ${state.scopedPage} of ${number.format(pages)}`);
     $('scoped-studies-previous').disabled = loading || state.scopedPage <= 1;
@@ -2249,7 +2274,8 @@ if (typeof document !== 'undefined') (() => {
     }
   }
   function downloadStudyTable() {
-    const rows=charts.sortStudyRows(advancedEvidence().matches,state.scopedSort||'year',state.scopedOrder||'desc');
+    const matches=charts.filterStudyTrials(advancedEvidence().matches,state.studyTrialQuery,state.scopedPayload?.evidence_registry);
+    const rows=charts.sortStudyRows(matches,state.scopedSort||'year',state.scopedOrder||'desc');
     const csv=charts.studyTableCSV(rows,{registry:state.scopedPayload?.evidence_registry||{},labels:state.drugLabels});
     const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
     const link=document.createElement('a');link.href=url;link.download='metaMelanomaTrials-studies.csv';document.body.appendChild(link);link.click();link.remove();
@@ -2871,6 +2897,13 @@ if (typeof document !== 'undefined') (() => {
     if (matrix) showMatrixDetails(matrix.dataset.matrixGroup.split(',').map(Number));
   });
   window.addEventListener('hashchange', () => showView(location.hash.slice(1), true));
+  const studySearchHost=$('studies-trial-search');
+  studySearchHost.innerHTML=globalThis.TrialSearch.field('Studies');
+  const studySearchInput=studySearchHost.querySelector('[data-trial-search]');
+  studySearchInput.addEventListener('input',()=>{
+    state.studyTrialQuery=studySearchInput.value;
+    renderStudies(true,true);
+  });
   $('download-study-table').addEventListener('click',()=>withStudyDetails(downloadStudyTable));
   $('trial-only-toggle')?.addEventListener('click',()=>withStudyDetails(()=>{state.trialsOnly=!state.trialsOnly;refreshStudyChoices();renderAnalysis();renderSummary();renderMatrix();renderPlanning();}));
   $('scoped-studies-previous').addEventListener('click',()=>{state.scopedPage--;renderStudies(false);});

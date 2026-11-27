@@ -51,6 +51,10 @@ main{width:100%;max-width:none;min-height:calc(100vh - 78px);padding:28px 28px 1
 .analysis-tabs{margin-bottom:14px}
 .analysis-tabs{flex-wrap:wrap}
 .evidence-tab-heading{display:flex;align-items:center;flex-wrap:wrap;gap:14px}
+.trial-search{position:relative;display:inline-flex;align-items:center;max-width:100%;min-width:0;color:var(--muted,#565656)}
+.trial-search > .icon{position:absolute;left:10px;width:15px;height:15px;pointer-events:none}
+.trial-search input[type=search]{box-sizing:border-box;min-width:0;width:15rem;max-width:100%;min-height:34px;padding:6px 9px 6px 32px;border:1px solid var(--line,#ccc);border-radius:5px;background:white;color:var(--ink,#222);font:inherit;font-size:13px}
+.trial-search input[type=search]:focus-visible{outline:2px solid var(--ink,#222);outline-offset:2px}
 .evidence-tab .panel-heading{align-items:center;flex-wrap:wrap}
 .evidence-tab .evidence-tab-note{color:#555;font-size:12px;line-height:1.55;margin:12px 22px}
 .evidence-tab .panel-heading .evidence-tab-note{margin:4px 0 0}
@@ -75,8 +79,14 @@ main{width:100%;max-width:none;min-height:calc(100vh - 78px);padding:28px 28px 1
 .evidence-tab-table td small{display:block;margin-top:3px;color:#5f6366;font-size:12px}
 .evidence-tab-table details{margin-top:5px}
 .evidence-tab-table summary,.evidence-tab details>summary{cursor:pointer}
-.evidence-threshold{display:inline-flex;align-items:center;gap:8px;font-size:13px}
-.evidence-threshold input{width:6.5em;padding:6px 8px;border:1px solid #aaa;border-radius:4px;font:inherit}
+[data-power-heading]{flex-wrap:nowrap;max-width:100%}
+.power-filters{display:flex;align-items:flex-end;gap:10px;max-width:100%}
+.evidence-threshold{display:grid;gap:3px;min-width:0;font-size:12px;font-weight:600}
+.evidence-threshold input{box-sizing:border-box;width:100%;min-width:0;height:34px;padding:6px 8px;border:1px solid #aaa;border-radius:4px;font:inherit;font-weight:400}
+@media(max-width:700px){
+  .power-filters{display:grid;grid-template-columns:minmax(0,1.65fr) repeat(2,minmax(0,1fr));width:100%;gap:8px}
+  .power-filters .trial-search input[type=search]{width:100%}
+}
 @media(max-width:700px){.evidence-tab-table{font-size:12px}.evidence-tab-table th,.evidence-tab-table td{padding:8px 10px}.evidence-tab .evidence-tab-note{margin-inline:14px}}
 .analysis-tabs button{font-size:12px;padding:11px 17px}
 .panel-heading{padding:18px 20px;gap:14px}

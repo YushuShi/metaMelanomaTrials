@@ -24,9 +24,10 @@ test('each binary follow-up qualifies independently and the displayed range uses
   ]};
   const data={schema_version:2,rows:[followUp]};
   const control=()=>({value:'100',addEventListener(event,handle){this[event]=handle;}});
-  const events=control(),participants=control(),results={addEventListener(){}};
+  const events=control(),participants=control(),search=control(),results={addEventListener(){}};
+  search.value='';
   const panel={querySelector:selector=>({
-    '[data-event-threshold]':events,'[data-participant-threshold]':participants,'[data-power-results]':results
+    '[data-event-threshold]':events,'[data-participant-threshold]':participants,'[data-power-results]':results,'[data-trial-search]':search
   })[selector]};
   let reportCount;
   mount(panel,data,(_heading,_panel,getEvidence)=>{
@@ -93,10 +94,42 @@ test('a matching full-text effect binds its own population and control rate to a
   rate.cutoff=null;late.estimate=.97;assert.deepEqual(graphScenarios(early,article,[comparison]),[]);
 });
 test('empty release is supported',()=>assert.deepEqual(build({articles:[]},null).rows,[]));
+
+test('trial searches limit eligible effect rows and advanced filter counts without relaxing cutoffs',()=>{
+  const control=value=>({value,addEventListener(type,fn){this[type]=fn;}});
+  const search=control(''), events=control('100'), participants=control('100'), output={addEventListener(){}};
+  const panel={querySelector:s=>({'[data-trial-search]':search,'[data-event-threshold]':events,
+    '[data-participant-threshold]':participants,'[data-power-results]':output})[s]};
+  const first={...row,pmid:'17',measure:'HR',estimate:.5,n:null,scenarios:[],
+    trial:'NEON-2',nct:'NCT04920383',filter_binding:{pmid:'17',result_id:'first'}};
+  const second={...first,pmid:'18',trial:'CheckMate 067',nct:'NCT01844505',filter_binding:{pmid:'18',result_id:'second'}};
+  const comparison={...second,pmid:'17',filter_binding:{pmid:'17',result_id:'second-in-same-report'}};
+  const data={schema_version:2,rows:[first,second,comparison]};
+  let evidence;
+  const attach=(_heading,_filter,getEvidence)=>{evidence=getEvidence;return {refresh(){},destroy(){}};};
+  const reportCount=()=>evidence({},false,{}).summary.report_count;
+  mount(panel,data,attach);
+  assert.equal(reportCount(),2);
+  for(const query of ['keynote','nct04920383']){
+    search.value=query;search.input();
+    assert.equal(reportCount(),1);
+    assert.equal(output.innerHTML.includes('NEON-2 (KEYNOTE-D05)'), query === 'keynote');
+    assert.match(output.innerHTML,/NEON-2/);
+    assert.doesNotMatch(output.innerHTML,/CheckMate 067/);
+    assert.equal(output.innerHTML.match(/data-pmid="17"/g).length,1);
+  }
+  events.value='66';events.input();
+  assert.doesNotMatch(output.innerHTML,/<table/);assert.equal(reportCount(),0);
+  events.value='100';events.input();assert.match(output.innerHTML,/NEON-2/);
+  mount(panel,data,attach);
+  assert.equal(search.value,'nct04920383');
+  search.value='';search.input();
+  assert.match(output.innerHTML,/CheckMate 067/);assert.equal(reportCount(),2);
+});
 test('cutoffs and the power saved in Settings update results and clinical filter choices',()=>{
   const makeInput=value=>({value,addEventListener(t,cb){this[t]=cb;}});
   const inputs={'[data-event-threshold]':makeInput('100'),
-    '[data-participant-threshold]':makeInput('100')};
+    '[data-participant-threshold]':makeInput('100'),'[data-trial-search]':makeInput('')};
   const output={addEventListener(){},querySelector(){return null;}};
   const panel={querySelector:s=>s==='[data-power-results]'?output:inputs[s]};
   const data={schema_version:2,rows:[row,{...row,pmid:'12345',filter_binding:{pmid:'12345',result_id:'hr'},measure:'HR',estimate:.5,n:null,scenarios:[]}]};

@@ -1,0 +1,21 @@
+# Phase II vs Phase III
+
+Rebuild the tab from the project root with `node website/scripts/phase_comparison.cjs`. The builder reads the released melanoma evidence, treatment definitions, trial identifiers and the tab’s saved citation, registry and source reviews. It writes `website/dist/data/phase_comparison.json`. Browsers fetch this file on opening the tab.
+
+The date beside a phase II cohort is the date of its first identified primary results paper. An electronic publication date takes precedence over the journal issue date. A year or month can be shown when the source does not specify a day. Later results carry their own publication links.
+
+The collapsed list shows each phase II trial and its linked phase III trials with their results dates or recruitment status. Entries are ordered by the first phase II results publication. When several regimens share that trial and primary paper, expanding the entry shows each regimen and its comparisons. Searching by a phase II name or registration number shows all its eligible matches. Searching by a phase III identifier shows the related phase II entries paired with that trial. A match on an alternate trial name shows that name in parentheses.
+
+All phase II cohorts in this catalogue have published primary results. “Results published in both phases” also requires an identified phase III primary results publication. The other status choices use the registry’s overall study status or the absence of a linked phase III trial. An active trial can have published primary results while follow-up continues. The primary results PMID is drawn from the linked trial’s source publications, using the source review when automatic citation classification is insufficient.
+
+Each phase II entry has an explicit list of eligible phase III trial or cohort IDs. Phase III status describes the linked sources at the indicated assessment. A blank field carries no information about a future analysis. Peer-reviewed and regulatory updates with a different population, regimen, comparator, or endpoint need a separate source review before their estimates can be used. A published pooled estimate across cohorts belongs only to that pooled population.
+
+The builder checks chronology for every proposed pair, including reviewed links. For published trials, the first phase III primary-results paper must appear after the first phase II primary-results paper, regardless of when recruitment began. A report of a co-primary endpoint qualifies even while another endpoint is pending. Follow-up papers can update the outcomes. For a phase III trial awaiting primary results, its documented start must follow the phase II start, or the phase II publication if the earlier start is unknown. Dates reported to a year or month establish order only when their possible date ranges are separate. A phase II cohort stays in the catalogue when none of its proposed phase III matches qualify.
+
+The expanded table identifies the regimen in each phase and gives the reason for each trial pairing. A pair can represent a confirmatory trial, independent trials in a comparable clinical setting, or a shared control regimen. Each trial retains its own identity. Comparative HRs align only when the endpoint and opposing regimen match. A registry result carries its own source link and can include a qualification from the publication. “Not reported here” means the tab has no estimate matching that row.
+
+Each HR, RR, and OR gives the two treatment arms directly beneath the estimate in its own phase column. The first arm is the numerator and the second is the reference. “Followed by” describes successive treatments in a single arm. Dose and schedule are shown when they distinguish the arms. When an estimate is inverted from the published direction, the interval is also inverted.
+
+The citations and registry records used for rebuilding reside in `website/config/phase_comparison_*.json`. The tab-specific citation and registry scripts refresh these inputs. Clinically reviewed exceptions and endpoint status updates are recorded with sources in `config/phase_comparison_sources.json`. Recheck the status source and later publications when refreshing a pending trial.
+
+Run `node --test website/tests/test_phase_comparison*.cjs` after rebuilding.

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "repository": "https://github.com/YushuShi/metaMelanomaTrials",
   "visibility": "public",
-  "built_at": "2026-11-24T20:29:24.261945+00:00",
+  "built_at": "2026-11-27T00:56:32.635750+00:00",
   "scientific_snapshot_changed": false,
   "files": [
     {
@@ -201,6 +201,15 @@
       "original_path": "config/evidence_schema.json",
       "original_sha256": "16fdda2980a9517a042cb219e956d39064347430b34df6d4b8a66f30acd61222",
       "original_bytes": 5928,
+      "gzip": false
+    },
+    {
+      "path": "config/phase_comparison_sources.json",
+      "sha256": "83c8cbd827f9bdf7e3fb3442fc0a369c713495990575e13b1e70a985e436aeb8",
+      "bytes": 85447,
+      "original_path": "config/phase_comparison_sources.json",
+      "original_sha256": "83c8cbd827f9bdf7e3fb3442fc0a369c713495990575e13b1e70a985e436aeb8",
+      "original_bytes": 85447,
       "gzip": false
     },
     {
@@ -1644,6 +1653,51 @@
       "gzip": false
     },
     {
+      "path": "website/config/phase_comparison_citations.json",
+      "sha256": "222ee155f6abd0e86d52ec26d961003cb28f25057f66389ca3d2b6329415f8ed",
+      "bytes": 837315,
+      "original_path": "website/config/phase_comparison_citations.json",
+      "original_sha256": "222ee155f6abd0e86d52ec26d961003cb28f25057f66389ca3d2b6329415f8ed",
+      "original_bytes": 837315,
+      "gzip": false
+    },
+    {
+      "path": "website/config/phase_comparison_links.json",
+      "sha256": "2322fa53535378a8280eb7d6825ea8cd0188daf5c95ffa9c86a73065ac3cd257",
+      "bytes": 9997,
+      "original_path": "website/config/phase_comparison_links.json",
+      "original_sha256": "2322fa53535378a8280eb7d6825ea8cd0188daf5c95ffa9c86a73065ac3cd257",
+      "original_bytes": 9997,
+      "gzip": false
+    },
+    {
+      "path": "website/config/phase_comparison_online.json",
+      "sha256": "e9cfed59d2b677b2ea76eee5c65ace564c960c1549cc9478a1e6635c548dbef6",
+      "bytes": 3890,
+      "original_path": "website/config/phase_comparison_online.json",
+      "original_sha256": "e9cfed59d2b677b2ea76eee5c65ace564c960c1549cc9478a1e6635c548dbef6",
+      "original_bytes": 3890,
+      "gzip": false
+    },
+    {
+      "path": "website/config/phase_comparison_outcome_reviews.json",
+      "sha256": "d020a4d3040efc51e2f21262de0eda748735e5ed4a4ebbc9bccfcf3a0a49e09e",
+      "bytes": 672,
+      "original_path": "website/config/phase_comparison_outcome_reviews.json",
+      "original_sha256": "d020a4d3040efc51e2f21262de0eda748735e5ed4a4ebbc9bccfcf3a0a49e09e",
+      "original_bytes": 672,
+      "gzip": false
+    },
+    {
+      "path": "website/config/phase_comparison_registry.json",
+      "sha256": "b60b65bcfc9bba0cc17bc9b1b0ef8e7b89d6025511bea10bd48a1b6cb0d02521",
+      "bytes": 159964,
+      "original_path": "website/config/phase_comparison_registry.json",
+      "original_sha256": "b60b65bcfc9bba0cc17bc9b1b0ef8e7b89d6025511bea10bd48a1b6cb0d02521",
+      "original_bytes": 159964,
+      "gzip": false
+    },
+    {
       "path": "website/dist/about_article_progress.css",
       "sha256": "8da5c3faea2d3534bd6bd96f8ffd86e461de663177e3b631dfd0d31c68f35d7b",
       "bytes": 4126,
@@ -1690,11 +1744,11 @@
     },
     {
       "path": "website/dist/app.js",
-      "sha256": "e4664d719829762de73dfd66105c175e77e1a53816020e41329ac23d2f2e9359",
-      "bytes": 274181,
+      "sha256": "a555ec58a801ee4e1767849b17141d6a45f5b36a56df9e2546f0e9595fcfce17",
+      "bytes": 276180,
       "original_path": "website/dist/app.js",
-      "original_sha256": "e4664d719829762de73dfd66105c175e77e1a53816020e41329ac23d2f2e9359",
-      "original_bytes": 274181,
+      "original_sha256": "a555ec58a801ee4e1767849b17141d6a45f5b36a56df9e2546f0e9595fcfce17",
+      "original_bytes": 276180,
       "gzip": false
     },
     {
@@ -1815,6 +1869,15 @@
       "gzip": true
     },
     {
+      "path": "website/dist/data/phase_comparison.json.gz",
+      "sha256": "a8da962c0309c62928b15d19bd3e65729f858adba214b36ee97ed1fdd7ffebe8",
+      "bytes": 142752,
+      "original_path": "website/dist/data/phase_comparison.json",
+      "original_sha256": "2e9e637dbf488b69706aefb02bfca21ead6c929f0bce49e81c1db5b6d231c8b4",
+      "original_bytes": 1421536,
+      "gzip": true
+    },
+    {
       "path": "website/dist/data/provisional_studies.json.gz",
       "sha256": "4046ea91eb76c2b090af079e3c81d9f5da67bd5e17edd017e86ff1b28cc80aaa",
       "bytes": 39873,
@@ -1924,11 +1987,11 @@
     },
     {
       "path": "website/dist/data/treatment_map_version.json.gz",
-      "sha256": "a84e53862efe7adc9c31702d76e04d2bb9a296f5edcf794ae6286841a15f63a3",
-      "bytes": 4107,
+      "sha256": "7fc72bc513bb2c94ffd5470391b86d551f41fdf74f06ce559de39b29430eb142",
+      "bytes": 4160,
       "original_path": "website/dist/data/treatment_map_version.json",
-      "original_sha256": "70adacd81b49001d36707710b689c57b89421e258ec5e036bc28a6a05733e1fb",
-      "original_bytes": 9731,
+      "original_sha256": "40fc65cb1ceeaad5210fef4350ce93667b2737f47ffcb8f89a480649aee5494d",
+      "original_bytes": 9835,
       "gzip": true
     },
     {
@@ -2023,11 +2086,11 @@
     },
     {
       "path": "website/dist/index.html",
-      "sha256": "05141de5bc1d6762f9719372ffb0f7297738af0898d0b4aafee83a4d72a104d0",
-      "bytes": 19963,
+      "sha256": "4d42db815d719ae8ae64ffc33a4dcc5be3de3e8e2c77696bef0f8ef34255efa2",
+      "bytes": 20526,
       "original_path": "website/dist/index.html",
-      "original_sha256": "05141de5bc1d6762f9719372ffb0f7297738af0898d0b4aafee83a4d72a104d0",
-      "original_bytes": 19963,
+      "original_sha256": "4d42db815d719ae8ae64ffc33a4dcc5be3de3e8e2c77696bef0f8ef34255efa2",
+      "original_bytes": 20526,
       "gzip": false
     },
     {
@@ -2041,11 +2104,11 @@
     },
     {
       "path": "website/dist/new_findings.js",
-      "sha256": "3e364d48512a4fd601a06eca4f5a98a29d39e034ab8f432001ecf43bb50f247e",
-      "bytes": 4209,
+      "sha256": "b015cbe96ffdf734a56fe2292d2f71322f803638a194272fc5244953257201bd",
+      "bytes": 5216,
       "original_path": "website/dist/new_findings.js",
-      "original_sha256": "3e364d48512a4fd601a06eca4f5a98a29d39e034ab8f432001ecf43bb50f247e",
-      "original_bytes": 4209,
+      "original_sha256": "b015cbe96ffdf734a56fe2292d2f71322f803638a194272fc5244953257201bd",
+      "original_bytes": 5216,
       "gzip": false
     },
     {
@@ -2082,6 +2145,24 @@
       "original_path": "website/dist/outcome_source_rules.js",
       "original_sha256": "aa99e01a85d70b45f84a017a970411630ebf94befb428f47df60b28d0a6d4901",
       "original_bytes": 3072292,
+      "gzip": false
+    },
+    {
+      "path": "website/dist/phase_comparison.css",
+      "sha256": "f14100832085fe48421d3f70d79885453b2776976a90f08caad845842f5effe6",
+      "bytes": 2599,
+      "original_path": "website/dist/phase_comparison.css",
+      "original_sha256": "f14100832085fe48421d3f70d79885453b2776976a90f08caad845842f5effe6",
+      "original_bytes": 2599,
+      "gzip": false
+    },
+    {
+      "path": "website/dist/phase_comparison.js",
+      "sha256": "3b7a50cd7f63a7980348e393f000301a5a45c0a484553e167466c2f45dba5879",
+      "bytes": 16899,
+      "original_path": "website/dist/phase_comparison.js",
+      "original_sha256": "3b7a50cd7f63a7980348e393f000301a5a45c0a484553e167466c2f45dba5879",
+      "original_bytes": 16899,
       "gzip": false
     },
     {
@@ -2221,11 +2302,11 @@
     },
     {
       "path": "website/dist/styles.css",
-      "sha256": "3a4054f4599d97b0faf54fdfc5aefde6967331308201a56e60f7959c0ab90f4e",
-      "bytes": 94929,
+      "sha256": "963e49da6b22e2472739ecd8ff9020d25590c6108301a6ff6cbf0cba0030d98d",
+      "bytes": 95898,
       "original_path": "website/dist/styles.css",
-      "original_sha256": "3a4054f4599d97b0faf54fdfc5aefde6967331308201a56e60f7959c0ab90f4e",
-      "original_bytes": 94929,
+      "original_sha256": "963e49da6b22e2472739ecd8ff9020d25590c6108301a6ff6cbf0cba0030d98d",
+      "original_bytes": 95898,
       "gzip": false
     },
     {
@@ -2427,12 +2508,21 @@
       "gzip": false
     },
     {
+      "path": "website/dist/trial_search.js",
+      "sha256": "777ef307060d8ba0c2b43ef52f4556144d29405b7adb66eff16444e8c8394001",
+      "bytes": 4247,
+      "original_path": "website/dist/trial_search.js",
+      "original_sha256": "777ef307060d8ba0c2b43ef52f4556144d29405b7adb66eff16444e8c8394001",
+      "original_bytes": 4247,
+      "gzip": false
+    },
+    {
       "path": "website/dist/underpowered_studies.js",
-      "sha256": "c592569b18fdefcd5fe806c5c3b3c68a604888e2f40d1717c452580d380a79c8",
-      "bytes": 12804,
+      "sha256": "2e098bd0fbb69b11e85535f2b883f2f2a305e5f98515950243fab4706ff7cc0f",
+      "bytes": 13680,
       "original_path": "website/dist/underpowered_studies.js",
-      "original_sha256": "c592569b18fdefcd5fe806c5c3b3c68a604888e2f40d1717c452580d380a79c8",
-      "original_bytes": 12804,
+      "original_sha256": "2e098bd0fbb69b11e85535f2b883f2f2a305e5f98515950243fab4706ff7cc0f",
+      "original_bytes": 13680,
       "gzip": false
     },
     {
@@ -2505,6 +2595,60 @@
       "original_path": "website/scripts/new_findings_dates.py",
       "original_sha256": "81c0c2b0adcb53a103396312cd22f3e7c886c32faa36dc71f648c3c70ef34c62",
       "original_bytes": 6001,
+      "gzip": false
+    },
+    {
+      "path": "website/scripts/phase_comparison.cjs",
+      "sha256": "68b5ef7563f8452f8f63d2a1ba56a399a7753b2d01eff28f192c8d41e921e3bf",
+      "bytes": 36128,
+      "original_path": "website/scripts/phase_comparison.cjs",
+      "original_sha256": "68b5ef7563f8452f8f63d2a1ba56a399a7753b2d01eff28f192c8d41e921e3bf",
+      "original_bytes": 36128,
+      "gzip": false
+    },
+    {
+      "path": "website/scripts/phase_comparison.md",
+      "sha256": "a5cf59212f5a31957bb7ccd5a77457dda59f775350c79341f15152211f159fcd",
+      "bytes": 4291,
+      "original_path": "website/scripts/phase_comparison.md",
+      "original_sha256": "a5cf59212f5a31957bb7ccd5a77457dda59f775350c79341f15152211f159fcd",
+      "original_bytes": 4291,
+      "gzip": false
+    },
+    {
+      "path": "website/scripts/phase_comparison_citations.py",
+      "sha256": "5b744617f1690d1bed06ea948a01c29c92da0fa36b39d85edc92f6ec16480e82",
+      "bytes": 7678,
+      "original_path": "website/scripts/phase_comparison_citations.py",
+      "original_sha256": "5b744617f1690d1bed06ea948a01c29c92da0fa36b39d85edc92f6ec16480e82",
+      "original_bytes": 7678,
+      "gzip": false
+    },
+    {
+      "path": "website/scripts/phase_comparison_online.py",
+      "sha256": "a02793cf6ee474d528153c40210a4af9689f2591314952fc2fe1ba14ed6cae34",
+      "bytes": 2181,
+      "original_path": "website/scripts/phase_comparison_online.py",
+      "original_sha256": "a02793cf6ee474d528153c40210a4af9689f2591314952fc2fe1ba14ed6cae34",
+      "original_bytes": 2181,
+      "gzip": false
+    },
+    {
+      "path": "website/scripts/phase_comparison_outcomes.cjs",
+      "sha256": "37ea197054dee7f1bdad169544c57b5a8ae31aa17f647506255587220f016c82",
+      "bytes": 19225,
+      "original_path": "website/scripts/phase_comparison_outcomes.cjs",
+      "original_sha256": "37ea197054dee7f1bdad169544c57b5a8ae31aa17f647506255587220f016c82",
+      "original_bytes": 19225,
+      "gzip": false
+    },
+    {
+      "path": "website/scripts/phase_comparison_registry.py",
+      "sha256": "01bd3cba1068f6054266ef68cdbd47edc922057aa02ff04b93cfac3f9a0f887e",
+      "bytes": 2829,
+      "original_path": "website/scripts/phase_comparison_registry.py",
+      "original_sha256": "01bd3cba1068f6054266ef68cdbd47edc922057aa02ff04b93cfac3f9a0f887e",
+      "original_bytes": 2829,
       "gzip": false
     },
     {
@@ -2977,11 +3121,11 @@
     },
     {
       "path": "website/tests/test_new_findings.cjs",
-      "sha256": "0d67abc4faf2760afe3daa272febad9509959aad02e0aaeaa2fe6ef55c4b2fdf",
-      "bytes": 3192,
+      "sha256": "98633eaf85fafd8b4ff7c6e14795db5f5c5a42ff2da5ec1d2c4c2c95e6c3e1ec",
+      "bytes": 4887,
       "original_path": "website/tests/test_new_findings.cjs",
-      "original_sha256": "0d67abc4faf2760afe3daa272febad9509959aad02e0aaeaa2fe6ef55c4b2fdf",
-      "original_bytes": 3192,
+      "original_sha256": "98633eaf85fafd8b4ff7c6e14795db5f5c5a42ff2da5ec1d2c4c2c95e6c3e1ec",
+      "original_bytes": 4887,
       "gzip": false
     },
     {
@@ -3063,6 +3207,87 @@
       "original_path": "website/tests/test_pathway_sensitivity_reference.cjs",
       "original_sha256": "05fc560002c8db47b24ea85eb22760e59233ada17e4815b12bbc56ea76075254",
       "original_bytes": 4165,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_checkmate.cjs",
+      "sha256": "888351830a821fd8aadf661e616702b89992a060a818cea568e0fe5dd015f2da",
+      "bytes": 1911,
+      "original_path": "website/tests/test_phase_comparison_checkmate.cjs",
+      "original_sha256": "888351830a821fd8aadf661e616702b89992a060a818cea568e0fe5dd015f2da",
+      "original_bytes": 1911,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_data.cjs",
+      "sha256": "5d0cdb1d6187a584c562d2a25a5cc69b7e030753f004eb5eec78c82b6a6e8b00",
+      "bytes": 7925,
+      "original_path": "website/tests/test_phase_comparison_data.cjs",
+      "original_sha256": "5d0cdb1d6187a584c562d2a25a5cc69b7e030753f004eb5eec78c82b6a6e8b00",
+      "original_bytes": 7925,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_disclosure.cjs",
+      "sha256": "f06db1ffe77a78c354246e5c9b4508a70a39326c5c409ece85d17a7fef471e94",
+      "bytes": 6910,
+      "original_path": "website/tests/test_phase_comparison_disclosure.cjs",
+      "original_sha256": "f06db1ffe77a78c354246e5c9b4508a70a39326c5c409ece85d17a7fef471e94",
+      "original_bytes": 6910,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_historical.cjs",
+      "sha256": "7c497653b5dd09ef560254ffed0ababd1b32e8bb64a3ef14fbf68c2cf9561062",
+      "bytes": 3167,
+      "original_path": "website/tests/test_phase_comparison_historical.cjs",
+      "original_sha256": "7c497653b5dd09ef560254ffed0ababd1b32e8bb64a3ef14fbf68c2cf9561062",
+      "original_bytes": 3167,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_match_basis.cjs",
+      "sha256": "f7ca6dae4d3b267d1db55279d0ec1dff4ed196f8214cb7685a1f99ad9d2b9c7f",
+      "bytes": 3431,
+      "original_path": "website/tests/test_phase_comparison_match_basis.cjs",
+      "original_sha256": "f7ca6dae4d3b267d1db55279d0ec1dff4ed196f8214cb7685a1f99ad9d2b9c7f",
+      "original_bytes": 3431,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_outcomes.cjs",
+      "sha256": "15c3ddbdc448dbcff42d2193d1c56c30421541644a945df6118a110927bbc88e",
+      "bytes": 8664,
+      "original_path": "website/tests/test_phase_comparison_outcomes.cjs",
+      "original_sha256": "15c3ddbdc448dbcff42d2193d1c56c30421541644a945df6118a110927bbc88e",
+      "original_bytes": 8664,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_progression.cjs",
+      "sha256": "f2c8c129f46bfda9372f4ea704d2aec01ecbbf3b425b00789e259368e291f3ba",
+      "bytes": 2810,
+      "original_path": "website/tests/test_phase_comparison_progression.cjs",
+      "original_sha256": "f2c8c129f46bfda9372f4ea704d2aec01ecbbf3b425b00789e259368e291f3ba",
+      "original_bytes": 2810,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_snapshot.cjs",
+      "sha256": "536073f51be34cd1377a1b8ae41d30c25e82673b7a8fa06c2ba6e87bdca7891e",
+      "bytes": 5806,
+      "original_path": "website/tests/test_phase_comparison_snapshot.cjs",
+      "original_sha256": "536073f51be34cd1377a1b8ae41d30c25e82673b7a8fa06c2ba6e87bdca7891e",
+      "original_bytes": 5806,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_phase_comparison_ui.cjs",
+      "sha256": "4f210a185cd80df03d40aa821d016f7c131221876e0e76557c4bae00e7752895",
+      "bytes": 10050,
+      "original_path": "website/tests/test_phase_comparison_ui.cjs",
+      "original_sha256": "4f210a185cd80df03d40aa821d016f7c131221876e0e76557c4bae00e7752895",
+      "original_bytes": 10050,
       "gzip": false
     },
     {
@@ -3243,6 +3468,15 @@
       "original_path": "website/tests/test_structured_regimen_integration.cjs",
       "original_sha256": "bbb97de0238bb293fbc497685d71304ff01cf09bc814efcbb0ec73f9774ab953",
       "original_bytes": 9895,
+      "gzip": false
+    },
+    {
+      "path": "website/tests/test_studies_trial_search.cjs",
+      "sha256": "3f01483432023f97adbf7646a21be35521f9f3d5b4b1d8a8af3feec8db105ade",
+      "bytes": 4670,
+      "original_path": "website/tests/test_studies_trial_search.cjs",
+      "original_sha256": "3f01483432023f97adbf7646a21be35521f9f3d5b4b1d8a8af3feec8db105ade",
+      "original_bytes": 4670,
       "gzip": false
     },
     {
@@ -3660,6 +3894,15 @@
       "gzip": false
     },
     {
+      "path": "website/tests/test_trial_search.cjs",
+      "sha256": "fabc442d7362850409c72e8bda16c968aa924da4bc8fde996c20c5196ecdfafa",
+      "bytes": 2433,
+      "original_path": "website/tests/test_trial_search.cjs",
+      "original_sha256": "fabc442d7362850409c72e8bda16c968aa924da4bc8fde996c20c5196ecdfafa",
+      "original_bytes": 2433,
+      "gzip": false
+    },
+    {
       "path": "website/tests/test_trial_table_ui.cjs",
       "sha256": "5613817013939d366087f1c953886d13b8e3e0621f042676ab6f241d158e645e",
       "bytes": 6127,
@@ -3670,11 +3913,11 @@
     },
     {
       "path": "website/tests/test_underpowered_studies.cjs",
-      "sha256": "704c506e36243d792a19868c40436c3051e78f6787b215653731ff0d51c4b18d",
-      "bytes": 8916,
+      "sha256": "b2945caef0799e0d31e217e5c75e0fb81a0004859953000e4d87dc6bdd3a6362",
+      "bytes": 10969,
       "original_path": "website/tests/test_underpowered_studies.cjs",
-      "original_sha256": "704c506e36243d792a19868c40436c3051e78f6787b215653731ff0d51c4b18d",
-      "original_bytes": 8916,
+      "original_sha256": "b2945caef0799e0d31e217e5c75e0fb81a0004859953000e4d87dc6bdd3a6362",
+      "original_bytes": 10969,
       "gzip": false
     },
     {

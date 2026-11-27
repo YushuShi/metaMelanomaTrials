@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="./treatment_network_ui.css">
   <link rel="stylesheet" href="./radial_branch_family.css">
   <link rel="stylesheet" href="./radial_branch_panel.css">
+  <link rel="stylesheet" href="./phase_comparison.css">
   <script src="./semantic_numeric_display.js" defer></script>
   <script src="./evidence_display.js" defer></script>
   <script src="./numeric_evidence_release.js" defer></script>
@@ -29,6 +30,7 @@
   <script src="./treatment_picker.js" defer></script>
   <script src="./trial_registry.js" defer></script>
   <script src="./trial_identifiers.js" defer></script>
+  <script src="./trial_search.js" defer></script>
   <script src="./statistical_math.js" defer></script>
   <script src="./confidence_intervals.js" defer></script>
   <script src="./wald_interval.js" defer></script>
@@ -59,6 +61,7 @@
   <script src="./treatment_map.js" defer></script>
   <script src="./underpowered_studies.js" defer></script>
   <script src="./new_findings.js" defer></script>
+  <script src="./phase_comparison.js" defer></script>
   <script src="./study_indirect.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./published_outcome_review.js" defer></script>
@@ -101,9 +104,11 @@
           <button role="tab" aria-selected="false" aria-controls="analysis-articles" id="tab-articles" data-analysis-tab="articles" tabindex="-1">Studies</button>
           <button role="tab" aria-selected="false" aria-controls="analysis-underpowered-studies" id="tab-underpowered-studies" data-analysis-tab="underpowered-studies" tabindex="-1">Underpowered studies</button>
           <button role="tab" aria-selected="false" aria-controls="analysis-new-findings" id="tab-new-findings" data-analysis-tab="new-findings" tabindex="-1">New findings</button>
+          <button role="tab" aria-selected="false" aria-controls="analysis-phase-comparison" id="tab-phase-comparison" data-analysis-tab="phase-comparison" tabindex="-1">Phase II vs Phase III</button>
         </div>
         <section class="panel analysis-panel evidence-tab" id="analysis-underpowered-studies" role="tabpanel" aria-labelledby="tab-underpowered-studies" hidden></section>
         <section class="panel analysis-panel evidence-tab" id="analysis-new-findings" role="tabpanel" aria-labelledby="tab-new-findings" hidden></section>
+        <section class="panel analysis-panel evidence-tab" id="analysis-phase-comparison" role="tabpanel" aria-labelledby="tab-phase-comparison" hidden></section>
         <section id="analysis-articles" role="tabpanel" aria-labelledby="tab-articles" hidden>
           <form class="panel analysis-controls" id="analysis-form" hidden>
             <div class="analysis-control-grid">
@@ -127,7 +132,7 @@
           <div class="panel analysis-panel">
             <div class="panel-heading study-table-heading">
               <div class="study-table-title"><h2>Studies <span class="articles-count" id="scoped-studies-count"></span></h2><p class="study-table-key" id="study-table-key"><span title="Results based on abstract-only extraction">* Abstract only</span><span>Gray rows: non-trial studies</span></p></div>
-              <div class="study-table-actions"><button type="button" class="secondary-button" id="trial-only-toggle" aria-pressed="false" aria-controls="scoped-studies-rows" title="Show trials only">Trial Only</button><button type="button" class="secondary-button" id="download-study-table" title="Download all filtered studies and results across all pages" disabled><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download CSV</button></div>
+              <div class="study-table-actions"><span id="studies-trial-search"></span><button type="button" class="secondary-button" id="trial-only-toggle" aria-pressed="false" aria-controls="scoped-studies-rows" title="Show trials only">Trial Only</button><button type="button" class="secondary-button" id="download-study-table" title="Download all filtered studies and results across all pages" disabled><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download CSV</button></div>
             </div>
             <div class="table-scroll"><table class="scoped-studies-table"><thead><tr><th scope="col">Study</th><th scope="col" id="scoped-author-heading" aria-sort="none"><button type="button" id="scoped-sort-author">First author <span aria-hidden="true">↕</span></button></th><th scope="col" id="scoped-year-heading" aria-sort="descending"><button type="button" id="scoped-sort-year">Year <span aria-hidden="true">↓</span></button></th><th scope="col">Trial name</th><th scope="col">NCT number</th><th scope="col">Group</th><th scope="col">Comparator</th><th scope="col">Intervention</th><th scope="col">Sample size</th><th scope="col">Effect size (CI)</th></tr></thead><tbody id="scoped-studies-rows"></tbody></table></div>
             <div class="main-articles-footer"><span id="scoped-studies-range" role="status" aria-live="polite"></span><nav class="main-articles-pagination" aria-label="Study pages"><button type="button" class="secondary-button" id="scoped-studies-previous">Previous</button><span id="scoped-studies-page"></span><button type="button" class="secondary-button" id="scoped-studies-next">Next</button></nav></div>

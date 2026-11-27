@@ -1,0 +1,12 @@
+{
+  "e7b38776d16b45435b3092914c636663c13b5bf83093c46064bc3da5905cda14": {
+    "pmid": "38029480",
+    "source_url": "https://eprints.whiterose.ac.uk/id/eprint/206919/7/EJC-D-23-02078_R1.pdf",
+    "location": "Table 2. Summary of adverse events in patients receiving at least one trial dose.",
+    "reason": "The PubMed abstract uses grade >3. The full safety analysis and Table 2 define these counts as grade ≥3.",
+    "rows": {
+      "B_SEVERE_AE_INT": {"arm_id":"A_INT","population_id":"P1","percentage":53,"numerator":20,"denominator":38},
+      "B_SEVERE_AE_CONT": {"arm_id":"A_CONT","population_id":"P1","percentage":42,"numerator":17,"denominator":40}
+    }
+  }
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "regimen": "Carboplatin + Paclitaxel", "phase2_pmid": "22124101", "phase3_pmid": "23248256",
+    "phase2_id":"NCT00434252","phase3_id":"NCT00110019",
+    "label":"Shared control arm. BEAM added bevacizumab and E2603 added sorafenib.",
+    "source_url":"https://pubmed.ncbi.nlm.nih.gov/23248256/",
+    "phase3_comparator":"Carboplatin + Paclitaxel + Sorafenib",
+    "population": "Unresectable stage III or IV melanoma with no prior chemotherapy. E2603 allowed prior immunotherapy.",
+    "rationale": "Both randomized trials report the carboplatin–paclitaxel control arm in first-line chemotherapy for advanced melanoma. BEAM added bevacizumab and E2603 added sorafenib, so their comparative hazard ratios have different comparators.",
+    "sources": ["https://pubmed.ncbi.nlm.nih.gov/22124101/", "https://pmc.ncbi.nlm.nih.gov/articles/PMC4878104/", "https://clinicaltrials.gov/study/NCT00110019"]
+  },
+  {
+    "regimen": "GM-CSF", "phase2_pmid":"10764421","phase3_pmid":"26351350",
+    "phase3_outcomes": [
+      {"key":"OS|median|population:hla-a2-positive","label":"Median OS · HLA-A2 positive","value":"69.3 months","pmid":"26351350","date":"2015-09-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/#T2","denominator":109},
+      {"key":"RFS|median|population:hla-a2-positive","label":"Median RFS · HLA-A2 positive","value":"10.0 months","pmid":"26351350","date":"2015-09-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/#T2","denominator":109},
+      {"key":"OS|survival_probability|60mo|population:hla-a2-positive","label":"5-year OS · HLA-A2 positive","value":"51.1% (95% CI 41.2–60.1)","pmid":"26351350","date":"2015-09-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/#T2","denominator":109},
+      {"key":"RFS|survival_probability|60mo|population:hla-a2-positive","label":"5-year RFS · HLA-A2 positive","value":"31.3% (95% CI 22.8–40.2)","pmid":"26351350","date":"2015-09-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/#T2","denominator":109},
+      {"key":"OS|median|population:hla-a2-negative","label":"Median OS · HLA-A2 negative","value":"69.9 months","pmid":"26351350","date":"2015-09-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/#T2","denominator":190},
+      {"key":"RFS|median|population:hla-a2-negative","label":"Median RFS · HLA-A2 negative","value":"11.0 months","pmid":"26351350","date":"2015-09-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/#T2","denominator":190},
+      {"key":"OS|survival_probability|60mo|population:hla-a2-negative","label":"5-year OS · HLA-A2 negative","value":"51.2% (95% CI 43.8–58.2)","pmid":"26351350","date":"2015-09-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/#T2","denominator":190},
+      {"key":"RFS|survival_probability|60mo|population:hla-a2-negative","label":"5-year RFS · HLA-A2 negative","value":"30.6% (95% CI 24.1–37.3)","pmid":"26351350","date":"2015-09-08","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/#T2","denominator":190}
+    ],
+    "phase2_id":"pmid:10764421","phase3_id":"NCT01989572",
+    "label":"The phase III investigators cite the phase II adjuvant GM-CSF study as their rationale. The comparison here uses the arms with no active vaccine.",
+    "source_url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/",
+    "phase3_comparator":"Placebo",
+    "population":"High-risk stage III/IV melanoma after complete resection",
+    "rationale":"The E4697 primary publication explicitly identifies the Spitler study as evidence motivating this trial. Only distinct GM-CSF monotherapy arms qualify; the phase III factorial contrast includes vaccination and is a different regimen.",
+    "sources":["https://pubmed.ncbi.nlm.nih.gov/10764421/","https://pmc.ncbi.nlm.nih.gov/articles/PMC4669592/"]
+  },
+  {
+    "regimen":"Ipilimumab","phase2_pmid":"37592104","phase3_pmid":"40048691",
+    "phase2_outcomes": [
+      {"key":"PFS|median|investigator|RECIST 1.1","label":"Median PFS · investigator, RECIST 1.1","value":"2.7 months (90% CI 2.5–2.9)","sourceUrl":"https://clinicaltrials.gov/study/NCT03033576?tab=results","denominator":23},
+      {"key":"OS|median","label":"Median OS","value":"14.5 months (90% CI 8.1 months–not estimable)","sourceUrl":"https://clinicaltrials.gov/study/NCT03033576?tab=results","denominator":23},
+      {"key":"PFS|survival_probability|6mo|investigator|RECIST 1.1","label":"6-month PFS · investigator, RECIST 1.1","value":"13% (90% CI 4–27)","pmid":"37592104","date":"2023-08-17","sourceUrl":"https://pmc.ncbi.nlm.nih.gov/articles/PMC10708907/","denominator":23}
+    ],
+    "phase3_outcomes": [
+      {"key":"PFS|median|investigator|RECIST 1.1","label":"Median PFS · investigator, RECIST 1.1","value":"2.7 months (95% CI 2.6–2.8)","pmid":"40048691","date":"2025-03-06","sourceUrl":"https://scholarlypublications.universiteitleiden.nl/handle/1887/4298479","denominator":243},
+      {"key":"PFS|median|independent|RECIST 1.1","label":"Median PFS · independent central review, RECIST 1.1","value":"2.7 months (95% CI 2.6–2.8)","pmid":"40048691","date":"2025-03-06","sourceUrl":"https://scholarlypublications.universiteitleiden.nl/handle/1887/4298479","denominator":243},
+      {"key":"OS|median","label":"Median OS","value":"10.0 months (95% CI 8.1–11.5)","pmid":"40048691","date":"2025-03-06","sourceUrl":"https://scholarlypublications.universiteitleiden.nl/handle/1887/4298479","denominator":243},
+      {"key":"OS|survival_probability|12mo","label":"1-year OS","value":"42.2% (95% CI 35.9–48.5)","pmid":"40048691","date":"2025-03-06","sourceUrl":"https://scholarlypublications.universiteitleiden.nl/handle/1887/4298479","denominator":243},
+      {"key":"OS|survival_probability|24mo","label":"2-year OS","value":"27.5% (95% CI 21.5–33.7)","pmid":"40048691","date":"2025-03-06","sourceUrl":"https://scholarlypublications.universiteitleiden.nl/handle/1887/4298479","denominator":243}
+    ],
+    "phase2_id":"NCT03033576","phase3_id":"NCT03445533",
+    "label":"Shared ipilimumab control after PD-1 blockade. The experimental partners were nivolumab and tilsotolimod.",
+    "source_url":"https://pubmed.ncbi.nlm.nih.gov/40048691/",
+    "phase2_comparator":"Ipilimumab + Nivolumab → Nivolumab",
+    "population":"Advanced melanoma after PD-1 blockade. S1616 required primary resistance. ILLUMINATE-301 required an injectable lesion and allowed progression during or after treatment.",
+    "rationale":"Both randomized trials administered ipilimumab monotherapy after anti-PD-1 failure. Their experimental arms differ, so their treatment-comparison HRs have separate outcome keys.",
+    "sources":["https://www.swog.org/clinical-trials/s1616","https://pubmed.ncbi.nlm.nih.gov/40048691/"]
+  },
+  {
+    "regimen":"Dacarbazine","phase2_id":"NCT01009177","phase3_id":"cohort:report:15020614",
+    "phase3_outcomes": [
+      {"key":"TTP|median","label":"Median time to progression","value":"1.9 months · full analysis set","pmid":"15020614","date":"2004-03-15","sourceUrl":"https://pubmed.ncbi.nlm.nih.gov/15020614/","denominator":111}
+    ],
+    "label":"Shared dacarbazine control. The earlier phase III trial tested fotemustine, and the phase II trial tested the addition of bosentan.",
+    "source_url":"https://pubmed.ncbi.nlm.nih.gov/15020614/"
+  },
+  {
+    "regimen":"Binimetinib","phase2_id":"NCT01320085:NRAS","phase3_id":"NCT01763164",
+    "label":"NEMO tested the phase II binimetinib finding in an NRAS Q61-mutant population.",
+    "source_url":"https://doi.org/10.1016/S1470-2045(17)30180-8"
+  },
+  {
+    "regimen":"Intismeran autogene + Pembrolizumab","phase2_id":"NCT03897881","phase3_id":"NCT05933577",
+    "label":"Confirmatory phase III trial of the adjuvant regimen. INTerpath-001 also included patients with stage IIB disease.",
+    "source_url":"https://doi.org/10.1200/OA-25-00008"
+  },
+  {
+    "regimen":"Nivolumab + Vusolimogene oderparepvec (RP1)","phase2_id":"NCT03767348","phase3_id":"NCT06264180",
+    "label":"Confirmatory phase III trial of RP1 plus nivolumab after PD-1 blockade.",
+    "source_url":"https://www.fda.gov/media/193879/download"
+  },
+  {
+    "regimen":"Pembrolizumab → Cyclophosphamide → Fludarabine → Lifileucel → Aldesleukin → Pembrolizumab","phase2_id":"NCT03645928:1A","phase3_id":"NCT05727904",
+    "label":"The phase II investigators identified TILVANCE-301 as the phase III study of lifileucel plus pembrolizumab in untreated advanced melanoma.",
+    "source_url":"https://doi.org/10.1200/JCO.2024.42.16_suppl.9505"
+  },
+  {
+    "regimen":"Talimogene laherparepvec","phase2_id":"NCT00289016","phase3_id":"NCT00769704",
+    "label":"OPTiM evaluated talimogene laherparepvec after the initial phase II OncoVEX study in unresectable melanoma.",
+    "source_url":"https://pubmed.ncbi.nlm.nih.gov/19884534/"
+  },
+  {
+    "regimen":"Talimogene laherparepvec","phase2_id":"NCT02366195","phase3_id":"NCT00769704",
+    "label":"Same regimen in patients with injectable melanoma. OPTiM outcomes had already been published when T-VEC-325 reported.",
+    "source_url":"https://pubmed.ncbi.nlm.nih.gov/33785610/"
+  },
+  {
+    "regimen":"Ipilimumab + Nivolumab","phase2_id":"NCT01927419","phase3_id":"NCT01844505",
+    "label":"Independent trials with the same first-line combination and an ipilimumab control. CheckMate 067 also had a nivolumab arm.",
+    "source_url":"https://pubmed.ncbi.nlm.nih.gov/26027431/"
+  },
+  {
+    "regimen":"Ipilimumab + Nivolumab","phase2_id":"NCT01927419","phase3_id":"NCT02714218",
+    "label":"Same first-line regimen. CheckMate 511 compared two dosing schedules for the combination.",
+    "source_url":"https://pubmed.ncbi.nlm.nih.gov/30811280/"
+  },
+  {
+    "regimen":"Ipilimumab + Nivolumab","phase2_id":"NCT01927419","phase3_id":"NCT02599402",
+    "label":"Same first-line regimen. CheckMate 401 studied the combination in a broader, single-arm population.",
+    "source_url":"https://pubmed.ncbi.nlm.nih.gov/37307514/"
+  }
+]

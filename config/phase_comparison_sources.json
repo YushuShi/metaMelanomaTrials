@@ -1,0 +1,2185 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-11-26",
+  "phase3_primary_result_pmids": {
+    "NCT01844505": "26027431",
+    "NCT01989572": "26351350",
+    "NCT05933577": "43013837"
+  },
+  "groups": [
+    {
+      "id": "intismeran-pembrolizumab-adjuvant",
+      "regimen": "Intismeran autogene + Pembrolizumab",
+      "drugs": [
+        "Intismeran autogene",
+        "Pembrolizumab"
+      ],
+      "setting": "Adjuvant",
+      "phase2": [
+        {
+          "id": "NCT03897881",
+          "name": "KEYNOTE-942",
+          "nct": "NCT03897881",
+          "primary_date": "2024-01-18",
+          "primary_pmid": "38246194",
+          "regimen": "Intismeran autogene + Pembrolizumab",
+          "population": "Resected stage IIIB–IV high-risk cutaneous melanoma",
+          "comparator": "Pembrolizumab",
+          "status": "Five-year update published",
+          "publications": [
+            {
+              "pmid": "38246194",
+              "date": "2024-01-18",
+              "title": "KEYNOTE-942 primary analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/38246194/"
+            },
+            {
+              "pmid": "42223134",
+              "date": "2026-06-01",
+              "title": "KEYNOTE-942 five-year update",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/42223134/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "RFS|HR|vs:pembrolizumab",
+              "outcomeLabel": "RFS · HR",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab"},
+              "label": "RFS · HR vs Pembrolizumab",
+              "value": "0.510 (95% CI 0.294–0.887)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/42223134/",
+              "date": "2026-06-01",
+              "pmid": "42223134",
+              "denominator": 157
+            },
+            {
+              "key": "DMFS|HR|vs:pembrolizumab",
+              "outcomeLabel": "DMFS · HR",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab"},
+              "label": "DMFS · HR vs Pembrolizumab",
+              "value": "0.411 (95% CI 0.200–0.843)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/42223134/",
+              "date": "2026-06-01",
+              "pmid": "42223134",
+              "denominator": 157
+            },
+            {
+              "key": "OS|HR|vs:pembrolizumab",
+              "outcomeLabel": "OS · HR",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab"},
+              "label": "OS · HR vs Pembrolizumab",
+              "value": "0.471 (95% CI 0.165–1.345)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/42223134/",
+              "date": "2026-06-01",
+              "pmid": "42223134",
+              "denominator": 157
+            },
+            {
+              "key": "RFS|survival_probability|18mo",
+              "label": "18-month RFS",
+              "value": "79% (95% CI 69.0–85.6)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/38246194/",
+              "date": "2024-01-18",
+              "pmid": "38246194",
+              "denominator": 107
+            }
+          ],
+          "match_ids": [
+            "NCT05933577"
+          ]
+        }
+      ],
+      "phase3": [
+        {
+          "id": "NCT05933577",
+          "name": "INTerpath-001",
+          "aliases": ["V940-001"],
+          "nct": "NCT05933577",
+          "primary_date": "2026-11-11",
+          "primary_pmid": "43013837",
+          "regimen": "Intismeran autogene + Pembrolizumab",
+          "population": "Resected stage IIB–IV cutaneous melanoma, including earlier stages than KEYNOTE-942",
+          "comparator": "Pembrolizumab (+ placebo)",
+          "status": "RFS and DMFS published · interim OS reported",
+          "publications": [
+            {
+              "pmid": "43013837",
+              "date": "2026-11-11",
+              "title": "INTerpath-001 primary analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/43013837/"
+            },
+            {
+              "pmid": null,
+              "date": "2026-10-24",
+              "title": "ESMO presentation · INTerpath-001 interim OS",
+              "url": "https://docs.publicnow.com/viewDoc?filename=178244%5CEXT%5CBAE43297F8442A8A60339DC12668FB1FD5A782B4_99150EAE0A604694EE38D2B15A904F77D89A1F1D.PDF"
+            },
+            {
+              "pmid": null,
+              "date": "2026-10-22",
+              "title": "INTerpath-001 prespecified overall analysis",
+              "url": "https://www.merck.com/news/merck-and-moderna-will-present-results-from-landmark-phase-3-interpath-001-trial-for-intismeran-autogene-plus-keytruda-pembrolizumab-at-esmo-2026-presidential-symposium/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "RFS|HR|vs:pembrolizumab",
+              "outcomeLabel": "RFS · HR",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab (+ placebo)"},
+              "label": "RFS · HR vs Pembrolizumab",
+              "value": "0.58 (95% CI 0.45–0.75)",
+              "sourceUrl": "https://www.merck.com/news/merck-and-moderna-will-present-results-from-landmark-phase-3-interpath-001-trial-for-intismeran-autogene-plus-keytruda-pembrolizumab-at-esmo-2026-presidential-symposium/",
+              "date": "2026-10-22",
+              "denominator": 1137
+            },
+            {
+              "key": "DMFS|HR|vs:pembrolizumab",
+              "outcomeLabel": "DMFS · HR",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab (+ placebo)"},
+              "label": "DMFS · HR vs Pembrolizumab",
+              "value": "0.62 (95% CI 0.45–0.85)",
+              "sourceUrl": "https://www.merck.com/news/merck-and-moderna-will-present-results-from-landmark-phase-3-interpath-001-trial-for-intismeran-autogene-plus-keytruda-pembrolizumab-at-esmo-2026-presidential-symposium/",
+              "date": "2026-10-22",
+              "denominator": 1137
+            },
+            {
+              "key": "OS|HR|vs:pembrolizumab",
+              "outcomeLabel": "OS · HR",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab (+ placebo)"},
+              "label": "OS · HR vs Pembrolizumab",
+              "value": "0.77 (95% CI 0.45–1.31) · interim",
+              "sourceUrl": "https://docs.publicnow.com/viewDoc?filename=178244%5CEXT%5CBAE43297F8442A8A60339DC12668FB1FD5A782B4_99150EAE0A604694EE38D2B15A904F77D89A1F1D.PDF",
+              "date": "2026-10-24",
+              "denominator": 1137
+            },
+            {
+              "key": "RFS|HR|vs:pembrolizumab|before6mo",
+              "outcomeLabel": "RFS · HR · before 6 months",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab (+ placebo)"},
+              "label": "RFS · HR vs Pembrolizumab · before 6 months",
+              "value": "0.99 (95% CI 0.66–1.49)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/43013837/",
+              "date": "2026-11-11",
+              "pmid": "43013837"
+            },
+            {
+              "key": "RFS|HR|vs:pembrolizumab|after6mo",
+              "outcomeLabel": "RFS · HR · after 6 months",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab (+ placebo)"},
+              "label": "RFS · HR vs Pembrolizumab · after 6 months",
+              "value": "0.42 (95% CI 0.30–0.58)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/43013837/",
+              "date": "2026-11-11",
+              "pmid": "43013837"
+            },
+            {
+              "key": "DMFS|HR|vs:pembrolizumab|before6mo",
+              "outcomeLabel": "DMFS · HR · before 6 months",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab (+ placebo)"},
+              "label": "DMFS · HR vs Pembrolizumab · before 6 months",
+              "value": "1.01 (95% CI 0.58–1.79)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/43013837/",
+              "date": "2026-11-11",
+              "pmid": "43013837"
+            },
+            {
+              "key": "DMFS|HR|vs:pembrolizumab|after6mo",
+              "outcomeLabel": "DMFS · HR · after 6 months",
+              "comparison": {"treatment": "Intismeran autogene + Pembrolizumab", "reference": "Pembrolizumab (+ placebo)"},
+              "label": "DMFS · HR vs Pembrolizumab · after 6 months",
+              "value": "0.50 (95% CI 0.34–0.73)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/43013837/",
+              "date": "2026-11-11",
+              "pmid": "43013837"
+            },
+            {
+              "key": "RFS|survival_probability|24mo",
+              "label": "2-year RFS",
+              "value": "82.2%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/43013837/",
+              "date": "2026-11-11",
+              "pmid": "43013837",
+              "denominator": 757
+            },
+            {
+              "key": "DMFS|survival_probability|24mo",
+              "label": "2-year DMFS",
+              "value": "88.5%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/43013837/",
+              "date": "2026-11-11",
+              "pmid": "43013837",
+              "denominator": 757
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ipilimumab-nivolumab-first-line",
+      "regimen": "Ipilimumab + Nivolumab",
+      "drugs": [
+        "Ipilimumab",
+        "Nivolumab"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT01927419",
+          "name": "CheckMate 069",
+          "nct": "NCT01927419",
+          "primary_date": "2015-04-20",
+          "primary_pmid": "25891304",
+          "regimen": "Ipilimumab + Nivolumab",
+          "population": "Previously untreated unresectable stage III or IV melanoma",
+          "comparator": "Ipilimumab",
+          "status": "Long-term OS published",
+          "publications": [
+            {
+              "pmid": "25891304",
+              "date": "2015-04-20",
+              "title": "CheckMate 069 primary analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/25891304/"
+            },
+            {
+              "pmid": "27622997",
+              "date": "2016-09-09",
+              "title": "CheckMate 069 two-year analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/27622997/"
+            },
+            {
+              "pmid": "39504507",
+              "date": "2024-11-06",
+              "title": "Trial-specific long-term OS in an analysis of six CheckMate trials",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/39504507/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed|BRAF-wild-type",
+              "label": "Confirmed ORR · BRAF V600 wild type",
+              "value": "61% (95% CI 49–72)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/25891304/",
+              "date": "2015-04-20",
+              "pmid": "25891304",
+              "denominator": 72
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "56.8 months (95% CI 29.2–56.8) · treated population",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/39504507/",
+              "date": "2024-11-06",
+              "pmid": "39504507"
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "Median PFS not reached",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/27622997/",
+              "date": "2016-09-09",
+              "pmid": "27622997",
+              "denominator": 95,
+              "status": "not_reached"
+            },
+            {
+              "key": "OS|HR|vs:ipilimumab",
+              "outcomeLabel": "OS · HR",
+              "comparison": {"treatment": "Ipilimumab + Nivolumab → Nivolumab", "reference": "Ipilimumab"},
+              "label": "OS · HR vs Ipilimumab",
+              "value": "0.74 (95% CI 0.43–1.26)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/27622997/",
+              "date": "2016-09-09",
+              "pmid": "27622997",
+              "denominator": 142
+            },
+            {
+              "key": "PFS|HR|vs:ipilimumab",
+              "outcomeLabel": "PFS · HR",
+              "comparison": {"treatment": "Ipilimumab + Nivolumab → Nivolumab", "reference": "Ipilimumab"},
+              "label": "PFS · HR vs Ipilimumab",
+              "value": "0.36 (95% CI 0.22–0.56)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/27622997/",
+              "date": "2016-09-09",
+              "pmid": "27622997",
+              "denominator": 142
+            },
+            {
+              "key": "OS|survival_probability|12mo",
+              "label": "1-year OS",
+              "value": "73.4% (95% CI 63.2–81.2)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/27622997/",
+              "date": "2016-09-09",
+              "pmid": "27622997",
+              "denominator": 95
+            },
+            {
+              "key": "OS|survival_probability|24mo",
+              "label": "2-year OS",
+              "value": "63.8% (95% CI 53.3–72.6)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/27622997/",
+              "date": "2016-09-09",
+              "pmid": "27622997",
+              "denominator": 95
+            },
+            {
+              "key": "PFS|survival_probability|24mo",
+              "label": "2-year PFS",
+              "value": "51.3% (95% CI 40.4–61.2)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/27622997/",
+              "date": "2016-09-09",
+              "pmid": "27622997",
+              "denominator": 95
+            }
+          ],
+          "match_ids": [
+            "NCT01844505",
+            "NCT02714218",
+            "NCT02599402"
+          ]
+        }
+      ],
+      "phase3": [
+        {
+          "id": "NCT01844505",
+          "name": "CheckMate 067",
+          "nct": "NCT01844505",
+          "primary_date": "2015-05-31",
+          "primary_pmid": "26027431",
+          "regimen": "Ipilimumab + Nivolumab",
+          "population": "Previously untreated unresectable stage III or IV melanoma",
+          "comparator": "Ipilimumab or Nivolumab (separate arms)",
+          "status": "Final ten-year outcomes published",
+          "publications": [
+            {
+              "pmid": "26027431",
+              "date": "2015-05-31",
+              "title": "CheckMate 067 primary PFS analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/26027431/"
+            },
+            {
+              "pmid": "30361170",
+              "date": "2018-10-22",
+              "title": "CheckMate 067 four-year analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/30361170/"
+            },
+            {
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "title": "CheckMate 067 final ten-year analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/39282897/"
+            },
+            {
+              "date": "2025-05-21",
+              "title": "CheckMate 067 registered results",
+              "url": "https://clinicaltrials.gov/study/NCT01844505?tab=results"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "71.9 months (95% CI 38.2–114.4)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/39282897/",
+              "date": "2024-09-15",
+              "pmid": "39282897",
+              "denominator": 314
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "11.5 months (95% CI 8.9–20.0)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "date": "2024-09-15",
+              "pmid": "39282897",
+              "denominator": 314
+            },
+            {
+              "key": "OS|HR|vs:ipilimumab",
+              "outcomeLabel": "OS · HR",
+              "comparison": {"treatment": "Ipilimumab + Nivolumab → Nivolumab", "reference": "Ipilimumab"},
+              "label": "OS · HR vs Ipilimumab",
+              "value": "0.53 (95% CI 0.44–0.65)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/39282897/",
+              "date": "2024-09-15",
+              "pmid": "39282897",
+              "denominator": 629
+            },
+            {
+              "key": "OS|survival_probability|120mo",
+              "label": "10-year OS",
+              "value": "43% (95% CI 38–49)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/39282897/",
+              "date": "2024-09-15",
+              "pmid": "39282897",
+              "denominator": 314
+            },
+            {
+              "key": "PFS|HR|vs:ipilimumab",
+              "outcomeLabel": "PFS · HR",
+              "comparison": {"treatment": "Ipilimumab + Nivolumab → Nivolumab", "reference": "Ipilimumab"},
+              "label": "PFS · HR vs Ipilimumab",
+              "value": "0.42 (95% CI 0.35–0.51)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "denominator": 629
+            },
+            {
+              "key": "PFS|HR|vs:nivolumab",
+              "outcomeLabel": "PFS · HR",
+              "comparison": {"treatment": "Ipilimumab + Nivolumab → Nivolumab", "reference": "Nivolumab"},
+              "label": "PFS · HR vs Nivolumab",
+              "value": "0.79 (95% CI 0.65–0.96)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "denominator": 630,
+              "note": "Descriptive comparison with nivolumab monotherapy."
+            },
+            {
+              "key": "OS|HR|vs:nivolumab",
+              "outcomeLabel": "OS · HR",
+              "comparison": {"treatment": "Ipilimumab + Nivolumab → Nivolumab", "reference": "Nivolumab"},
+              "label": "OS · HR vs Nivolumab",
+              "value": "0.85 (95% CI 0.69–1.05)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "denominator": 630,
+              "note": "Descriptive comparison with nivolumab monotherapy."
+            },
+            {
+              "key": "OS|survival_probability|12mo",
+              "label": "1-year OS",
+              "value": "73% (95% CI 68–78)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01844505?tab=results",
+              "sourceLabel": "ClinicalTrials.gov results",
+              "date": "2025-05-21",
+              "denominator": 314
+            },
+            {
+              "key": "OS|survival_probability|24mo",
+              "label": "2-year OS",
+              "value": "64% (95% CI 59–69)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01844505?tab=results",
+              "sourceLabel": "ClinicalTrials.gov results",
+              "date": "2025-05-21",
+              "denominator": 314
+            },
+            {
+              "key": "PFS|survival_probability|12mo",
+              "label": "1-year PFS",
+              "value": "50% (95% CI 44–55)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01844505?tab=results",
+              "sourceLabel": "ClinicalTrials.gov results",
+              "date": "2025-05-21",
+              "denominator": 314
+            },
+            {
+              "key": "PFS|survival_probability|24mo",
+              "label": "2-year PFS",
+              "value": "43% (95% CI 37–48)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01844505?tab=results",
+              "sourceLabel": "ClinicalTrials.gov results",
+              "date": "2025-05-21",
+              "denominator": 314
+            },
+            {
+              "key": "OS|survival_probability|36mo",
+              "label": "3-year OS",
+              "value": "58% (95% CI 52–63)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "denominator": 314
+            },
+            {
+              "key": "OS|survival_probability|60mo",
+              "label": "5-year OS",
+              "value": "52% (95% CI 46–57)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "denominator": 314
+            },
+            {
+              "key": "PFS|survival_probability|36mo",
+              "label": "3-year PFS",
+              "value": "39% (95% CI 34–45)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "denominator": 314
+            },
+            {
+              "key": "PFS|survival_probability|60mo",
+              "label": "5-year PFS",
+              "value": "37% (95% CI 31–42)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "denominator": 314
+            },
+            {
+              "key": "PFS|survival_probability|120mo",
+              "label": "10-year PFS",
+              "value": "31% (95% CI 26–37)",
+              "sourceUrl": "https://doi.org/10.1056/NEJMoa2407417",
+              "pmid": "39282897",
+              "date": "2024-09-15",
+              "denominator": 314
+            }
+          ]
+        },
+        {
+          "id": "NCT02714218",
+          "name": "CheckMate 511",
+          "nct": "NCT02714218",
+          "primary_date": "2019-02-27",
+          "primary_pmid": "30811280",
+          "regimen": "Nivolumab 1 mg/kg + Ipilimumab 3 mg/kg",
+          "population": "Previously untreated unresectable stage III or IV melanoma",
+          "comparator": "Nivolumab 3 mg/kg + Ipilimumab 1 mg/kg",
+          "status": "Phase IIIb/IV · three-year outcomes published",
+          "publications": [
+            {
+              "pmid": "30811280",
+              "date": "2019-02-27",
+              "title": "CheckMate 511 primary safety and efficacy analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/30811280/"
+            },
+            {
+              "pmid": null,
+              "date": "2021-05-20",
+              "title": "CheckMate 511 three-year update · ASCO meeting abstract",
+              "url": "https://doi.org/10.1200/JCO.2021.39.15_suppl.9516"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|investigator",
+              "label": "ORR · investigator assessment",
+              "value": "53% (95% CI 45–60)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2021.39.15_suppl.9516",
+              "date": "2021-05-20",
+              "denominator": 178
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "10.0 months (95% CI 6.3–40.9)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2021.39.15_suppl.9516",
+              "date": "2021-05-20",
+              "denominator": 178
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "Median OS not reached (95% CI 43.8 months–not reached)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2021.39.15_suppl.9516",
+              "date": "2021-05-20",
+              "denominator": 178,
+              "status": "not_reached"
+            },
+            {
+              "key": "PFS|survival_probability|36mo",
+              "label": "3-year PFS",
+              "value": "43% (95% CI 35–50)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2021.39.15_suppl.9516",
+              "date": "2021-05-20",
+              "denominator": 178
+            },
+            {
+              "key": "OS|survival_probability|36mo",
+              "label": "3-year OS",
+              "value": "61% (95% CI 53–67)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2021.39.15_suppl.9516",
+              "date": "2021-05-20",
+              "denominator": 178
+            },
+            {
+              "key": "TRAE|percentage|grade3to5",
+              "label": "Treatment-related adverse events · grade 3–5",
+              "value": "48.3% (95% CI 40.8–55.9)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/30811280/",
+              "date": "2019-02-27",
+              "pmid": "30811280",
+              "denominator": 178
+            }
+          ]
+        },
+        {
+          "id": "NCT02599402",
+          "name": "CheckMate 401",
+          "nct": "NCT02599402",
+          "primary_date": "2023-06-12",
+          "primary_pmid": "37307514",
+          "regimen": "Ipilimumab + Nivolumab",
+          "population": "Previously untreated unresectable stage III or IV melanoma; included patients with ECOG 2, brain metastases and ocular or mucosal melanoma",
+          "comparator": null,
+          "status": "Phase IIIb · outcomes published",
+          "publications": [
+            {
+              "pmid": "37307514",
+              "date": "2023-06-12",
+              "title": "CheckMate 401 primary analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/37307514/"
+            },
+            {
+              "date": "2021-06-15",
+              "title": "CheckMate 401 registered results",
+              "url": "https://clinicaltrials.gov/study/NCT02599402?tab=results"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "OS|survival_probability|24mo",
+              "label": "2-year OS",
+              "value": "63% (95% CI 59–68)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/37307514/",
+              "date": "2023-06-12",
+              "pmid": "37307514",
+              "denominator": 533
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "Median OS not reached (95% CI 33.9 months–not reached)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/37307514/",
+              "date": "2023-06-12",
+              "pmid": "37307514",
+              "denominator": 533,
+              "status": "not_reached"
+            },
+            {
+              "key": "ORR|percentage",
+              "label": "ORR",
+              "value": "44% (95% CI 40–49)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/37307514/",
+              "date": "2023-06-12",
+              "pmid": "37307514",
+              "denominator": 533
+            },
+            {
+              "key": "CR|percentage",
+              "label": "Complete response",
+              "value": "11%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/37307514/",
+              "date": "2023-06-12",
+              "pmid": "37307514",
+              "denominator": 533
+            },
+            {
+              "key": "PFS|median|investigator-clinical-or-radiographic-progression-or-new-therapy",
+              "label": "Median PFS · radiologic or clinical progression, or new treatment",
+              "value": "4.96 months (95% CI 3.45–6.77)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT02599402?tab=results",
+              "sourceLabel": "ClinicalTrials.gov results",
+              "date": "2021-06-15",
+              "denominator": 533,
+              "note": "The investigators omitted PFS from the publication because tumor assessment intervals varied.",
+              "noteSourceUrl": "https://doi.org/10.1200/JCO.22.02199"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lenvatinib-pembrolizumab-post-pd1",
+      "regimen": "Lenvatinib + Pembrolizumab",
+      "drugs": [
+        "Lenvatinib",
+        "Pembrolizumab"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT03776136",
+          "name": "LEAP-004",
+          "nct": "NCT03776136",
+          "primary_date": "2022-07-22",
+          "primary_pmid": "35867951",
+          "regimen": "Lenvatinib + Pembrolizumab",
+          "population": "Unresectable stage III–IV melanoma with confirmed progression on prior PD-1 or PD-L1 blockade",
+          "comparator": null,
+          "status": "Four-year update published",
+          "publications": [
+            {
+              "pmid": "35867951",
+              "date": "2022-07-22",
+              "title": "LEAP-004 primary analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/35867951/"
+            },
+            {
+              "pmid": null,
+              "date": "2024-05-29",
+              "title": "LEAP-004 four-year update · ASCO meeting abstract",
+              "url": "https://doi.org/10.1200/JCO.2024.42.16_suppl.9559"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|BICR",
+              "label": "ORR · central review",
+              "value": "24.3% (95% CI 16.4–33.7)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2024.42.16_suppl.9559",
+              "date": "2024-05-29",
+              "denominator": 103
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "4.2 months (95% CI 3.5–6.3)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2024.42.16_suppl.9559",
+              "date": "2024-05-29",
+              "denominator": 103
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "14.0 months (95% CI 10.8–18.3)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2024.42.16_suppl.9559",
+              "date": "2024-05-29",
+              "denominator": 103
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "8.5 months (range 3.2–40.8)",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2024.42.16_suppl.9559",
+              "date": "2024-05-29",
+              "denominator": 25
+            },
+            {
+              "key": "PFS|survival_probability|24mo",
+              "label": "2-year PFS",
+              "value": "10.1%",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2024.42.16_suppl.9559",
+              "date": "2024-05-29",
+              "denominator": 103
+            },
+            {
+              "key": "OS|survival_probability|24mo",
+              "label": "2-year OS",
+              "value": "29.7%",
+              "sourceUrl": "https://doi.org/10.1200/JCO.2024.42.16_suppl.9559",
+              "date": "2024-05-29",
+              "denominator": 103
+            }
+          ],
+          "match_ids": []
+        }
+      ],
+      "phase3": [],
+      "match_review": {
+        "date": "2026-11-26",
+        "excluded_candidates": [
+          {
+            "nct": "NCT03820986",
+            "pmid": "40885529",
+            "reason": "LEAP-003 required no previous PD-(L)1 therapy for advanced disease. LEAP-004 required confirmed progression on PD-(L)1 blockade.",
+            "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/40885529/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rp1-nivolumab-post-pd1",
+      "regimen": "Nivolumab + Vusolimogene oderparepvec (RP1)",
+      "drugs": [
+        "Nivolumab",
+        "Vusolimogene oderparepvec (RP1)"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT03767348",
+          "name": "IGNYTE",
+          "nct": "NCT03767348",
+          "primary_date": "2025-07-08",
+          "primary_pmid": "40627813",
+          "regimen": "Nivolumab + Vusolimogene oderparepvec (RP1)",
+          "population": "Advanced cutaneous melanoma with confirmed progression on immediate prior anti-PD-1 therapy",
+          "comparator": null,
+          "status": "Phase II cohort reported · three-year follow-up",
+          "publications": [
+            {
+              "pmid": "40627813",
+              "date": "2025-07-08",
+              "title": "IGNYTE anti-PD-1-failed melanoma cohort",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/40627813/"
+            },
+            {
+              "pmid": null,
+              "date": "2026-07-30",
+              "title": "FDA review of the three-year IGNYTE efficacy update",
+              "url": "https://www.fda.gov/media/193878/download"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed|BICR",
+              "label": "Confirmed ORR · central review",
+              "value": "33.6% (95% CI 25.8–42.0)",
+              "sourceUrl": "https://www.fda.gov/media/193878/download",
+              "date": "2026-07-30",
+              "denominator": 140
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "32.9 months (95% CI 25.76–46.03)",
+              "sourceUrl": "https://www.fda.gov/media/193878/download",
+              "date": "2026-07-30",
+              "denominator": 140
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "3.6 months",
+              "sourceUrl": "https://www.fda.gov/media/193878/download",
+              "date": "2026-07-30",
+              "denominator": 140
+            },
+            {
+              "key": "OS|survival_probability|12mo",
+              "label": "1-year OS",
+              "value": "75.3%",
+              "sourceUrl": "https://www.fda.gov/media/193878/download",
+              "date": "2026-07-30",
+              "denominator": 140
+            },
+            {
+              "key": "OS|survival_probability|24mo",
+              "label": "2-year OS",
+              "value": "61.5%",
+              "sourceUrl": "https://www.fda.gov/media/193878/download",
+              "date": "2026-07-30",
+              "denominator": 140
+            },
+            {
+              "key": "OS|survival_probability|36mo",
+              "label": "3-year OS",
+              "value": "47.8%",
+              "sourceUrl": "https://www.fda.gov/media/193878/download",
+              "date": "2026-07-30",
+              "denominator": 140
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "24.8 months (95% CI 14.1–not reached)",
+              "sourceUrl": "https://www.fda.gov/media/193878/download",
+              "date": "2026-07-30",
+              "denominator": 47
+            }
+          ],
+          "match_ids": [
+            "NCT06264180"
+          ]
+        }
+      ],
+      "phase3": [
+        {
+          "id": "NCT06264180",
+          "name": "IGNYTE-3",
+          "nct": "NCT06264180",
+          "primary_date": null,
+          "primary_pmid": null,
+          "regimen": "Nivolumab + Vusolimogene oderparepvec (RP1)",
+          "population": "Advanced cutaneous melanoma after PD-1 blockade and CTLA-4 blockade or ineligibility for anti-CTLA-4 treatment",
+          "comparator": "Physician’s choice",
+          "status": "Confirmatory trial ongoing · primary OS pending",
+          "publications": [
+            {
+              "pmid": null,
+              "date": "2026-05-27",
+              "title": "IGNYTE-3 protocol · ASCO meeting abstract",
+              "url": "https://doi.org/10.1200/JCO.2026.44.16_suppl.TPS9597"
+            },
+            {
+              "pmid": null,
+              "date": "2026-07-30",
+              "title": "FDA review of early IGNYTE-3 response counts",
+              "url": "https://www.fda.gov/media/193935/download"
+            },
+            {
+              "pmid": null,
+              "date": "2026-08-06",
+              "title": "FDA confirmatory-trial requirement and OS endpoint",
+              "url": "https://www.fda.gov/media/194230/download"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|responders|preliminary",
+              "label": "Responders · preliminary analysis",
+              "value": "3 in the selected regimen arm, 0 in the control arm",
+              "sourceUrl": "https://www.fda.gov/media/193935/download",
+              "date": "2026-07-30"
+            },
+            {
+              "key": "OS|status",
+              "label": "OS",
+              "value": "Awaiting OS results",
+              "sourceUrl": "https://www.fda.gov/media/194230/download",
+              "date": "2026-08-06",
+              "status": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pembrolizumab-neoadjuvant-desmoplastic",
+      "regimen": "Pembrolizumab",
+      "drugs": [
+        "Pembrolizumab"
+      ],
+      "setting": "Neoadjuvant",
+      "phase2": [
+        {
+          "id": "NCT02775851:A",
+          "name": "SWOG S1512 · cohort A",
+          "nct": "NCT02775851",
+          "primary_date": "2026-01-29",
+          "primary_pmid": "41611998",
+          "regimen": "Pembrolizumab",
+          "population": "Surgically resectable stage I–III desmoplastic melanoma",
+          "comparator": null,
+          "status": "Primary results published",
+          "publications": [
+            {
+              "pmid": "41611998",
+              "date": "2026-01-29",
+              "title": "SWOG S1512 resectable cohort A · primary report",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/41611998/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "pCR|percentage|local",
+              "label": "Pathological complete response · local assessment",
+              "value": "71% (95% CI 51–87)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/41611998/",
+              "date": "2026-01-29",
+              "pmid": "41611998",
+              "denominator": 28
+            },
+            {
+              "key": "ORR|percentage|9wk|clinical",
+              "label": "Clinical response at 9 weeks",
+              "value": "48% (95% CI 28–69)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/41611998/",
+              "date": "2026-01-29",
+              "pmid": "41611998",
+              "denominator": 25
+            },
+            {
+              "key": "OS|survival_probability|36mo",
+              "label": "3-year OS",
+              "value": "87% (95% CI 65–96)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/41611998/",
+              "date": "2026-01-29",
+              "pmid": "41611998",
+              "denominator": 28
+            },
+            {
+              "key": "RFS|survival_probability|36mo",
+              "label": "3-year RFS",
+              "value": "74% (95% CI 51–87)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/41611998/",
+              "date": "2026-01-29",
+              "pmid": "41611998",
+              "denominator": 27
+            },
+            {
+              "key": "MSS|survival_probability|36mo",
+              "label": "3-year MSS",
+              "value": "95% (95% CI 80–100)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/41611998/",
+              "date": "2026-01-29",
+              "pmid": "41611998",
+              "denominator": 28
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "Median OS not reached",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/41611998/",
+              "date": "2026-01-29",
+              "pmid": "41611998",
+              "denominator": 28,
+              "status": "not_reached"
+            },
+            {
+              "key": "RFS|median",
+              "label": "Median RFS",
+              "value": "Median RFS not reached",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/41611998/",
+              "date": "2026-01-29",
+              "pmid": "41611998",
+              "denominator": 27,
+              "status": "not_reached"
+            }
+          ],
+          "match_ids": []
+        }
+      ],
+      "phase3": []
+    },
+    {
+      "id": "pembrolizumab-advanced-desmoplastic",
+      "regimen": "Pembrolizumab",
+      "drugs": [
+        "Pembrolizumab"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT02775851:B",
+          "name": "SWOG S1512 · cohort B",
+          "nct": "NCT02775851",
+          "primary_date": "2025-08-14",
+          "primary_pmid": "40813711",
+          "regimen": "Pembrolizumab",
+          "population": "Unresectable desmoplastic melanoma",
+          "comparator": null,
+          "status": "Primary results published",
+          "publications": [
+            {
+              "pmid": "40813711",
+              "date": "2025-08-14",
+              "title": "SWOG S1512 unresectable cohort B · primary report",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/40813711/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "CR|percentage|clinical",
+              "label": "Clinical complete response",
+              "value": "37% (95% CI 19–58)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/40813711/",
+              "date": "2025-08-14",
+              "pmid": "40813711",
+              "denominator": 27
+            },
+            {
+              "key": "ORR|percentage|posthoc",
+              "label": "ORR · post hoc",
+              "value": "89% (95% CI 71–98)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/40813711/",
+              "date": "2025-08-14",
+              "pmid": "40813711",
+              "denominator": 27
+            },
+            {
+              "key": "Melanoma-specific PFS|survival_probability|36mo",
+              "label": "3-year Melanoma-specific PFS",
+              "value": "84%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/40813711/",
+              "date": "2025-08-14",
+              "pmid": "40813711",
+              "denominator": 26
+            },
+            {
+              "key": "MSS|survival_probability|36mo",
+              "label": "3-year MSS",
+              "value": "96%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/40813711/",
+              "date": "2025-08-14",
+              "pmid": "40813711",
+              "denominator": 26
+            },
+            {
+              "key": "OS|survival_probability|36mo",
+              "label": "3-year OS",
+              "value": "84%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/40813711/",
+              "date": "2025-08-14",
+              "pmid": "40813711",
+              "denominator": 26
+            },
+            {
+              "key": "PFS|survival_probability|36mo",
+              "label": "3-year PFS",
+              "value": "72%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/40813711/",
+              "date": "2025-08-14",
+              "pmid": "40813711",
+              "denominator": 26
+            }
+          ],
+          "match_ids": []
+        }
+      ],
+      "phase3": []
+    },
+    {
+      "id": "nivolumab-relatlimab-post-pd1",
+      "regimen": "Nivolumab + Relatlimab",
+      "drugs": [
+        "Nivolumab",
+        "Relatlimab"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT01968109:D1",
+          "name": "RELATIVITY-020 · cohort D1",
+          "nct": "NCT01968109",
+          "primary_date": "2023-02-13",
+          "primary_pmid": "36780608",
+          "regimen": "Nivolumab + Relatlimab",
+          "population": "Advanced melanoma progressing on one prior anti-PD-1-containing regimen",
+          "comparator": null,
+          "status": "Phase IIa cohort results published",
+          "publications": [
+            {
+              "pmid": "36780608",
+              "date": "2023-02-13",
+              "title": "RELATIVITY-020 part D · phase IIa cohorts D1 and D2",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/36780608/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|BICR",
+              "label": "ORR · central review",
+              "value": "12.0% (95% CI 8.8–15.8)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 351
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "2.1 months (95% CI 1.9–3.5)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 354
+            },
+            {
+              "key": "PFS|survival_probability|6mo",
+              "label": "6-month PFS",
+              "value": "29.1% (95% CI 24.2–34.1)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 354
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "14.7 months (95% CI 12.4–16.9)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 354
+            },
+            {
+              "key": "OS|survival_probability|12mo",
+              "label": "1-year OS",
+              "value": "56.0% (95% CI 50.6–61.1)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 354
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "Median DoR not reached (95% CI 12.9 months–not reached)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "status": "not_reached",
+              "denominator": 42
+            }
+          ],
+          "match_ids": []
+        },
+        {
+          "id": "NCT01968109:D2",
+          "name": "RELATIVITY-020 · cohort D2",
+          "nct": "NCT01968109",
+          "primary_date": "2023-02-13",
+          "primary_pmid": "36780608",
+          "regimen": "Nivolumab + Relatlimab",
+          "population": "Advanced melanoma progressing during or after at least one prior anti-PD-(L)1 regimen; broader prior-treatment eligibility",
+          "comparator": null,
+          "status": "Phase IIa cohort results published",
+          "publications": [
+            {
+              "pmid": "36780608",
+              "date": "2023-02-13",
+              "title": "RELATIVITY-020 part D · phase IIa cohorts D1 and D2",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/36780608/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|BICR",
+              "label": "ORR · central review",
+              "value": "9.2% (95% CI 5.2–14.7)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 163
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "3.2 months (95% CI 1.9–3.6)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 164
+            },
+            {
+              "key": "PFS|survival_probability|6mo",
+              "label": "6-month PFS",
+              "value": "27.7% (95% CI 20.5–35.4)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 164
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "17.1 months (95% CI 13.4–21.0)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 164
+            },
+            {
+              "key": "OS|survival_probability|12mo",
+              "label": "1-year OS",
+              "value": "60.0% (95% CI 52.0–67.0)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 164
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "12.8 months (95% CI 6.9–12.9)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36780608/",
+              "date": "2023-02-13",
+              "pmid": "36780608",
+              "denominator": 15
+            }
+          ],
+          "match_ids": []
+        }
+      ],
+      "phase3": [],
+      "match_review": {
+        "date": "2026-11-26",
+        "excluded_candidates": [
+          {
+            "nct": "NCT03470922",
+            "pmid": "34986285",
+            "reason": "The pooled phase II/III RELATIVITY-047 report enrolled previously untreated advanced melanoma. RELATIVITY-020 part D required progression with earlier PD-(L)1 blockade.",
+            "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/34986285/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "talimogene-laherparepvec-advanced",
+      "regimen": "Talimogene laherparepvec",
+      "drugs": [
+        "Talimogene laherparepvec"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT00289016",
+          "name": "OncoVEX phase II",
+          "nct": "NCT00289016",
+          "primary_date": "2009-11-02",
+          "primary_pmid": "19884534",
+          "regimen": "Talimogene laherparepvec",
+          "population": "Unresectable stage IIIC–IV melanoma with injectable lesions",
+          "comparator": null,
+          "status": "Primary results and lesion follow-up published",
+          "publications": [
+            {
+              "pmid": "19884534",
+              "date": "2009-11-02",
+              "title": "OncoVEX phase II primary analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/19884534/"
+            },
+            {
+              "pmid": "26981242",
+              "date": "2016-03-15",
+              "title": "OncoVEX phase II lesion-specific reanalysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/26981242/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|RECIST",
+              "label": "ORR · RECIST",
+              "value": "26%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/19884534/",
+              "date": "2009-11-02",
+              "pmid": "19884534",
+              "denominator": 50
+            },
+            {
+              "key": "OS|survival_probability|12mo",
+              "label": "1-year OS",
+              "value": "58%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/19884534/",
+              "date": "2009-11-02",
+              "pmid": "19884534",
+              "denominator": 50
+            },
+            {
+              "key": "TTP|median",
+              "label": "Median time to progression",
+              "value": "146 days (range 15–607) · progression without a subsequent response or stable disease",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT00289016?tab=results",
+              "denominator": 50
+            },
+            {
+              "key": "OS|survival_probability|24mo",
+              "label": "2-year OS",
+              "value": "52%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/19884534/",
+              "date": "2009-11-02",
+              "pmid": "19884534",
+              "denominator": 50
+            }
+          ],
+          "match_ids": [
+            "NCT00769704"
+          ]
+        },
+        {
+          "id": "NCT02366195",
+          "name": "T-VEC-325",
+          "nct": "NCT02366195",
+          "primary_date": "2021-03-30",
+          "primary_pmid": "33785610",
+          "regimen": "Talimogene laherparepvec",
+          "population": "Unresectable stage IIIB–IV melanoma with injectable lesions",
+          "comparator": null,
+          "status": "Phase II outcomes published",
+          "publications": [
+            {
+              "pmid": "33785610",
+              "date": "2021-03-30",
+              "title": "T-VEC-325 phase II primary analysis and longer follow-up",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/33785610/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|investigator|modified-WHO",
+              "label": "ORR · investigator, modified WHO",
+              "value": "27.9% (95% CI 19.8–37.2)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/33785610/",
+              "date": "2021-03-30",
+              "pmid": "33785610",
+              "denominator": 111
+            },
+            {
+              "key": "CR|percentage|investigator|modified-WHO",
+              "label": "Complete response · investigator, modified WHO",
+              "value": "13.5%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/33785610/",
+              "date": "2021-03-30",
+              "pmid": "33785610",
+              "denominator": 111
+            },
+            {
+              "key": "TTF|median",
+              "label": "Median time to treatment failure",
+              "value": "8.1 months (95% CI 5.4–11.0)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT02366195?tab=results",
+              "denominator": 111
+            },
+            {
+              "key": "DRR|percentage|investigator|modified-WHO",
+              "label": "Durable response · investigator, modified WHO",
+              "value": "21.6%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/33785610/",
+              "date": "2021-03-30",
+              "pmid": "33785610",
+              "denominator": 111
+            }
+          ],
+          "match_ids": [
+            "NCT00769704"
+          ]
+        }
+      ],
+      "phase3": [
+        {
+          "id": "NCT00769704",
+          "name": "OPTiM",
+          "nct": "NCT00769704",
+          "primary_date": "2015-05-26",
+          "primary_pmid": "26014293",
+          "regimen": "Talimogene laherparepvec",
+          "population": "Unresectable stage IIIB–IV melanoma with injectable lesions",
+          "comparator": "Sargramostim (GM-CSF)",
+          "status": "Final outcomes published",
+          "publications": [
+            {
+              "pmid": "26014293",
+              "date": "2015-05-26",
+              "title": "OPTiM primary analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/26014293/"
+            },
+            {
+              "pmid": "31171039",
+              "date": "2019-06-06",
+              "title": "OPTiM final analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/31171039/"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "TTF|median",
+              "label": "Median time to treatment failure",
+              "value": "8.2 months (95% CI 6.5–9.9)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT00769704?tab=results",
+              "denominator": 295
+            },
+            {
+              "key": "ORR|percentage|independent|modified-WHO",
+              "label": "ORR · independent assessment, modified WHO",
+              "value": "26.4% (95% CI 21.4–31.5)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/26014293/",
+              "date": "2015-05-26",
+              "pmid": "26014293",
+              "denominator": 295
+            },
+            {
+              "key": "DRR|percentage|independent|modified-WHO",
+              "label": "Durable response · independent assessment, modified WHO",
+              "value": "16.3% (95% CI 12.1–20.5)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/26014293/",
+              "date": "2015-05-26",
+              "pmid": "26014293",
+              "denominator": 295
+            },
+            {
+              "key": "ORR|percentage|investigator|modified-WHO",
+              "label": "ORR · investigator, modified WHO",
+              "value": "31.5%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/31171039/",
+              "date": "2019-06-06",
+              "pmid": "31171039",
+              "denominator": 295
+            },
+            {
+              "key": "DRR|percentage|investigator|modified-WHO",
+              "label": "Durable response · investigator, modified WHO",
+              "value": "19.0%",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/31171039/",
+              "date": "2019-06-06",
+              "pmid": "31171039",
+              "denominator": 295
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "23.3 months (95% CI 19.5–29.6)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/31171039/",
+              "date": "2019-06-06",
+              "pmid": "31171039",
+              "denominator": 295
+            },
+            {
+              "key": "OS|HR|vs:sargramostim",
+              "outcomeLabel": "OS · HR",
+              "comparison": {"treatment": "Talimogene laherparepvec", "reference": "Sargramostim (GM-CSF)"},
+              "label": "OS · HR vs Sargramostim",
+              "value": "0.79 (95% CI 0.62–1.00)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/31171039/",
+              "date": "2019-06-06",
+              "pmid": "31171039",
+              "denominator": 436
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "regimen": "Cyclophosphamide → Fludarabine → Lifileucel → Aldesleukin",
+      "drugs": [
+        "Cyclophosphamide",
+        "Fludarabine",
+        "Lifileucel",
+        "Aldesleukin"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT02360579:cohort-4",
+          "nct": "NCT02360579",
+          "name": "C-144-01 · cohort 4",
+          "regimen": "Cyclophosphamide → Fludarabine → Lifileucel → Aldesleukin",
+          "comparator": null,
+          "primary_date": "2022-12-13",
+          "primary_pmid": "36600653",
+          "publications": [
+            {
+              "pmid": "36600653",
+              "date": "2022-12-13",
+              "title": "Lifileucel after progression on checkpoint inhibitors and targeted therapies in cohorts 2 and 4",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/36600653/"
+            },
+            {
+              "pmid": "40454684",
+              "date": "2025-06-02",
+              "title": "Five-year follow-up of C-144-01 cohorts 2 and 4 (pooled)",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/40454684/"
+            }
+          ],
+          "population": "Unresectable or metastatic melanoma with progression after PD-1 blockade; BRAF-directed therapy if BRAF V600-positive.",
+          "status": "Phase II cohort results published",
+          "status_as_of": "2022-12-13",
+          "match_ids": [],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed|central|RECIST 1.1",
+              "label": "Confirmed ORR · central review · RECIST 1.1",
+              "value": "28.7% (95% CI 19.5–39.4)",
+              "denominator": 87,
+              "pmid": "36600653",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36600653/",
+              "date": "2022-12-13"
+            },
+            {
+              "key": "DOR|median",
+              "label": "Median DOR",
+              "value": "10.4 months",
+              "denominator": 25,
+              "pmid": "36600653",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36600653/",
+              "date": "2022-12-13"
+            }
+          ]
+        },
+        {
+          "id": "NCT02360579:cohort-2",
+          "nct": "NCT02360579",
+          "name": "C-144-01 · cohort 2",
+          "regimen": "Cyclophosphamide → Fludarabine → Lifileucel → Aldesleukin",
+          "comparator": null,
+          "primary_date": "2021-05-12",
+          "primary_pmid": "33979178",
+          "publications": [
+            {
+              "pmid": "33979178",
+              "date": "2021-05-12",
+              "title": "Lifileucel, a Tumor-Infiltrating Lymphocyte Therapy, in Metastatic Melanoma",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/33979178/"
+            },
+            {
+              "pmid": "36600653",
+              "date": "2022-12-13",
+              "title": "Lifileucel after progression on checkpoint inhibitors and targeted therapies in cohorts 2 and 4",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/36600653/"
+            },
+            {
+              "pmid": "40454684",
+              "date": "2025-06-02",
+              "title": "Five-year follow-up of C-144-01 cohorts 2 and 4 (pooled)",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/40454684/"
+            }
+          ],
+          "population": "Unresectable or metastatic melanoma with progression after PD-1 blockade; BRAF-directed therapy if BRAF V600-positive.",
+          "status": "Phase II cohort results published",
+          "status_as_of": "2022-12-13",
+          "match_ids": [],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed|central|RECIST 1.1",
+              "label": "Confirmed ORR · central review · RECIST 1.1",
+              "value": "34.8% (95% CI 23.5–47.6)",
+              "denominator": 66,
+              "pmid": "36600653",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36600653/",
+              "date": "2022-12-13"
+            },
+            {
+              "key": "DOR|median",
+              "label": "Median DOR",
+              "value": "Median DOR not reached",
+              "denominator": 23,
+              "pmid": "36600653",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/36600653/",
+              "date": "2022-12-13"
+            },
+            {
+              "key": "ORR|percentage|investigator|RECIST 1.1",
+              "label": "ORR · investigator review · RECIST 1.1",
+              "value": "36% (95% CI 25–49)",
+              "denominator": 66,
+              "pmid": "33979178",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/33979178/",
+              "date": "2021-05-12"
+            }
+          ]
+        }
+      ],
+      "phase3": [],
+      "review_note": "The five-year OS and DOR summaries reported for both cohorts together do not establish separate cohort outcomes. TILVANCE-301 (NCT05727904) adds pembrolizumab in the first-line setting.",
+      "review_source_urls": [
+        "https://pubmed.ncbi.nlm.nih.gov/33979178/",
+        "https://pubmed.ncbi.nlm.nih.gov/36600653/",
+        "https://pubmed.ncbi.nlm.nih.gov/40454684/",
+        "https://clinicaltrials.gov/study/NCT05727904"
+      ]
+    },
+    {
+      "id": "lifileucel-pembrolizumab-advanced",
+      "regimen": "Pembrolizumab → Cyclophosphamide → Fludarabine → Lifileucel → Aldesleukin → Pembrolizumab",
+      "drugs": [
+        "Pembrolizumab",
+        "Cyclophosphamide",
+        "Fludarabine",
+        "Lifileucel",
+        "Aldesleukin"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT03645928:1A",
+          "name": "IOV-COM-202 · cohort 1A",
+          "nct": "NCT03645928",
+          "primary_date": "2026-10-23",
+          "primary_pmid": null,
+          "regimen": "Pembrolizumab → Cyclophosphamide → Fludarabine → Lifileucel → Aldesleukin → Pembrolizumab",
+          "population": "Checkpoint-inhibitor-naïve advanced melanoma. Prior targeted therapy or chemotherapy was allowed. The efficacy analysis included 24 of 27 treated participants.",
+          "comparator": null,
+          "status": "Final cohort results reported at ESMO 2026",
+          "publications": [
+            {
+              "pmid": null,
+              "date": "2021-05-20",
+              "title": "IOV-COM-202 · preliminary report during recruitment (7 treated) · ASCO abstract",
+              "url": "https://doi.org/10.1200/JCO.2021.39.15_suppl.9537"
+            },
+            {
+              "pmid": null,
+              "date": "2024-05-29",
+              "title": "IOV-COM-202 · interim report during recruitment (22 in efficacy analysis) · ASCO abstract",
+              "url": "https://doi.org/10.1200/JCO.2024.42.16_suppl.9505"
+            },
+            {
+              "pmid": null,
+              "date": "2026-10-23",
+              "title": "IOV-COM-202 · final cohort 1A results · ESMO presentation",
+              "url": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf"
+            },
+            {
+              "pmid": null,
+              "date": "2026-10-23",
+              "title": "IOV-COM-202 final cohort 1A report · Annals of Oncology, ESMO abstract 2072O",
+              "url": "https://doi.org/10.1016/j.annonc.2026.08.2363"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed|investigator|RECIST1.1",
+              "label": "Confirmed ORR · investigator, RECIST 1.1",
+              "value": "62.5% (95% CI 40.6–81.2)",
+              "sourceUrl": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf",
+              "date": "2026-10-23",
+              "denominator": 24
+            },
+            {
+              "key": "CR|percentage|investigator|RECIST1.1",
+              "label": "Complete response · investigator, RECIST 1.1",
+              "value": "29.2%",
+              "sourceUrl": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf",
+              "date": "2026-10-23",
+              "denominator": 24
+            },
+            {
+              "key": "DCR|percentage|investigator|RECIST1.1",
+              "label": "Disease control · investigator, RECIST 1.1",
+              "value": "83.3% (95% CI 62.6–95.3)",
+              "sourceUrl": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf",
+              "date": "2026-10-23",
+              "denominator": 24
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "19.8 months (95% CI 3.6 months–not reached)",
+              "sourceUrl": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf",
+              "date": "2026-10-23",
+              "denominator": 24
+            },
+            {
+              "key": "PFS2|median",
+              "label": "Median PFS2",
+              "value": "34.3 months (95% CI 6.8 months–not reached)",
+              "sourceUrl": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf",
+              "date": "2026-10-23",
+              "denominator": 24
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "Median OS not reached (95% CI 19.2 months–not reached)",
+              "sourceUrl": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf",
+              "date": "2026-10-23",
+              "denominator": 24,
+              "status": "not_reached"
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "Median DoR not reached (range 4.3–57.7+ months)",
+              "sourceUrl": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf",
+              "date": "2026-10-23",
+              "denominator": 15,
+              "status": "not_reached"
+            }
+          ],
+          "match_ids": [
+            "NCT05727904"
+          ],
+          "primary_url": "https://www.iovance.com/uploads/IOV-COM-202-cohort-1A-ESMO-oral_Final-3309-publication.pdf"
+        }
+      ],
+      "phase3": [
+        {
+          "id": "NCT05727904",
+          "name": "TILVANCE-301",
+          "nct": "NCT05727904",
+          "primary_date": null,
+          "primary_pmid": null,
+          "regimen": "Pembrolizumab → Cyclophosphamide → Fludarabine → Lifileucel → Aldesleukin → Pembrolizumab",
+          "population": "Untreated unresectable stage IIIC–IV melanoma. Prior adjuvant or neoadjuvant therapy is permitted under the registry criteria.",
+          "comparator": "Pembrolizumab",
+          "status": "Recruiting · phase III results pending",
+          "publications": [
+            {
+              "pmid": null,
+              "date": "2026-09-24",
+              "title": "TILVANCE-301 trial record and prespecified endpoints",
+              "url": "https://clinicaltrials.gov/study/NCT05727904"
+            },
+            {
+              "pmid": null,
+              "date": "2026-11-05",
+              "title": "Sponsor update on the ongoing TILVANCE-301 trial",
+              "url": "https://ir.iovance.com/node/16156/pdf"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|status",
+              "label": "ORR",
+              "value": "Awaiting ORR results",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT05727904",
+              "date": "2026-09-24",
+              "status": "pending"
+            },
+            {
+              "key": "PFS|status",
+              "label": "PFS",
+              "value": "Awaiting PFS results",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT05727904",
+              "date": "2026-09-24",
+              "status": "pending"
+            },
+            {
+              "key": "OS|status",
+              "label": "OS",
+              "value": "Awaiting OS results",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT05727904",
+              "date": "2026-09-24",
+              "status": "pending"
+            },
+            {
+              "key": "CR|status",
+              "label": "Complete response",
+              "value": "Awaiting complete response results",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT05727904",
+              "date": "2026-09-24",
+              "status": "pending"
+            },
+            {
+              "key": "DoR|status",
+              "label": "Duration of response",
+              "value": "Awaiting DoR results",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT05727904",
+              "date": "2026-09-24",
+              "status": "pending"
+            },
+            {
+              "key": "PFS2|status",
+              "label": "PFS2",
+              "value": "Awaiting PFS2 results",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT05727904",
+              "date": "2026-09-24",
+              "status": "pending"
+            },
+            {
+              "key": "EFS|status",
+              "label": "Event-free survival",
+              "value": "Awaiting EFS results",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT05727904",
+              "date": "2026-09-24",
+              "status": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "binimetinib-advanced",
+      "regimen": "Binimetinib",
+      "drugs": [
+        "Binimetinib"
+      ],
+      "setting": "Advanced",
+      "phase2": [
+        {
+          "id": "NCT01320085:NRAS",
+          "name": "MEK162X2201 · NRAS, 45 mg",
+          "nct": "NCT01320085",
+          "primary_date": "2014-09",
+          "primary_pmid": null,
+          "regimen": "Binimetinib",
+          "population": "Unresectable or metastatic NRAS-mutant cutaneous melanoma, including codons beyond Q61. Prior systemic therapy was permitted.",
+          "comparator": null,
+          "status": "Completed · outcomes reported",
+          "publications": [
+            {
+              "pmid": "23414587",
+              "date": "2013-02-13",
+              "title": "MEK162 primary report of the 45 mg groups: complete BRAF cohort and preliminary NRAS cohort",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/23414587/"
+            },
+            {
+              "pmid": null,
+              "date": "2014-09",
+              "title": "MEK162 expanded NRAS cohort of 117 · final primary outcomes and OS, ESMO LBA35",
+              "url": "https://doi.org/10.1093/annonc/mdu438.43"
+            },
+            {
+              "pmid": "30956763",
+              "date": "2019-03-05",
+              "title": "MEK162 biomarker and patient-disposition results in the three enrolled cohorts",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/30956763/"
+            },
+            {
+              "pmid": null,
+              "date": "2024-01-24",
+              "title": "MEK162 phase II · results by mutation and dose cohort",
+              "url": "https://clinicaltrials.gov/study/NCT01320085?tab=results"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed",
+              "label": "Confirmed ORR",
+              "value": "14.5% (95% CI 8.7–22.2) · investigator, RECIST 1.0",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 117
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "3.6 months (95% CI 2.6–3.8) · investigator, RECIST 1.0",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 117
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "12.2 months (95% CI lower bound 7.9 months; upper bound unreported)",
+              "sourceUrl": "https://doi.org/10.1093/annonc/mdu438.43",
+              "date": "2014-09",
+              "denominator": 117
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "4.0 months (95% CI 3.7 months–not estimable)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 17
+            },
+            {
+              "key": "TTR|median",
+              "label": "Median TTR",
+              "value": "1.9 months (95% CI 1.8–3.7)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 17
+            }
+          ],
+          "match_ids": [
+            "NCT01763164"
+          ],
+          "primary_url": "https://doi.org/10.1093/annonc/mdu438.43"
+        },
+        {
+          "id": "NCT01320085:BRAF45",
+          "name": "MEK162X2201 · BRAF V600, 45 mg",
+          "nct": "NCT01320085",
+          "primary_date": "2013-02-13",
+          "primary_pmid": "23414587",
+          "regimen": "Binimetinib",
+          "population": "Advanced BRAF V600-mutant cutaneous melanoma. Prior BRAF inhibitor therapy was permitted.",
+          "comparator": null,
+          "status": "Completed · outcomes reported",
+          "publications": [
+            {
+              "pmid": "23414587",
+              "date": "2013-02-13",
+              "title": "MEK162 primary report of the 45 mg groups: complete BRAF cohort and preliminary NRAS cohort",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/23414587/"
+            },
+            {
+              "pmid": "30956763",
+              "date": "2019-03-05",
+              "title": "MEK162 biomarker and patient-disposition results in the three enrolled cohorts",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/30956763/"
+            },
+            {
+              "pmid": null,
+              "date": "2024-01-24",
+              "title": "MEK162 phase II · results by mutation and dose cohort",
+              "url": "https://clinicaltrials.gov/study/NCT01320085?tab=results"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed",
+              "label": "Confirmed ORR",
+              "value": "4.9% (95% CI 0.6–16.5) · investigator, RECIST 1.0",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 41
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "3.5 months (95% CI 1.9–3.8) · investigator, RECIST 1.0",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 41
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "Median OS not reached",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 41,
+              "status": "not_reached"
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "3.6 months (95% CI 3.6–3.7)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 2
+            },
+            {
+              "key": "TTR|median",
+              "label": "Median TTR",
+              "value": "2.2 months (95% CI 1.8–2.5)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 2
+            }
+          ],
+          "match_ids": [],
+          "primary_url": "https://pubmed.ncbi.nlm.nih.gov/23414587/"
+        },
+        {
+          "id": "NCT01320085:BRAF60",
+          "name": "MEK162X2201 · BRAF V600, 60 mg",
+          "nct": "NCT01320085",
+          "primary_date": null,
+          "primary_pmid": null,
+          "regimen": "Binimetinib",
+          "population": "Advanced BRAF V600-mutant cutaneous melanoma. Prior BRAF inhibitor therapy was permitted. The protocol reduced the starting dose after enrollment.",
+          "comparator": null,
+          "status": "Completed · outcomes reported",
+          "publications": [
+            {
+              "pmid": "30956763",
+              "date": "2019-03-05",
+              "title": "MEK162 biomarker and patient-disposition results in the three enrolled cohorts",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/30956763/"
+            },
+            {
+              "pmid": null,
+              "date": "2024-01-24",
+              "title": "MEK162 phase II · results by mutation and dose cohort",
+              "url": "https://clinicaltrials.gov/study/NCT01320085?tab=results"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed",
+              "label": "Confirmed ORR",
+              "value": "12.0% (95% CI 2.5–31.2) · investigator, RECIST 1.0",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 25
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "1.8 months (95% CI 1.5–3.7) · investigator, RECIST 1.0",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 25
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "16.6 months (95% CI lower bound 4.9 months; upper bound not estimable)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 25
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "Median DoR not reached",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 3,
+              "status": "not_reached"
+            },
+            {
+              "key": "TTR|median",
+              "label": "Median TTR",
+              "value": "1.8 months (95% CI 1.8–1.8)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01320085?tab=results",
+              "date": "2024-01-24",
+              "denominator": 3
+            }
+          ],
+          "match_ids": []
+        }
+      ],
+      "phase3": [
+        {
+          "id": "NCT01763164",
+          "name": "NEMO",
+          "nct": "NCT01763164",
+          "primary_date": "2017-03-09",
+          "primary_pmid": "28284557",
+          "regimen": "Binimetinib",
+          "population": "Unresectable stage IIIC–IV NRAS Q61-mutant cutaneous melanoma or melanoma of unknown primary. Patients were untreated or had progressed after immunotherapy.",
+          "comparator": "Dacarbazine",
+          "status": "Completed · PFS and OS reported",
+          "publications": [
+            {
+              "pmid": "28284557",
+              "date": "2017-03-09",
+              "title": "NEMO primary analysis",
+              "url": "https://pubmed.ncbi.nlm.nih.gov/28284557/"
+            },
+            {
+              "pmid": null,
+              "date": "2021-03-22",
+              "title": "NEMO phase III · registered outcome results",
+              "url": "https://clinicaltrials.gov/study/NCT01763164?tab=results"
+            }
+          ],
+          "outcomes": [
+            {
+              "key": "ORR|percentage|confirmed",
+              "label": "Confirmed ORR",
+              "value": "15.2% (95% CI 11.2–20.1) · central review, RECIST 1.1",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01763164?tab=results",
+              "date": "2021-03-22",
+              "denominator": 269
+            },
+            {
+              "key": "PFS|median",
+              "label": "Median PFS",
+              "value": "2.83 months (95% CI 2.76–3.55) · blinded central review, RECIST 1.1",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01763164?tab=results",
+              "date": "2021-03-22",
+              "denominator": 269
+            },
+            {
+              "key": "OS|median",
+              "label": "Median OS",
+              "value": "10.97 months (95% CI 8.94–13.60)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01763164?tab=results",
+              "date": "2021-03-22",
+              "denominator": 269
+            },
+            {
+              "key": "PFS|HR|vs:dacarbazine",
+              "outcomeLabel": "PFS · HR",
+              "comparison": {"treatment": "Binimetinib", "reference": "Dacarbazine"},
+              "label": "PFS · HR vs Dacarbazine",
+              "value": "0.62 (95% CI 0.47–0.80)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/28284557/",
+              "date": "2017-03-09",
+              "pmid": "28284557",
+              "denominator": 402
+            },
+            {
+              "key": "OS|HR|vs:dacarbazine",
+              "outcomeLabel": "OS · HR",
+              "comparison": {"treatment": "Binimetinib", "reference": "Dacarbazine"},
+              "label": "OS · HR vs Dacarbazine",
+              "value": "1.00 (95% CI 0.75–1.33)",
+              "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/28284557/",
+              "date": "2017-03-09",
+              "pmid": "28284557",
+              "denominator": 402
+            },
+            {
+              "key": "DoR|median",
+              "label": "Median DoR",
+              "value": "6.87 months (95% CI 4.21–11.07)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01763164?tab=results",
+              "date": "2021-03-22",
+              "denominator": 41
+            },
+            {
+              "key": "TTR|median",
+              "label": "Median TTR",
+              "value": "1.45 months (95% CI 1.45–1.48)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01763164?tab=results",
+              "date": "2021-03-22",
+              "denominator": 61
+            },
+            {
+              "key": "DCR|percentage",
+              "label": "Disease control",
+              "value": "58.4% (95% CI 52.2–64.3)",
+              "sourceUrl": "https://clinicaltrials.gov/study/NCT01763164?tab=results",
+              "date": "2021-03-22",
+              "denominator": 269
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

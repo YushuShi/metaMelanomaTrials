@@ -4,9 +4,10 @@
   const api=factory(commonJS ? require('./confidence_intervals.js') : root.ConfidenceIntervals,
     commonJS ? () => require('./app.js') : () => root.MetaSampleSizeCharts,
     commonJS ? require('./treatment_map_planning.js') : root.TreatmentMapPlanning,
-    commonJS ? require('./advanced_filters.js') : root.AdvancedFilters);
+    commonJS ? require('./advanced_filters.js') : root.AdvancedFilters,
+    commonJS ? require('./trial_search.js') : root.TrialSearch);
   if(typeof module==='object'&&module.exports)module.exports=api;else root.UnderpoweredStudies=api;
-})(typeof globalThis==='undefined'?this:globalThis,function(CI,studies,Planning,Advanced){
+})(typeof globalThis==='undefined'?this:globalThis,function(CI,studies,Planning,Advanced,TrialSearch){
   'use strict';
   const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const validPower=power=>Number.isFinite(power)&&power>.5&&power<1;
@@ -71,7 +72,7 @@
     }).join('');
     return `<th scope="col" class="planning-sort-header"${active?' aria-sort="'+sort.direction+'"':''}><span class="planning-sort-heading"><span>${label}</span><span class="evidence-sort-buttons">${buttons}</span></span></th>`;
   }
-  function rowHtml(row){
+  function rowHtml(row,query){
     const pmid=String(row.pmid);
     const publication=/^\d+$/.test(pmid)?`<a href="https://pubmed.ncbi.nlm.nih.gov/${pmid}/" target="_blank" rel="noopener noreferrer">${escape(row.title)}</a>`:escape(row.title);
     const events=displayRange(row.plans,'events');
@@ -90,10 +91,11 @@
     const provenance=[row.original_level ? `From ${row.original_level}% CI` : '',row.calculated ? 'Calculated from arm rates' : ''].filter(Boolean);
     const mark=row.abstract_only ? '<sup class="abstract-only-mark" title="Results based on abstract only" aria-label="Abstract only">*</sup>' : '';
     const cell=value=>escape(value && value!=='NA' ? value : '—');
+    const trialName=TrialSearch.displayName(row.trialSearch,query,row.trial);
     const endpoint=row.endpoint_detail ? `${cell(row.endpoint).replace(/_/g,' ')}<small>${escape(row.endpoint_detail)}</small>` : cell(row.endpoint);
     return `<tr data-pmid="${escape(pmid)}"${row.nontrial ? ' class="study-nontrial"' : ''}>
       <td>${publication}${mark}${/^\d+$/.test(pmid) ? `<small>PMID ${pmid}</small>` : ''}</td><td>${cell(row.author ? row.author+' et al.' : '')}</td>
-      <td>${publicationYear(row)??'—'}</td><td>${cell(row.trial)}</td><td>${cell(row.nct)}</td><td>${cell(row.population)}${note}</td>
+      <td>${publicationYear(row)??'—'}</td><td>${cell(trialName)}</td><td>${cell(row.nct)}</td><td>${cell(row.population)}${note}</td>
       <td>${studies().savedTreatmentTag(row.comparator_label || row.reference)}</td><td>${studies().savedTreatmentTag(row.intervention_label || row.treatment,row.add_on)}</td>
       <td>${endpoint}</td><td>${escape(row.measure)} ${CI.formatEffectNumber(row.estimate)} (${CI.formatEffectNumber(row.lower)}–${CI.formatEffectNumber(row.upper)})${provenance.length ? `<small>${escape(provenance.join(' · '))}</small>` : ''}</td>
       <td>${events}</td><td>${sampleSize}${details}</td></tr>`;
@@ -109,12 +111,24 @@
     };
     const initialEvents=previousThreshold('data-event-threshold',defaultEventThreshold);
     const initialParticipants=previousThreshold('data-participant-threshold',defaultParticipantThreshold);
+    const initialQuery=panel.querySelector('[data-trial-search]')?.value || '';
+    const eligible=data.rows.filter(coversNull).map(row=>({...row,trialSearch:TrialSearch.index({names:row.trial,nct:row.nct,pmid:row.pmid})}));
     const multipleTimes=data.rows.some(row=>row.measure!=='HR' && row.scenarios?.length>1);
-    panel.innerHTML=`<div class="panel-heading"><div class="evidence-tab-heading" data-power-heading><h2>Underpowered studies</h2></div><label class="evidence-threshold">Survival event cutoff <input type="number" min="1" step="1" required data-event-threshold value="${initialEvents}"></label><label class="evidence-threshold">Binary participant cutoff <input type="number" min="1" step="1" required data-participant-threshold value="${initialParticipants}"></label></div><div data-power-filter></div>
+    panel.innerHTML=`<div class="panel-heading">
+      <div class="evidence-tab-heading" data-power-heading><h2>Underpowered studies</h2></div>
+      <div class="power-filters">
+        ${TrialSearch.field('Underpowered studies')}
+        <label class="evidence-threshold">Survival event cutoff <input type="number" min="1" step="1" required data-event-threshold value="${initialEvents}"></label>
+        <label class="evidence-threshold">Binary participant cutoff <input type="number" min="1" step="1" required data-participant-threshold value="${initialParticipants}"></label>
+      </div>
+    </div><div data-power-filter></div>
       <p class="evidence-tab-note">The 95% CI includes 1 and the required events (survival) or participants (binary outcomes) fall below the corresponding cutoff. Two-sided α = 0.05, with equal allocation.</p>
       <div data-power-results></div><details class="evidence-tab-note"><summary>How the targets are calculated</summary>
       <p>For survival outcomes, the reported HR determines the required events using the Schoenfeld formula. For binary outcomes, the two anticipated arm rates determine the required total sample size. Targets are rounded up before applying each cutoff.${multipleTimes?' Each binary assessment time appears if its required sample size falls below the participant cutoff.':''} <a href="https://pubmed.ncbi.nlm.nih.gov/6354290/" target="_blank" rel="noopener noreferrer">Survival method</a> · <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.proportion.power_proportions_2indep.html" target="_blank" rel="noopener noreferrer">Binary method</a></p></details>`;
     const eventInput=panel.querySelector('[data-event-threshold]'),participantInput=panel.querySelector('[data-participant-threshold]'),output=panel.querySelector('[data-power-results]');
+    const search=panel.querySelector('[data-trial-search]');
+    search.value=initialQuery;
+    const matchesTrial=row=>TrialSearch.matches(row.trialSearch, search.value);
     let sort={column:'year',direction:'descending'}, selections=Advanced.resetSelections(), options={};
     let assessed=[],qualified=[],power=null,eventThreshold=null,participantThreshold=null,filterUI;
     function compute(){
@@ -122,7 +136,7 @@
       if(targetPower===power&&nextEvents===eventThreshold&&nextParticipants===participantThreshold)return;
       if(targetPower!==power){
         power=targetPower;
-        assessed=data.rows.filter(coversNull).map(row=>plan(row,power));
+        assessed=eligible.map(row=>plan(row,power));
       }
       eventThreshold=nextEvents;participantThreshold=nextParticipants;
       qualified=validThreshold(eventThreshold)&&validThreshold(participantThreshold)
@@ -130,23 +144,24 @@
     }
     function getEvidence(chosen,expanded,opts){
       compute();
-      const candidates=qualified.map(row=>({study:{pmid:row.pmid},results:[row.filter_binding],comparisons:[]}));
+      const candidates=qualified.filter(matchesTrial).map(row=>({study:{pmid:row.pmid},results:[row.filter_binding],comparisons:[]}));
       const filtered=Advanced.filterBrowseMatches(candidates,chosen,opts);
       return {facets:expanded?Advanced.browseFacets(candidates,chosen,opts):[],summary:Advanced.browseSummary(filtered,opts)};
     }
     function table(rows){
-      return `<div class="table-scroll"><table class="evidence-tab-table study-evidence-grid"><thead><tr><th scope="col">Study</th><th scope="col">First author</th>${sortHeading('Published year','year',sort)}<th scope="col">Trial name</th><th scope="col">NCT number</th><th scope="col">Group</th><th scope="col">Comparator</th><th scope="col">Intervention</th><th scope="col">Endpoint</th><th scope="col">Effect (95% CI)</th>${sortHeading('Required events','events',sort)}${sortHeading('Required participants','n',sort)}</tr></thead><tbody>${rows.map(rowHtml).join('')}</tbody></table></div>`;
+      return `<div class="table-scroll"><table class="evidence-tab-table study-evidence-grid"><thead><tr><th scope="col">Study</th><th scope="col">First author</th>${sortHeading('Published year','year',sort)}<th scope="col">Trial name</th><th scope="col">NCT number</th><th scope="col">Group</th><th scope="col">Comparator</th><th scope="col">Intervention</th><th scope="col">Endpoint</th><th scope="col">Effect (95% CI)</th>${sortHeading('Required events','events',sort)}${sortHeading('Required participants','n',sort)}</tr></thead><tbody>${rows.map(row=>rowHtml(row,search.value)).join('')}</tbody></table></div>`;
     }
     function render(){
       compute();
       if(!validThreshold(eventThreshold)||!validThreshold(participantThreshold)){output.innerHTML='<p role="status" class="evidence-tab-note">Enter a positive whole number for each cutoff.</p>';return;}
-      const matches=row=>Advanced.resultMatches(row.filter_binding,selections,options);
+      const matches=row=>matchesTrial(row)&&Advanced.resultMatches(row.filter_binding,selections,options);
       const rows=sortRows(qualified.filter(matches),sort.column,sort.direction);
       const n=new Set(rows.map(r=>r.pmid)).size;
       const status=`${n} ${n===1?'publication':'publications'} · ${rows.length} ${rows.length===1?'result':'results'}`;
       const unavailable=assessed.filter(row=>!row.plans.length&&matches(row)).length;
       const unavailableNote=unavailable?`<p class="evidence-tab-note">Planning target unavailable for ${unavailable} ${unavailable===1?'result':'results'}.</p>`:'';
-      output.innerHTML=`<p role="status" class="evidence-tab-note">${status}</p>`+(rows.length?table(rows):'')+unavailableNote;
+      const summary=!rows.length&&search.value.trim()?'No underpowered results match this trial search and the selected filters.':status;
+      output.innerHTML=`<p role="status" class="evidence-tab-note">${summary}</p>`+(rows.length?table(rows):'')+unavailableNote;
     }
     output.addEventListener('click',event=>{
       const button=event.target.closest('button[data-sort-column]');
@@ -159,7 +174,7 @@
         output.querySelector(`button[data-sort-column="${column}"][aria-pressed="true"]`)?.focus({preventScroll:true});});
     });
     function refresh(){render();filterUI?.refresh();}
-    for(const control of [eventInput,participantInput])control.addEventListener('input',refresh);
+    for(const control of [eventInput,participantInput,search])control.addEventListener('input',refresh);
     if(attachAdvanced)filterUI=attachAdvanced(panel.querySelector('[data-power-heading]'),panel.querySelector('[data-power-filter]'),getEvidence,
       (chosen,opts)=>{selections=chosen;options=opts;render();});
     render();
