@@ -69,6 +69,35 @@ test('a phase II cohort with mixed matches appears once under each applicable ph
   assert.deepEqual(groups, before);
 });
 
+test('recruiting milestones appear with their own phase III trial in both the summary and table', () => {
+  const trial = {...phase3('III', 'RECRUITING', 'Recruiting'),
+    registry_primary_completion:{date:'2030-06',type:'ESTIMATED'},
+    registry_completion:{date:'2032',type:'ESTIMATED'}};
+  const html = groupHTML({...mixed, phase2:[phase2('II','2020',['III'])], phase3:[trial]});
+  const summary = html.match(/<summary>(.*?)<\/summary>/s)[1];
+  const table = html.match(/<tr class="phase-trial">(.*?)<\/tr>/s)[1];
+  for (const part of [summary, table]) {
+    const text = part.replace(/<[^>]*>/g,' ');
+    assert.match(text,/Estimated primary completion\s*[:·]?\s*Jun 2030/i);
+    assert.match(text,/Estimated study completion\s*[:·]?\s*2032\b/i);
+    assert.doesNotMatch(text,/Jun(?:e)? 1, 2030|Jan(?:uary)? 1, 2032/i);
+  }
+  assert.doesNotMatch(table.split('</td>')[0],/2030|2032/);
+});
+
+test('recruiting dates preserve actual status and omit unknown milestones and unrelated trial dates', () => {
+  const two = {...phase2('II','2020',['III']), registry_status:'RECRUITING',
+    registry_completion:{date:'2044-07-10',type:'ESTIMATED'}};
+  const trial = {...phase3('III','RECRUITING','Recruiting'),
+    registry_primary_completion:{date:'2026-11-21',type:'ACTUAL'},registry_completion:{}};
+  const htmlFor = fields => groupHTML({...mixed, phase2:[two], phase3:[{...trial,...fields}]});
+  const html = htmlFor({}).replace(/<[^>]*>/g,' ');
+  assert.match(html,/Primary completion\s*[:·]?\s*Nov 21, 2026/i);
+  assert.doesNotMatch(html,/estimated primary completion|study completion|2044/i);
+  assert.doesNotMatch(htmlFor({registry_primary_completion:undefined}),/primary completion|study completion/i);
+  assert.doesNotMatch(htmlFor({registry_status:'ACTIVE_NOT_RECRUITING',status:'Primary outcome pending'}),/Nov 21, 2026|2044/);
+});
+
 test('drug, setting, and phase III status can each be applied alone or combined', () => {
   assert.deepEqual(select('', '', 'Adjuvant'), [['single', 'Single', ['Second finished']]]);
   assert.equal(select('', 'Nivolumab').length, 3);

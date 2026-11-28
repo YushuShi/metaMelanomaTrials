@@ -13,6 +13,21 @@ function saved(file) {
 const snapshot = saved('phase_comparison');
 const key = outcome => outcome.sourceResultId && [outcome.pmid,outcome.sourceResultId].join('|');
 
+test('released recruiting phase III dates agree with the corresponding registry entry', () => {
+  const registry = require('../config/phase_comparison_registry.json');
+  const recruiting = matchingGroups(snapshot.groups,'','','recruiting').flatMap(group=>group.phase3);
+  for (const trial of recruiting) {
+    const source = registry[trial.nct];
+    assert.equal(source?.status,'RECRUITING',trial.nct);
+    for (const milestone of ['primary_completion','completion']) {
+      const value = source[milestone];
+      const expected = value?.date && ['ACTUAL','ESTIMATED'].includes(value.type) ?
+        {date:value.date,type:value.type} : undefined;
+      assert.deepEqual(trial['registry_' + milestone],expected,trial.nct + ' ' + milestone);
+    }
+  }
+});
+
 test('saved phase tables belong to the current evidence release and sort by primary reports', () => {
   assert.equal(snapshot.source_file_sha256,saved('treatment_map_version').source_file_sha256);
   assert.ok(snapshot.groups.length);

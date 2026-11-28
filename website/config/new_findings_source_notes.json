@@ -1,4 +1,21 @@
 {
+  "42926306": {
+    "doi": "10.1245/s10434-026-20632-1",
+    "report_design": "secondary_predictor_analysis",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/42926306/",
+    "reason": "This report uses PRADO case report forms to model predictors of lymph node dissection."
+  },
+  "42882866": {
+    "doi": "10.3390/cancers18193172",
+    "qualitative_findings": [
+      {
+        "endpoint": "Global DNA methylation",
+        "value": "Decreased after treatment",
+        "source_quote": "Treatment significantly decreased global DNA methylation",
+        "scope_quote": "combined with nivolumab in patients with unresectable or metastatic mucosal melanoma"
+      }
+    ]
+  },
   "42923311": {
     "doi": "10.1016/j.gore.2026.102226",
     "required_abstract_passages": [

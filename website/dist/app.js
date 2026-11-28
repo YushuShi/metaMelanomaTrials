@@ -1600,7 +1600,11 @@ if (typeof document !== 'undefined') (() => {
         (heading,body,evidence,change)=>mountTabAdvanced(heading,body,'underpowered-advanced',evidence,change),state.settings.power);
     } },
     'new-findings': { path: './data/new_findings.json', render: (panel, data) => globalThis.NewFindings.render(panel, data) },
-    'phase-comparison': { path: './data/phase_comparison.json', render: (panel, data) => globalThis.PhaseComparison.render(panel, data) }
+    'phase-comparison': { path: './data/phase_comparison.json', render: (panel, data) => globalThis.PhaseComparison.render(panel, data) },
+    'trial-outcomes': { path: './data/trial_outcomes.json', render: (panel, data) => globalThis.TrialOutcomes.mount(panel, data, {
+      attachAdvanced: (heading, body, evidence, change) => mountTabAdvanced(heading, body, 'trial-outcomes-advanced', evidence, change),
+      resultHref: source => '#study-result?' + new URLSearchParams({pmid: source.pmid, stage: source.stage, sha: source.sha, section: source.section, id: source.id})
+    }) }
   };
   const tabLoads = new Map();
 
@@ -1637,6 +1641,10 @@ if (typeof document !== 'undefined') (() => {
   }
 
   function showView(name, focus = false) {
+    const sourceRoute = name.startsWith('study-result?') ? name : null;
+    if (sourceRoute) name = 'analysis';
+    const dialog = $('study-dialog');
+    if (dialog.open && dialog.dataset.sourceRoute && dialog.dataset.sourceRoute !== sourceRoute) dialog.close();
     const requestedTab = Object.hasOwn(evidenceTabs, name) ? name : name === 'analysis' ? 'articles' : 'treatment-map';
     if (name === 'tracking') { name = 'about'; if (typeof history !== 'undefined' && location.hash === '#tracking') history.replaceState(null, '', '#about'); }
     if (['overview', 'usage', 'sources', 'reports'].includes(name)) name = 'about';
@@ -1650,8 +1658,9 @@ if (typeof document !== 'undefined') (() => {
       if (selected) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
     });
     document.title = `${titles[name]} · metaMelanomaTrials`;
-    if(name==='analysis')selectAnalysisTab(requestedTab);
+    if(name==='analysis')selectAnalysisTab(requestedTab, false, sourceRoute);
     if (focus) $('main').focus({ preventScroll: true });
+    if (sourceRoute) openOutcomeSource(sourceRoute);
   }
   function go(name) { if (location.hash !== `#${name}`) location.hash = name; else showView(name, true); }
 
@@ -2384,7 +2393,7 @@ if (typeof document !== 'undefined') (() => {
     }
     $('prisma-canvas').innerHTML=`<div class="dedicated-prisma" role="group" aria-label="Dedicated cutaneous melanoma report selection flow"><div class="prisma-inputs">${box('Historical R2-retained candidates',p.legacy_R2_retained_candidates)}<span class="prisma-plus" aria-hidden="true">+</span>${box('Additional R1-uncertain keyword matches',incoming)}</div><div class="prisma-input-merge" aria-hidden="true">↓</div>${box('Current R2 · title and abstract screening + extraction',p.authorized_cohort)}<p class="prisma-cohort-note">Additional ${escape(value(additional.total))} records: both reviewers source-checked ${escape(value(additional.both_reviewers_processed))}; retained by both ${escape(value(additional.both_retained))}; pending ${escape(value(additional.pending))}.</p><div class="prisma-r2-routes"><div class="prisma-retained-route">${arrow}${box('Retained by both · current review cycle',current.both_retained)}${arrow}${box('R3 full-report assessments completed',p.R3_full_report_assessments_complete)}<div class="prisma-source-context">${box('Full articles available in the source index',p.full_article_available_in_index,availabilityNote)}${partial?`<p>${escape(partial)}</p>`:''}</div>${arrow}${box('Final eligible reports',final)}<p class="prisma-note">R3-verified reports: ${escape(value(p.final_R3_verified_reports))}. ${p.final_inclusion_complete===true?'Final inclusion is explicitly completed.':'Final inclusion remains pending.'}</p></div><aside class="prisma-other-routes" aria-label="Other current R2 outcomes">${box('Excluded by both',current.both_excluded)}${box('Reviewer disagreement',current.disagreement)}${box('Uncertain after both reviews',current.both_uncertain)}${box('Pending source-checked review',current.pending)}</aside></div><p class="prisma-note">Counts refer to reports, not independent studies. Historical retention is preserved above. Quarantined or partial responses do not establish current R2 retention or completed R3 assessment.</p></div>`;
   }
-  function selectAnalysisTab(name, focus = false) {
+  function selectAnalysisTab(name, focus = false, sourceRoute = null) {
     if (name === 'extracted' || name === 'studies') name = 'articles';
     if (!Object.hasOwn(evidenceTabs, name) && !['articles', 'treatment-map'].includes(name)) name = 'articles';
     $('analysis-form').hidden = name !== 'articles';
@@ -2398,7 +2407,7 @@ if (typeof document !== 'undefined') (() => {
     if(name==='treatment-map')loadTreatmentMap();
     else if (Object.hasOwn(evidenceTabs, name)) loadEvidenceTab(name);
     else openStudiesTab();
-    const hash = name === 'articles' ? '#analysis' : '#' + name;
+    const hash = sourceRoute ? '#' + sourceRoute : name === 'articles' ? '#analysis' : '#' + name;
     if (location.hash !== hash) history.replaceState(null, '', hash);
   }
 
@@ -2457,11 +2466,11 @@ if (typeof document !== 'undefined') (() => {
       return `<details class="scoped-detail-result" ${choice.status==='review_needed'?'open':''}><summary>${escape([choice.group,choice.label].filter(Boolean).join(' · '))}${choice.status==='review_needed'?' · Review needed':''}</summary><p>${escape(reason)}</p><div class="table-wrap"><table><thead><tr><th>Display</th><th>Result</th><th>Assessment / analysis</th><th>Participants</th><th>Source / cutoff</th></tr></thead><tbody>${rows}</tbody></table></div>${passages}</details>`;
     }).join('')}</section>`;
   }
-  function renderDrawer(id) {
+  function renderDrawer(id, focusResult) {
     const study=state.scopedStudies.find((row)=>row.report_id===id);if(!study)return;state.activeReport=id;
     const pmid=pubmedLink(study.pmid),doi=doiLink(study.doi),details=study.details||{};
     const results=charts.studyResults(study).filter(row=>globalThis.MelanomaScope.resultEligible({...row,main_result_eligible:true},{study}));
-    const compact=globalThis.QuantitativeExtraction?.render(study,{registry:state.scopedPayload?.evidence_registry||{}})||'';
+    const compact=globalThis.QuantitativeExtraction?.render(study,{registry:state.scopedPayload?.evidence_registry||{},focusResult})||'';
     const resultCards=compact?'':results.map((original)=>{
       const row=scopedResult(original,study),nDisplay=evidenceDisplay?.sampleSizeDisplay(row,{samples:row.report_samples,evidenceRegistry:row.evidence_registry}),n=nDisplay?.text?.replace(/—/g,'NA')||'NA';
       const interval=charts.derivedInterval(row,{nDisplay,evidenceRegistry:row.evidence_registry});
@@ -2472,7 +2481,7 @@ if (typeof document !== 'undefined') (() => {
     }).join('');
     const otherOutcomes=charts.specialOutcomeDetails(study,{registry:state.scopedPayload?.evidence_registry||{}});
     const otherOutcomeSection=otherOutcomes.length?`<section class="drawer-section" id="other-outcomes" tabindex="-1"><h3>Other outcomes</h3>${otherOutcomes.map(item=>`<blockquote><p>${escape(item.quote)}</p><footer>${escape(typeof item.locator==='string'?item.locator:JSON.stringify(item.locator))}</footer></blockquote>`).join('')}</section>`:'';
-    const trial=match.prepared_trial||charts.studyTrialIdentifiers(study,{registry:state.scopedPayload?.evidence_registry||{}});
+    const trial=charts.studyTrialIdentifiers(study,{registry:state.scopedPayload?.evidence_registry||{}});
     const trialDetails=`<section class="drawer-section"><dl class="compact-extraction-fields"><dt>Trial name</dt><dd>${escape(trial.trial_label)}</dd><dt>NCT number</dt><dd>${escape(trial.nct_label)}</dd></dl></section>${outcomeChoiceDetails(study)}`;
     const status=study.current_screening_status||details.current_screening?.triage_status||'NA';
     const screening=`<section class="drawer-section"><h3>Screening</h3><p>${escape(human(status))}${['unclear','uncertain','exclude'].includes(status)&&details.current_decision_reason?` · ${escape(details.current_decision_reason)}`:''}</p></section>`;
@@ -2484,6 +2493,24 @@ if (typeof document !== 'undefined') (() => {
   }
 
   function openDrawer(id,section='') { renderDrawer(id); if (state.activeReport === id) {$('study-dialog').showModal();if(section)requestAnimationFrame(()=>{$(section)?.scrollIntoView?.({block:'start'});$(section)?.focus?.({preventScroll:true});});} }
+  async function openOutcomeSource(route) {
+    const source = Object.fromEntries(new URLSearchParams(route.slice('study-result?'.length)));
+    try {
+      await ensureStudyData();
+      if (location.hash !== '#' + route) return;
+      const study = state.scopedStudies.find(row => String(row.pmid) === source.pmid);
+      if (study) renderDrawer(study.report_id, source);
+      const row = study && $('trial-outcome-source-row');
+      if (!row) { state.activeReport = null; toast('This source result is unavailable in the current Studies data.'); return; }
+      const dialog = $('study-dialog');
+      dialog.dataset.sourceRoute = route;
+      if (!dialog.open) dialog.showModal();
+      row.focus({preventScroll:true});
+      row.scrollIntoView({block:'center'});
+    } catch {
+      if (location.hash === '#' + route) toast('The study details could not be loaded. Reload to try again.');
+    }
+  }
   async function fetchJson(path,expectedSha256) {
     const response=await fetch(path,{cache:'no-cache'});if(!response.ok)throw new Error(`Saved data returned HTTP ${response.status}.`);
     if(!expectedSha256)return response.json();
@@ -2911,7 +2938,13 @@ if (typeof document !== 'undefined') (() => {
   for(const key of ['author','year'])$(`scoped-sort-${key}`).addEventListener('click',()=>{state.scopedOrder=state.scopedSort===key&&state.scopedOrder==='asc'?'desc':'asc';state.scopedSort=key;renderStudies();});
   $('close-drawer').addEventListener('click', () => $('study-dialog').close());
   $('study-dialog').addEventListener('click', (event) => { if (event.target === $('study-dialog')) { const rect = $('study-dialog').getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right) $('study-dialog').close(); } });
-  $('study-dialog').addEventListener('close', () => { state.activeReport = null; });
+  $('study-dialog').addEventListener('close', () => {
+    const dialog = $('study-dialog');
+    if (dialog.open) return;
+    if (dialog.dataset.sourceRoute && location.hash === '#' + dialog.dataset.sourceRoute) history.replaceState(null, '', '#analysis');
+    delete dialog.dataset.sourceRoute;
+    state.activeReport = null;
+  });
   $('analysis-form').addEventListener('submit', (event) => { event.preventDefault(); updateAvailability('analysis'); renderAnalysis('always'); renderMainArticles(true); });
   for(const role of ['comparator','intervention'])$('analysis-'+role).addEventListener('change',()=>withStudyDetails(()=>{refreshStudyChoices(role);renderAnalysis('if-empty');},role));
   $('analysis-endpoint').addEventListener('change',()=>withStudyDetails(()=>{studyNetwork.endpoint='';studyNetwork.target='';refreshStudyChoices();renderAnalysis('if-empty');},'endpoint'));

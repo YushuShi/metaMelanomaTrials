@@ -418,6 +418,14 @@ function build(snapshot,graph,normalizations,citations,registry,verified,audit,r
       if(registration?.status){
         trial.registry_status=registration.status;
         if(registration.status_date)trial.registry_status_as_of=registration.status_date;
+        if(registration.status==='RECRUITING'){
+          for(const field of ['primary_completion','completion']){
+            const milestone=registration[field];
+            if(milestone?.date && ['ESTIMATED','ACTUAL'].includes(milestone.type)){
+              trial['registry_'+field]={date:milestone.date,type:milestone.type};
+            }
+          }
+        }
       }
     }
     group.phase2.sort(trialOrder);group.phase3.sort(trialOrder);group.sort_date=group.phase2[0]?.primary_date||null;

@@ -59,12 +59,90 @@ def first_publication(dates):
 
 
 def supported_note(note, row):
-    if not note or note['doi'].casefold() != str(row.get('doi') or '').casefold():
+    if not note or not note.get('finding') or note['doi'].casefold() != str(row.get('doi') or '').casefold():
         return None
     abstract = ' '.join((row.get('abstract') or '').split())
     if all(passage in abstract for passage in note['required_abstract_passages']):
         return note['finding']
     return None
+
+
+def supported_qualitative_findings(notes, row):
+    """Return reviewed authors' statements bound to this citation and population."""
+    note = notes.get(str(row.get('pmid', '')), {})
+    doi = row.get('doi')
+    if not doi or note.get('doi', '').casefold() != doi.casefold():
+        return []
+    abstract = ' '.join((row.get('abstract') or '').split())
+    findings = []
+    for entry in note.get('qualitative_findings', []):
+        # Each reviewed finding carries its own scope. A mixed-cancer abstract
+        # can support a melanoma finding only when that specific claim applies.
+        fields = {key: entry.get(key) for key in ('endpoint', 'value', 'source_quote')}
+        scope = entry.get('scope_quote')
+        if all(fields.values()) and scope and scope in abstract and fields['source_quote'] in abstract:
+            findings.append(fields)
+    return findings
+
+
+# Match a complete positive statement in a structured Results section. Free
+# interpretation of complex clauses stays with the source-reviewed notes above.
+MELANOMA = r'(?:(?:advanced|unresectable|resected|metastatic|cutaneous|mucosal|uveal|acral|malignant)\s+)*melanoma'
+MELANOMA_GROUP = rf'(?:(?:all )?(?:patients|participants) with {MELANOMA}|(?:the )?{MELANOMA} (?:cohort|subgroup|group|patients))'
+OVERALL_GROUP = r'(?:all (?:patients|participants)|the (?:overall|intention-to-treat|entire study) population)'
+RESULT_SCOPE = rf'(?:in|among) (?:{MELANOMA_GROUP}|{OVERALL_GROUP})'
+CLINICAL_ENDPOINT = (r'overall survival|progression[- ]free survival|recurrence[- ]free survival|disease[- ]free survival|'
+                     r'objective response rate|overall response rate|rate of adverse events|treatment-related adverse events|'
+                     r'duration of response|OS|PFS|RFS|DFS|ORR')
+AGENT = r'[A-Za-z][A-Za-z-]*(?:mab|nib|platin|zine|taxel|leukin)'
+TREATMENT = rf'(?:(?:the )?(?:study treatment|treatment|combination|intervention|therapy)|{AGENT}(?: (?:plus|and) {AGENT})?)'
+RESULT_SENTENCE = re.compile(
+    rf'(?:(?P<prefix>{RESULT_SCOPE}), )?(?:{TREATMENT} (?:statistically )?significantly '
+    rf'(?:improved|prolonged|increased|reduced|decreased|worsened|shortened) (?:the )?'
+    rf'(?P<endpoint>{CLINICAL_ENDPOINT})|(?:the (?:treatment effect on|difference in) )?'
+    rf'(?P<passive_endpoint>{CLINICAL_ENDPOINT}) was (?:statistically significant|(?:statistically )?significantly '
+    rf'(?:longer|shorter|lower|higher|improved|increased|reduced|prolonged))(?: (?:with|on) {TREATMENT})?)'
+    rf'(?: (?:versus|compared (?:to|with)) (?:placebo|observation|{AGENT}))?(?: (?P<suffix>{RESULT_SCOPE}))?[.]?', re.I)
+SINGLE_MELANOMA_TRIAL = re.compile(
+    rf'\b(?:(?:we|the trial|the study|this trial|this study) (?:enrolled|randomi[sz]ed|included) '
+    rf'(?:only |exclusively )?(?:\d+ )?(?:patients|participants) with {MELANOMA}|(?:patients|participants) with '
+    rf'{MELANOMA} were (?:enrolled|randomi[sz]ed))\s*(?:[.;]|$)', re.I)
+MIXED_OR_NONCLINICAL = re.compile(r'\b(?:cancers|tumou?rs|malignancies|carcinoma|sarcoma|lymphoma|leukemia|glioma|'
+                                  r'pan[- ]cancer|basket|mice|murine|xenograft|in vitro)\b', re.I)
+SECTION = re.compile(r'(?:^|\s)(background(?:/objectives)?|objectives?|methods?|design|'
+                     r'results?|findings|conclusions?|interpretation|discussion|limitations|funding|'
+                     r'trial registration|clinicaltrials\.gov identifier|keywords)\s*:\s*', re.I)
+
+
+def abstract_qualitative_findings(row):
+    abstract = ' '.join((row.get('abstract') or '').split())
+    sections = SECTION.split(abstract)
+    title = row.get('title') or ''
+    single_trial = ('melanoma' in title.lower() and SINGLE_MELANOMA_TRIAL.search(abstract) and
+                    not MIXED_OR_NONCLINICAL.search(title + ' ' + abstract))
+    findings = []
+    for heading, body in zip(sections[1::2], sections[2::2]):
+        if heading.lower() not in ('result', 'results', 'findings'):
+            continue
+        sentences = re.split(r'(?<=[.!?])\s+', body.strip())
+        for index, sentence in enumerate(sentences):
+            claim = RESULT_SENTENCE.fullmatch(sentence)
+            if not claim:
+                continue
+            scopes = [s for s in claim.group('prefix', 'suffix') if s]
+            if len(scopes) > 1 or (not single_trial and not any('melanoma' in s.lower() for s in scopes)):
+                continue
+            preceding = sentences[index - 1] if index else ''
+            following = sentences[index + 1] if index + 1 < len(sentences) else ''
+            if re.search(r'\b(previous|previously|historical|prior (?:trial|stud|report)|cited|published trial)', preceding, re.I):
+                continue
+            if re.match(r'(?:however\b|this (?:association|effect|difference|finding)|the (?:adjusted |estimated )?'
+                        r'(?:hazard|odds|risk) ratio|HR\b|RR\b|OR\s*[=:]|p\s*[<=>]|95\s*%\s*CI)', following, re.I):
+                continue
+            endpoint = claim['endpoint'] or claim['passive_endpoint']
+            label = endpoint.upper() if len(endpoint) <= 3 else endpoint.capitalize()
+            findings.append({'endpoint': label, 'value': sentence, 'source_quote': sentence})
+    return findings
 
 
 def build(root):
@@ -106,6 +184,15 @@ def build(root):
         result[pmid] = {'date': first, 'date_basis': basis, 'report_id': row['report_id']}
         if note := supported_note(notes.get(pmid), row):
             result[pmid]['abstract_note'] = note
+        qualitative = supported_qualitative_findings(notes, row)
+        # Apply automatic detection only to recent published citations. The
+        # release builder also checks the snapshot cutoff and screening status.
+        if first and CUTOFF <= (first + '-01-01')[:10]:
+            for item in abstract_qualitative_findings(row):
+                if not any(q['source_quote'] in item['source_quote'] for q in qualitative):
+                    qualitative.append(item)
+        if qualitative:
+            result[pmid]['qualitative_findings'] = qualitative
     return {'cutoff': CUTOFF, 'citations': result}
 
 

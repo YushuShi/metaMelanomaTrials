@@ -1,8 +1,9 @@
 """Save tab-specific publication metadata from the research workspace's PubMed records.
 
-Only dates, publication roles, and phase evidence are exported. The public build reads
+Only public bylines, dates, publication roles, and phase evidence are exported. The public build reads
 the saved metadata without a citation database, full text, or a network connection.
 """
+import argparse
 import json
 import re
 import sqlite3
@@ -58,22 +59,53 @@ def phase_evidence(row):
             'registration_ids':row.get('trial_identifiers') or []}
 
 
-def build():
-    with sqlite3.connect((ROOT / 'data/current/articles.sqlite3').as_uri()+'?mode=ro', uri=True) as db:
-        rows = (json.loads(r[0]) for r in db.execute('select citation_json from articles'))
-        catalog = {str(r['pmid']): info for r in rows if (info := phase_evidence(r))}
-    dates = defaultdict(set)
-    for file in sorted((ROOT/'data/raw/pubmed').glob('*.body')):
+def pubmed_articles(directory, wanted, skip_files=()):
+    for file in sorted(directory.glob('*.body')):
+        if file.name in skip_files:
+            continue
         with file.open('rb') as f:
             if b'<PubmedArticleSet' not in f.read(1024): continue
             f.seek(0)
             buf = f.read()
         for m in START.finditer(buf):
             pmid = m[1].decode()
-            if pmid not in catalog: continue
-            end = buf.index(b'</PubmedArticle>',m.end()) + len(b'</PubmedArticle>')
-            dates[pmid].update(xml_publication_dates(ElementTree.fromstring(buf[m.start():end])))
+            if pmid not in wanted: continue
+            end = buf.index(b'</PubmedArticle>', m.end()) + len(b'</PubmedArticle>')
+            yield pmid, ElementTree.fromstring(buf[m.start():end])
+
+
+def first_author(article):
+    author = article.find('./MedlineCitation/Article/AuthorList/Author')
+    if author is None: return None
+    return author.findtext('LastName') or author.findtext('CollectiveName')
+
+
+def build(author_cache=None):
+    with sqlite3.connect((ROOT / 'data/current/articles.sqlite3').as_uri()+'?mode=ro', uri=True) as db:
+        rows = (json.loads(r[0]) for r in db.execute('select citation_json from articles'))
+        catalog = {str(r['pmid']): info for r in rows if (info := phase_evidence(r))}
+    dates, authors = defaultdict(set), defaultdict(set)
+    primary_cache = ROOT/'data/raw/pubmed'
+    for pmid, article in pubmed_articles(primary_cache, catalog):
+        dates[pmid].update(xml_publication_dates(article))
+        if name := first_author(article):
+            authors[pmid].add(name)
+    if author_cache:
+        wanted = catalog.keys() - authors.keys()
+        scanned = {file.name for file in primary_cache.glob('*.body')}
+        for pmid, article in pubmed_articles(author_cache, wanted, scanned):
+            if name := first_author(article):
+                authors[pmid].add(name)
+    # Supplemental PubMed batches may be offline on a later monthly refresh.
+    # A newly cached structured byline for the same PMID takes precedence.
+    saved_file = ROOT/'website/config/phase_comparison_citations.json'
+    previous = json.loads(saved_file.read_text()) if saved_file.exists() else {}
     for pmid,row in catalog.items():
+        names = authors.get(pmid, set())
+        if len(names) == 1:
+            row['first_author'] = next(iter(names))
+        elif not names and (name := previous.get(pmid, {}).get('first_author')):
+            row['first_author'] = name
         candidates = dates.get(pmid, set())
         online = {d for d,src in candidates if src == 'Online publication'}
         journal = {d for d,src in candidates if src != 'Online publication'}
@@ -98,5 +130,8 @@ def build():
 
 
 if __name__=='__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--author-cache',type=Path,help='Additional local PubMed XML batches for missing first-author bylines')
+    args = parser.parse_args()
     out=ROOT/'website/config/phase_comparison_citations.json'
-    out.write_text(json.dumps(build(),ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
+    out.write_text(json.dumps(build(args.author_cache),ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')

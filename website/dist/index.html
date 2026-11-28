@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="./radial_branch_family.css">
   <link rel="stylesheet" href="./radial_branch_panel.css">
   <link rel="stylesheet" href="./phase_comparison.css">
+  <link rel="stylesheet" href="./trial_outcomes.css">
   <script src="./semantic_numeric_display.js" defer></script>
   <script src="./evidence_display.js" defer></script>
   <script src="./numeric_evidence_release.js" defer></script>
@@ -62,6 +63,7 @@
   <script src="./underpowered_studies.js" defer></script>
   <script src="./new_findings.js" defer></script>
   <script src="./phase_comparison.js" defer></script>
+  <script src="./trial_outcomes.js" defer></script>
   <script src="./study_indirect.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./published_outcome_review.js" defer></script>
@@ -105,10 +107,12 @@
           <button role="tab" aria-selected="false" aria-controls="analysis-underpowered-studies" id="tab-underpowered-studies" data-analysis-tab="underpowered-studies" tabindex="-1">Underpowered studies</button>
           <button role="tab" aria-selected="false" aria-controls="analysis-new-findings" id="tab-new-findings" data-analysis-tab="new-findings" tabindex="-1">New findings</button>
           <button role="tab" aria-selected="false" aria-controls="analysis-phase-comparison" id="tab-phase-comparison" data-analysis-tab="phase-comparison" tabindex="-1">Phase II vs Phase III</button>
+          <button role="tab" aria-selected="false" aria-controls="analysis-trial-outcomes" id="tab-trial-outcomes" data-analysis-tab="trial-outcomes" tabindex="-1">Trial Outcomes</button>
         </div>
         <section class="panel analysis-panel evidence-tab" id="analysis-underpowered-studies" role="tabpanel" aria-labelledby="tab-underpowered-studies" hidden></section>
         <section class="panel analysis-panel evidence-tab" id="analysis-new-findings" role="tabpanel" aria-labelledby="tab-new-findings" hidden></section>
         <section class="panel analysis-panel evidence-tab" id="analysis-phase-comparison" role="tabpanel" aria-labelledby="tab-phase-comparison" hidden></section>
+        <section class="panel analysis-panel evidence-tab" id="analysis-trial-outcomes" role="tabpanel" aria-labelledby="tab-trial-outcomes" hidden></section>
         <section id="analysis-articles" role="tabpanel" aria-labelledby="tab-articles" hidden>
           <form class="panel analysis-controls" id="analysis-form" hidden>
             <div class="analysis-control-grid">

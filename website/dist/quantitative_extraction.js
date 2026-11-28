@@ -155,9 +155,9 @@
     // alias registry used by the map supplies the display name and registration.
     return trialIdentity.harmonize({names:uniqueNames,nct_ids:uniqueIds,provenance,pmid:String(study.pmid||'')});
   }
-  function table(title,headers,rows){
+  function table(title,headers,rows,focusIndex=-1){
     if(!rows.length)return '';
-    return `<section class="drawer-section"><h3>${escape(title)}</h3><div class="table-scroll"><table class="compact-extraction-table"><thead><tr>${headers.map(label=>`<th scope="col">${escape(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(value=>`<td>${escape(typeof value==='number'?formatNumber(value):value)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`;
+    return `<section class="drawer-section"><h3>${escape(title)}</h3><div class="table-scroll"><table class="compact-extraction-table"><thead><tr>${headers.map(label=>`<th scope="col">${escape(label)}</th>`).join('')}</tr></thead><tbody>${rows.map((row,i)=>`<tr${i===focusIndex?' id="trial-outcome-source-row" tabindex="-1"':''}>${row.map(value=>`<td>${escape(typeof value==='number'?formatNumber(value):value)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`;
   }
   function fields(title,rows){
     return `<section class="drawer-section"><h3>${escape(title)}</h3><dl class="compact-extraction-fields">${rows.map(([label,value])=>`<dt>${escape(label)}</dt><dd>${escape(clean(value))}</dd>`).join('')}</dl></section>`;
@@ -479,7 +479,7 @@
     const labels={p_value:'P value',estimate:'Estimate',analysis_n:'Analysis N',ci_level:'CI level',ci_lower:'Lower CI',ci_upper:'Upper CI',adjustments:'Adjusted model',identifiers:'Study identifier'};
     return [sections[parts[0]],parts.length>1&&!/^(-|\d+)$/.test(field)?labels[field]||clean(field):''].filter(Boolean).join(' · ');
   }
-  function render(study,{registry={}}={}){
+  function render(study,{registry={},focusResult}={}){
     const all=records(study);if(!all.length)return '';
     return all.map(record=>{
       const s=record.study||{},arms=armLabels(record);
@@ -499,6 +499,11 @@
       const arm=id=>id==='NA'||id===null||id===undefined?'NA':arms.get(id)||'NA';
       const pops=new Map(list(record.populations).map(p=>[p.population_id||p.id,p]));
       const visible=row=>pops.get(row.population_id)?.melanoma_only!=='no';
+      const sourceMatches = focusResult && String(study.pmid) === focusResult.pmid &&
+        record.stage === focusResult.stage && record.source_sha256 === focusResult.sha;
+      const focusIndex = (section, rows) => sourceMatches && section === focusResult.section
+        ? rows.findIndex(row => String(row.id) === focusResult.id) : -1;
+      const survival = list(record.survival).filter(visible), binary = list(record.binary).filter(visible);
       const population=id=>{const p=pops.get(id);return p?text(p.label||p.scope||p.analysis_set):'NA';};
       const resolutions=new Map();
       const resolution=row=>{
@@ -549,10 +554,10 @@
       };
       out+=table('Comparative results',['Endpoint','Intervention','Reference','Population','N','Effect (CI)','Adjusted',...(hasCalculation?['Basis']:[])],
         effects.map(r=>[endpoint(r.endpoint),arm(r.intervention_arm_id||r.experimental_arm_id),arm(r.reference_arm_id||r.comparator_arm_id),resultPopulation(r),displayedN(r),`${text(r.measure)} ${interval(r,r.estimate,{original:true})}`,r.adjusted,...(hasCalculation?[calculationDetail(r)]:[])]));
-      out+=table('Time-to-event results',['Endpoint','Treatment','Population','N','Result','Time (months)','Value (CI)','Status'],list(record.survival).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.arm_id),resultPopulation(r),displayedN(r),clean(r.kind||r.result_type),r.time,interval(r,r.estimate,{original:true})+(typeof r.estimate==='number'?(r.unit==='months'?' months':r.unit==='percent'?'%':''):''),clean(r.median_status)]));
+      out+=table('Time-to-event results',['Endpoint','Treatment','Population','N','Result','Time (months)','Value (CI)','Status'],survival.map(r=>[endpoint(r.endpoint),arm(r.arm_id),resultPopulation(r),displayedN(r),clean(r.kind||r.result_type),r.time,interval(r,r.estimate,{original:true})+(typeof r.estimate==='number'?(r.unit==='months'?' months':r.unit==='percent'?'%':''):''),clean(r.median_status)]),focusIndex('survival',survival));
       const numerator=row=>list(record.derivations).some(d=>d.section==='binary'&&d.id===row.id&&
         d.field==='numerator')?`${row.numerator} (derived)`:row.numerator;
-      out+=table('Response and safety',['Endpoint','Treatment','Population','Patients','N','Percentage (CI)','Time (months)','Definition'],list(record.binary).filter(visible).map(r=>[endpoint(r.endpoint),arm(r.arm_id),population(r.population_id),numerator(r),displayedN(r),interval(r,resolution(r)?.reported_percentage??r.percentage,{original:true}),r.assessment_time,[definition(r),r.response_criteria,r.response_criteria_version,r.safety_attribution].filter(x=>x&&x!=='NA').join(' · ')||'NA']));
+      out+=table('Response and safety',['Endpoint','Treatment','Population','Patients','N','Percentage (CI)','Time (months)','Definition'],binary.map(r=>[endpoint(r.endpoint),arm(r.arm_id),population(r.population_id),numerator(r),displayedN(r),interval(r,resolution(r)?.reported_percentage??r.percentage,{original:true}),r.assessment_time,[definition(r),r.response_criteria,r.response_criteria_version,r.safety_attribution].filter(x=>x&&x!=='NA').join(' · ')||'NA']),focusIndex('binary',binary));
       const superseded=[];
       for(const [section,decisions] of Object.entries(reviewed?.source_preferences||{})){
         for(const old of list(reviewed.record[section])){
@@ -566,7 +571,7 @@
       if(superseded.length)out+='<details class="drawer-section"><summary>Earlier extraction values</summary>'+table('Original values',['Field','Population','Value'],superseded)+'</details>';
       for(const [url,locator] of sources)out+=`<p class="drawer-section"><a href="${escape(url)}" target="_blank" rel="noopener noreferrer">Full-text source</a> · ${escape(locator)}</p>`;
       const fullText=record.stage==='R3'||sources.has(publication?.source_url);
-      return all.length>1?`<details class="drawer-section"${fullText?' open':''}><summary>${fullText?'Full text':'Title and abstract'}</summary>${out}</details>`:out;
+      return all.length>1?`<details class="drawer-section"${fullText||sourceMatches?' open':''}><summary>${fullText?'Full text':'Title and abstract'}</summary>${out}</details>`:out;
     }).join('')+(study.details?.fulltext_assessment&&!['complete','complete_with_issues'].includes(study.details.fulltext_assessment.technical_state)?'<p class="drawer-section">Full-text review pending. The title-and-abstract results remain available.</p>':'');
   }
   return Object.freeze({effectiveRecord,checked,merge,records,trialIdentifiers,render,regimen,armLabels,resultDoseLabel,sourceRecord,recoveredDenominator,presentationSampleSize,presentationGroupLabel,timeLabel,cohortLabel,populationContext,resultContext,phasePartitions,treatmentAliases,countLabel,countAlias,countSummary,endpoint,definition,table,fields,text,clean,formatNumber,formatEffectNumber,cleanContext,interval});

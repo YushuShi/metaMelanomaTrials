@@ -217,19 +217,20 @@ def publication(root, payload, *, source_bytes, source_path=SOURCE):
 
 
 def refresh_study_tables(root):
-    """Rebuild both study tabs from the just-published retained evidence."""
+    """Rebuild the study tables and arm-level outcomes from retained evidence."""
     scripts = Path(__file__).resolve().parents[2] / 'website/scripts'
     commands = [
         [sys.executable, scripts / 'new_findings_dates.py', '--root', root],
         ['node', scripts / 'build_new_findings.cjs', root],
         ['node', scripts / 'underpowered_studies.cjs', root],
+        ['node', scripts / 'trial_outcomes.cjs', root],
     ]
     for command in commands:
         result = subprocess.run(command, cwd=root, capture_output=True, text=True, timeout=600)
         if result.returncode:
             raise ValueError(f'{command[1].name} failed: {result.stderr[-1800:]}')
     return {name: digest(owned(root, f'website/dist/data/{name}.json').read_bytes())
-            for name in ('underpowered_studies', 'new_findings')}
+            for name in ('underpowered_studies', 'new_findings', 'trial_outcomes')}
 
 
 def reconcile(root, *, dry_run=False, source_path=SOURCE, registry_path=REGISTRY,

@@ -70,6 +70,16 @@
     return '<time datetime="' + escape(value) + '">' + escape(label) + '</time>';
   }
 
+  function completionHTML(trial) {
+    if (trial.registry_status !== 'RECRUITING') return '';
+    const milestones = [[trial.registry_primary_completion, 'primary completion'], [trial.registry_completion, 'study completion']];
+    return milestones.flatMap(([milestone, label]) => {
+      if (!milestone?.date || !['ESTIMATED','ACTUAL'].includes(milestone.type)) return [];
+      const caption = milestone.type === 'ESTIMATED' ? 'Estimated ' + label : label[0].toUpperCase() + label.slice(1);
+      return '<small>' + caption + ' · ' + dateHTML(milestone.date) + '</small>';
+    }).join('');
+  }
+
   function link(url, label, title) {
     if (!url || !/^https?:\/\//i.test(url)) return escape(label);
     return '<a href="' + escape(url) + '" target="_blank" rel="noopener noreferrer"' +
@@ -102,6 +112,7 @@
       html += '<small>Registry · ' + link(registryURL, registryStatus) +
         (trial.registry_status_as_of ? ' · ' + dateHTML(trial.registry_status_as_of) : '') + '</small>';
     }
+    if (phase === 3) html += completionHTML(trial);
     const regimen = trial.regimen || group.regimen;
     html += '<small class="phase-regimen"><b>Regimen</b> ' + studies().savedTreatmentTag(regimen) +
       (trial.comparator ? ' <b>vs</b> ' + studies().savedTreatmentTag(trial.comparator) : '') + '</small>';
@@ -200,7 +211,8 @@
     const name = escape(query ? trialSearch.displayName(searchIndex(trial), query, trial.name) : trial.name);
     const info = phase === 'II' || trial.primary_date ? dateHTML(trial.primary_date) :
       escape(registryLabels[trial.registry_status] || trial.status || 'Status unknown');
-    return '<span class="phase-summary-label"><strong>Phase ' + phase + ' · ' + name + '</strong><small>' + info + '</small></span>';
+    return '<span class="phase-summary-label"><strong>Phase ' + phase + ' · ' + name + '</strong><small>' + info + '</small>' +
+      (phase === 'III' ? completionHTML(trial) : '') + '</span>';
   }
 
   function trialListHTML(groups, {expanded, deferred, query = ''} = {}) {

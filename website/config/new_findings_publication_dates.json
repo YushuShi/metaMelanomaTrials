@@ -89,7 +89,14 @@
     "42882866": {
       "date": "2026-10-01",
       "date_basis": "Online publication",
-      "report_id": "report-37c50864cc76a90ee0ca3f29"
+      "report_id": "report-37c50864cc76a90ee0ca3f29",
+      "qualitative_findings": [
+        {
+          "endpoint": "Global DNA methylation",
+          "value": "Decreased after treatment",
+          "source_quote": "Treatment significantly decreased global DNA methylation"
+        }
+      ]
     },
     "41740065": {
       "date": "2026-01",

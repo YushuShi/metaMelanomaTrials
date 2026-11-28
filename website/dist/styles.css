@@ -69,6 +69,12 @@ main{width:100%;max-width:none;min-height:calc(100vh - 78px);padding:28px 28px 1
 .study-evidence-grid td{overflow-wrap:break-word}
 .study-evidence-grid th:first-child{width:18%}
 .study-evidence-grid tr.study-nontrial>td{background:#f1f1f1}
+#analysis-new-findings tr.finding-study-significant>td,.findings-legend .finding-study-key{background:#fff0f5}
+#analysis-new-findings .finding-significant{background:#f5b4ce;color:#341425;border-radius:3px;padding:1px 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+#analysis-new-findings .finding-protective{color:#991420;font-weight:750}
+.finding-proof{font-size:.9em;white-space:nowrap}
+.findings-legend{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin:0 22px 10px;font-size:12px;color:#513643}
+.findings-legend .finding-study-key{padding:1px 4px;border-radius:3px}
 #analysis-underpowered-studies .study-evidence-grid :is(th,td){padding-inline:6px}
 #analysis-underpowered-studies .study-evidence-grid th{white-space:normal;line-height:1.2;vertical-align:middle}
 #analysis-underpowered-studies .planning-sort-header{width:1%}

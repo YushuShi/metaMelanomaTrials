@@ -1,0 +1,111 @@
+{
+  "42926306": [
+    {
+      "endpoint": "Therapeutic lymph node dissection · age <40 years",
+      "value": "OR 7.910 (95% CI 1.350–46.300)",
+      "group": "PRADO · predictors of therapeutic lymph node dissection",
+      "source_id": "CE-06ad6d028b3e5a0e29ce0b13-span-51e031d8e03d51e08d1f1407",
+      "source_quote": "Age < 40 years (odds ratio 7.91, 95% confidence interval 1.35-46.30; P = 0.022)",
+      "basis": "p=0.022",
+      "protective": false
+    },
+    {
+      "endpoint": "Therapeutic lymph node dissection · radiographic increase in tumor size",
+      "value": "OR 1.150 (95% CI 1.070–1.240)",
+      "group": "PRADO · predictors of therapeutic lymph node dissection",
+      "source_id": "CE-06ad6d028b3e5a0e29ce0b13-span-51e031d8e03d51e08d1f1407",
+      "source_quote": "radiographic increase in tumor size (odds ratio 1.15; 95% confidence interval 1.07-1.24; P < 0.001) were associated with TLND.",
+      "basis": "p<0.001",
+      "protective": false
+    }
+  ],
+  "42855460": [
+    {
+      "endpoint": "Tumor gene expression",
+      "value": "326 genes changed after treatment (325 decreased, one increased)",
+      "group": "Metastatic uveal melanoma · stable disease at week 16 (n=7)",
+      "source_id": "CE-14727cd8c6c9905772abee84-span-1f72276c3b1aecd656ba9f26",
+      "source_quote": "In patients with SD at Week 16 ( n = 7), 326 genes were significantly modulated (Fig. 5d ), of which 325 genes were downregulated and one gene was upregulated.",
+      "basis": "Authors report statistical significance",
+      "protective": false
+    },
+    {
+      "endpoint": "Plasma protein expression",
+      "value": "83 of 3,072 proteins changed during treatment",
+      "group": "Metastatic uveal melanoma · plasma analysis (n=23)",
+      "source_id": "CE-14727cd8c6c9905772abee84-span-6aa2d9635c126921cb064c94",
+      "source_quote": "First, we assessed in all mUM patients the changes in plasma proteins using the Olink technology. Significant changes in 83 of the 3072 proteins were identified (Fig. 4a ).",
+      "basis": "Authors report statistical significance",
+      "protective": false
+    },
+    {
+      "endpoint": "Liver lesion imaging features",
+      "value": "63 features changed over time, 59 differed by lesion response, and 84 had different trajectories by response",
+      "group": "Metastatic uveal melanoma · liver metastases (n=23)",
+      "source_id": "CE-14727cd8c6c9905772abee84-span-0b833bbab06ed2d3aad4f094",
+      "source_quote": "In the 23 patients with baseline liver metastases, 59 lesions progressed and 127 responded by 24 weeks. Mixed-effects modelling revealed that 63 radiomic features changed significantly over time, 59 features differed significantly between responding and non-responding lesions, and 84 features showed significantly different temporal trajectories (corrected p = 0.000467).",
+      "basis": "Authors report statistical significance",
+      "protective": false
+    }
+  ],
+  "42947736": [
+    {
+      "endpoint": "Clinical benefit rate · OR",
+      "value": "4.276 (95% CI 1.198–15.268)",
+      "group": "Adults with refractory metastatic",
+      "comparator": "Temozolomide", "intervention": "Nivolumab", "add_on": true,
+      "source_id": "CE-5708e85b144f2823f2622a93-span-dcea0fd6e5684569ed33f869",
+      "source_quote": "For CBR, the combination regimen was associated with an odds ratio of 4.276 (95% CI: 1.198-15.268; p=0.025).",
+      "basis": "p=0.025",
+      "protective": true,
+      "ratio": 4.276,
+      "measure": "OR",
+      "outcome": "CBR"
+    },
+    {
+      "endpoint": "OS · HR",
+      "value": "0.183 (95% CI 0.049–0.690)",
+      "group": "Baseline LDH >2× ULN",
+      "comparator": "Temozolomide", "intervention": "Nivolumab", "add_on": true,
+      "source_id": "CE-5708e85b144f2823f2622a93-span-e2046d68266d21f82b4eb7fd",
+      "source_quote": "0.183 (95% CI: 0.049-0.690, p=0.012) for LDH >2× ULN.",
+      "basis": "p=0.012",
+      "protective": true,
+      "ratio": 0.183,
+      "measure": "HR",
+      "outcome": "OS"
+    },
+    {
+      "endpoint": "PFS · HR",
+      "value": "0.205 (95% CI 0.060–0.692)",
+      "group": "Baseline LDH >2× ULN",
+      "comparator": "Temozolomide", "intervention": "Nivolumab", "add_on": true,
+      "source_id": "CE-5708e85b144f2823f2622a93-span-df05bd61f686d3960c5a85a6",
+      "source_quote": "0.205 (95% CI: 0.060-0.692, p=0.011) among those with LDH >2× ULN.",
+      "basis": "p=0.011",
+      "protective": true,
+      "ratio": 0.205,
+      "measure": "HR",
+      "outcome": "PFS"
+    },
+    {
+      "endpoint": "Clinical benefit rate",
+      "value": "90.0% vs 20.0%",
+      "group": "BRAF-mutant",
+      "comparator": "Temozolomide", "intervention": "Nivolumab", "add_on": true,
+      "source_id": "CE-5708e85b144f2823f2622a93-span-510bafac84d560b0c821299e",
+      "source_quote": "In patients with BRAF mutations, ORR was also numerically higher for nivolumab and temozolomide compared to temozolomide monotherapy (50.0% vs. 0%, p=0.101). The CBR was significantly higher (90.0% vs. 20.0%, p=0.017).",
+      "basis": "p=0.017",
+      "protective": false
+    },
+    {
+      "endpoint": "OS · treatment interaction",
+      "value": "The association between treatment and OS varied with baseline LDH",
+      "group": "Exploratory analysis · baseline LDH",
+      "source_id": "CE-5708e85b144f2823f2622a93-span-e2046d68266d21f82b4eb7fd",
+      "source_quote": "The association between OS and each potential treatment-covariate interaction was explored. A significant interaction between treatment and baseline LDH was identified (likelihood ratio test; p=0.04245).",
+      "basis": "p=0.04245",
+      "protective": false
+    }
+  ]
+}

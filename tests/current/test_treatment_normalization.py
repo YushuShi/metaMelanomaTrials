@@ -18,6 +18,8 @@ REPO = Path(__file__).resolve().parents[2]
 RESOURCES = ['pipeline.py', REGISTRY, GENERATED_REGISTRY,
     'config/sample_size_link_reviews.json', 'config/comparison_result_reviews.json',
     'website/scripts/treatment_map_defaults.cjs', 'website/scripts/underpowered_studies.cjs',
+    'website/scripts/trial_outcomes.cjs', 'website/scripts/trial_outcome_links.cjs', 'website/scripts/trial_outcome_measures.cjs',
+    'website/config/phase_comparison_outcome_reviews.json',
     'website/scripts/treatment_network_reference_cache.cjs','website/scripts/treatment_network_reference_cache.R',
     'website/scripts/treatment_network_authors.py','website/scripts/study_browse_defaults.cjs',
     'website/scripts/single_arm_denominators.py','config/single_arm_denominator_reviews.json',
@@ -103,7 +105,7 @@ api:Object.values(side.comparisons).map(row=>row.roles.intervention.description.
         map_data=json.loads((self.root/MAP_PUBLIC).read_bytes())
         self.assertEqual(map_data['metadata']['normalization_content_sha256'],sidecar['content_sha256'])
         self.assertEqual(map_data['metadata']['source_file_sha256'],digest(source_before))
-        for table in ('underpowered_studies', 'new_findings'):
+        for table in ('underpowered_studies', 'new_findings', 'trial_outcomes'):
             saved = (self.root/f'website/dist/data/{table}.json').read_bytes()
             self.assertEqual(applied['study_tables'][table], digest(saved))
             self.assertEqual(json.loads(saved)['source_file_sha256'], digest(source_before))
